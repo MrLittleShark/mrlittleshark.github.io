@@ -52,11 +52,11 @@
 <pre><code>OpenCFD OpenFOAM v2512</code></pre>
 <h2>1 圆柱附近的流动与计算范围</h2>
 <p>圆柱绕流涉及壁面黏性、曲面加速和下游尾流。来流绕过圆柱后，在适当条件下分离并形成交替变化的涡结构。模型需规定入口、出口与外侧边界，并积分圆柱表面的压力和黏性应力以求受力。</p>
-<pre><code>本例采用二维不可压缩层流模型，圆柱直径 D=1 m，来流速度 U=1 m/s，运动黏度 ν=0.01 m²/s，故 Re=UD/ν=100。求解器为 pimpleFoam，turbulenceProperties 中设置 simulationType laminar，当前计算未启用湍流模型。</code></pre>
+<p>本例采用二维不可压缩层流模型，圆柱直径 D=1 m，来流速度 U=1 m/s，运动黏度 ν=0.01 m²/s，故 Re=UD/ν=100。求解器为 pimpleFoam，turbulenceProperties 中设置 simulationType laminar，当前计算未启用湍流模型。</p>
 <p>计算域为 x∈[−5,15] m、y∈[−5,5] m，厚度为 0.1 m。以圆柱直径归一化后，上游长度为 5D，下游长度为 15D，横向宽度为 10D。报告域尺寸时同时给出这些比例，便于评价外边界与圆柱的相对距离。</p>
 <p>厚度方向划分一层单元，前后边界使用 empty。二维约束下，积分仍包含 0.1 m 的计算厚度。参考面积、总阻力和单位长度受力之间的换算应使用同一厚度及归一化定义。</p>
 <h2>2 边界条件与初始扰动</h2>
-<pre><code>入口速度为 (1,0,0) m/s，压力为零梯度；出口压力取零参考，速度为 zeroGradient。上下边界速度为 slip，圆柱表面为 noSlip。inlet、outlet、top、bottom、cylinder 须在网格与场文件中一致，受力积分选取实际 cylinder 边界。</code></pre>
+<p>入口速度为 (1,0,0) m/s，压力为零梯度；出口压力取零参考，速度为 zeroGradient。上下边界速度为 slip，圆柱表面为 noSlip。inlet、outlet、top、bottom、cylinder 须在网格与场文件中一致，受力积分选取实际 cylinder 边界。</p>
 <p>圆柱采用 noSlip，壁面速度为零，近壁网格需解析速度梯度。上下边界采用 slip，限制法向穿透并允许切向运动。若改为无滑移壁面，将引入额外边界层，使问题由当前外流配置转为更受通道约束的流动。</p>
 <p>内部初始速度为 (1,0.001,0) m/s，入口保持水平来流。初场中的小幅竖直扰动打破水平中心线对称性，用于观察非对称扰动的发展。分析启动过程时，应同时记录扰动幅度和方向。</p>
 <pre><code>internalField uniform (1 0.001 0);</code></pre>
@@ -67,21 +67,21 @@
 <p>径向分辨率影响壁面速度梯度及黏性应力，周向分辨率影响压力分布、分离位置和受力积分。增加远场单元数并不能替代圆柱附近的加密。因此，网格设计需要根据关注量分配单元：若研究阻力，应同时检查近壁和尾流；若关注下游结构，还应确保尾流方向有足够分辨率。</p>
 <figure><img loading="lazy" src="/assets/lessons/06/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图 1 为实际网格。圆柱周围的曲面边界与外侧矩形计算域通过分块连接，局部单元的方向和长宽比随位置变化。网格总数与四个块的划分一致，包围盒与上述计算域尺寸一致。</p>
-<pre><code>checkMesh 报告本例最大非正交角约为 71.524°，平均约为 34.003°，最大偏斜度约为 2.79945。非正交角描述相邻单元中心连线与共享面法向之间的夹角，较大的局部值会影响法向梯度的离散。该组网格已完成当前计算，但定量评价阻力精度时仍应通过几何和局部加密比较检查空间误差。</code></pre>
+<p>checkMesh 报告本例最大非正交角约为 71.524°，平均约为 34.003°，最大偏斜度约为 2.79945。非正交角描述相邻单元中心连线与共享面法向之间的夹角，较大的局部值会影响法向梯度的离散。该组网格已完成当前计算，但定量评价阻力精度时仍应通过几何和局部加密比较检查空间误差。</p>
 <p>网格改动后，圆柱周长的离散精度和参考几何应同时核对。计算域总面积减去圆柱截面积，再乘薄层厚度，可得总体积的近似检查值；实际网格体积还包含曲边离散带来的几何差异。网格数量、质量指标和几何误差应分别报告，不宜只用总单元数描述整个网格。</p>
 <h2>4 时间推进与两种输出间隔</h2>
 <p>计算至 120 s，固定步长 0.01 s，共 12000 步。每步采用两次 PIMPLE 外循环，每次含两次压力修正，非正交修正参数为零。循环次数控制步内耦合，时间步控制物理时间推进，二者分别检验。</p>
 <p>特征时间 D/U 为 1 s，因此本例计算区间为 120 个对流特征时间。这个无量纲时长有助于描述流场发展程度，但周期状态是否建立仍应由实际曲线判断。对于初始扰动增长较慢或数值耗散较大的情况，给定计算时长不一定已经包含足够稳定的完整周期。</p>
-<pre><code>controlDict 顶层的 writeInterval 为 5，配合 writeControl runTime，表示每隔 5 s 保存完整场。forceCoeffs 子字典却采用 writeControl timeStep、writeInterval 1，表示每个时间步保存一次力系数。因而受力时间序列比完整速度场的保存更密集，两种数据的时间分辨率不同。
-endTime 120;
+<p>controlDict 顶层的 writeInterval 为 5，配合 writeControl runTime，表示每隔 5 s 保存完整场。forceCoeffs 子字典却采用 writeControl timeStep、writeInterval 1，表示每个时间步保存一次力系数。因而受力时间序列比完整速度场的保存更密集，两种数据的时间分辨率不同。</p>
+<pre><code>endTime 120;
 deltaT 0.01;
 writeControl runTime;
 writeInterval 5;</code></pre>
 <p>读取结果时要按数据用途选择来源。完整场可用于观察某些时刻的尾流形状，力系数序列可用于分析更细的时间变化。若希望由涡量动画判断涡脱落相位，五秒的场输出间隔可能不足，应提前缩短场保存间隔。仅有密集力系数，并不代表同样时刻已经保存全部空间场。</p>
 <h2>5 阻力与升力的定义</h2>
 <p>阻力平行来流，升力垂直来流。Cd=Fx/(0.5ρU²A)，Cl 采用相同分母。动压乘参考面积具有力的量纲，因而系数无量纲。跨工况比较须统一密度、速度及参考面积的定义。</p>
-<pre><code>本例 forceCoeffs 对 cylinder 进行积分，rhoInf 为 1 kg/m³，magUInf 为 1 m/s，lRef 为 1 m，Aref 为 0.1 m²。阻力方向为 (1,0,0)，升力方向为 (0,1,0)。参考面积取直径与厚度之积，即 1×0.1=0.1 m²，与实际二维薄层一致。
-patches (cylinder);
+<p>本例 forceCoeffs 对 cylinder 进行积分，rhoInf 为 1 kg/m³，magUInf 为 1 m/s，lRef 为 1 m，Aref 为 0.1 m²。阻力方向为 (1,0,0)，升力方向为 (0,1,0)。参考面积取直径与厚度之积，即 1×0.1=0.1 m²，与实际二维薄层一致。</p>
+<pre><code>patches (cylinder);
 rho rhoInf;
 rhoInf 1;
 dragDir (1 0 0);
@@ -121,11 +121,11 @@ foamToVTK -latestTime -fields &#x27;(U vorticity)&#x27;</code></pre>
 <p>初始扰动的作用也需要通过时间过程判断。对称的几何和入口不保证离散计算会立即形成明显的非对称尾流，扰动可能需要时间增长，也可能受到网格和格式的耗散。当前初始竖直速度很小，应保留该信息，并通过升力曲线观察其响应。若比较不同扰动，首先保持扰动之外的输入一致，再分析增长时间、幅值和最终统计量。</p>
 <p>一个可复查的圆柱结果记录应包含三类内容：模型部分给出几何比例、雷诺数及边界；数值部分给出网格、时间步和求解控制；结果部分给出受力定义、统计时间及流场图。统计得到的均值若缺少起止时间，便无法判断是否包含启动峰值；涡量图若缺少时刻，便无法与升力相位对应。保存这些信息可以使后续加密或参数比较针对同一个观测对象。</p>
 <h2>9 力系数采样与尾流统计</h2>
-<pre><code>forceCoeffs按表面压力及黏性载荷计算力，再用0.5ρU∞²Aref归一化。当前D=1m、厚度b=0.1m，所以Aref=0.1m²。二维模型的积分本身包含厚度，参考面积必须使用同一厚度约定。改变Aref而不改变流动，会直接改变报告的系数，因此参考量属于必须记录的输入。</code></pre>
+<p>forceCoeffs按表面压力及黏性载荷计算力，再用0.5ρU∞²Aref归一化。当前D=1m、厚度b=0.1m，所以Aref=0.1m²。二维模型的积分本身包含厚度，参考面积必须使用同一厚度约定。改变Aref而不改变流动，会直接改变报告的系数，因此参考量属于必须记录的输入。</p>
 <p>本例时间步0.01s，力系数每步记录，场文件每5s写出。两种记录的采样能力差异很大：力系数Nyquist频率为50Hz，场文件为0.1Hz。频谱分析应使用原始高频力系数，不能靠在稀疏场数据之间插值补回真实频率。选择50–120s窗口时，频率分辨率约0.0143Hz，但这并不自动说明流动已形成稳定周期。</p>
 <p>层流与定常不是同一概念。层流尾流可以随时间演化，判断统计是否充分需要查看振幅、均值漂移及重复周期。当前粗网格用于受力定义和尾流分析，后续应分别检查周向分辨率、径向加密和下游长度，并报告平均Cd、Cl均方根及采用的统计区间。</p>
 <h2>10 资料来源</h2>
-<pre><code>本讲依据 Re100 的真实网格、0/U、0/p、物性和控制字典，以及 12000 条力系数记录。继续阅读可查看本机 v2512 的 pimpleFoam、forceCoeffs 和 vorticity 实现及帮助，参考资料 all-slides.pdf 第 204–288 页可用于了解圆柱绕流的后续模型。报告系数时应保留参考量定义和实际统计区间。</code></pre>
+<p>本讲依据 Re100 的真实网格、0/U、0/p、物性和控制字典，以及 12000 条力系数记录。继续阅读可查看本机 v2512 的 pimpleFoam、forceCoeffs 和 vorticity 实现及帮助，参考资料 all-slides.pdf 第 204–288 页可用于了解圆柱绕流的后续模型。报告系数时应保留参考量定义和实际统计区间。</p>
 <section class="exercise"><h2>课后练习</h2><p>复现 Re=100 的 St 数并与实验值对比，写出偏差来源的分析（网格、计算域大小、时间步、格式）。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
 </div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="6">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=6">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/05/">← 上一讲<span>溃坝与上升气泡</span></a><a href="/lessons/07/">下一讲 →<span>网格质量</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
 </main>

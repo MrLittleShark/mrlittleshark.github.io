@@ -52,25 +52,25 @@
 <pre><code>OpenCFD OpenFOAM v2512</code></pre>
 <h2>1 网格数据与控制方程的接口</h2>
 <p>有限体积方程使用单元体积、面积和邻接关系计算瞬态项与面通量。外部软件的网格格式和区域编号可能不同，转换工具将点、面、单元和分组写为求解器可读数据，物理边界仍由场文件另行定义。</p>
-<pre><code>polyMesh 中，points 保存坐标，faces 保存面顶点编号，owner 保存面所属单元，neighbour 保存内部面另一侧单元，boundary 保存边界分组。内部面通过邻接关系共享通量，边界面通过 patch 关联场条件；这些关系共同确定面值的来源。</code></pre>
+<p>polyMesh 中，points 保存坐标，faces 保存面顶点编号，owner 保存面所属单元，neighbour 保存内部面另一侧单元，boundary 保存边界分组。内部面通过邻接关系共享通量，边界面通过 patch 关联场条件；这些关系共同确定面值的来源。</p>
 <p>几何表面定义空间形状，面集合选取已有网格面，patch 参与边界条件分配。选面操作不会自动建立入口条件，inlet 名称也不自动赋予速度。边界名称与物理条件须在场文件中明确对应。</p>
-<pre><code>gmsh_import 将 cube.msh 转换为一个六面体单元，便于逐项核对网格文件；split_boundary 从已生成网格的底面选区，建立独立边界和单元区域。两组均只处理网格，不求解流场。</code></pre>
+<p>gmsh_import 将 cube.msh 转换为一个六面体单元，便于逐项核对网格文件；split_boundary 从已生成网格的底面选区，建立独立边界和单元区域。两组均只处理网格，不求解流场。</p>
 <h2>2 外部网格转换及单位核对</h2>
-<pre><code>gmsh_import 依次执行 gmshToFoam cube.msh、checkMesh 并创建 case.foam。转换结果为一个单元，包围盒 (0 0 0) 至 (1 1 1)，六个面归入 walls。该例用于检验格式与边界映射，不具备实际流动分辨能力。
-source /usr/lib/openfoam/openfoam2512/etc/bashrc
+<p>gmsh_import 依次执行 gmshToFoam cube.msh、checkMesh 并创建 case.foam。转换结果为一个单元，包围盒 (0 0 0) 至 (1 1 1)，六个面归入 walls。该例用于检验格式与边界映射，不具备实际流动分辨能力。</p>
+<pre><code>source /usr/lib/openfoam/openfoam2512/etc/bashrc
 cd 代码/gmsh_import
 ./Allrun.sh
 gmshToFoam cube.msh &gt; log.gmshToFoam 2&gt;&amp;1
 checkMesh &gt; log.checkMesh 2&gt;&amp;1
 touch case.foam</code></pre>
 <p>外部网格的单位应由已知尺寸核对。若将以 mm 表示的长度误读为 m，长度放大 10³ 倍，面积和体积分别放大 10⁶ 与 10⁹ 倍。即使速度与黏度数值不变，Re 和通量积分也会改变，因此单位检查须在求解前完成。</p>
-<pre><code>transformPoints 可缩放点坐标，mm 转为 m 时使用 0.001。本例已采用 m，无需再次缩放。换算应在副本中进行并记录原单位及比例；后处理仅将坐标显示为 mm 时，不应再次修改计算网格。</code></pre>
+<p>transformPoints 可缩放点坐标，mm 转为 m 时使用 0.001。本例已采用 m，无需再次缩放。换算应在副本中进行并记录原单位及比例；后处理仅将坐标显示为 mm 时，不应再次修改计算网格。</p>
 <figure><img loading="lazy" src="/assets/lessons/11/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
-<pre><code>图中几何外形与包围盒一致。还需读取 boundary：walls 的类型实际为 patch，名称虽然包含 wall 含义，却没有自动变为 wall 类型。是否设置无滑移条件仍由速度场决定；需要壁面模型或壁面统计时，还应检查网格类型是否符合该模型要求。这个例子说明边界名称、网格类型和场条件必须分别读取。</code></pre>
+<p>图中几何外形与包围盒一致。还需读取 boundary：walls 的类型实际为 patch，名称虽然包含 wall 含义，却没有自动变为 wall 类型。是否设置无滑移条件仍由速度场决定；需要壁面模型或壁面统计时，还应检查网格类型是否符合该模型要求。这个例子说明边界名称、网格类型和场条件必须分别读取。</p>
 <h2>3 按几何条件选择边界面</h2>
-<pre><code>split_boundary 尺寸为 1 m×1 m×0.05 m，各方向 12 个单元，总计 1728。厚度方向也有 12 层，因此属于三维网格。底面已有 144 面，分区仅从中选择，不新增几何面。
-选区分两步完成。第一步用 patchToFace 建立 sourceWallFaces，把 bottom 的全部面纳入 faceSet。第二步使用 action subset，仅保留这些面中面中心位于指定圆柱内的面。先限定底面再按几何筛选，可以避免邻近侧面或内部面同时被选入。
-actions
+<p>split_boundary 尺寸为 1 m×1 m×0.05 m，各方向 12 个单元，总计 1728。厚度方向也有 12 层，因此属于三维网格。底面已有 144 面，分区仅从中选择，不新增几何面。</p>
+<p>选区分两步完成。第一步用 patchToFace 建立 sourceWallFaces，把 bottom 的全部面纳入 faceSet。第二步使用 action subset，仅保留这些面中面中心位于指定圆柱内的面。先限定底面再按几何筛选，可以避免邻近侧面或内部面同时被选入。</p>
+<pre><code>actions
 (
     &#123;
         name sourceWallFaces;
@@ -92,8 +92,8 @@ actions
 <p>圆柱轴沿 y 方向通过底面中心附近，半径为零点二米。筛选依据是面中心的位置，并非对圆周进行重新切割，所以分区边缘沿现有网格面呈离散近似。半径略微改变但没有跨过新的面中心时，面数可能保持不变；跨过某一排面中心后，面数会跳变。这种分段变化来自选择规则和网格分辨率。</p>
 <p>实际日志先报告一百四十四个底面，随后 sourceWallFaces 减少为四十八个面。核对这一中间结果比只查看最终边界名称更有用：若第一步已为零，应检查 patch 名；若第一步正确而第二步为零，应检查圆柱轴、半径、单位及筛选范围。两种错误发生于不同阶段，修正方法也不同。</p>
 <h2>4 创建 patch 与单元区域</h2>
-<pre><code>createPatch 从已有面集合创建 sourceWall。constructFrom set 指明来源为集合，set sourceWallFaces 指定集合名，patchInfo 中 type wall 指定网格边界类型。-overwrite 将修改直接写入当前 polyMesh。
-patches
+<p>createPatch 从已有面集合创建 sourceWall。constructFrom set 指明来源为集合，set sourceWallFaces 指定集合名，patchInfo 中 type wall 指定网格边界类型。-overwrite 将修改直接写入当前 polyMesh。</p>
+<pre><code>patches
 (
     &#123;
         name sourceWall;
@@ -103,8 +103,8 @@ patches
     &#125;
 );</code></pre>
 <p>本例分区后 sourceWall 有四十八个面，剩余底面仍名为 bottom，有九十六个面。两者面数之和等于原底面的一百四十四个面，说明操作是边界面的重新分组，并没有增加或删除底面几何。最终边界总数从五个增至六个，单元总数仍为一千七百二十八个。</p>
-<pre><code>topoSetDict 中还有 sourceCells 和 sourceZone。boxToCell 根据单元中心位于盒内的条件选择单元，范围为 x 从零点三到零点七米、y 从零到零点二米、z 从零到零点零五米。生成的 cellSet 包含九十六个单元，随后 setToCellZone 把它转换为同样包含九十六个单元的 sourceZone。
-faceSet 与 cellZone 的用途不同。前者可用于重建边界，后者常用于指定体积源项或区域操作。局部输入若施加于面，积分单位通常包含面积；若施加于单元，积分单位通常包含体积。把边界通量直接写成体积源，除了对象类型不匹配，还会造成源项量纲错误，因此需要先根据控制方程明确输入发生在边界还是体内。</code></pre>
+<p>topoSetDict 中还有 sourceCells 和 sourceZone。boxToCell 根据单元中心位于盒内的条件选择单元，范围为 x 从零点三到零点七米、y 从零到零点二米、z 从零到零点零五米。生成的 cellSet 包含九十六个单元，随后 setToCellZone 把它转换为同样包含九十六个单元的 sourceZone。</p>
+<p>faceSet 与 cellZone 的用途不同。前者可用于重建边界，后者常用于指定体积源项或区域操作。局部输入若施加于面，积分单位通常包含面积；若施加于单元，积分单位通常包含体积。把边界通量直接写成体积源，除了对象类型不匹配，还会造成源项量纲错误，因此需要先根据控制方程明确输入发生在边界还是体内。</p>
 <p>运行脚本还调用 renumberMesh -overwrite 重排编号，以改善后续线性系统的编号结构。重编号保留几何及物理分区，但单元和面编号可改变。任何依赖原单元编号的人工列表都需要重新核对；通常应优先使用几何或区域名称指定对象，减少对偶然编号的依赖。</p>
 <h2>5 面积 法向与通量的计算</h2>
 <p>底面面积为 1×0.05=0.05 m²，均分为 144 面。sourceWall 含 48 面，面积为 0.016667 m²，剩余 bottom 约为 0.033333 m²。分区前后面积之和应一致。</p>
@@ -121,7 +121,7 @@ renumberMesh -overwrite &gt; log.renumberMesh 2&gt;&amp;1
 checkMesh &gt; log.checkMesh.2 2&gt;&amp;1
 touch case.foam</code></pre>
 <figure><img loading="lazy" src="/assets/lessons/11/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
-<pre><code>图中网格单元分布保持规则，分区主要改变边界归属。单独显示边线时，新旧 patch 的差异未必明显，需在 ParaView 中按边界名称分别选择 sourceWall 和 bottom，并采用不同颜色检查其空间位置。随后读取 boundary 中的面数和起始编号，核对与 topoSet 日志一致。</code></pre>
+<p>图中网格单元分布保持规则，分区主要改变边界归属。单独显示边线时，新旧 patch 的差异未必明显，需在 ParaView 中按边界名称分别选择 sourceWall 和 bottom，并采用不同颜色检查其空间位置。随后读取 boundary 中的面数和起始编号，核对与 topoSet 日志一致。</p>
 <p>最终 checkMesh 的最大非正交角为零，最大偏斜度约为 1.07×10⁻¹⁴，反映本例仍为规则正交网格。这些指标没有改变，是因为创建 patch 和重编号没有移动顶点。若后续更改几何或缩放，也应重新检查，但不能用质量指标不变替代边界语义和单位核对。</p>
 <p>需要继续求解时，各场文件必须为 sourceWall 增加条件，并保留 bottom 的相应条目。仅给速度补边界而遗漏压力或标量，求解器仍会在读取后续场时停止。添加条目前先确认新边界承担的约束，例如固定速度、固定梯度或无滑移，并检查各变量之间是否相容。</p>
 <p>边界面积的核对还应与总体守恒联系起来。将原底面分成两部分后，若两部分仍采用相同通量密度，则两部分通量之和应等于分区前的总通量。若只在新边界施加通量，其余部分设为零梯度，则总体输入随选区面积改变。比较不同分区时，需要说明保持的是通量密度还是总输入率：保持前者时总量随面积变，保持后者时应按新面积重新计算密度。</p>
@@ -139,26 +139,26 @@ touch case.foam</code></pre>
 <pre><code>cat system/topoSetDict
 cat system/createPatchDict
 head -n 45 log.topoSet
-head -n 70 constant/polyMesh/boundary
-topoSet 按几何或拓扑条件生成集合，createPatch 根据 faceSet 等来源创建边界。
-cellSet 和 faceSet 分别记录所选单元及面。源项需要 cellZone 时，需将单元集合转换为单元区域。</code></pre>
+head -n 70 constant/polyMesh/boundary</code></pre>
+<p>topoSet 按几何或拓扑条件生成集合，createPatch 根据 faceSet 等来源创建边界。</p>
+<p>cellSet 和 faceSet 分别记录所选单元及面。源项需要 cellZone 时，需将单元集合转换为单元区域。</p>
 <p>创建 patch 后，各场的 boundaryField 均需包含新边界名称，并设置相应条件。</p>
 <h3>导入网格的长度单位</h3>
 <p>执行目录为 代码/gmsh_import。</p>
 <pre><code>ls *.msh
 head -n 35 log.gmshToFoam
 transformPoints -help
-checkMesh &gt; log.importCheck 2&gt;&amp;1
-gmshToFoam 读取本目录中的 msh 文件，导入后核对物理分组、patch 类型、包围盒和单元数。
-transformPoints -scale 按比例修改网格坐标，可在副本中用于长度单位换算。</code></pre>
+checkMesh &gt; log.importCheck 2&gt;&amp;1</code></pre>
+<p>gmshToFoam 读取本目录中的 msh 文件，导入后核对物理分组、patch 类型、包围盒和单元数。</p>
+<p>transformPoints -scale 按比例修改网格坐标，可在副本中用于长度单位换算。</p>
 <p>本例网格采用米。缩放因子 0.001 适用于输入坐标采用毫米、目标单位为米的情况。</p>
 <h2>9 网格对象与量纲传播</h2>
-<pre><code>网格转换保留的是坐标、拓扑和分组关系。有限体积离散通过 owner 和 neighbour 确定面两侧的单元，通过 boundary 确定外边界所属分组。一个几何上位于壁面的面，只有在网格分组和场条件共同正确时，才具有所需的速度或热边界约束。将名字写成 inlet 或 wall 并不自动定义相应物理条件。
-设边界面通量密度为 j_f，单元体积源强为 s_c，则边界总量为 Σj_f A_f，体积总量为 Σs_c V_c。两者的积分对象、单位和选区方法不同。topoSet 的几何筛选只是把已有面或单元选入集合，不会产生新的控制方程；createPatch 和区域模型才决定后续如何使用这些对象。</code></pre>
+<p>网格转换保留的是坐标、拓扑和分组关系。有限体积离散通过 owner 和 neighbour 确定面两侧的单元，通过 boundary 确定外边界所属分组。一个几何上位于壁面的面，只有在网格分组和场条件共同正确时，才具有所需的速度或热边界约束。将名字写成 inlet 或 wall 并不自动定义相应物理条件。</p>
+<p>设边界面通量密度为 j_f，单元体积源强为 s_c，则边界总量为 Σj_f A_f，体积总量为 Σs_c V_c。两者的积分对象、单位和选区方法不同。topoSet 的几何筛选只是把已有面或单元选入集合，不会产生新的控制方程；createPatch 和区域模型才决定后续如何使用这些对象。</p>
 <p>检查 sourceWall 和 sourceZone 时，应分别显示面和单元，核对其位置、数量与积分范围。</p>
 <p>尺度换算会沿计算链传播。若毫米坐标被按米解释，长度变为目标值的 1000 倍，面积和体积分别变为 10⁶、10⁹ 倍。即使字典中的速度或通量密度数值未变，Re 和总流量也已经变化。正确的核查顺序是先比较设计尺寸与网格包围盒，再计算代表面积和体积，最后检查变量量纲及边界积分。</p>
 <h2>10 资料来源</h2>
-<pre><code>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 515–538 页。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</code></pre>
+<p>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 515–538 页。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</p>
 <section class="exercise"><h2>课后练习</h2><p>把一个 gmsh（或 Fluent）网格转入 OpenFOAM；在底面用 topoSet + createPatch 切出一个圆形电极面，并用 setFields 在电极中心放一个半球形种子气泡，用 ParaView 确认位置正确。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
 </div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="11">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=11">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/10/">← 上一讲<span>snappyHexMesh 实战</span></a><a href="/lessons/12/">下一讲 →<span>有限体积与离散格式</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
 </main>

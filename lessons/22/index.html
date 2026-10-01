@@ -53,45 +53,45 @@
 <h2>1 稳态问题的方程与边界约束</h2>
 <p>常 D、无体源的稳态扩散满足 ∇·(D∇T)=0。一维平板化为 d²T/dy²=0，两次积分得 T=Ay+B。边界条件确定 A、B，因而同一控制方程可对应不同分布与通量。</p>
 <p>T 为无量纲标量，D 的单位为 m²/s，梯度单位为 m⁻¹，扩散通量 q=−DdT/dy 的单位为 m/s。该通量描述标量输运，须与流体速度区分。laplacianFoam 读取 0/T，其 dimensions 为七个零，物理意义由方程及边界定义确定。</p>
-<pre><code>primary 与 mixed 共用平板网格，宽、高均为 0.001 m，厚 0.0001 m，划分为 12×40×1。左右零梯度、前后 empty，结果仅沿 y 变化。两组顶部均取 T=0，底部分别施加定值条件和线性交换条件。</code></pre>
+<p>primary 与 mixed 共用平板网格，宽、高均为 0.001 m，厚 0.0001 m，划分为 12×40×1。左右零梯度、前后 empty，结果仅沿 y 变化。两组顶部均取 T=0，底部分别施加定值条件和线性交换条件。</p>
 <h2>2 两端定值的解析解</h2>
 <p>平板高 L，底值 T₀、顶值 TL，代入通解得 T(y)=T₀+(TL−T₀)y/L，向上通量 q=D(T₀−TL)/L。无源稳态各截面通量相等，否则存在净积累。</p>
 <p>L=0.001 m、T0=0.01、TL=0、D=1 m²/s 时，剖面斜率为 −10 m⁻¹，向上通量为 10 m/s。底面外法向为负 y，故外向扩散通量为负；顶面外法向为正 y，外向通量为正。两端积分相消，满足无源稳态守恒。</p>
 <p>y 方向单元高为 2.5×10⁻⁵ m，首层中心距底面 1.25×10⁻⁵ m。解析首、末层中心值分别为 0.009875 和 0.000125，与计算极值一致；边界值仍为 0.01 和 0。fieldMinMax 的单元极值应与单元中心解析值比较。</p>
 <p>线性剖面可用于检查坐标、边界距离和求解实现。正交网格上的线性插值能表示该分布，明显偏差通常应先从输入与边界排查。几何、系数或源项改变后，需针对新方程建立参考解。</p>
 <h2>3 Robin条件与界面交换</h2>
-<pre><code>Robin 条件将向内通量写为 q=h(Tref−Tw)，分别以 Tw、Tref 表示壁面值和外部参考值。本讲 T 无量纲，故 h 为 m/s。同一有限通量下，h 越大，壁面值越接近外部参考值。
-流体内部从底部壁面向顶部输运的通量同时满足 q=D(Tw−Ttop)/L。将两式联立，可得 Tref−Ttop=q(1/h+L/D)。因此总通量为 q=(Tref−Ttop)/(1/h+L/D)，内部扩散阻力为 L/D，边界交换阻力为 1/h。两项的单位均为 s/m，可以相加。
-本例 h=1000 m/s，L/D=0.001 s/m，1/h=0.001 s/m，两项相等。总阻力为两端定值问题中内部阻力的两倍，通量因此由 10 降为 5 m/s。参考值差 0.01 中，一半用于边界交换，一半用于内部扩散，故壁面值 Tw=0.005，顶部仍为零。</code></pre>
+<p>Robin 条件将向内通量写为 q=h(Tref−Tw)，分别以 Tw、Tref 表示壁面值和外部参考值。本讲 T 无量纲，故 h 为 m/s。同一有限通量下，h 越大，壁面值越接近外部参考值。</p>
+<p>流体内部从底部壁面向顶部输运的通量同时满足 q=D(Tw−Ttop)/L。将两式联立，可得 Tref−Ttop=q(1/h+L/D)。因此总通量为 q=(Tref−Ttop)/(1/h+L/D)，内部扩散阻力为 L/D，边界交换阻力为 1/h。两项的单位均为 s/m，可以相加。</p>
+<p>本例 h=1000 m/s，L/D=0.001 s/m，1/h=0.001 s/m，两项相等。总阻力为两端定值问题中内部阻力的两倍，通量因此由 10 降为 5 m/s。参考值差 0.01 中，一半用于边界交换，一半用于内部扩散，故壁面值 Tw=0.005，顶部仍为零。</p>
 <p>该推导说明，mixed 中的 refValue 不等于最终壁面值。参考值代表外部条件，真正壁面值由内部场与交换关系共同求出。若把 refValue 当作边界实际值，将错误地预测剖面斜率和通量。求解结束后，应分别读取参考参数、边界值与相邻单元中心值。</p>
 <h2>4 mixed权重的离散推导</h2>
-<pre><code>面到中心距为 d、中心值为 TP 时，联立 D(Tw−TP)/d=h(Tref−Tw)，得到 Tw=[hTref+(D/d)TP]/[h+D/d]。令 β=h/(h+D/d)，即可写为 Tw=βTref+(1−β)TP，对应零参考梯度的 mixed 条件。
-OpenFOAM 的 mixed 将定值贡献和梯度贡献按 valueFraction 组合。refValue 给定参考值，refGradient 给定参考外法向梯度，valueFraction 给定 β。当前底面配置为：
-bottom
+<p>面到中心距为 d、中心值为 TP 时，联立 D(Tw−TP)/d=h(Tref−Tw)，得到 Tw=[hTref+(D/d)TP]/[h+D/d]。令 β=h/(h+D/d)，即可写为 Tw=βTref+(1−β)TP，对应零参考梯度的 mixed 条件。</p>
+<p>OpenFOAM 的 mixed 将定值贡献和梯度贡献按 valueFraction 组合。refValue 给定参考值，refGradient 给定参考外法向梯度，valueFraction 给定 β。当前底面配置为：</p>
+<pre><code>bottom
 &#123;
     type mixed;
     refValue uniform 0.01;
     refGradient uniform 0;
     valueFraction uniform 0.012345679012345678;
     value uniform 0;
-&#125;
-本例 d=1.25×10⁻⁵ m，D/d=80000 m/s，β=1000/(1000+80000)=1/81。value uniform 0 为读取时的初始边界值，mixed 更新后得到与内部场相容的壁面值。β=1 退化为定值，β=0 退化为给定梯度；中间值表达两类约束的组合。</code></pre>
+&#125;</code></pre>
+<p>本例 d=1.25×10⁻⁵ m，D/d=80000 m/s，β=1000/(1000+80000)=1/81。value uniform 0 为读取时的初始边界值，mixed 更新后得到与内部场相容的壁面值。β=1 退化为定值，β=0 退化为给定梯度；中间值表达两类约束的组合。</p>
 <p>若 y 方向网格加密一倍，d 减半，保持 h 不变时应使用 β=1/161。继续固定原 β 会改变实际交换系数。由权重公式反求 h，可得 h=(D/d)β/(1−β)，因此网格距离是边界物理解释的一部分。第24讲通过 codedMixed 从网格自动读取每个面的距离，减少手工更新权重的工作。</p>
 <h2>5 稳态求解与命令</h2>
-<pre><code>steadyState 去除物理时间导数。endTime=30、deltaT=1 控制迭代循环，目录 30 表示迭代位置，不代表 30 s 扩散过程。研究瞬态时须恢复时间项，并另定步长和初值。
-blockMesh &gt; log.blockMesh 2&gt;&amp;1
+<p>steadyState 去除物理时间导数。endTime=30、deltaT=1 控制迭代循环，目录 30 表示迭代位置，不代表 30 s 扩散过程。研究瞬态时须恢复时间项，并另定步长和初值。</p>
+<pre><code>blockMesh &gt; log.blockMesh 2&gt;&amp;1
 checkMesh &gt; log.checkMesh 2&gt;&amp;1
 laplacianFoam &gt; log.laplacianFoam 2&gt;&amp;1
 touch case.foam</code></pre>
 <p>这四条命令在两个独立目录中分别执行。blockMesh 创建相同网格，checkMesh 检查几何和拓扑，laplacianFoam 根据各自边界求解。比较前应检查两个 0/T，确认差别确实限定在底部条件，其余数值格式、物性和网格保持一致。</p>
-<pre><code>线性求解采用 PCG，预条件器为 DIC，绝对容差为 1×10⁻¹²，relTol=0。该设置使每次线性求解按绝对容差结束，便于与线性解析解比较。SIMPLE 中 nNonOrthogonalCorrectors=1 用于扩散方程的非正交修正循环。当前正交网格几何简单，但仍需核对日志中的收敛情况。</code></pre>
+<p>线性求解采用 PCG，预条件器为 DIC，绝对容差为 1×10⁻¹²，relTol=0。该设置使每次线性求解按绝对容差结束，便于与线性解析解比较。SIMPLE 中 nNonOrthogonalCorrectors=1 用于扩散方程的非正交修正循环。当前正交网格几何简单，但仍需核对日志中的收敛情况。</p>
 <p>已测试的字典查询命令可直接读取关键设置：</p>
 <pre><code>foamDictionary 0/T -entry boundaryField
 foamDictionary system/fvSchemes -entry ddtSchemes
 foamDictionary constant/transportProperties -entry DT</code></pre>
 <p>查询输出有助于确认文件中实际生效的条目。修改模板后尤其应核对边界名、字段量纲与扩散系数，避免只依据目录名称判断算例条件。</p>
 <h2>6 实际剖面与通量检验</h2>
-<pre><code>primary 的数值通量为 10.000000000003334 m/s，mixed 为 5.0 m/s，与解析值一致。mixed 第一层中心值为 0.0049375，最后一层中心值为 0.0000625，均位于壁面值 0.005 与顶部值零之间。由任意两个内部中心值计算斜率，应得到约 −5 m⁻¹。</code></pre>
+<p>primary 的数值通量为 10.000000000003334 m/s，mixed 为 5.0 m/s，与解析值一致。mixed 第一层中心值为 0.0049375，最后一层中心值为 0.0000625，均位于壁面值 0.005 与顶部值零之间。由任意两个内部中心值计算斜率，应得到约 −5 m⁻¹。</p>
 <figure><img loading="lazy" src="/assets/lessons/22/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图中两组剖面均为线性分布，mixed 的斜率绝对值为 primary 的一半。这一差异由边界交换阻力引起，网格和内部扩散系数保持不变。图形解释应同时给出参考值、壁面值和通量，完整表达边界变化如何传递到域内分布。</p>
 <p>核对通量时，可以从斜率计算，也可以读取边界法向梯度。两者采用的方向应一致。若比较外向通量，底面和顶面符号相反；若统一比较向上通量，两者数值应相同。报告中应明确“向上”或“外向”，并用同一符号约定计算净通量。</p>
@@ -117,14 +117,14 @@ foamDictionary constant/transportProperties -entry DT</code></pre>
 <p>在当前线性算例中，解析值简单且系数恒定，因此可以逐单元核查。若边界值正确而第一层中心值偏差显著，应检查壁面距离或网格坐标；若整个剖面具有近似相同的常数偏移，应检查参考值；若剖面弯曲，则应检查是否存在未关闭的源项、变系数或横向边界影响。</p>
 <p>对非正交网格，面法向梯度由正交部分和非正交修正组成，边界距离的几何含义比均匀一维网格更复杂。解析平板仍可作为基本对照，但应检查修正循环和网格质量。改变线性求解容差与改变空间离散属于不同操作，前者主要影响代数误差，后者决定所求离散方程。</p>
 <p>最终统计表可以按算例记录参考值、壁面值、第一层中心值、最后一层中心值和通量。这样既能检验线性分布，也能直接看到混合边界中参考值与实际壁面值的区别。所有数据应取自同一次计算的最终保存场，避免修改字典后仍使用旧结果。</p>
-<pre><code>本讲依据本地 v2512 的 laplacianFoam、mixed 边界实现以及 primary、mixed 测试记录。已有 all-slides.pdf 第784—793页可用于复习 Laplace 方程练习，命令与文件查询参考所附 v2512 命令资料。</code></pre>
+<p>本讲依据本地 v2512 的 laplacianFoam、mixed 边界实现以及 primary、mixed 测试记录。已有 all-slides.pdf 第784—793页可用于复习 Laplace 方程练习，命令与文件查询参考所附 v2512 命令资料。</p>
 <h2>9 Robin条件的有限体积构造与阻力分析</h2>
-<pre><code>线性交换边界将域内扩散与外部储库连接。设壁面浓度cf、邻近单元中心浓度cP、参考浓度cref，向域内的交换通量为J=h(cref−cf)。在正交网格的一维近似下，壁面至中心的扩散通量为D(cf−cP)/δ，其中δ为面中心与单元中心沿法向的距离。消去J得到cf=[h/(h+D/δ)]cref+[D/δ/(h+D/δ)]cP。
-该式与mixed的面值组合一致：refValue=cref，refGradient=0，valueFraction=h/(h+D/δ)。</code></pre>
+<p>线性交换边界将域内扩散与外部储库连接。设壁面浓度cf、邻近单元中心浓度cP、参考浓度cref，向域内的交换通量为J=h(cref−cf)。在正交网格的一维近似下，壁面至中心的扩散通量为D(cf−cP)/δ，其中δ为面中心与单元中心沿法向的距离。消去J得到cf=[h/(h+D/δ)]cref+[D/δ/(h+D/δ)]cP。</p>
+<pre><code>该式与mixed的面值组合一致：refValue=cref，refGradient=0，valueFraction=h/(h+D/δ)。</code></pre>
 <p>这一推导解释了网格与权重的关系。真实物性h不随网格改变，但离散系数D/δ会变化，所以相同物理边界在不同网格上具有不同valueFraction。如果加密网格却保持β不变，反算得到的h也随之改变，网格研究中将同时改变物理问题。</p>
-<pre><code>codedMixed可根据patch的deltaCoeffs获取局部1/δ，从而按每个边界面的实际几何计算权重。对于非正交网格，还应核对法向距离及梯度修正的处理。</code></pre>
+<p>codedMixed可根据patch的deltaCoeffs获取局部1/δ，从而按每个边界面的实际几何计算权重。对于非正交网格，还应核对法向距离及梯度修正的处理。</p>
 <p>稳态平板能给出整个边值问题的闭式参照。底部交换与厚度L内的扩散阻力串联，顶部浓度为零时J=cref/(1/h+L/D)。以Bi=hL/D表征两项阻力的比例。Bi很小时，交换阻力1/h占主导；Bi很大时，扩散阻力L/D占主导。h趋于无穷时恢复底部定浓度，h趋于零时接近绝热型的零通量条件。这两个极限可用于检查公式、量纲和程序实现。</p>
-<pre><code>当前D=1 m²/s、L=0.001 m、h=1000 m/s及cref=0.01的验证例得到J=5 m/s；底部直接固定0.01时得到J=10 m/s。这里浓度为无量纲标量，因此通量单位为m/s。若改为mol/m³浓度，则J的单位相应为mol/(m²·s)，数值边界关系仍按相同量纲推导。比较两种实现时，应统一场的量纲、物性和面值定义，并分别检查底部输入与顶部输出。</code></pre>
+<p>当前D=1 m²/s、L=0.001 m、h=1000 m/s及cref=0.01的验证例得到J=5 m/s；底部直接固定0.01时得到J=10 m/s。这里浓度为无量纲标量，因此通量单位为m/s。若改为mol/m³浓度，则J的单位相应为mol/(m²·s)，数值边界关系仍按相同量纲推导。比较两种实现时，应统一场的量纲、物性和面值定义，并分别检查底部输入与顶部输出。</p>
 <section class="exercise"><h2>课后练习</h2><p>在含一个静止半球形气泡的电极网格上，分别用恒电位（一次分布）与线性化动力学（二次分布）边界求电势场，对比电极表面电流密度分布，并计算气泡造成的有效电极面积损失。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
 </div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="22">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=22">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/21/">← 上一讲<span>标量扩散与通量边界</span></a><a href="/lessons/23/">下一讲 →<span>源项与自适应加密</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
 </main>

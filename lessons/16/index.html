@@ -52,19 +52,19 @@
 <pre><code>OpenCFD OpenFOAM v2512</code></pre>
 <h2>1 对照实验的控制条件</h2>
 <p>一维周期问题满足 ∂T/∂t+U∂T/∂x=0，U=1 m/s，T 无量纲，物理扩散为零。精确分布仅平移，形状和幅值不变。本讲以五种空间格式、三档 Courant 数比较相对精确解的偏差。</p>
-<pre><code>计算域长 1 m，x 方向划分 100 个均匀单元，Δx=0.01 m。左右边界为周期条件，其余方向采用 empty。空间格式为 upwind、linear、linearUpwind、limitedLinear 和 vanLeer，时间格式统一为隐式 Euler。每种格式设置 Co=0.2、0.5、0.8，共 15 组独立算例。</code></pre>
+<p>计算域长 1 m，x 方向划分 100 个均匀单元，Δx=0.01 m。左右边界为周期条件，其余方向采用 empty。空间格式为 upwind、linear、linearUpwind、limitedLinear 和 vanLeer，时间格式统一为隐式 Euler。每种格式设置 Co=0.2、0.5、0.8，共 15 组独立算例。</p>
 <p>固定网格与速度时，三档 Co 对应 Δt=0.002、0.005、0.008 s。endTime 均设为 0.5 s，但末次保存时刻分别为 0.5、0.5、0.496 s。误差按各组实际时刻构造精确解，比较时应注明这一时刻差异。</p>
 <p>对照分为两类：固定 Co 比较空间格式，固定空间格式比较时间步。网格和初始分布保持一致。各组保留字典与日志，使误差表中的结果可追溯至实际输入，而非仅依据目录名称判断条件。</p>
 <h2>2 精确解 采样与误差定义</h2>
 <p>T₀(x)=exp(−((x−0.25)/0.06)²)，恒速精确解为 T₀(x−Ut)，坐标按 1 m 周期映射。t=0.5 s 时峰中心在 0.75 m。参考值在单元中心采样，离散最大值约 0.99308，保留初始峰形。</p>
-<pre><code>comparison.csv 的 x、initial、exact 和 numerical 分别为单元中心坐标、初值、精确解和数值解，误差按同一行计算。节点值或其他网格上的插值结果须先统一采样定义，才能与原数组比较。</code></pre>
+<p>comparison.csv 的 x、initial、exact 和 numerical 分别为单元中心坐标、初值、精确解和数值解，误差按同一行计算。节点值或其他网格上的插值结果须先统一采样定义，才能与原数组比较。</p>
 <p>均匀网格上，L1=Σ|ei|/N，L2=√(Σei²/N)，最大误差为 max|ei|。三者分别反映平均绝对偏差、对较大局部误差的响应及最严重偏离。非均匀网格应采用单元体积加权，避免细网格区因单元较多而获得过高统计权重。</p>
 <p>总量指标需要另外定义。本课程 JSON 中 mass_error 实际为数值场平均值减初始平均值，其单位与 T 一致，本例为无量纲。由于网格均匀、总体积固定，该指标与标量体积积分差相差固定总体积因子。它不是相对误差，报告时不得再附加百分号，也不能在不同总体积的模型间直接比较。</p>
 <p>例如四个等体积单元误差为零点一、负零点一、零点二、负零点二，带符号平均为零，而 L1 为零点一五。正负误差在积分中抵消，但局部偏差仍显著。对于浓度等非负变量，负误差还可能导致欠冲，这需要由场最小值单独检查。</p>
 <h2>3 空间格式与时间耗散</h2>
-<pre><code>upwind 以迎流单元值构造面值，稳定性通常较好，但产生数值扩散。本例隐式上风的主导等效扩散约为 UΔx(1+Co)/2。减小 Co 仅降低时间贡献，空间贡献仍使零物理扩散下的峰值衰减、分布展宽。
-linear 采用线性插值，linearUpwind 则在上游值上增加梯度修正，通常能更好保留光滑分布的幅值。但其高阶修正可能在陡峭区域引入局部振荡，表现为超过允许最大值或低于允许最小值。是否发生这种现象取决于空间和时间离散的组合，不能仅依据某一格式名称判断。
-limitedLinear 与 vanLeer 根据局部梯度关系限制修正，抑制过冲和欠冲。限制器在不同区域的作用不相同，平滑部分可以保留较多高阶信息，较陡区域则可能增加耗散。因此计算结果既要看总体范数，也要看局部极值和峰形。一个 L1 略小的结果，仍可能包含对所研究变量不允许的负值。</code></pre>
+<p>upwind 以迎流单元值构造面值，稳定性通常较好，但产生数值扩散。本例隐式上风的主导等效扩散约为 UΔx(1+Co)/2。减小 Co 仅降低时间贡献，空间贡献仍使零物理扩散下的峰值衰减、分布展宽。</p>
+<p>linear 采用线性插值，linearUpwind 则在上游值上增加梯度修正，通常能更好保留光滑分布的幅值。但其高阶修正可能在陡峭区域引入局部振荡，表现为超过允许最大值或低于允许最小值。是否发生这种现象取决于空间和时间离散的组合，不能仅依据某一格式名称判断。</p>
+<p>limitedLinear 与 vanLeer 根据局部梯度关系限制修正，抑制过冲和欠冲。限制器在不同区域的作用不相同，平滑部分可以保留较多高阶信息，较陡区域则可能增加耗散。因此计算结果既要看总体范数，也要看局部极值和峰形。一个 L1 略小的结果，仍可能包含对所研究变量不允许的负值。</p>
 <p>隐式 Euler 为一阶时间格式，其时间误差同样会平滑瞬态分布。在较大 Co 下，时间耗散可能掩盖空间格式的振荡；减小 Co 后，整体形状更接近精确解，但原先被平滑的欠冲可能更明显。这并不矛盾，因为总体误差范数和最小值衡量不同特性。时间步选择需同时满足精度及变量约束。</p>
 <p>相位误差还需从特征位置判断。峰值数值接近但峰中心偏移时，阈值到达时间或传播速度仍可能错误；峰位置正确但宽度过大，也会改变高浓度区域范围。因此图表应保留完整曲线，而不能只展示误差柱状图。</p>
 <p>高斯分布还可以用半高宽表征展宽。对初始函数，令函数值等于峰值的一半，可得离峰中心的距离为零点零六乘以根号下二的自然对数，因此理论半高全宽约为零点零九九九一米。计算数值曲线半高宽时，应先确定采用理论峰值的一半还是数值峰值的一半。前者同时反映幅值衰减和宽度变化，后者更接近描述数值峰的相对形状，两种定义不能混用。</p>
@@ -74,16 +74,16 @@ limitedLinear 与 vanLeer 根据局部梯度关系限制修正，抑制过冲和
 <p>各目录 Allrun.sh 依次执行 blockMesh、checkMesh、scalarTransportFoam 和速度模后处理。主程序读取给定 U，仅求解 T。完整初始列表随目录保存，可独立运行。</p>
 <pre><code>source /usr/lib/openfoam/openfoam2512/etc/bashrc
 cd 代码/vanLeer_Co0.5
-./Allrun.sh
-关键修改位于 fvSchemes 的 div(phi,T) 以及 controlDict 的 deltaT。DT 为零，T 的 dimensions 为全零，Euler 设置在 ddtSchemes。本例 T 的线性求解器为 PBiCGStab，预条件器为 DILU，绝对容差为 10⁻¹²，relTol 为零，以控制代数迭代误差。
-ddtSchemes &#123; default Euler; &#125;
+./Allrun.sh</code></pre>
+<p>关键修改位于 fvSchemes 的 div(phi,T) 以及 controlDict 的 deltaT。DT 为零，T 的 dimensions 为全零，Euler 设置在 ddtSchemes。本例 T 的线性求解器为 PBiCGStab，预条件器为 DILU，绝对容差为 10⁻¹²，relTol 为零，以控制代数迭代误差。</p>
+<pre><code>ddtSchemes &#123; default Euler; &#125;
 divSchemes
 &#123;
     default none;
     div(phi,T) Gauss vanLeer;
 &#125;</code></pre>
 <p>保持相同初始分布时，不要在运行后将最后时刻覆盖到零目录再比较另一格式，否则改变了初值并减少了需要输运的尖锐程度。参数比较应从各目录给定的初场开始。改网格数量时，也要重新计算逐单元初值，原来一百个数不能直接用于其他数量或排序的单元。</p>
-<pre><code>comparison.csv 为课程测试后根据保存场生成的核查数据。若修改参数后只重新运行求解器，该表应重新生成或在 ParaView 中重新导出对应场，再计算精确解；不能继续引用修改前的比较表。图后注明结果来自哪次输入和哪个时刻，可以避免把旧数据用于新参数。</code></pre>
+<p>comparison.csv 为课程测试后根据保存场生成的核查数据。若修改参数后只重新运行求解器，该表应重新生成或在 ParaView 中重新导出对应场，再计算精确解；不能继续引用修改前的比较表。图后注明结果来自哪次输入和哪个时刻，可以避免把旧数据用于新参数。</p>
 <h2>5 十五组结果的比较</h2>
 <div class="table-scroll"><table>
 <tr><th>空间格式</th><th>Co=0.2 的 L1</th><th>Co=0.5 的 L1</th><th>Co=0.8 的 L1</th></tr>
@@ -102,7 +102,7 @@ divSchemes
 <p>Co 为零点二时，linear 的最小值约为 −0.00205108，linearUpwind 为 −0.00172506；二者的最大值分别约为 0.796235、0.782802。减小时间步改善了峰值及总体范数，却使负向振荡比 Co 为零点五时更明显。隐式时间耗散的减少，使空间高阶修正的局部振荡表现出来。</p>
 <figure><img loading="lazy" src="/assets/lessons/16/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <figure><img loading="lazy" src="/assets/lessons/16/image4.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
-<pre><code>vanLeer 在 Co 为零点二时最小值约为 1.10×10⁻²⁵，最大值约为 0.755563；limitedLinear 的最小值约为 2.33×10⁻¹⁴，最大值约为 0.753124。当前两种限制格式保持了非负结果，峰值低于线性类结果，体现了局部极值控制与幅值保持之间的差异。</code></pre>
+<p>vanLeer 在 Co 为零点二时最小值约为 1.10×10⁻²⁵，最大值约为 0.755563；limitedLinear 的最小值约为 2.33×10⁻¹⁴，最大值约为 0.753124。当前两种限制格式保持了非负结果，峰值低于线性类结果，体现了局部极值控制与幅值保持之间的差异。</p>
 <p>全部十五组的平均值差绝对值约在 10⁻¹² 量级或更小，明显小于 L1 误差。该结果说明共用面通量保持了总体收支，而曲线形状仍因离散发生改变。守恒性是输运计算的一项必要检查，不能用来替代准确性或有界性判断。</p>
 <p>欠冲是否可接受取决于变量定义。对温度扰动，负值可能具有正常意义；对绝对浓度或体积分数，负值通常违反约束。本例 T 为无量纲测试标量，可用来显示算法特性，但应用到实际组分方程时，应根据非负要求重新选择和验证格式。</p>
 <h2>7 扩展实验与误差结论</h2>
@@ -125,16 +125,16 @@ head -n 5 comparison.csv</code></pre>
 <p>执行目录为 代码/vanLeer_Co0.5。</p>
 <pre><code>postProcess -func &#x27;fieldMinMax(T)&#x27; -latestTime
 foamDictionary 0/T -entry dimensions -value
-foamDictionary constant/transportProperties -entry DT
-fieldMinMax 输出保存场的极值，结合曲线读取峰值、峰宽及相位，并计算 L1 误差。</code></pre>
+foamDictionary constant/transportProperties -entry DT</code></pre>
+<p>fieldMinMax 输出保存场的极值，结合曲线读取峰值、峰宽及相位，并计算 L1 误差。</p>
 <p>本例 T 无量纲、DT 为零，分布变化主要反映离散误差。</p>
 <p>限制器的数值表现受网格、时间离散及方程设置影响，应根据实际场评价有界性和误差。</p>
 <h2>9 误差来源分离与一致采样</h2>
 <p>数值结果同时受空间离散、时间离散和迭代误差影响。固定网格减小时间步，可以观察时间误差；固定足够小的时间步并细化网格，可以观察空间误差。保持 Co 不变时，Δt 随 Δx 改变，得到的是组合误差的变化，不能直接把观察到的阶数称为空间格式的理论阶数。若某一误差已被另外一种误差淹没，继续单项加密可能出现平台。</p>
-<pre><code>对于单元误差 e_i，体积加权 L1 为 ΣV_i|e_i|/ΣV_i，L2 为 [ΣV_i e_i²/ΣV_i]^(1/2)，最大误差为 max|e_i|。非均匀网格上直接按单元数平均，会使局部细网格区域获得过大的统计权重。计算误差还需明确字段表示单元中心采样还是单元平均，参考值必须采用相同定义。</code></pre>
+<p>对于单元误差 e_i，体积加权 L1 为 ΣV_i|e_i|/ΣV_i，L2 为 [ΣV_i e_i²/ΣV_i]^(1/2)，最大误差为 max|e_i|。非均匀网格上直接按单元数平均，会使局部细网格区域获得过大的统计权重。计算误差还需明确字段表示单元中心采样还是单元平均，参考值必须采用相同定义。</p>
 <p>本讲解析解为初始高斯函数的周期平移。实际输出时间存在差异：Co=0.8 保存至 0.496 s，其余两档保存至 0.5 s，因此每一组应使用自己的实际时刻建立参考解。指标 mass_error 在现有记录中为最终均值减初始均值；均匀网格下乘域总体积才能换算为积分差。它不是除以初始总量后的相对误差。</p>
 <h2>10 资料来源</h2>
-<pre><code>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 770–814 页。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</code></pre>
+<p>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 770–814 页。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</p>
 <section class="exercise"><h2>课后练习</h2><p>用同一算例扫描 5 种对流格式 × 3 个 CFL 数，绘制误差—耗时散点图并给出选型建议。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
 </div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="16">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=16">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/15/">← 上一讲<span>残差与边界条件</span></a><a href="/lessons/17/">下一讲 →<span>静止气泡与寄生流</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
 </main>

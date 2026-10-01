@@ -52,11 +52,11 @@
 <pre><code>OpenCFD OpenFOAM v2512</code></pre>
 <h2>1 字典设置与运行时编译</h2>
 <p>字典可表达常量、列表和标准边界。坐标相关初场或依赖局部网格的交换关系可嵌入 C++，由运行时编译生成相应功能，在字段读取或边界更新时执行。</p>
-<pre><code>codeStream 在字典读取时执行代码，并将结果写入输出流，可用于生成初始字段。codedFixedValue 和 codedMixed 在边界更新时执行，处理当前边界面。初场和边界代码分别对应单元数组与面数组，输出长度须与作用对象一致。</code></pre>
+<p>codeStream 在字典读取时执行代码，并将结果写入输出流，可用于生成初始字段。codedFixedValue 和 codedMixed 在边界更新时执行，处理当前边界面。初场和边界代码分别对应单元数组与面数组，输出长度须与作用对象一致。</p>
 <p>本讲包含球冠初场、线性 Robin 边界和时间表脉冲通量三例。脉冲例采用标准时间函数，说明可直接由字典表达的变化。仅在需要坐标、网格数据或特殊函数关系时，再考虑嵌入代码。</p>
 <h2>2 球冠初场的几何推导</h2>
-<pre><code>codeStream__interFoam_N24_theta90 由理论体积和角度求球半径及球心，再遍历单元中心。中心位于球内时 alpha.water=0，否则为 1。网格改变后重新生成与当前坐标匹配的列表。
-半径 R、气侧角 θg 的球冠，其球心高度为 −Rcosθg，壁上高度 h=R(1−cosθg)，体积 V=πh²(R−h/3)=πR³(2−3cosθg+cos³θg)/3。本例 θg=90°，球心位于壁面，气泡为半球。代码按 V=2.6179938779914943×10⁻¹⁰ m³ 计算半径。</code></pre>
+<p>codeStream__interFoam_N24_theta90 由理论体积和角度求球半径及球心，再遍历单元中心。中心位于球内时 alpha.water=0，否则为 1。网格改变后重新生成与当前坐标匹配的列表。</p>
+<p>半径 R、气侧角 θg 的球冠，其球心高度为 −Rcosθg，壁上高度 h=R(1−cosθg)，体积 V=πh²(R−h/3)=πR³(2−3cosθg+cos³θg)/3。本例 θg=90°，球心位于壁面，气泡为半球。代码按 V=2.6179938779914943×10⁻¹⁰ m³ 计算半径。</p>
 <p>按单元中心判定相分布未精确计算球面与各单元的交体积，离散初始体积为 2.583272455422624×10⁻¹⁰ m³，与理论值存在偏差。应先核对初始体积，再评价输运守恒；修改半径或球心后需重新检查位置并积分体积。</p>
 <h2>3 codeStream代码的输入与输出</h2>
 <p>代码取得所属网格，用 mesh.C() 读取中心坐标，以 mesh.nCells() 分配标量列表。核心语句如下：</p>
@@ -67,29 +67,29 @@ forAll(alpha,celli)
 &#123;
     if (mag(mesh.C()[celli]-centre)&lt;R) alpha[celli]=0.0;
 &#125;
-alpha.writeEntry(&quot;&quot;,os);
-前两行依次取得含网格信息的字典对象和 fvMesh。scalarField 创建与单元数等长、初值为 1 的数组；forAll 遍历单元，mag 计算中心至球心的距离，满足条件者赋 0。writeEntry 将完整列表写入 internalField 的输出流。</code></pre>
+alpha.writeEntry(&quot;&quot;,os);</code></pre>
+<p>前两行依次取得含网格信息的字典对象和 fvMesh。scalarField 创建与单元数等长、初值为 1 的数组；forAll 遍历单元，mag 计算中心至球心的距离，满足条件者赋 0。writeEntry 将完整列表写入 internalField 的输出流。</p>
 <p>输出类型应与字段类型一致。alpha.water 是 volScalarField，输出标量列表；若生成速度初场，则应使用向量列表及相应类型。列表长度应来自当前网格，不能固定为某个旧网格的单元数。初始气体区域很小时，还应检查是否存在足够多单元中心落入该区域，避免几何存在而离散气体为空。</p>
 <p>代码块由 #{ 与 #} 包围，codeInclude 声明头文件，codeOptions 指定头文件搜索路径，codeLibs 指定所需库。初场读取与运行时编译的日志应在首次运行时核对。修改后检查 dynamicCode 的重新编译记录，再显示初始场，确认使用了当前代码。</p>
 <h2>4 codedMixed与网格距离</h2>
-<pre><code>coded_linear_robin 沿用第 22 讲：T 无量纲，D=1 m²/s、h=1000 m/s、参考值 0.01、顶部为零。联立 Robin 与面梯度关系得 β=h/(h+D/d)，每个面的 d 由当前网格确定。</code></pre>
+<p>coded_linear_robin 沿用第 22 讲：T 无量纲，D=1 m²/s、h=1000 m/s、参考值 0.01、顶部为零。联立 Robin 与面梯度关系得 β=h/(h+D/d)，每个面的 d 由当前网格确定。</p>
 <p>当前边界代码直接读取 patch().deltaCoeffs()，即该距离的倒数：</p>
 <pre><code>const scalar h = 1000;
 const scalar diffusivity = 1;
 this-&gt;refValue() = 0.01;
 this-&gt;refGrad() = 0;
-this-&gt;valueFraction() = h/(h + diffusivity*this-&gt;patch().deltaCoeffs());
-this 指向当前边界对象，refValue、refGrad 和 valueFraction 分别访问参考值、参考梯度和混合权重。一个常数可以赋给整个面字段，距离倒数则逐面参与计算。对于非均匀网格，不同边界面的权重可不同，但物理交换系数 h 保持一致。</code></pre>
+this-&gt;valueFraction() = h/(h + diffusivity*this-&gt;patch().deltaCoeffs());</code></pre>
+<p>this 指向当前边界对象，refValue、refGrad 和 valueFraction 分别访问参考值、参考梯度和混合权重。一个常数可以赋给整个面字段，距离倒数则逐面参与计算。对于非均匀网格，不同边界面的权重可不同，但物理交换系数 h 保持一致。</p>
 <p>当前均匀网格中 d=1.25×10⁻⁵ m，β=1/81，与标准 mixed 一致。网格加密一倍后 d 减半，代码会计算 β=1/161。相比手工固定 valueFraction，这种写法把网格几何与物理参数分开处理。若将 h 或 D 改变，也应同步修改对应的物性与边界参数，保持推导关系一致。</p>
-<pre><code>name classroomRobin 指定运行时生成类型的名称。字典中保留 refValue、refGradient、valueFraction 和 value 的初始条目，代码更新时再依据当前网格赋值。重复使用名称时应确保对应实现一致，避免把旧缓存或另一边界类型误认为当前代码。</code></pre>
+<p>name classroomRobin 指定运行时生成类型的名称。字典中保留 refValue、refGradient、valueFraction 和 value 的初始条目，代码更新时再依据当前网格赋值。重复使用名称时应确保对应实现一致，避免把旧缓存或另一边界类型误认为当前代码。</p>
 <h2>5 线性边界的实际验证</h2>
 <p>最终中心值范围为 0.0000625～0.0049375，通量 5.0，与标准 mixed 一致。解析壁面值为 0.005，首层中心低于壁面，差异正对应线性剖面的半格距离。</p>
 <figure><img loading="lazy" src="/assets/lessons/24/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图中标量沿 y 线性下降，表明当前边界交换和内部扩散形成稳态。验证重点包括通量、剖面斜率和壁面值。编译完成只说明代码能被构建，数值比较才能检查权重公式、法向符号及距离使用是否正确。</p>
 <p>测试时先保持与标准 mixed 完全相同的网格和物理参数，再比较结果。随后才改变网格，检查代码是否保持同一 h。若非均匀网格出现偏差，应逐面检查 deltaCoeffs、参考值和边界位置，确认相邻单元距离与推导中的 d 对应。</p>
 <h2>6 时间表脉冲通量</h2>
-<pre><code>pulse_flux 采用 laplacianFoam 计算浓度扩散，D=4.5×10⁻⁹ m²/s，初始浓度为零。底面使用 uniformFixedGradient，uniformGradient 由 table 指定，当前时间表如下：
-values ((0 100000)
+<p>pulse_flux 采用 laplacianFoam 计算浓度扩散，D=4.5×10⁻⁹ m²/s，初始浓度为零。底面使用 uniformFixedGradient，uniformGradient 由 table 指定，当前时间表如下：</p>
+<pre><code>values ((0 100000)
     (0.0099 100000)
     (0.01 0)
     (0.0199 0)
@@ -102,8 +102,8 @@ values ((0 100000)
 <figure><img loading="lazy" src="/assets/lessons/24/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>脉冲停止后，已进入域内的浓度仍继续扩散，因此最终壁面附近浓度不立即归零。判断时间边界的作用，应同时分析输入函数和场的响应。若需要观察完整时序，应在独立副本中增加保存频率；当前正式结果主要保存最终时刻，不能从一帧场推断每个脉冲峰值。</p>
 <h2>7 编译 求解与错误定位</h2>
-<pre><code>初场算例的运行先生成网格，再由 interFoam 读取并编译 codeStream；Robin 和脉冲例采用 blockMesh、checkMesh、laplacianFoam 的顺序。三个算例分别包含完整 Allrun.sh 和输入字典，运行时代码不依赖其他讲次的文件。代码错误与物理设置错误应按发生阶段区分。
-foamDictionary 0/T -disableFunctionEntries -entry boundaryField
+<p>初场算例的运行先生成网格，再由 interFoam 读取并编译 codeStream；Robin 和脉冲例采用 blockMesh、checkMesh、laplacianFoam 的顺序。三个算例分别包含完整 Allrun.sh 和输入字典，运行时代码不依赖其他讲次的文件。代码错误与物理设置错误应按发生阶段区分。</p>
+<pre><code>foamDictionary 0/T -disableFunctionEntries -entry boundaryField
 ls dynamicCode
 head -n 20 log.laplacianFoam</code></pre>
 <p>第一条已测试命令在不展开功能条目的条件下查看原始边界内容，适合阅读包含代码的字典。dynamicCode 保存生成与编译信息，求解日志反映加载和运行状态。排查 C++ 错误时先查第一条 error，后续提示可能由同一缺失类型或头文件引起。</p>
@@ -127,10 +127,10 @@ head -n 20 log.laplacianFoam</code></pre>
 <h3>独立复算与代码记录</h3>
 <p>复算包含动态代码的算例时，保留字典、网格输入和所需物性即可重新编译；生成缓存可按需要清理。检查首次编译和再次运行的日志，可以确认构建过程与数值过程分别完成。需要比较修改前后的结果时，应保留不同目录及对应源代码，而非覆盖字典后依赖旧日志解释结果。</p>
 <p>代码说明宜先写数学关系，再指出各变量对应的对象和单位，最后给出验证量。对于本讲 Robin 边界，关系是线性交换，对象是边界面距离，验证量是解析通量；对于球冠初场，关系是球面几何，对象是单元中心，验证量是体积和位置。按照这一顺序，可以把代码实现与数值问题直接联系起来。</p>
-<pre><code>本讲依据本机 v2512 的 codeStream、codedMixed 与 uniformFixedGradient 接口，以及当前三个算例的字典和测试记录。已有 all-slides.pdf 第815—873页介绍运行时代码与边界基础，具体语法应结合所附 v2512 命令资料及本地源码核对。</code></pre>
+<p>本讲依据本机 v2512 的 codeStream、codedMixed 与 uniformFixedGradient 接口，以及当前三个算例的字典和测试记录。已有 all-slides.pdf 第815—873页介绍运行时代码与边界基础，具体语法应结合所附 v2512 命令资料及本地源码核对。</p>
 <h2>9 运行时边界的离散一致性</h2>
 <p>运行时C++降低了新增边界条件的编译组织成本，但仍然需要完整的数学检验。codeStream通常在字典读取过程中执行，用于生成初始字段或参数列表；codedFixedValue与codedMixed属于边界更新过程，其计算时刻取决于字段求解和边界求值顺序。阅读代码时应先确定执行阶段，再判断使用的时间、内部场和几何量是否为本次求解所需的数据。</p>
-<pre><code>线性Robin条件是检验codedMixed的合适问题。代码根据当前边界的deltaCoeffs计算D/δ，再形成h/(h+D/δ)。这一过程应在不同网格下给出同一物理交换系数h，而非同一固定权重。把第22讲的解析通量、普通mixed及codedMixed并列比较，可以分别检查公式、字典与代码。输出字段有限且程序正常结束仅说明基本数值计算完成；通量大小与收支关系才反映边界是否正确实现。</code></pre>
+<p>线性Robin条件是检验codedMixed的合适问题。代码根据当前边界的deltaCoeffs计算D/δ，再形成h/(h+D/δ)。这一过程应在不同网格下给出同一物理交换系数h，而非同一固定权重。把第22讲的解析通量、普通mixed及codedMixed并列比较，可以分别检查公式、字典与代码。输出字段有限且程序正常结束仅说明基本数值计算完成；通量大小与收支关系才反映边界是否正确实现。</p>
 <p>脉冲通量还涉及时间积分。若时间表采用线性插值，节点间通量呈线性变化，累计输入可按梯形面积计算；若采用保持前值的阶跃定义，积分应按矩形面积计算。两种定义在相同节点下可能产生不同总输入。求解器对一个时间步采用的边界值还与更新时间及离散格式有关。应直接根据实际时间步记录构造累计输入，并与域内总量变化比较。</p>
 <p>验证时先令通量为零，确认初始均匀场保持；再采用恒通量与解析扩散解比较；最后设置单个脉冲，逐次减小开关附近的时间步，分析累计输入误差与扩散剖面。若完整脉冲宽度小于一个时间步，求解器可能跳过输入变化，或按某一端点值施加过长时间。对多个周期，累计误差还会逐步扩大。因此时间表节点、时间步和保存间隔应分别设置并说明用途。</p>
 <section class="exercise"><h2>课后练习</h2><p>用 codeStream 写一个参数化的球冠种子气泡初始化模板（体积、接触角、位置可改），用 ParaView 验证初始体积与接触角正确。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>

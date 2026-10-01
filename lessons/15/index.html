@@ -54,10 +54,10 @@
 <p>离散系统 Ax=b 在近似解 xk 下的残差为 r=b−Axk，表示代数方程的不平衡。OpenFOAM 通常报告归一化初始与最终残差，分别对应本次线性求解开始和结束。</p>
 <p>残差与解误差通过离散矩阵相联系。可逆系统中有 A(x−xk)=r，同样的残差在不同矩阵下可对应不同误差。矩阵条件、归一化和变量尺度均影响其含义，不能据压力与速度残差的数值大小直接比较两者精度。</p>
 <p>线性残差下降表明代数求解更充分，但方程仍包含时空离散误差，模型输入也可能不符合研究对象。应分别检查：日志中的线性迭代、网格和时间步对照，以及边界通量、单位和物性设置。</p>
-<pre><code>transient_residuals 方腔用于分析启动过程的残差与速度，open_channel 通道用于分析速度入口、压力出口和回流处理。两者的几何、网格及物性不同，应比较边界约束和收敛判据的作用，不宜逐单元相减其最终场。</code></pre>
+<p>transient_residuals 方腔用于分析启动过程的残差与速度，open_channel 通道用于分析速度入口、压力出口和回流处理。两者的几何、网格及物性不同，应比较边界约束和收敛判据的作用，不宜逐单元相减其最终场。</p>
 <h2>2 瞬态残差与稳态判据</h2>
 <p>瞬态推进更新旧时层、系数及源项，所以上一步已充分收敛时，下一步初始残差仍可能升高。应结合流场变化解释新方程与旧解的差异；周期流动的残差还可能随物理信号周期变化。</p>
-<pre><code>transient_residuals 使用 400 个单元，Δt=0.005 s，计算至 0.5 s。100 个时间步各进行两次压力修正，故日志含 200 条压力求解记录。最终速度最大值约为 0.838261 m/s，反映启动后的流动发展；代数残差下降不代表物理变化停止。</code></pre>
+<p>transient_residuals 使用 400 个单元，Δt=0.005 s，计算至 0.5 s。100 个时间步各进行两次压力修正，故日志含 200 条压力求解记录。最终速度最大值约为 0.838261 m/s，反映启动后的流动发展；代数残差下降不代表物理变化停止。</p>
 <figure><img loading="lazy" src="/assets/lessons/15/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图中横轴为线性求解调用序号。与物理速度曲线比较时，应由 Time 标签恢复各记录的时刻；用于算法分析时则明确保留调用序号。将每次调用误作一个时间步，会因步内多次修正而错误估计时间、频率和变化速率。</p>
 <p>稳态需要目标量在足够长区间内保持稳定。例如流量、阻力、中线速度或监测点压力的变化幅度应小于预先规定的容许值。若关注百分之一的力差异，数值波动就应显著低于这一尺度。达到某个线性残差阈值而目标量仍持续漂移时，应继续计算并分析漂移原因。</p>
@@ -69,14 +69,14 @@
 <p>对边界错误的诊断应早于容差调整。若一个封闭域被赋予净流入而没有相应流出，不可压缩连续性本身难以满足；进一步收紧压力容差只是在不相容约束下增加求解工作。先计算总体边界通量，确认控制方程存在所要求的解，再分析代数收敛效率。</p>
 <p>线性残差的归一化还意味着它通常不直接带有原场单位。速度残差为某个小数，并不表示速度误差就是同样数值的米每秒。若需要评价速度精度，应与参考速度场、网格加密结果或实验数据比较，并明确误差单位或无量纲分母。对于压力，同样需要先确定运动学压力还是物理压力，再比较数值。保留这一区分可以避免把日志收敛阈值直接写成计算精度。</p>
 <h2>4 场值 法向梯度与壁面约束</h2>
-<pre><code>fixedValue 约束边界值，zeroGradient 约束外法向导数。固定温度与绝热分别属于这两类条件。零梯度允许非零边界值，也允许非零对流通量，不能据此推断总通量为零。</code></pre>
+<p>fixedValue 约束边界值，zeroGradient 约束外法向导数。固定温度与绝热分别属于这两类条件。零梯度允许非零边界值，也允许非零对流通量，不能据此推断总通量为零。</p>
 <p>对速度场，noSlip 将静止壁面速度设为零。slip 限制法向速度并允许切向滑动，对应的壁面剪切行为不同。symmetryPlane 要求镜面对称，法向速度及适当变量的法向导数满足对称约束。把有显著剪切的固体表面改为对称面，会改变实际边界问题，不能仅以计算更易收敛作为选择依据。</p>
 <p>入口出口条件需要不同变量配套。不可压缩通道常在入口指定速度、压力采用零梯度，在出口指定压力、速度采用适宜流出条件。入口速度确定流入量，出口压力确定参考及驱动力响应，出口速度则由内部流动和连续性调整。若两端同时强制不相容的流量，就会与整体守恒冲突。</p>
-<pre><code>inletOutlet 根据面通量方向切换：流出时通常采用零梯度，回流时采用 inletValue。回流值代表计算域外侧流体的状态，并非为了让数值稳定而任意填写。对于速度、温度或浓度，应分别给出与外部流体相符的值。若出口处存在长期显著回流，还需分析边界位置是否过于接近回流区。
-网格 patch 的 type 与场文件中的边界 type 处于不同层次。前者影响几何分类和某些专用模型，后者规定该变量的约束。一个边界名为 wall 不会自动产生无滑移条件，反之某些场条件能够在一般 patch 上执行，但需要壁面函数或壁面统计时仍应核对网格类型。</code></pre>
+<p>inletOutlet 根据面通量方向切换：流出时通常采用零梯度，回流时采用 inletValue。回流值代表计算域外侧流体的状态，并非为了让数值稳定而任意填写。对于速度、温度或浓度，应分别给出与外部流体相符的值。若出口处存在长期显著回流，还需分析边界位置是否过于接近回流区。</p>
+<p>网格 patch 的 type 与场文件中的边界 type 处于不同层次。前者影响几何分类和某些专用模型，后者规定该变量的约束。一个边界名为 wall 不会自动产生无滑移条件，反之某些场条件能够在一般 patch 上执行，但需要壁面函数或壁面统计时仍应核对网格类型。</p>
 <h2>5 开口通道的输入与通量</h2>
-<pre><code>open_channel 尺寸为 2 m×0.4 m×0.02 m，网格 30×10×1、共 300 单元，前后 empty，ν=0.01 m²/s。初始速度为零，左侧给定 (1 0 0) m/s，右侧 inletOutlet 的回流值同为 (1 0 0) m/s，上下壁面为 noSlip。
-left
+<p>open_channel 尺寸为 2 m×0.4 m×0.02 m，网格 30×10×1、共 300 单元，前后 empty，ν=0.01 m²/s。初始速度为零，左侧给定 (1 0 0) m/s，右侧 inletOutlet 的回流值同为 (1 0 0) m/s，上下壁面为 noSlip。</p>
+<pre><code>left
 &#123;
     type fixedValue;
     value uniform (1 0 0);
@@ -89,7 +89,7 @@ right
 &#125;</code></pre>
 <p>压力左侧和上下侧采用 zeroGradient，右侧采用 fixedValue，数值为零。p 的量纲为 m²/s²，因此右侧规定的是运动学表压基准。若需要换算为帕，应乘所采用的恒定密度。压力字段中的负值表示低于参考压力，并不自动代表不合理的绝对压力。</p>
 <p>入口面积为 0.4×0.02=0.008 m²，入口平均速度为1 m/s，所以流入体积流量为 0.008 m³/s。按计算域外法向，左侧通量为负。若达到整体不可压缩通量平衡，右侧带符号流量应与其抵消。壁面法向速度为零，不贡献穿壁对流通量。</p>
-<pre><code>当前 blockMeshDict 中 left、right 的网格类型实际写为 wall，top 为 patch，而速度边界如上设置。应分别读取网格类别与场边界条件。扩展本例前，宜将入口、出口的网格类型设为 patch，将静止固壁设为 wall，并核对相应场条件及壁面模型要求。</code></pre>
+<p>当前 blockMeshDict 中 left、right 的网格类型实际写为 wall，top 为 patch，而速度边界如上设置。应分别读取网格类别与场边界条件。扩展本例前，宜将入口、出口的网格类型设为 patch，将静止固壁设为 wall，并核对相应场条件及壁面模型要求。</p>
 <p>通道时间步为 0.0025 s，终止于 0.2 s，共八十步。入口平均速度在边界立即指定，域内流场仍经历压力调整和黏性发展。流动沿全长的对流时间约为二秒，当前时长短于这一尺度，因而最终图用于观察启动状态，不能直接当作充分发展通道流的剖面。</p>
 <h2>6 运行结果与守恒检查</h2>
 <pre><code>source /usr/lib/openfoam/openfoam2512/etc/bashrc
@@ -98,7 +98,7 @@ cd 代码/open_channel
 <p>脚本执行 blockMesh、checkMesh、icoFoam，并计算最后时刻的速度大小。网格检查确定几何与拓扑，求解日志提供压力速度迭代，结果场用于计算局部速度及压力。检查顺序应把三种信息联系起来，避免用某一项通过代替全部验证。</p>
 <figure><img loading="lazy" src="/assets/lessons/15/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>零点二秒全域最大速度大小约为 1.275325 m/s，高于入口均匀速度。局部速度大于入口平均值可来自分布调整与流量约束，应结合剖面和积分解释；仅凭局部极值不能认定流量增加。单元压力最小值约为 0.0327303 m²/s²，最大值约为 2.454920 m²/s²，边界出口固定值为零，单元中心值不必等于边界值。</p>
-<pre><code>最终连续性日志的 sum local 约为 5.33×10⁻¹¹，global 约为 1.82×10⁻¹²，cumulative 约为 9.73×10⁻⁷。这些值由求解器按特定时间和归一化方式统计，用于跟踪通量不平衡；其中累积量包含前面时间步的贡献，不能直接当成最终瞬间的流量误差。需要实际入口出口流量时，应积分 phi 并核对其量纲。</code></pre>
+<p>最终连续性日志的 sum local 约为 5.33×10⁻¹¹，global 约为 1.82×10⁻¹²，cumulative 约为 9.73×10⁻⁷。这些值由求解器按特定时间和归一化方式统计，用于跟踪通量不平衡；其中累积量包含前面时间步的贡献，不能直接当成最终瞬间的流量误差。需要实际入口出口流量时，应积分 phi 并核对其量纲。</p>
 <figure><img loading="lazy" src="/assets/lessons/15/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>方腔没有穿过壁面的净流量，速度仍可形成循环。通道存在持续流入流出，两者的压力参考和边界约束不同。并列分析这两种流动，有助于理解总体零净通量与局部非零流动可以同时存在，连续性约束的是每个控制体的收支，而非所有速度都为零。</p>
 <h2>7 故障定位与结果记录</h2>
@@ -113,17 +113,17 @@ cd 代码/open_channel
 <pre><code>foamHelp boundary -help
 pimpleFoam -listVectorBCs
 foamDictionary 0/U -entry boundaryField
-foamDictionary 0/p -entry boundaryField
-foamHelp 的 boundary 子命令位于选项之前，-listVectorBCs 用于查询已注册的向量边界类型。</code></pre>
+foamDictionary 0/p -entry boundaryField</code></pre>
+<p>foamHelp 的 boundary 子命令位于选项之前，-listVectorBCs 用于查询已注册的向量边界类型。</p>
 <p>本例入口指定速度、出口指定压力，U 的 inletOutlet 根据通量方向处理流出及回流。</p>
-<pre><code>type wall 指定网格边界类型，noSlip 指定速度边界条件，需同时核对网格及各场设置。</code></pre>
+<p>type wall 指定网格边界类型，noSlip 指定速度边界条件，需同时核对网格及各场设置。</p>
 <h3>压力参考与残差</h3>
 <p>执行目录为 代码/open_channel。</p>
 <pre><code>foamDictionary 0/p -entry dimensions -value
 foamDictionary system/fvSolution -entry PISO
 tail -n 20 log.icoFoam</code></pre>
 <p>本例 p 的单位为 m2/s2，出口定值确定压力基准；封闭方腔通过 pRefCell 和 pRefValue 等设置确定参考。</p>
-<pre><code>interFoam 与 Boussinesq 求解器的 p_rgh 量纲可能不同，应核对 dimensions 及对应方程。</code></pre>
+<p>interFoam 与 Boussinesq 求解器的 p_rgh 量纲可能不同，应核对 dimensions 及对应方程。</p>
 <p>负表压表示压力低于所选参考值。收敛检查还应包括流量、速度变化及连续性误差。</p>
 <h2>9 压力零点与标量边界通量</h2>
 <p>不可压缩动量方程通过压力梯度影响速度。若所有压力边界只规定法向梯度，给压力场增加任意常数不会改变这些条件，线性系统因此需要参考约束以确定唯一压力零点。封闭方腔通常设置参考单元和参考值；开放通道可通过固定出口压力提供参考。比较两个压力结果时，应先统一参考条件，再判断梯度和流动是否不同。</p>
@@ -138,9 +138,9 @@ tail -n 20 log.icoFoam</code></pre>
 <p>被动浓度满足∂c/∂t+∇·(Uc)=D∇²c，其中D=2e−5 m²/s。Schmidt数Sc=ν/D=0.75。以入口高度H=0.01m为尺度，入口A的Re=UH/ν=200，Pe=UH/D=150；入口B在两组中分别为Re=200、400，Pe=150、300。主通道出口的平均速度更高，无量纲数应注明取值位置，不能只给一个没有定义的Re。</p>
 <p>对流时间约为L/U，横向扩散时间约为H²/D。二者之比形成Pe，因此Pe较大时，即使示踪物已经到达出口，横向浓度仍可能不均匀。汇流处的流向改变、剪切层与回流会改变局部停留时间和浓度梯度，随后扩散逐步削弱梯度。增加D会改变模型的物理扩散强度，不能把它当作使图片变平滑的作图参数。</p>
 <h2>13 求解器与函数对象的配置</h2>
-<pre><code>pimpleFoam求解速度和压力，scalarTransport函数对象读取当前phi，推进浓度c。该函数对象来自v2512的solverFunctionObjects库。本机官方TJunction案例也采用这一机制。本例使用0/c提供初始场和边界，fvSchemes提供div(phi,c)等格式，fvSolution提供c的线性求解参数。
-动量与浓度采用backward时间离散，动量对流采用linearUpwind，浓度对流采用limitedLinear 1。PIMPLE外迭代两次、压力修正两次，固定时间步0.0005s，计算至1.2s。浓度函数对象的D为常系数，单位m²/s。运行时可在同一log.pimpleFoam中分别检索速度、压力和c的求解过程。
-Allrun.sh只需执行blockMesh、checkMesh、pimpleFoam和标准后处理命令。</code></pre>
+<p>pimpleFoam求解速度和压力，scalarTransport函数对象读取当前phi，推进浓度c。该函数对象来自v2512的solverFunctionObjects库。本机官方TJunction案例也采用这一机制。本例使用0/c提供初始场和边界，fvSchemes提供div(phi,c)等格式，fvSolution提供c的线性求解参数。</p>
+<p>动量与浓度采用backward时间离散，动量对流采用linearUpwind，浓度对流采用limitedLinear 1。PIMPLE外迭代两次、压力修正两次，固定时间步0.0005s，计算至1.2s。浓度函数对象的D为常系数，单位m²/s。运行时可在同一log.pimpleFoam中分别检索速度、压力和c的求解过程。</p>
+<pre><code>Allrun.sh只需执行blockMesh、checkMesh、pimpleFoam和标准后处理命令。</code></pre>
 <p>入口浓度采用fixedValue，壁面采用零梯度。出口只有在完全流出时才适用当前的零梯度浓度条件。最初的60mm下游通道试算中，不等流量组回流延伸到出口，虽然整体流量守恒，出口混合统计仍受到影响。最终将两组共同延长至140mm，并重新计算。该修正体现了边界位置必须由流动结果检验，而不能只凭命令能执行便认定计算域足够。</p>
 <h2>14 平均浓度与混合均匀性的区别</h2>
 <p>当示踪库存不再变化且边界扩散贡献可忽略时，出口通量加权平均浓度满足cideal=(QAcA+QBcB)/(QA+QB)。两组分别为0.5和2/3。出口的面积平均c与通量加权平均c不同：前者每单位面积权重相同，后者流量较大的位置权重更大。本节使用phi作为权重，使统计与实际示踪通量对应。</p>
@@ -157,7 +157,7 @@ Allrun.sh只需执行blockMesh、checkMesh、pimpleFoam和标准后处理命令�
 <p>本节的二维模型能够说明汇流、回流和分子扩散，但不包含三维横截面二次流。后续设计研究可以改变下游长度、支路角度或流量分配；若几何变化引入明显三维效应，应扩展为三维计算，而不能沿用empty约束后仍解释三维混合机制。</p>
 <h2>17 后台阶湍流分离与再附着</h2>
 <h3>几何 流动与研究量</h3>
-<pre><code>后台阶使来流边界层离开壁面，在台阶后形成分离剪切层和回流区，随后在下游再附着。本例采用本机 v2512 的 backwardFacingStep2D 网格，以台阶高度 h=0.0127 m 为长度尺度。入口位于 x/h=−130，出口位于 x/h=50，网格共 20540 个单元。前后平面为 empty，表示二维平均流动，不能用于预测三维湍流瞬时结构。</code></pre>
+<p>后台阶使来流边界层离开壁面，在台阶后形成分离剪切层和回流区，随后在下游再附着。本例采用本机 v2512 的 backwardFacingStep2D 网格，以台阶高度 h=0.0127 m 为长度尺度。入口位于 x/h=−130，出口位于 x/h=50，网格共 20540 个单元。前后平面为 empty，表示二维平均流动，不能用于预测三维湍流瞬时结构。</p>
 <p>入口速度为 44.2 m/s，运动黏度为 1.56×10⁻⁵ m²/s，Re_h=35983.3。入口上、下游短段采用对称边界，随后设置无滑移壁面，使边界层在到达台阶前发展。出口指定运动学压力为零，速度采用零梯度。长入口段的作用需要从台阶前剖面验证，而不能只依据其长度推断边界层符合实验。</p>
 <h3>RANS 模型与近壁条件</h3>
 <p>稳态 RANS 动量方程包含平均对流、压力梯度、分子黏性应力和雷诺应力。kOmegaSST 通过 k 和 ω 两个输运方程计算湍动能和比耗散率，并由涡黏性近似封闭雷诺应力。SST 的混合函数与应力限制参与近壁和外层计算，模型选择不能只由目录中的 RASModel 名称判断，还应核对其余物性与壁面条件。</p>
@@ -166,7 +166,7 @@ Allrun.sh只需执行blockMesh、checkMesh、pimpleFoam和标准后处理命令�
 <p>近壁网格沿法向分级，采用 nutUBlendedWallFunction、omegaWallFunction 和 kqRWallFunction。当前下壁 yPlus 范围为 0.0023693–5.1222，面积加权均值 1.5277；上壁均值 1.2457。</p>
 <p>这是细近壁网格配合混合壁函数的设置，不能仅因大部分 yPlus 接近 1，就称为完全解析黏性底层的低雷诺数模型。尖角附近应单独查看局部网格及壁面量，不能只报告平均 yPlus。</p>
 <h3>离散 松弛与收敛</h3>
-<pre><code>本例采用 steadyState 时间格式，5000 表示 SIMPLE 迭代次数，不是 5000 s。速度对流采用 bounded Gauss linearUpwind grad(U)，梯度采用 cellLimited Gauss linear 1，湍流变量采用有界上风输运。压力场松弛为 0.3，速度和湍流方程松弛为 0.5。这些设置用于降低初始过渡中的非线性振荡，同时保留速度方程的梯度修正。</code></pre>
+<p>本例采用 steadyState 时间格式，5000 表示 SIMPLE 迭代次数，不是 5000 s。速度对流采用 bounded Gauss linearUpwind grad(U)，梯度采用 cellLimited Gauss linear 1，湍流变量采用有界上风输运。压力场松弛为 0.3，速度和湍流方程松弛为 0.5。这些设置用于降低初始过渡中的非线性振荡，同时保留速度方程的梯度修正。</p>
 <p>最后 200 次的压力初始归一化残差在约 9.91e-05–0.000125 之间波动。最后一次 Ux、Uy 初始残差分别为 1.07e-08 和 7.3e-08，不能把这些变量的归一化数值当作同一量纲的误差比较。</p>
 <p>最后两个保存结果之间的速度场相对 L2 变化为 3.45e-06，最后 250 次再附着位置变化为 1.78e-06h，进出口体积通量相对不平衡为 1.56e-09。这些指标分别描述代数迭代、目标量稳定性和质量守恒。</p>
 <h3>再附着 压力恢复与实验对照</h3>
@@ -174,8 +174,8 @@ Allrun.sh只需执行blockMesh、checkMesh、pimpleFoam和标准后处理命令�
 <p>该差异超过实验所列再附着不确定度，需要进一步比较网格、入口发展边界层和模型误差，不能以求解完成替代实验验证。</p>
 <p>入口减出口的面积平均运动学静压差为 -12.3356 m²/s²，负值表示扩张后的静压恢复。能量损失另用总压衡量：将 p+|U|²/2 按边界通量加权，本次运动学总压损失为 147.0507 m²/s²。静压恢复与总压损失可以同时发生，二者不能混用。</p>
 <h3>运行与后续研究</h3>
-<pre><code>进入代码/backward_step_SST 后运行 ./Allrun.sh。脚本依次执行 blockMesh、checkMesh、simpleFoam、yPlus 后处理和 VTK 输出。
-system/sample 保留 x/h=1、4、6、10 的速度采样；reference/cf.exp.dat 保存公开实验摩擦系数数据，图中已叠加误差棒。后续网格研究应同时细化剪切层和近壁单元，并保持入口、离散设置及停止准则一致，再比较再附着位置、δ99 和总压损失。</code></pre>
+<p>进入代码/backward_step_SST 后运行 ./Allrun.sh。脚本依次执行 blockMesh、checkMesh、simpleFoam、yPlus 后处理和 VTK 输出。</p>
+<p>system/sample 保留 x/h=1、4、6、10 的速度采样；reference/cf.exp.dat 保存公开实验摩擦系数数据，图中已叠加误差棒。后续网格研究应同时细化剪切层和近壁单元，并保持入口、离散设置及停止准则一致，再比较再附着位置、δ99 和总压损失。</p>
 <p>实验条件与数据来源：Turbulence Modeling Resource 后台阶验证案例。当前计算输入由本机 v2512 官方教程定制。</p>
 <h2>18 计算结果与数据来源</h2>
 <p>下列图表由本讲独立算例的实际保存场、采样数据或原始日志生成。各图的计算条件与误差定义见前述案例分析，原始数值保存在本讲测试结果。</p>
@@ -192,7 +192,7 @@ system/sample 保留 x/h=1、4、6、10 的速度采样；reference/cf.exp.dat �
 <figure><img loading="lazy" src="/assets/lessons/15/image9.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>依据本次完整测试的实际网格、场数据或日志绘制，数据来源见对应算例测试记录。</p>
 <h2>19 资料来源</h2>
-<pre><code>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 716–769 页。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</code></pre>
+<p>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 716–769 页。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</p>
 <section class="exercise"><h2>课后练习</h2><p>为“微电极上单个气泡生长”设计完整的边界条件方案（U、p_rgh、alpha.water、溶解气体浓度 c、电势 φ 五个场），逐条说明选择理由与失效风险。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
 </div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="15">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=15">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/14/">← 上一讲<span>压力速度耦合</span></a><a href="/lessons/16/">下一讲 →<span>格式误差实验</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
 </main>

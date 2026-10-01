@@ -51,13 +51,13 @@
 <p>配套算例位于原课程“03_算例目录与量纲”目录。文中相对路径以该讲目录或已注明的算例目录为准。</p>
 <pre><code>OpenCFD OpenFOAM v2512</code></pre>
 <h2>1 按计算内容组织输入</h2>
-<pre><code>OpenFOAM 算例由网格、初始场、边界条件、物性及数值字典共同定义。网格规定求解域和单元，初边值条件规定流动约束，物性进入控制方程，数值字典规定离散与迭代方法。修改参数前先确定其所属内容及文件位置，再检查关联输入是否需要同步调整。</code></pre>
+<p>OpenFOAM 算例由网格、初始场、边界条件、物性及数值字典共同定义。网格规定求解域和单元，初边值条件规定流动约束，物性进入控制方程，数值字典规定离散与迭代方法。修改参数前先确定其所属内容及文件位置，再检查关联输入是否需要同步调整。</p>
 <p>本讲包含 baseline、dimensions 和 patch 三组独立算例。baseline 为正常方腔，后两组分别预设速度量纲和边界名称错误。三组均使用 400 个单元，计算域为 0.1 m×0.1 m×0.01 m，运动黏度为 0.001 m²/s。正常组以 0.005 s 时间步从静止状态计算至 0.1 s，用于对照输入读取和错误定位过程。</p>
 <p>参数修改应对应具体文件：顶盖速度位于 0/U 的 top 边界，黏度位于 constant/transportProperties，终止时间位于 system/controlDict。网格修改除编辑 blockMeshDict 外，还须重新生成网格。边界、物性、时间控制和空间离散应分别核查。</p>
 <p>常见输入目录为 0、constant 和 system。生成后的实际网格保存在 constant/polyMesh，计算场保存在按时间命名的目录中。网格字典记录生成条件，polyMesh 提供求解器实际读取的数据，两者均应保留；修改字典后须重新生成网格，才能使输入设置生效。</p>
 <h2>2 场文件的文件头与主体</h2>
-<pre><code>FoamFile 声明文件格式、类别和对象名。class=volVectorField 表示单元中心向量场，如速度 U；volScalarField 表示单元中心标量场，如压力 p。类别决定程序对数值及列表的解释。
-FoamFile
+<p>FoamFile 声明文件格式、类别和对象名。class=volVectorField 表示单元中心向量场，如速度 U；volScalarField 表示单元中心标量场，如压力 p。类别决定程序对数值及列表的解释。</p>
+<pre><code>FoamFile
 &#123;
     version 2.0;
     format ascii;
@@ -65,8 +65,8 @@ FoamFile
     object U;
 &#125;
 dimensions [0 1 -1 0 0 0 0];
-internalField uniform (0 0 0);
-version 2.0 表示文件格式版本，format ascii 表示文本存储，object U 表示速度对象。格式版本与 OpenFOAM 发行版本无关，使用 v2512 时仍保留 version 2.0。文件名、对象名和求解器要求的字段名称应相互一致。</code></pre>
+internalField uniform (0 0 0);</code></pre>
+<p>version 2.0 表示文件格式版本，format ascii 表示文本存储，object U 表示速度对象。格式版本与 OpenFOAM 发行版本无关，使用 v2512 时仍保留 version 2.0。文件名、对象名和求解器要求的字段名称应相互一致。</p>
 <p>文件主体中的 dimensions 定义量纲，internalField 定义内部初值，boundaryField 按网格边界名称给出边界条件。速度场的数值由三个分量构成，压力场每处只需一个标量。读取文件时，先确认变量及其类型，再检查量纲、数值和边界列表。</p>
 <p>同一变量在初始目录和结果目录中的写法可能不同。初始状态可以用 uniform 简洁表达，计算后的场则通常包含逐单元数据。这种变化来自数据存储方式，并不改变变量定义。保存结果采用非均匀列表后，列表长度与当前网格相关，不能忽略网格数量就直接迁移到另一张网格。</p>
 <h2>3 七位量纲及其运算</h2>
@@ -93,10 +93,10 @@ version 2.0 表示文件格式版本，format ascii 表示文本存储，object 
 <p>封闭方腔中的 p 采用零法向梯度边界，并在求解控制中设置参考单元和值。参考条件消除压力场中未确定的常数，不改变由压力差驱动的速度响应。初始压力为零只定义初始数值基准，并不表示计算中所有位置都保持零压力。</p>
 <p>进行压力设置时，可按以下顺序检查：先确定求解器方程中的压力定义，再查看字段量纲，随后进行数值换算，最后核对参考值和边界条件。如此可以将“变量名称相同但定义不同”的问题与普通的拼写错误区分开来。</p>
 <h2>5 内部初值与边界条件</h2>
-<pre><code>uniform 对所选区域赋相同数值。内部 uniform (0 0 0) 表示静止初场，顶盖 uniform (1 0 0) 表示给定壁面速度。二者分别作用于内部单元与边界面，可同时存在；启动后流场通过方程调整。
-nonuniform 则通过列表逐项保存数值。对内部单元场，列表中的数据数量应等于当前单元数；边界非均匀列表则需与相应边界面数一致。即使两个网格总单元数相同，其单元位置和编号也可能不同，直接复制列表未必保持正确的空间对应关系。非均匀场迁移需要考虑位置映射，而不只是列表长度。
-网格的 boundary 文件给出边界名称、网格类型、面数和起始面编号。场文件中的 boundaryField 按这些名称指定数值条件。本例包括 left、right、bottom、top 和 frontAndBack。名称的作用是连接同一个几何边界与各个场的条件，所以所有字段需要采用相容名称。
-left
+<p>uniform 对所选区域赋相同数值。内部 uniform (0 0 0) 表示静止初场，顶盖 uniform (1 0 0) 表示给定壁面速度。二者分别作用于内部单元与边界面，可同时存在；启动后流场通过方程调整。</p>
+<p>nonuniform 则通过列表逐项保存数值。对内部单元场，列表中的数据数量应等于当前单元数；边界非均匀列表则需与相应边界面数一致。即使两个网格总单元数相同，其单元位置和编号也可能不同，直接复制列表未必保持正确的空间对应关系。非均匀场迁移需要考虑位置映射，而不只是列表长度。</p>
+<p>网格的 boundary 文件给出边界名称、网格类型、面数和起始面编号。场文件中的 boundaryField 按这些名称指定数值条件。本例包括 left、right、bottom、top 和 frontAndBack。名称的作用是连接同一个几何边界与各个场的条件，所以所有字段需要采用相容名称。</p>
+<pre><code>left
 &#123;
     type noSlip;
 &#125;
@@ -115,13 +115,13 @@ frontAndBack
 <p>网格调整后出现的场读取错误也应按这一关系处理。增大平面网格的单元数，会增加内部场需要的元素数量；改变边界划分则可能改变某个边界的面数。均匀初值可以由程序按照当前网格展开，非均匀初值却包含旧网格数量。需要重新初始化或采用合适的场映射方法，使新网格上的数据具有明确空间含义。</p>
 <h2>6 字典语法与命令查询</h2>
 <p>普通条目使用关键字和值，并以英文分号结束。大括号定义子字典，圆括号用于列表，方括号用于量纲指数。注释帮助解释文件，但不参与数值读取。缺少分号时，解释器可能继续读取下一行，导致错误显示在后续位置，因此检查语法时应同时查看报错行及其前一条目。</p>
-<pre><code>fvSchemes 与 fvSolution 的作用不同。前者设置时间导数、梯度、散度和扩散项的离散格式；后者设置线性方程求解器、容差和压力速度修正。本例压力线性系统采用 PCG 与 DIC，速度采用 smoothSolver。PISO 中有两个压力修正，非正交修正参数为零。阅读这些条目时应按子字典所属对象解释，不能只按同名关键字检索后统一替换。
-foamDictionary system/controlDict -keywords
+<p>fvSchemes 与 fvSolution 的作用不同。前者设置时间导数、梯度、散度和扩散项的离散格式；后者设置线性方程求解器、容差和压力速度修正。本例压力线性系统采用 PCG 与 DIC，速度采用 smoothSolver。PISO 中有两个压力修正，非正交修正参数为零。阅读这些条目时应按子字典所属对象解释，不能只按同名关键字检索后统一替换。</p>
+<pre><code>foamDictionary system/controlDict -keywords
 foamDictionary system/controlDict -entry endTime -value
 foamDictionary 0/p -entry dimensions -value
-foamDictionary system/fvSolution -entry solvers/p
--keywords 列出关键字，-entry 指定条目，-value 只显示该条目的值。solvers/p 表示 solvers 内的 p 子字典。这样的层级查询使需要修改的位置明确，也能避免误将速度的容差改为压力容差。读取复杂字典时，可先查看顶层关键字，再逐层进入目标子字典。
-字典允许引用已经定义的条目。本例 pFinal 中的 $p 继承压力设置，再把 relTol 改为零，使最终调用采用相应停止条件。引用可减少重复书写，但也意味着某个实际设置不一定直接写在当前位置。foamDictionary 的 -expand 可查看展开结果；包含 codeStream 时，展开过程还可能涉及代码处理，普通查看应选用适当选项。</code></pre>
+foamDictionary system/fvSolution -entry solvers/p</code></pre>
+<p>-keywords 列出关键字，-entry 指定条目，-value 只显示该条目的值。solvers/p 表示 solvers 内的 p 子字典。这样的层级查询使需要修改的位置明确，也能避免误将速度的容差改为压力容差。读取复杂字典时，可先查看顶层关键字，再逐层进入目标子字典。</p>
+<p>字典允许引用已经定义的条目。本例 pFinal 中的 $p 继承压力设置，再把 relTol 改为零，使最终调用采用相应停止条件。引用可减少重复书写，但也意味着某个实际设置不一定直接写在当前位置。foamDictionary 的 -expand 可查看展开结果；包含 codeStream 时，展开过程还可能涉及代码处理，普通查看应选用适当选项。</p>
 <h2>7 完整修改例题</h2>
 <p>考虑只练习修改控制字典，而暂不改变主算例。先将 controlDict 复制为 controlDict.practice，再在副本中将 endTime 设为 0.8，最后读回该值。下面的命令已经在课程命令核查中使用，修改对象始终是 practice 副本。</p>
 <pre><code>cp system/controlDict system/controlDict.practice
@@ -131,8 +131,8 @@ foamDictionary system/controlDict.practice -entry endTime -value</code></pre>
 <p>再考虑将顶盖速度由原值改为另一给定值。需要保持 vector 的三个分量结构，并判断期望方向是否沿 x。修改后应重新计算雷诺数，因为速度变化会改变 UL/ν。如果研究目标是保持雷诺数不变同时改变速度，还必须相应调整黏度或长度，而非只改一个数值。文件层面的修改应与希望保持的物理条件一起说明。</p>
 <p>修改初始速度也应与计算起点对应。若 startFrom 选择 latestTime，程序读取的是已有的最后保存场，此时修改 0/U 未必改变实际续算初值。若要求从静止状态比较，则需要从初始时刻启动并确认所读时间目录。确定文件位置时，应同时查看控制字典的时间选择方式。</p>
 <h2>8 两类实际故障与结果检查</h2>
-<pre><code>本讲 dimensions 目录实际改动的是 0/U：把正确的 [0 1 -1 0 0 0 0] 改为 [0 2 -1 0 0 0 0]。长度指数多了一次，速度被错误声明为面积除以时间。求解日志因而报告 Incompatible dimensions for operation。修复时应恢复速度量纲，0/p 在本例中没有被修改。
-patch 目录则将 0/U 中的 left 改名为 missingWall，而网格边界仍然叫 left。日志显示 Cannot find patchField entry for left，并指向 0/U/boundaryField。程序能够识别网格中的 left，却找不到同名速度条件。恢复 left 名称后，再检查其他字段的边界定义即可完成对应修复。</code></pre>
+<p>本讲 dimensions 目录实际改动的是 0/U：把正确的 [0 1 -1 0 0 0 0] 改为 [0 2 -1 0 0 0 0]。长度指数多了一次，速度被错误声明为面积除以时间。求解日志因而报告 Incompatible dimensions for operation。修复时应恢复速度量纲，0/p 在本例中没有被修改。</p>
+<p>patch 目录则将 0/U 中的 left 改名为 missingWall，而网格边界仍然叫 left。日志显示 Cannot find patchField entry for left，并指向 0/U/boundaryField。程序能够识别网格中的 left，却找不到同名速度条件。恢复 left 名称后，再检查其他字段的边界定义即可完成对应修复。</p>
 <p>两种故障的根因不同：前者是变量单位不满足方程要求，后者是字段与网格的名称连接中断。它们都不是通过放宽求解容差可以解决的问题。应先根据日志判断失败发生在读取或组装阶段，再修正具体输入；运行后核对是否继续推进到预定时间。</p>
 <figure><img loading="lazy" src="/assets/lessons/03/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图 1 为 baseline 在 0.1 s 的实际速度结果。顶盖运动使近壁流体加速，内部开始形成回流。该结果为故障修复提供正常参照：网格数、初始条件和终止时间均与故障组保持一致，修复后应能完成相同计算流程。测试记录中的速度和压力均为有限值。</p>
@@ -142,7 +142,7 @@ patch 目录则将 0/U 中的 left 改名为 missingWall，而网格边界仍然
 <p>量纲错误与单位数值错误是两个问题。dimensions检查能发现不相容的方程运算，却不能判断长度应为毫米还是米，也不能确认物性数值是否合理。ρ=998kg/m³、Δp=250Pa时，运动学压差为0.250501m²/s²。这一数值应与[0 2 −2 0 0 0 0]同时使用。</p>
 <p>封闭不可压缩问题的压力只确定到一个加法常数。纯Neumann压力系统具有常数零空间，需要pRefCell与pRefValue等条件确定数值参考。改变参考值会平移压力场，但不应改变流速或压差。边界核对因此须同时考虑名称一致性、场类型和数学相容性，而不能只检查字典语法。</p>
 <h2>10 资料来源</h2>
-<pre><code>本讲依据 baseline、dimensions、patch 的实际输入及测试日志编写，特别核对了两组故障与基准文件的差异。继续阅读可查看本机 v2512 的 icoFoam 方腔教程、foamDictionary 帮助以及源代码中 dimensionSet 的定义。</code></pre>
+<p>本讲依据 baseline、dimensions、patch 的实际输入及测试日志编写，特别核对了两组故障与基准文件的差异。继续阅读可查看本机 v2512 的 icoFoam 方腔教程、foamDictionary 帮助以及源代码中 dimensionSet 的定义。</p>
 <p>参考资料 all-slides.pdf 第 90–132、151–159 页可用于补充目录和字典说明。阅读其他求解器的场文件时，应重新核对变量类型、量纲和边界要求。</p>
 <section class="exercise"><h2>课后练习</h2><p>手写一份 0/U，分别制造量纲错误与边界名不匹配错误，记录两种报错信息的差异。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
 </div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="3">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=3">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/02/">← 上一讲<span>方腔流动与 ParaView</span></a><a href="/lessons/04/">下一讲 →<span>日志阅读与排错</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>

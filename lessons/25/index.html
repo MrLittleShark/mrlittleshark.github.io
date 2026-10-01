@@ -53,37 +53,37 @@
 <p>本讲提供两套源码。myInterFoam 均匀场例说明字段创建并检查常数保持性；myInterIsoScalarFoam 周期高斯例用于分析对流扩散、限制器和解析误差。以下先介绍基础实现，再说明 DGas 的字典读取与非均匀验证，并分别标明两套程序的参数来源。</p>
 <h2>1 在两相求解器中增加输运方程</h2>
 <p>新增输运变量需要在源码中创建字段、组装方程，并配置初边值和离散方法。本讲以两相流被动标量说明开发流程，字典用于调节现有方程，源码修改用于增加方程本身。</p>
-<pre><code>基础源码取自本机 v2512 的 interFoam，连同所需 VoF 头文件保存在算例 src 中。新程序保留速度、压力和相分数求解，并在每步增加 cGas 方程。该标量接受流动输运，但不反馈速度、物性和气泡体积，可用于检查字段创建及更新流程。
-cGas 的单位为 mol/m³，初始值为 1，主要物理边界取零梯度，楔形侧面取 wedge。连续性满足且无标量源时，均匀场应保持不变，因此该例可检查新方程与流动通量的一致性。非均匀对流扩散需用独立算例进一步验证。</code></pre>
+<p>基础源码取自本机 v2512 的 interFoam，连同所需 VoF 头文件保存在算例 src 中。新程序保留速度、压力和相分数求解，并在每步增加 cGas 方程。该标量接受流动输运，但不反馈速度、物性和气泡体积，可用于检查字段创建及更新流程。</p>
+<p>cGas 的单位为 mol/m³，初始值为 1，主要物理边界取零梯度，楔形侧面取 wedge。连续性满足且无标量源时，均匀场应保持不变，因此该例可检查新方程与流动通量的一致性。非均匀对流扩散需用独立算例进一步验证。</p>
 <h2>2 源码文件与程序执行顺序</h2>
-<pre><code>interFoam.C 创建时间、网格和字段并组织循环。createFields.H 建立物理对象，UEqn.H 组装动量，pEqn.H 校正压力及通量，其余头文件处理相输运和模型更新。阅读时沿 include 次序追踪数据依赖。
-cGas 方程位于 PIMPLE 循环之后、runTime.write() 之前，先完成速度压力修正，再用更新后的 phi 求解标量，最后统一输出。提前至压力修正前可能使用尚未满足连续性的通量；移入外循环则会改变求解次数和字段更新关系。
-alpha.water 表示相占体积比例，cGas 表示规定的浓度场。气泡流动通过速度和通量影响 cGas，但 cGas 不进入当前相分数和动量方程。结果解释应遵循这一单向作用关系。</code></pre>
+<p>interFoam.C 创建时间、网格和字段并组织循环。createFields.H 建立物理对象，UEqn.H 组装动量，pEqn.H 校正压力及通量，其余头文件处理相输运和模型更新。阅读时沿 include 次序追踪数据依赖。</p>
+<p>cGas 方程位于 PIMPLE 循环之后、runTime.write() 之前，先完成速度压力修正，再用更新后的 phi 求解标量，最后统一输出。提前至压力修正前可能使用尚未满足连续性的通量；移入外循环则会改变求解次数和字段更新关系。</p>
+<p>alpha.water 表示相占体积比例，cGas 表示规定的浓度场。气泡流动通过速度和通量影响 cGas，但 cGas 不进入当前相分数和动量方程。结果解释应遵循这一单向作用关系。</p>
 <h2>3 创建字段与设置量纲</h2>
 <p>在 createFields.H 中创建新增标量及物性，实际代码如下：</p>
 <pre><code>volScalarField cGas(IOobject(&quot;cGas&quot;,runTime.timeName(),mesh,IOobject::MUST_READ,IOobject::AUTO_WRITE),mesh);
-dimensionedScalar DGas(&quot;DGas&quot;,dimViscosity,4.5e-9);
-IOobject 指定字段名称、当前时间目录、所属网格及读写规则。MUST_READ 要求相应初始场存在，AUTO_WRITE 指定在正常保存时刻写出。volScalarField 表示单元中心标量场，其内部值和边界值来自当前算例的 0/cGas。字段名称在源码、初值文件及数值字典中应保持一致。
-DGas 是带量纲标量，数值为 4.5×10⁻⁹ m²/s，dimViscosity 在此提供长度平方除以时间的量纲。虽然该量纲名称与黏度有关，但本变量表示扩散系数。当前实现直接在源码中定义 DGas，未从 transportProperties 读取；修改其数值需要修改这一行并重新编译。</code></pre>
+dimensionedScalar DGas(&quot;DGas&quot;,dimViscosity,4.5e-9);</code></pre>
+<p>IOobject 指定字段名称、当前时间目录、所属网格及读写规则。MUST_READ 要求相应初始场存在，AUTO_WRITE 指定在正常保存时刻写出。volScalarField 表示单元中心标量场，其内部值和边界值来自当前算例的 0/cGas。字段名称在源码、初值文件及数值字典中应保持一致。</p>
+<p>DGas 是带量纲标量，数值为 4.5×10⁻⁹ m²/s，dimViscosity 在此提供长度平方除以时间的量纲。虽然该量纲名称与黏度有关，但本变量表示扩散系数。当前实现直接在源码中定义 DGas，未从 transportProperties 读取；修改其数值需要修改这一行并重新编译。</p>
 <p>0/cGas 的 dimensions 为 [0 −3 0 0 1 0 0]，对应单位体积内的物质的量。internalField uniform 1 给出均匀初值。零梯度边界限制法向扩散梯度；若边界允许流体流出，还应结合对流通量分析总量变化。零扩散通量并不自动意味着零对流通量。</p>
 <h2>4 方程组装与离散格式</h2>
-<pre><code>新增方程为 ∂cGas/∂t+∇·(UcGas)−∇·(DGas∇cGas)=0。phi 为面体积通量，fvm::div 构造对流，fvm::ddt、fvm::laplacian 分别构造时间和扩散的隐式矩阵，形成 fvScalarMatrix。
-fvScalarMatrix cEqn(fvm::ddt(cGas)+fvm::div(phi,cGas)-fvm::laplacian(DGas,cGas));
+<p>新增方程为 ∂cGas/∂t+∇·(UcGas)−∇·(DGas∇cGas)=0。phi 为面体积通量，fvm::div 构造对流，fvm::ddt、fvm::laplacian 分别构造时间和扩散的隐式矩阵，形成 fvScalarMatrix。</p>
+<pre><code>fvScalarMatrix cEqn(fvm::ddt(cGas)+fvm::div(phi,cGas)-fvm::laplacian(DGas,cGas));
 cEqn.solve();</code></pre>
 <p>这里的 fvm 表示相关离散贡献进入线性系统，未知量参与本次求解。与之相比，fvc 通常根据已有字段计算显式量。选择隐式或显式处理会影响稳定性和代数结构，应依据方程和时间尺度分析。当前对流与扩散均按所配置格式组装。</p>
-<pre><code>system/fvSchemes 在 divSchemes 中包含 div(phi,cGas) Gauss upwind。其名称应与源码方程请求的条目完全一致，否则求解器在读取格式时会报错。时间格式采用 Euler，扩散格式采用 Gauss linear corrected。新增 C++ 方程后，仍需设置这些数值项，因为程序需要知道如何把连续算子离散为矩阵。
-system/fvSolution 对 cGas 使用 PBiCGStab，预条件器 DILU，绝对容差 1×10⁻¹⁰，relTol=0。对流项通常使矩阵不对称，因此应采用与矩阵性质相容的线性方法。压力、速度和相分数保留各自独立配置，它们的容差并不直接替代新标量的求解设置。</code></pre>
+<p>system/fvSchemes 在 divSchemes 中包含 div(phi,cGas) Gauss upwind。其名称应与源码方程请求的条目完全一致，否则求解器在读取格式时会报错。时间格式采用 Euler，扩散格式采用 Gauss linear corrected。新增 C++ 方程后，仍需设置这些数值项，因为程序需要知道如何把连续算子离散为矩阵。</p>
+<p>system/fvSolution 对 cGas 使用 PBiCGStab，预条件器 DILU，绝对容差 1×10⁻¹⁰，relTol=0。对流项通常使矩阵不对称，因此应采用与矩阵性质相容的线性方法。压力、速度和相分数保留各自独立配置，它们的容差并不直接替代新标量的求解设置。</p>
 <h2>5 编译配置与独立运行</h2>
-<pre><code>Make/files 列出 interFoam.C，并以 EXE=$(PWD)/myInterFoam 将程序写至编译目录 src/myInterFoam。Make/options 的 EXE_INC、EXE_LIBS 分别指定头文件和链接库，包含有限体积、网格、界面及两相输运依赖。
-wmake src/myInterFoam &gt; log.wmake 2&gt;&amp;1
+<p>Make/files 列出 interFoam.C，并以 EXE=$(PWD)/myInterFoam 将程序写至编译目录 src/myInterFoam。Make/options 的 EXE_INC、EXE_LIBS 分别指定头文件和链接库，包含有限体积、网格、界面及两相输运依赖。</p>
+<pre><code>wmake src/myInterFoam &gt; log.wmake 2&gt;&amp;1
 blockMesh &gt; log.blockMesh 2&gt;&amp;1
 checkMesh &gt; log.checkMesh 2&gt;&amp;1
 setFields &gt; log.setFields 2&gt;&amp;1
 ./src/myInterFoam/myInterFoam &gt; log.myInterFoam 2&gt;&amp;1
 postProcess -func &#x27;mag(U)&#x27; -latestTime &gt; log.magU 2&gt;&amp;1
-touch case.foam
-Allrun.sh 首先编译，再生成网格、初始化相分数并运行当前目录内程序。显式使用 ./src/myInterFoam/myInterFoam，能够避免误调用其他位置的同名程序。log.wmake 与 log.myInterFoam 分别保存构建和求解信息，出现错误时可根据阶段定位。
-复制完整算例后，src/myInterFoam 与 src/VoF 之间的相对路径保持有效，程序可以在新位置重新编译。编译器和系统 OpenFOAM 库仍来自已加载的 v2512 环境，因此源码版本与环境应一致。生成的对象文件可以清理，源文件、头文件和 Make 配置应一并保留。</code></pre>
+touch case.foam</code></pre>
+<p>Allrun.sh 首先编译，再生成网格、初始化相分数并运行当前目录内程序。显式使用 ./src/myInterFoam/myInterFoam，能够避免误调用其他位置的同名程序。log.wmake 与 log.myInterFoam 分别保存构建和求解信息，出现错误时可根据阶段定位。</p>
+<p>复制完整算例后，src/myInterFoam 与 src/VoF 之间的相对路径保持有效，程序可以在新位置重新编译。编译器和系统 OpenFOAM 库仍来自已加载的 v2512 环境，因此源码版本与环境应一致。生成的对象文件可以清理，源文件、头文件和 Make 配置应一并保留。</p>
 <h2>6 均匀标量算例的实际结果</h2>
 <p>计算终止时间为 2×10⁻⁵ s，时间步与最大时间步为 2×10⁻⁶ s，maxCo=0.25，maxAlphaCo=0.2。当前测试完成编译、求解及字段输出，最终 cGas 最小值为 0.999999951092，最大值为 1.00000001995。相对于均匀初值一，最大绝对偏差约为 4.89×10⁻⁸，说明当前短时计算基本保持均匀标量。</p>
 <p>这一结果可从方程解释。均匀浓度的梯度为零，扩散项为零；连续性满足时，对流散度不会改变常数场。因此偏差主要与离散通量、线性求解和数值精度有关。检查均匀场能发现通量使用或方程位置问题，但不能充分评价非均匀剖面的对流扩散精度。</p>
@@ -96,8 +96,8 @@ Allrun.sh 首先编译，再生成网格、初始化相分数并运行当前目�
 <p>本例适合学习新增字段和方程的程序流程，也可作为更复杂输运模型的起点。扩展之前，应先验证非均匀初值的纯扩散和给定速度对流，明确新方程的离散性质，再添加相间分配或源项。各阶段使用独立参考解，有助于区分基础输运误差与界面耦合误差。</p>
 <h2>8 分层验证与错误分析</h2>
 <p>最基本的构建检查是确认可执行文件由当前源码生成，运行日志显示读取 cGas，最终时间目录包含该字段。随后进行均匀场检查，比较最小值、最大值和总量。再采用一维扩散解析解检验扩散项，使用平移初始分布检验对流项。每项测试应提供对应初边值和参考结果。</p>
-<pre><code>缺少 0/cGas 会触发 MUST_READ 读取错误；缺少 div(phi,cGas) 会在格式查询时失败；缺少 fvSolution 中的 cGas 条目会影响线性求解配置；DGas 量纲错误则会在方程组装中出现量纲不一致。按创建、离散、求解和输出顺序检查，能够将报错与具体文件对应。
-编译阶段找不到头文件时，检查 EXE_INC；出现 undefined reference 时，检查 EXE_LIBS 与接口版本。若程序执行成功但修改参数后结果完全不变，应确认程序路径和编译时间，并检查参数是否真正参与方程。当前 DGas 直接写在源码中，修改物性字典不会改变它。</code></pre>
+<p>缺少 0/cGas 会触发 MUST_READ 读取错误；缺少 div(phi,cGas) 会在格式查询时失败；缺少 fvSolution 中的 cGas 条目会影响线性求解配置；DGas 量纲错误则会在方程组装中出现量纲不一致。按创建、离散、求解和输出顺序检查，能够将报错与具体文件对应。</p>
+<p>编译阶段找不到头文件时，检查 EXE_INC；出现 undefined reference 时，检查 EXE_LIBS 与接口版本。若程序执行成功但修改参数后结果完全不变，应确认程序路径和编译时间，并检查参数是否真正参与方程。当前 DGas 直接写在源码中，修改物性字典不会改变它。</p>
 <h3>总量与边界贡献</h3>
 <p>标量总量为所有单元 cGas 与体积的乘积之和。固定计算域内，只有边界对流、边界扩散和体积源改变该总量。当前零梯度限制扩散项，但顶部边界是否存在对流仍需由速度和 phi 判断。因此验证总量时，应同时分析边界通量，尤其是开放计算域。</p>
 <p>均匀初值检验利用常数场的解析性质，不依赖复杂界面形状。即使流场存在局部循环，只要面通量离散满足连续性，常数场仍应保持。若偏差集中在开放边界，可能与边界对流处理有关；若全域出现随步数累积的偏移，可进一步检查压力校正后的通量和求解位置。</p>
@@ -112,7 +112,7 @@ Allrun.sh 首先编译，再生成网格、初始化相分数并运行当前目�
 <p>输出频率由运行时间管理统一控制。AUTO_WRITE 使字段随正常保存时刻写出，不能保证每次线性求解后都产生新文件。检查结果时，应比较控制字典中的保存设置与实际时间目录。若需要更高时间分辨率，可在独立副本中调整保存间隔，并保持求解时间步不变以区分两者作用。</p>
 <p>修改主程序后，可先阅读编译日志中实际处理的源文件，再检查生成程序的路径。仅修改 controlDict 的 application 条目不会自动编译新程序，也不会改变 Allrun.sh 中显式执行的路径。当前脚本已将构建与执行路径写明，便于从源文件追踪到结果。</p>
 <p>对后续非均匀测试，建议先关闭与问题无关的复杂机制，采用具有解析解的初边值。纯扩散可检验扩散项与零通量边界，给定均匀速度平移可检验对流项，再组合两者。每个新测试的准确结果必须来自实际计算，已有均匀场记录仅用于评价本讲已经执行的设置。</p>
-<pre><code>本讲依据本地 v2512 interFoam 源码、当前 myInterFoam 的 createFields.H、主程序和 Make 文件，以及独立编译与数值检查记录。已有 all-slides.pdf 第815—873页可用于复习代码结构；更完整的界面传质模型在后续专题讨论。</code></pre>
+<p>本讲依据本地 v2512 interFoam 源码、当前 myInterFoam 的 createFields.H、主程序和 Make 文件，以及独立编译与数值检查记录。已有 all-slides.pdf 第815—873页可用于复习代码结构；更完整的界面传质模型在后续专题讨论。</p>
 <h2>9 几何VOF求解器中的非均匀标量验证</h2>
 <p>新增myInterIsoScalarFoam以本机v2512的interIsoFoam为基础，在相分数和流动求解之后增加cGas方程。与前述均匀场检验相比，非均匀初场具有可分辨的梯度，能够实际检验对流面值、扩散项和时间离散。四个目录分别保存D=0的非受限格式、D=0的受限格式，以及D=0.001 m²/s的两档网格。</p>
 <p>每例均附完整源码、必要头文件和Make配置，Allrun.sh直接执行网格命令、wmake及当前目录内的程序。</p>
@@ -120,8 +120,8 @@ Allrun.sh 首先编译，再生成网格、初始化相分数并运行当前目�
 <p>初始标量为周期高斯分布，中心x0=0.25 m，宽度w0=0.06 m。N100和N200在x方向分别划分100和200个单元，横向均为20个单元，时间步分别为0.001和0.0005 s，Co均为0.1。</p>
 <p>对于恒定D，解析宽度w(t)=√(w0²+4Dt)，单个高斯分量为[w0/w(t)]exp[−(x−Ut−x0)²/w(t)²]。对整数个域长的平移像求和得到周期解。D=0时形状只发生平移，t=1 s应回到初态；D&gt;0时即使圆盘和峰中心完成一个周期，标量宽度仍因物理扩散增加。</p>
 <p>比较时在与数值单元中心一致的位置计算解析值，按单元体积计算L1误差、最大绝对误差和总量，并保存逐点CSV。</p>
-<pre><code>源码先创建scalarTransportProperties字典，再以dimensionedScalar读取DGas。该变量的量纲为m²/s，字典修改后重新运行即可使用新值。cGas由MUST_READ读取，采用AUTO_WRITE随时间写出。
-离散方程使用fvm::ddt(cGas)+fvm::div(phi,cGas)−fvm::laplacian(DGas,cGas)，求解位置在PIMPLE循环之后、runTime.write()之前。此处phi是当前流动校正后的通量；给定速度验证中则为相应规定通量。时间项采用Euler，对流项通过fvSchemes的div(phi,cGas)选择格式。</code></pre>
+<p>源码先创建scalarTransportProperties字典，再以dimensionedScalar读取DGas。该变量的量纲为m²/s，字典修改后重新运行即可使用新值。cGas由MUST_READ读取，采用AUTO_WRITE随时间写出。</p>
+<p>离散方程使用fvm::ddt(cGas)+fvm::div(phi,cGas)−fvm::laplacian(DGas,cGas)，求解位置在PIMPLE循环之后、runTime.write()之前。此处phi是当前流动校正后的通量；给定速度验证中则为相应规定通量。时间项采用Euler，对流项通过fvSchemes的div(phi,cGas)选择格式。</p>
 <p>实际结果揭示了积分守恒与局部精度的区别。D=0、N100的linearUpwind计算在1 s时峰值为0.77494，最小值为−0.002473，L1误差为0.02562。负值来源于非受限重构的数值振荡，不能解释为物理浓度。</p>
 <p>采用相同网格、时间步和初场，仅将格式改为limitedLinear 1后，最小值约3.15×10⁻¹³，峰值降至0.71871，L1增至0.03018。本组受限格式改善了非负性，但增加了数值扩散。两者总量漂移均小于3×10⁻¹⁰，说明守恒并不能阻止局部振荡或峰值衰减。</p>
 <p>D=0.001 m²/s时，N100与N200的L1分别为0.012843和0.006462，峰值相对于解析采样值的偏差分别为−11.82%和−6.11%。N100末场仍有约−2.90×10⁻⁵的负值，N200末场保持非负。加密同时改变了网格与时间步，因此这里报告联合分辨率提高后的误差变化，不据此确定空间格式收敛阶。后续可固定网格改变Δt，再固定足够小的Δt改变网格，分别估计时间和空间误差。</p>

@@ -52,7 +52,7 @@
 <pre><code>OpenCFD OpenFOAM v2512</code></pre>
 <h2>1 网格在有限体积计算中的作用</h2>
 <p>有限体积法在每个网格单元上建立积分守恒方程，质量与动量通过公共面交换。单元体积、面面积、法向和连接关系均参与离散，因此网格几何直接影响求解方程。</p>
-<pre><code>points 保存坐标，faces 保存面顶点，owner 和 neighbour 定义面的单元归属，boundary 定义边界分组。场量通常存储在单元中心，通量在面上计算，因此需由单元值重构面值及法向梯度。重构精度取决于单元形状和相对位置。</code></pre>
+<p>points 保存坐标，faces 保存面顶点，owner 和 neighbour 定义面的单元归属，boundary 定义边界分组。场量通常存储在单元中心，通量在面上计算，因此需由单元值重构面值及法向梯度。重构精度取决于单元形状和相对位置。</p>
 <p>增加单元数可提高空间分辨率，但误差同时受单元方向、尺寸过渡和几何质量影响。相同单元数不保证相同精度，局部加密也不能消除扭曲问题。网格评价应综合几何、质量指标和目标观测量。</p>
 <p>三组倾斜方腔保持单元数和求解设置一致，通过水平移动上边界研究质量指标的变化。该对照可解释几何与质量报告的关系，但计算域形状随之改变，不能用作同一几何下的网格独立性检验。</p>
 <h2>2 非正交角及其离散影响</h2>
@@ -69,7 +69,7 @@
 <p>单元体积为正是基本几何要求，因为有限体积方程需要用体积统计平均量和通量变化。极小体积单元可能使局部时间尺度变得很短，并改变离散系数的大小；体积跨度很大时，求解条件也可能发生变化。检查总网格体积能够发现整体尺度问题，而检查最小体积及其位置则有助于识别局部问题，这两种检查不能互相替代。</p>
 <p>共享面的连通关系同样影响求解。两个几何上相邻的块，如果没有按照预期连接，可能形成额外边界，导致流体区域被分隔。此时局部单元形状看起来规则，计算域的物理连通性却已经改变。拓扑检查与几何检查分别处理相邻关系和形状问题，完整网格检查需要兼顾二者。</p>
 <h2>4 倾斜方腔的对照条件</h2>
-<pre><code>skew0 为边长 0.1 m 的正方腔。skew0.025、skew0.07 分别将上边界右移 0.025、0.07 m，底部不变。三组均为 20×20×1、400 个单元，厚度 0.01 m，顶盖沿 x 以 1 m/s 运动，其余侧壁固定。</code></pre>
+<p>skew0 为边长 0.1 m 的正方腔。skew0.025、skew0.07 分别将上边界右移 0.025、0.07 m，底部不变。三组均为 20×20×1、400 个单元，厚度 0.01 m，顶盖沿 x 以 1 m/s 运动，其余侧壁固定。</p>
 <p>目录名中的数值为上边界水平偏移量，单位是米。它与 checkMesh 输出的无量纲偏斜度不是同一个变量。本例偏移量除以腔体高度分别为零、零点二五和零点七，而实际报告中的最大偏斜度也分别接近这些数值；这一关系来自当前均匀剪切几何，不能推广为任意网格的定义。</p>
 <div class="table-scroll"><table>
 <tr><th>算例</th><th>水平偏移/m</th><th>单元数</th><th>最大非正交角/°</th><th>最大偏斜度</th></tr>
@@ -86,7 +86,7 @@
 tail -n 25 log.checkMesh.full
 checkMesh -writeSets vtk &gt; log.checkMesh.sets 2&gt;&amp;1</code></pre>
 <p>-allGeometry 与 -allTopology 启用更完整的检查，-writeSets vtk 将检查得到的相关集合写出，便于定位。输出哪些集合取决于实际检查结果，并非每张网格都会产生相同的文件。查看帮助可以确认当前版本支持的选项及输出方式。</p>
-<pre><code>Mesh OK 表示通过本次启用的检查项目。它不包含与某个物理解的误差比较，也不自动说明网格无关。实际研究需要将网格报告与结果对比结合，说明所用分辨率能否满足观测量的精度要求。</code></pre>
+<p>Mesh OK 表示通过本次启用的检查项目。它不包含与某个物理解的误差比较，也不自动说明网格无关。实际研究需要将网格报告与结果对比结合，说明所用分辨率能否满足观测量的精度要求。</p>
 <h2>6 网格图与计算结果的解释</h2>
 <figure><img loading="lazy" src="/assets/lessons/07/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图 1 为 skew0，平面内网格线正交，单元均匀排列。其非正交角为零，偏斜度仅为浮点计算量级。它适合作为理解倾斜变化的几何参照，但不能据此认为所有流场误差都为零。</p>
@@ -105,8 +105,8 @@ checkMesh -writeSets vtk &gt; log.checkMesh.sets 2&gt;&amp;1</code></pre>
 <h2>8 网格无关性与编号重排</h2>
 <p>网格无关性分析应保持几何、物性、边界和时间条件一致，改变空间分辨率，比较同一观测量。对方腔，可建立 20×20、40×40 和 80×80 的平面网格，在相同时间比较中线速度或某个区域的平均量。比较之前应检查时间误差是否足够小，避免将时间步效应混入空间误差。</p>
 <p>可用相邻两组结果差的绝对值衡量变化，也可除以细网格结果得到相对变化。当观测量接近零时，相对误差可能失去稳定意义，应采用有明确尺度的绝对误差或其他归一化方式。选取误差指标时，应说明它对应研究中的哪一项需求。</p>
-<pre><code>renumberMesh 处理的是单元编号，而非几何形状。编号重排可能改变矩阵带宽和数据访问顺序，影响求解效率，但不会修复负体积、非正交角或局部分辨率。它适合在保持网格几何不变的前提下研究计算效率。
-renumberMesh -overwrite &gt; log.renumberMesh 2&gt;&amp;1
+<p>renumberMesh 处理的是单元编号，而非几何形状。编号重排可能改变矩阵带宽和数据访问顺序，影响求解效率，但不会修复负体积、非正交角或局部分辨率。它适合在保持网格几何不变的前提下研究计算效率。</p>
+<pre><code>renumberMesh -overwrite &gt; log.renumberMesh 2&gt;&amp;1
 tail -n 20 log.renumberMesh
 checkMesh &gt; log.checkMesh.renumbered 2&gt;&amp;1</code></pre>
 <p>该操作应在独立副本中进行，并保留重排前后的日志。比较内容包括矩阵相关统计、相同求解条件下的耗时和场量结果。若只有编号发生改变，几何质量指标应保持一致；若同时重新生成了另一张网格，就不能再把全部耗时差归因于编号。</p>
@@ -118,7 +118,7 @@ checkMesh &gt; log.checkMesh.renumbered 2&gt;&amp;1</code></pre>
 <p>现有倾斜方腔改变上边界水平偏移，同时改变了流体域。它适合展示质量指标随几何变化的响应，不适合作为纯网格误差证明。若需要区分几何效应与离散误差，应建立两套对照：一套固定剖分规则改变几何，另一套固定边界改变内部网格。</p>
 <p>对同一目标量建立三组网格，只有在误差近似满足Qh=Q0+Chᵖ且其他误差足够小时，才可用差值比估计p。空间加密前应检查时间步和线性容差，计算时刻及采样位置也须一致。对于尚未进入渐近区的非单调结果，应继续加密或检查局部误差，而不应强行给出一个收敛阶。</p>
 <h2>10 资料来源</h2>
-<pre><code>本讲依据 skew0、skew0.025、skew0.07 的网格字典、checkMesh 日志、求解设置和结果检查编写。继续阅读可查阅本机 v2512 的 checkMesh、renumberMesh 帮助和有限体积法网格数据结构，参考资料 all-slides.pdf 第 323–357 页介绍了相关质量指标。后续学习离散格式时，可将这些几何条件与面值插值和法向梯度的具体公式联系起来。</code></pre>
+<p>本讲依据 skew0、skew0.025、skew0.07 的网格字典、checkMesh 日志、求解设置和结果检查编写。继续阅读可查阅本机 v2512 的 checkMesh、renumberMesh 帮助和有限体积法网格数据结构，参考资料 all-slides.pdf 第 323–357 页介绍了相关质量指标。后续学习离散格式时，可将这些几何条件与面值插值和法向梯度的具体公式联系起来。</p>
 <section class="exercise"><h2>课后练习</h2><p>对三套质量不同的网格跑 checkMesh，分别写出各自需要配套的数值设置及理由。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
 </div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="7">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=7">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/06/">← 上一讲<span>圆柱绕流</span></a><a href="/lessons/08/">下一讲 →<span>blockMesh 与轴对称</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
 </main>

@@ -59,8 +59,8 @@
 <p>x 方向 100 个单元，间距 0.01 m，其余边界为 empty，速度与标量遵循相同约束。未知量位于单元中心，通量通过面计算，因此需从邻近单元构造面值，对流格式的主要差异在此产生。</p>
 <p>速度沿正 x 方向时，一阶上风以左侧上游单元值作为面值。该近似忽略上游中心至面位置的梯度变化，通常具有较好的稳定性，但其数值耗散会使脉冲展宽、峰值降低。</p>
 <p>线性插值按两侧单元值及几何距离计算面值。均匀一维网格上，面值为相邻中心值的算术平均，位于二者之间。该近似在光滑区域通常精度较高，但中心型对流离散的最终单元解仍可能在陡峭分布附近过冲或欠冲，需另行检查场极值。</p>
-<pre><code>linearUpwind 从上游值出发，使用梯度与从上游中心指向面的位移点积构造修正。它因而同时依赖对流格式和梯度格式。本例 gradSchemes 使用 Gauss linear，这项设置会影响梯度修正的数值。只记录 linearUpwind 名称而不记录梯度计算方式，不能完整复现离散方程。
-limitedLinear 和 vanLeer 对高阶修正施加限制。其限制强度随局部梯度关系变化，在光滑区域保留较多高阶信息，在急剧变化附近抑制振荡。限制器兼顾分辨率与有界性的方式不同，需要用场极值、形状误差及总量共同比较。增加限制可以减少某些非物理振荡，也可能增加局部耗散。</code></pre>
+<p>linearUpwind 从上游值出发，使用梯度与从上游中心指向面的位移点积构造修正。它因而同时依赖对流格式和梯度格式。本例 gradSchemes 使用 Gauss linear，这项设置会影响梯度修正的数值。只记录 linearUpwind 名称而不记录梯度计算方式，不能完整复现离散方程。</p>
+<p>limitedLinear 和 vanLeer 对高阶修正施加限制。其限制强度随局部梯度关系变化，在光滑区域保留较多高阶信息，在急剧变化附近抑制振荡。限制器兼顾分辨率与有界性的方式不同，需要用场极值、形状误差及总量共同比较。增加限制可以减少某些非物理振荡，也可能增加局部耗散。</p>
 <h2>3 时间离散与数值扩散</h2>
 <p>五种空间格式统一采用隐式 Euler。时间项由新旧时刻差商近似，空间项取新时刻值，每步求解线性系统。该时间离散为一阶，提高空间插值阶数并不改变时间精度。</p>
 <p>对于一维正向常速度和一阶上风，离散方程可写为 (Tiⁿ⁺¹−Tiⁿ)/Δt+U(Tiⁿ⁺¹−Ti−1ⁿ⁺¹)/Δx=0。使用泰勒展开比较连续方程，可见其主导误差含有类似扩散的二阶空间导数。隐式上风的等效数值扩散系数在这一简化模型下约为 UΔx(1+Co)/2。空间上风和隐式时间离散均贡献耗散。</p>
@@ -75,26 +75,26 @@ limitedLinear 和 vanLeer 对高阶修正施加限制。其限制强度随局部
 <p>数值误差计算使用相同单元中心及实际保存时刻。若一组使用节点值，另一组使用单元中心值，会引入额外采样差异。比较单元平均值与点值时也需要明确近似；本课程当前检查按相同中心位置生成参考数组，与已保存的单元数值逐项比较。</p>
 <p>一个具体守恒例题是：公共面体积通量为 0.01 m³/s，面无量纲标量值为二，则标量通量为 0.02 m³/s。该通量在上游单元方程中表示流出，在下游单元中表示流入。两个单元相加时贡献为零，但若面值二偏离真实面值，两个单元的局部变化率仍同时存在误差。总量抵消不能代替局部精度验证。</p>
 <h2>5 文件设置及独立运行</h2>
-<pre><code>upwind、linear、linearUpwind、limitedLinear、vanLeer 五组目录均标记 Co0.5。网格、初值、速度、步长及终止时刻一致，仅对流格式在 fvSchemes 中不同。以下给出 upwind 配置。
-ddtSchemes &#123; default Euler; &#125;
+<p>upwind、linear、linearUpwind、limitedLinear、vanLeer 五组目录均标记 Co0.5。网格、初值、速度、步长及终止时刻一致，仅对流格式在 fvSchemes 中不同。以下给出 upwind 配置。</p>
+<pre><code>ddtSchemes &#123; default Euler; &#125;
 gradSchemes &#123; default Gauss linear; &#125;
 divSchemes
 &#123;
     default none;
     div(phi,T) Gauss upwind;
 &#125;
-laplacianSchemes &#123; default Gauss linear corrected; &#125;
-Gauss 表示把散度积分写为面通量求和，upwind 指定对流面值的计算方法。扩散项虽然保留离散格式，但 transportProperties 中 DT 为零，该项不产生物理扩散。default none 要求求解器使用的离散项显式给出，缺少 div(phi,T) 时会在构造方程过程中报错。
-source /usr/lib/openfoam/openfoam2512/etc/bashrc
+laplacianSchemes &#123; default Gauss linear corrected; &#125;</code></pre>
+<p>Gauss 表示把散度积分写为面通量求和，upwind 指定对流面值的计算方法。扩散项虽然保留离散格式，但 transportProperties 中 DT 为零，该项不产生物理扩散。default none 要求求解器使用的离散项显式给出，缺少 div(phi,T) 时会在构造方程过程中报错。</p>
+<pre><code>source /usr/lib/openfoam/openfoam2512/etc/bashrc
 cd 代码/upwind_Co0.5
 ./Allrun.sh</code></pre>
 <p>脚本依次运行 blockMesh、checkMesh、scalarTransportFoam 和速度大小后处理。scalarTransportFoam 读取给定 U 并求解 T，不求解动量方程或压力速度耦合。</p>
-<pre><code>fvSolution 中 T 使用 PBiCGStab 和 DILU，绝对容差为 10⁻¹²，relTol 为零，用于减小线性求解误差对格式对照的影响。
-周期边界在网格和场文件中均需配套。left 与 right 在 blockMeshDict 中互为 neighbourPatch，0/T 和 0/U 中均采用 cyclic。若仅在某一个场中改为固定值，就改变了原问题的边界输运，不再是相同周期平移实验。重新生成不同数量的网格时，非均匀初始列表也必须与新单元数一致。</code></pre>
+<p>fvSolution 中 T 使用 PBiCGStab 和 DILU，绝对容差为 10⁻¹²，relTol 为零，用于减小线性求解误差对格式对照的影响。</p>
+<p>周期边界在网格和场文件中均需配套。left 与 right 在 blockMeshDict 中互为 neighbourPatch，0/T 和 0/U 中均采用 cyclic。若仅在某一个场中改为固定值，就改变了原问题的边界输运，不再是相同周期平移实验。重新生成不同数量的网格时，非均匀初始列表也必须与新单元数一致。</p>
 <h2>6 实际结果与误差解释</h2>
 <figure><img loading="lazy" src="/assets/lessons/12/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>在零点五秒时，upwind 的最大值约为 0.441323，L1 误差为 0.0801808。其曲线相对于精确解明显降低并展宽。linear 的最大值约为 0.648173，L1 约为 0.0446289；linearUpwind 的最大值约为 0.639727，L1 约为 0.0449475。后两者保留了更多幅值，但最小值分别约为 −1.57×10⁻⁶ 和 −5.99×10⁻⁵，出现欠冲。</p>
-<pre><code>limitedLinear 与 vanLeer 的最大值分别约为 0.633077、0.630745，L1 分别约为 0.0449838、0.0456480。当前结果中二者最小值为正，且非常接近零。与一阶上风相比，这些格式降低了分布误差；与线性类格式相比，极值表现不同，需要结合变量的非负要求选择。</code></pre>
+<p>limitedLinear 与 vanLeer 的最大值分别约为 0.633077、0.630745，L1 分别约为 0.0449838、0.0456480。当前结果中二者最小值为正，且非常接近零。与一阶上风相比，这些格式降低了分布误差；与线性类格式相比，极值表现不同，需要结合变量的非负要求选择。</p>
 <figure><img loading="lazy" src="/assets/lessons/12/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <figure><img loading="lazy" src="/assets/lessons/12/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图中峰中心位于预计位置附近，幅值和宽度仍存在明显差异。相位误差描述峰或其他特征位置的偏移，幅值误差描述极值的变化，形状误差则包含整个曲线分布偏差。这几类指标不应只由同一个峰值数字代替。例如峰位置正确但峰值衰减较大，仍会影响基于阈值定义的区域范围。</p>
@@ -112,22 +112,22 @@ cd 代码/upwind_Co0.5
 foamSearch . ddtSchemes.default fvSchemes
 foamDictionary system/fvSchemes -entry gradSchemes</code></pre>
 <p>本机 foamSearch 的参数顺序为目录、关键字、文件名，嵌套关键字以点号分隔；上述命令在当前算例目录中查询 ddtSchemes.default。</p>
-<pre><code>div(phi,T) 对应本例标量对流项；其他求解器可采用 div(rhoPhi,U) 等条目。
-Gauss 通过散度定理将体积积分写为面通量求和，后续插值格式确定面值。条目名称需与求解器方程一致。</code></pre>
+<p>div(phi,T) 对应本例标量对流项；其他求解器可采用 div(rhoPhi,U) 等条目。</p>
+<p>Gauss 通过散度定理将体积积分写为面通量求和，后续插值格式确定面值。条目名称需与求解器方程一致。</p>
 <h3>有界性检查</h3>
 <p>执行目录为 代码/linear_Co0.5。</p>
 <pre><code>foamDictionary system/fvSchemes -entry ddtSchemes
 foamDictionary system/fvSchemes -entry laplacianSchemes
-postProcess -func &#x27;fieldMinMax(T)&#x27; -latestTime
-linearUpwind 含梯度修正，在陡峭梯度附近可能产生过冲或欠冲，需检查实际场极值。</code></pre>
+postProcess -func &#x27;fieldMinMax(T)&#x27; -latestTime</code></pre>
+<p>linearUpwind 含梯度修正，在陡峭梯度附近可能产生过冲或欠冲，需检查实际场极值。</p>
 <p>两相及非线性计算的稳定性还受界面输运、非线性迭代和边界条件影响，应结合完整方程检查。</p>
 <p>本例同时比较极值、分布误差及总量，以分别评价有界性、输运精度和守恒性。</p>
 <h2>9 离散守恒与修正方程</h2>
 <p>标量有限体积方程可写为 V_P(T_P^{n+1}−T_P^n)/Δt+Σ_f F_f=S_PV_P。对所有单元相加，内部面的 F_f 因符号相反抵消。周期、无源情况下，标量积分因而保持不变。这个推导没有要求每个单元值等于精确解，因此总量守恒并不排除峰值衰减、相位偏移和过冲。误差评估须同时报告场分布与积分收支。</p>
-<pre><code>对于一维恒速 U&gt;0 的后向 Euler 和上风组合，在新时刻展开时间差分与空间差分，得到 T_t+UT_x≈(Δt/2)T_tt+(UΔx/2)T_xx。再用原方程的主导关系 T_tt≈U²T_xx，可得 D_num≈UΔx(1+Co)/2。该项说明即使真实扩散系数为零，离散过程仍可使光滑脉冲展宽。它也说明本课程减小 Co 时，后向 Euler 的时间耗散贡献会减弱。</code></pre>
+<p>对于一维恒速 U&gt;0 的后向 Euler 和上风组合，在新时刻展开时间差分与空间差分，得到 T_t+UT_x≈(Δt/2)T_tt+(UΔx/2)T_xx。再用原方程的主导关系 T_tt≈U²T_xx，可得 D_num≈UΔx(1+Co)/2。该项说明即使真实扩散系数为零，离散过程仍可使光滑脉冲展宽。它也说明本课程减小 Co 时，后向 Euler 的时间耗散贡献会减弱。</p>
 <p>上述修正方程只保留主导截断项，适用于光滑分布、均匀网格和给定格式组合。限制器在陡峭区改变重构行为后，误差不再由一个全域常数扩散系数完整描述。因此本讲先用解析推导解释趋势，再用相同时间与位置的计算结果检验峰值、极值及误差范数。</p>
 <h2>10 资料来源</h2>
-<pre><code>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 619–669 页。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</code></pre>
+<p>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 619–669 页。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</p>
 <section class="exercise"><h2>课后练习</h2><p>列表说明本课程用过的所有算例中 fvSchemes 每个关键词对应的方程项，以及你会怎么选、为什么。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
 </div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="12">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=12">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/11/">← 上一讲<span>网格转换与边界分区</span></a><a href="/lessons/13/">下一讲 →<span>时间步与线性求解器</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
 </main>

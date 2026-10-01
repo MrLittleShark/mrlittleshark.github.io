@@ -56,9 +56,9 @@
 <p>电势算例使用 laplacianFoam 读取 T，量纲 [1 2 −3 0 0 −1 0] 对应 V。该求解器用于求解常系数 Laplace 方程，电流再由给定电导率与电势梯度计算。物性字典中的系数服务于数学方程，电学解释须另行明确电导率及电流定义。</p>
 <p>一次电流分布只考虑导电几何和电势边界，二次电流分布进一步包含电极反应关系。本讲依次用平板定值、线性混合和非线性 Butler–Volmer 边界验证实现，再以固定绝缘气泡分析遮蔽对局部电流的影响。</p>
 <h2>2 平板电势与线性反应边界</h2>
-<pre><code>potential_primary 高 0.001 m，底部 0.01 V、顶部零，κ=1 S/m 时解析电流为 κΔφ/L=10 A/m²。数值结果 10.000000000003334 A/m² 与线性解一致。
-potential_mixed 采用 j=h(Vref−φw)，Vref=0.01 V、h=1000 S/m²。溶液电阻与界面反应电阻相等，电流密度为 5 A/m²，底部溶液电势为 0.005 V，另一半电势差落在反应边界。因此 refValue 不等于实际壁面电势。
-bottom
+<p>potential_primary 高 0.001 m，底部 0.01 V、顶部零，κ=1 S/m 时解析电流为 κΔφ/L=10 A/m²。数值结果 10.000000000003334 A/m² 与线性解一致。</p>
+<p>potential_mixed 采用 j=h(Vref−φw)，Vref=0.01 V、h=1000 S/m²。溶液电阻与界面反应电阻相等，电流密度为 5 A/m²，底部溶液电势为 0.005 V，另一半电势差落在反应边界。因此 refValue 不等于实际壁面电势。</p>
+<pre><code>bottom
 &#123;
     type mixed;
     refValue uniform 0.01;
@@ -71,7 +71,7 @@ bottom
 <p>图中不同剖面斜率对应不同电流密度。解释电势差时应区分溶液内压降与边界反应贡献，并说明参考金属电势、平衡电势和溶液电势的定义。仅将同名场图叠加，不能代替这一物理量说明。</p>
 <h2>3 绝缘气泡造成的电流重分布</h2>
 <p>绝缘附着气泡可作为法向电流为零的障碍。导电域改变后，电势和电流重新分布，局部梯度可能集中。总电流还取决于有效电极面积及反应边界。</p>
-<pre><code>potential_insulating_bubble 与其 mixed 版本分别采用定值和混合边界。blockMesh、snappyHexMesh 生成包含固定气泡障碍的导电域，再求解电势。流动 VOF 在另一个算例中计算，两者不实时交换界面位置。</code></pre>
+<p>potential_insulating_bubble 与其 mixed 版本分别采用定值和混合边界。blockMesh、snappyHexMesh 生成包含固定气泡障碍的导电域，再求解电势。流动 VOF 在另一个算例中计算，两者不实时交换界面位置。</p>
 <figure><img loading="lazy" src="/assets/lessons/27/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图中电势分布应结合气泡表面零法向电流分析。在边缘处比较梯度时，需考虑局部网格分辨率和几何曲率。当前定值障碍例的单元电势范围约为 0.0003037 至 0.0098275 V，混合边界障碍例约为 0.0002373 至 0.0076598 V。这些场范围描述局部分布，总电流需进一步积分电极法向通量。</p>
 <p>有效面积减小与局部梯度增强可能同时发生，因此总电流变化不能只由裸露面积比例确定。比较时可采用相同电极参考条件，分别统计总电流与局部最大电流密度。固定障碍结果适合分析给定气泡形状下的导电问题，气泡移动导致的电流反馈需在耦合模型中实现。</p>
@@ -83,7 +83,7 @@ bottom
 <h2>5 气泡附着 生长与脱落判据</h2>
 <p>附着气泡受浮力、接触线表面力、压力和周围流动共同作用。注气增加体积，但脱落还受钉扎、滞后、入口几何及惯性影响。质心上升也可能发生在附着生长阶段，须另用连通性判断脱落。</p>
 <p>本课程采用气相单元共享面连通性分析。先选择 alpha.water&lt;0.5 的单元，再识别共享面连通区域，并保留至少含 8 个单元的区域。按气体体积选出其中最大的区域，检查其是否仍与 electrode 或 substrate 边界相邻。形状图与连通性应在同一保存时刻核对。</p>
-<pre><code>detachment_theta90 的实际最新时刻为 0.5999970308 s。气体体积由 4.0932133976735996×10⁻¹¹ 增至 5.935203521826938×10⁻⁹ m³，按 εV=|Vnum−(V0+Qt)|/(V0+Qt) 计算，总体积相对误差约为 0.06431%。共享面连通性检查未检测到脱落，因此该记录没有对应的脱落半径或脱落时刻。</code></pre>
+<p>detachment_theta90 的实际最新时刻为 0.5999970308 s。气体体积由 4.0932133976735996×10⁻¹¹ 增至 5.935203521826938×10⁻⁹ m³，按 εV=|Vnum−(V0+Qt)|/(V0+Qt) 计算，总体积相对误差约为 0.06431%。共享面连通性检查未检测到脱落，因此该记录没有对应的脱落半径或脱落时刻。</p>
 <figure><img loading="lazy" src="/assets/lessons/27/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图中用于观察增长后的形状和壁面连接范围。若界面出现细颈，需要结合气相连接检查判断是否真正断开。保存间隔决定事件时间的分辨率；发生脱落时，也通常只能先定位在最后连接帧与首次断开帧之间。</p>
 <h2>6 接触角比较与Fritz尺度</h2>
@@ -93,8 +93,8 @@ bottom
 <p>延长计算前，还应检查顶部和外边界是否足够远，气泡增长是否受到有限域限制，以及网格是否能分辨变细的连接区域。提高时间分辨率和局部分辨率对应不同误差，应分别对照。仅改变结束时间不能保证脱落判定精度。</p>
 <h2>7 Marangoni切向应力</h2>
 <p>表面张力沿界面变化时，切向梯度可驱动界面附近流动。设单位界面法向为 n，切向投影算子为 I−nn，则 ∇sσ=(I−nn)∇σ。法向毛细力与这一切向力分别对应曲率和表面张力沿界面的变化，应在模型中区分。</p>
-<pre><code>marangoni_given_gradient 给定 ∇σ=(0,−0.01,0) N/m²。代码根据 alpha.water 梯度计算局部法向，将给定梯度减去法向投影，再乘界面梯度模长形成体积力。其核心关系为：
-const vector tangent=gradSigma-n*(n &amp; gradSigma);
+<p>marangoni_given_gradient 给定 ∇σ=(0,−0.01,0) N/m²。代码根据 alpha.water 梯度计算局部法向，将给定梯度减去法向投影，再乘界面梯度模长形成体积力。其核心关系为：</p>
+<pre><code>const vector tangent=gradSigma-n*(n &amp; gradSigma);
 const vector force=magnitude*tangent;
 eqn.source()[celli] -= mesh().V()[celli]*force;</code></pre>
 <p>最后一行的符号与 fvOptions 在动量方程中的矩阵约定有关。代码同时输出法向投影误差，用于检查 n与切向力的点积是否接近零。纯相中接近舍入误差的相分数梯度不用于定义界面法向，以避免除以很小模长。</p>
@@ -124,34 +124,34 @@ eqn.source()[celli] -= mesh().V()[celli]*force;</code></pre>
 <p>计算域为5°轴对称楔形，半径4 mm、高8 mm。中心孔口半径0.25 mm；环形电极由0.25 mm延伸至1 mm；其余底面为绝缘基底。环形电极电势2 V，顶部0 V。孔口、侧壁和外围基底均为电学绝缘，流入气体不会通过孔口携带电流。流动边界中孔口速度由电流更新，环形电极及基底为noSlip，顶面为压力出口。全部固体的边界theta0=90°。该几何与边界绕轴保持不变。</p>
 <p>径向三段分别为4、12、24个单元，轴向0–2 mm和2–8 mm各40层，共3200个单元。初始气泡为半径0.4 mm的半球，通过setFields按单元中心初始化。水和氢气的物性写在constant/transportProperties；气体换算温度293.15 K、绝对压力101325 Pa，与采用的约20 ℃氢气密度0.0838 kg/m³一致。</p>
 <h2>11 方程 单位与反馈关系</h2>
-<pre><code>以alpha=alpha.water表示液相体积分数。两相体积分数由isoAdvector输运，界面采用plicRDF重构。混合密度为rho=alpha rho_l+(1−alpha)rho_g。速度满足不可压缩体积连续性方程div(U)=0和含重力、黏性及表面张力的动量方程。由于产气从边界输入，域内没有由电极反应直接产生的相分数体积源。
-电导率定义为kappa=kappa_l[alpha+epsilon(1−alpha)]，其中kappa_l=20 S/m。电势Velec的单位为V，电流密度i=−kappa grad(Velec)，单位A/m²。每个流动时间步求解div(kappa grad(Velec))=0。</code></pre>
+<p>以alpha=alpha.water表示液相体积分数。两相体积分数由isoAdvector输运，界面采用plicRDF重构。混合密度为rho=alpha rho_l+(1−alpha)rho_g。速度满足不可压缩体积连续性方程div(U)=0和含重力、黏性及表面张力的动量方程。由于产气从边界输入，域内没有由电极反应直接产生的相分数体积源。</p>
+<p>电导率定义为kappa=kappa_l[alpha+epsilon(1−alpha)]，其中kappa_l=20 S/m。电势Velec的单位为V，电流密度i=−kappa grad(Velec)，单位A/m²。每个流动时间步求解div(kappa grad(Velec))=0。</p>
 <p>0/Velec中的内部零值为首个稳态线性系统提供迭代初猜；电势方程无时间导数，每一步求解当前界面对应的导电场。气体电导率epsilon kappa_l为维持线性系统可解性设置的正则化参数，并非氢气真实电导率。epsilon设为零会使气相内部导电方程退化；因此需要比较多个足够小的正值，并单独检查网格影响。</p>
 <p>面电导率采用调和插值，即kappa_f=1/interpolate(1/kappa)。高、低电导率单元相邻时，调和插值保留低电导区域的主要阻力，避免简单算术平均过度增大跨界面电流。混合单元中的电导率仍由体积分数插值给定，因此界面厚度与网格尺寸会影响近界面导电分布。</p>
 <p>设电极流入计算域的电流为I，则I=−integral(i·n dA)，n为计算域外法向。底部n沿负y，给定电极正电势时电流向上进入液体，I为正。求解器由电势矩阵的离散面通量积分得到电极电流和顶部电流，使电流检查与实际离散方程采用同一通量。</p>
-<pre><code>氢气反应的电子转移数z=2。摩尔产气率为eta I/(zF)，其中本例集气效率eta=1，F=96485.33212 C/mol。孔口体积流量Q=eta IRT/(zFp_abs)，R=8.314462618 J/(mol·K)。孔口速度Uin=Q/Ain，方向为正y。电极面积和孔口面积不同，不能直接用电极电流密度替代孔口速度。
-RT/p采用给定绝对压力。初始球面Laplace压差约2σ/R=360 Pa，为参考绝对压力的0.36%，本例采用恒压体积换算。若研究更小气泡或较大压力变化，应在摩尔量到体积率的换算中更新气泡压力，并重新验证收支。当前incompressible两相方程未求解气体压缩过程。</code></pre>
+<p>氢气反应的电子转移数z=2。摩尔产气率为eta I/(zF)，其中本例集气效率eta=1，F=96485.33212 C/mol。孔口体积流量Q=eta IRT/(zFp_abs)，R=8.314462618 J/(mol·K)。孔口速度Uin=Q/Ain，方向为正y。电极面积和孔口面积不同，不能直接用电极电流密度替代孔口速度。</p>
+<p>RT/p采用给定绝对压力。初始球面Laplace压差约2σ/R=360 Pa，为参考绝对压力的0.36%，本例采用恒压体积换算。若研究更小气泡或较大压力变化，应在摩尔量到体积率的换算中更新气泡压力，并重新验证收支。当前incompressible两相方程未求解气体压缩过程。</p>
 <h2>12 程序执行顺序</h2>
 <p>所有源码均在src/myElectroIsoFoam，保留本机interIsoFoam与其依赖头文件。新增createElectroFields.H读取电模型参数、创建电势、电导率和电流密度场，并建立electroBalance.csv。</p>
-<pre><code>updateElectricity.H用当前alpha计算电导率、求解电势、积分电流、更新孔口速度及边界phi。recordElectricity.H记录每一步的电流、累计电荷、气体体积与误差。
-在时间步开始时用alpha^n求得I^n和Q^n。改变孔口速度后先通过CorrectPhi求解辅助压力方程，对面体积通量进行投影，保证界面输运使用连续的phi。随后执行几何VOF输运、动量求解和压力校正，得到alpha^(n+1)与速度场。若只改入口U却不修正phi，界面方程可能使用与新边界流量不相容的面通量。
-该分步耦合在时间上为显式更新，电势与流量由时间步起点的界面决定。CSV中的time为更新后流动时刻，electricTime=time−dt为该行导电场对应的界面时刻。输出电势比同目录中的alpha落后一个时间步；当前步长远小于保存间隔，但读取场图和进行时间步研究时仍需区分两个时刻。
-kappa = sigmaL*(alpha1 + epsilon*(1-alpha1));
+<p>updateElectricity.H用当前alpha计算电导率、求解电势、积分电流、更新孔口速度及边界phi。recordElectricity.H记录每一步的电流、累计电荷、气体体积与误差。</p>
+<p>在时间步开始时用alpha^n求得I^n和Q^n。改变孔口速度后先通过CorrectPhi求解辅助压力方程，对面体积通量进行投影，保证界面输运使用连续的phi。随后执行几何VOF输运、动量求解和压力校正，得到alpha^(n+1)与速度场。若只改入口U却不修正phi，界面方程可能使用与新边界流量不相容的面通量。</p>
+<p>该分步耦合在时间上为显式更新，电势与流量由时间步起点的界面决定。CSV中的time为更新后流动时刻，electricTime=time−dt为该行导电场对应的界面时刻。输出电势比同目录中的alpha落后一个时间步；当前步长远小于保存间隔，但读取场图和进行时间步研究时仍需区分两个时刻。</p>
+<pre><code>kappa = sigmaL*(alpha1 + epsilon*(1-alpha1));
 surfaceScalarField kappaf(&quot;kappaf&quot;,1.0/fvc::interpolate(1.0/kappa));
 fvScalarMatrix electricEqn(fvm::laplacian(kappaf,Velec));
 electricEqn.solve();</code></pre>
 <p>上式为便于说明的核心关系，完整源码包含相分数范围限制、量纲声明、电流符号检查和边界赋值。修改电压时编辑0/Velec，修改电导率比、温度或反馈开关时编辑constant/electroProperties。只有更改C++实现时才需要重新编译。</p>
 <h2>13 编译与运行</h2>
-<pre><code>进入当前目录并加载v2512环境后执行./Allrun.sh。所有案例均包含各自源码和Make文件，程序输出至src/myElectroIsoFoam/myElectroIsoFoam。编译记录在log.wmake，求解记录在log.myElectroIsoFoam。
-blockMesh &gt; log.blockMesh 2&gt;&amp;1
+<p>进入当前目录并加载v2512环境后执行./Allrun.sh。所有案例均包含各自源码和Make文件，程序输出至src/myElectroIsoFoam/myElectroIsoFoam。编译记录在log.wmake，求解记录在log.myElectroIsoFoam。</p>
+<pre><code>blockMesh &gt; log.blockMesh 2&gt;&amp;1
 checkMesh &gt; log.checkMesh 2&gt;&amp;1
 setFields &gt; log.setFields 2&gt;&amp;1
 wmake -j 2 src/myElectroIsoFoam &gt; log.wmake 2&gt;&amp;1
-./src/myElectroIsoFoam/myElectroIsoFoam &gt; log.myElectroIsoFoam 2&gt;&amp;1
-wmake的-j 2允许至多两个并行编译任务；src/myElectroIsoFoam指定源目录。Make/files指定主程序和本例可执行文件位置，Make/options链接当前OpenFOAM的几何VOF、有限体积、物性和湍流模型库。源码与链接库须属于同一v2512环境。</code></pre>
+./src/myElectroIsoFoam/myElectroIsoFoam &gt; log.myElectroIsoFoam 2&gt;&amp;1</code></pre>
+<p>wmake的-j 2允许至多两个并行编译任务；src/myElectroIsoFoam指定源目录。Make/files指定主程序和本例可执行文件位置，Make/options链接当前OpenFOAM的几何VOF、有限体积、物性和湍流模型库。源码与链接库须属于同一v2512环境。</p>
 <h2>14 守恒检查与模型检验</h2>
 <p>全周量由5°楔形积分乘72得到。入口速度的计算在楔形域内完成，电流和面积采用同一几何范围，角度系数在其比值中相消。网格边界是平面离散面，实际面积应从网格读取，不能一处使用精确圆面积、另一处使用离散楔形面积而不说明差异。</p>
-<pre><code>每一步按实际时间步累计电荷：C^(n+1)=C^n+I_applied^n Δt。预期气体体积为V_expected=V0+eta RT C/(zFp)。实际气体体积为sum[(1−alpha_i)Vi]。电流不平衡为|I_electrode−I_top|/|I_electrode|，体积收支误差为(Vgas−Vexpected)/Vexpected。</code></pre>
+<p>每一步按实际时间步累计电荷：C^(n+1)=C^n+I_applied^n Δt。预期气体体积为V_expected=V0+eta RT C/(zFp)。实际气体体积为sum[(1−alpha_i)Vi]。电流不平衡为|I_electrode−I_top|/|I_electrode|，体积收支误差为(Vgas−Vexpected)/Vexpected。</p>
 <p>独立制作阶段还按blockMesh实际单元几何重新计算体积积分，与C++原生积分比较。该检查检验字段读取、单元体积权重和全周换算。α有界、电荷守恒和气体体积守恒并不等同于界面形状或速度已经达到网格无关，应分别检查近接触线网格、毛细时间步、气体电导率和初始化方法。</p>
 <p>气体连通性采用alpha.water&lt;0.5、共享面相邻的单元识别，至少8个单元构成候选区域。选取气体体积最大的区域，检查是否与底面相连。电极气泡的质心升高不能替代该连接判据。当前30 ms计算用于附着生长，不提供脱落时刻或脱落半径。</p>
 <h2>15 三组对照的实际结果</h2>
@@ -159,8 +159,8 @@ wmake的-j 2允许至多两个并行编译任务；src/myElectroIsoFoam指定源
 <figure><img loading="lazy" src="/assets/lessons/27/image5.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>冻结对照仍按瞬时相分数求解电势，但气体入口始终采用初始电流换算的流量。</p>
 <figure><img loading="lazy" src="/assets/lessons/27/image6.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
-<pre><code>Vexpected=V0+ηRT/(zFp)∫Iapplied dt；体积曲线由实际网格积分独立复核。
-正则化对照epsilon=1e-3的末电流为0.112684408 A。与epsilon=1e-4比较时，采用electricTime对齐并插值，计算(I_1e-3/I_1e-4−1)。该差异包含正则化改变导电场后进一步引起的界面响应，不能仅按某一固定形状上的电导率误差解释。</code></pre>
+<pre><code>Vexpected=V0+ηRT/(zFp)∫Iapplied dt；体积曲线由实际网格积分独立复核。</code></pre>
+<p>正则化对照epsilon=1e-3的末电流为0.112684408 A。与epsilon=1e-4比较时，采用electricTime对齐并插值，计算(I_1e-3/I_1e-4−1)。该差异包含正则化改变导电场后进一步引起的界面响应，不能仅按某一固定形状上的电导率误差解释。</p>
 <figure><img loading="lazy" src="/assets/lessons/27/image7.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>不同自适应时间步的电流先线性插值到相同electricTime，再计算差异。</p>
 <p>反馈基准全过程最大电流不平衡为2.629163e-10，最终体积收支误差为-5.016237e-10，独立网格积分与原生体积积分差异为8.057219e-14。三组均未检测到脱落。</p>

@@ -56,16 +56,16 @@
 <p>本讲分别设置反应通量扩散、给定体积流量生长及固定界面一维浓度分配三类计算。前两类采用 OpenFOAM，第三类采用独立 Python 有限体积程序。各自用解析关系检查单位、总量守恒和分配条件，为移动界面耦合提供验证基础。</p>
 <p>等效注气模型直接给定进入气泡的体积流量，可分析形状与受力；跨界面传质模型则需求解溶解浓度、界面通量及体积响应。模型选择应与研究目标、可用参数和验证数据相匹配。</p>
 <h2>2 Faraday定律与单位换算</h2>
-<pre><code>Faraday 关系 N=j/(zF)，F=96485.33212 C/mol，z 为每摩尔产物消耗的电子摩尔数。氢气 z=2，j=100 A/m² 时 N=5.18213×10⁻⁴ mol/(m²·s)。电流密度与面积须采用一致单位。</code></pre>
+<p>Faraday 关系 N=j/(zF)，F=96485.33212 C/mol，z 为每摩尔产物消耗的电子摩尔数。氢气 z=2，j=100 A/m² 时 N=5.18213×10⁻⁴ mol/(m²·s)。电流密度与面积须采用一致单位。</p>
 <p>总产气摩尔率由摩尔通量乘电极面积得到。电流仅部分用于目标反应时，引入电流效率；生成气体仅部分进入气泡时，另定义气泡分配比例。两者分别描述反应利用与相间分配，公式中应明确区分。本讲通量验证采用给定产气通量。</p>
-<pre><code>理想气体换算为 Q=ṅRT/pg，其中 pg 为绝对压力，T 为热力学温度。以 ηg 表示进入气泡的比例，可写 Q=ηgjAeRT/(zFpg)。电极面积 Ae 决定总产气量，孔口面积 Ain 决定 Uin=Q/Ain，二者分别定义。</code></pre>
+<p>理想气体换算为 Q=ṅRT/pg，其中 pg 为绝对压力，T 为热力学温度。以 ηg 表示进入气泡的比例，可写 Q=ηgjAeRT/(zFpg)。电极面积 Ae 决定总产气量，孔口面积 Ain 决定 Uin=Q/Ain，二者分别定义。</p>
 <p>孔半径 0.25 mm、Uin=0.05 m/s 时，全圆孔面积约为 1.9635×10⁻⁷ m²，Q≈9.8175×10⁻⁹ m³/s。在 298.15 K、101325 Pa 下，对应摩尔率约 4.013×10⁻⁷ mol/s、析氢等效电流约 0.07744 A。这是由注气速度反算的电流，注气求解器未同时求解电极反应。</p>
 <h2>3 反应通量的扩散验证</h2>
-<pre><code>Faraday_flux_1D 取 D=4.5×10⁻⁹ m²/s、初浓度零，laplacianFoam 的 T 表示 mol/m³ 浓度。底部向内输入对应外法向梯度 N/D=115158.551740197 mol/m⁴，fixedGradient 取正值。</code></pre>
+<p>Faraday_flux_1D 取 D=4.5×10⁻⁹ m²/s、初浓度零，laplacianFoam 的 T 表示 mol/m³ 浓度。底部向内输入对应外法向梯度 N/D=115158.551740197 mol/m⁴，fixedGradient 取正值。</p>
 <p>半无限域恒通量扩散的表面浓度为 2N√[t/(πD)]。t=1 s 时解析值为 8.7168086125 mol/m³，数值壁面外推值为 8.7161016738 mol/m³，相对误差约 0.00811%。单位面积总量满足 ∫cdy=Nt，当前数值检查的相对误差约为 1.02×10⁻¹³。</p>
 <figure><img loading="lazy" src="/assets/lessons/26/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图中比较的是给定产气通量下的浓度剖面。第一层单元中心与壁面位置不同，壁面值使用已知梯度作半网格外推。浓度场尚未包含气液移动界面，因此本例验证的是反应通量的扩散输入与守恒。</p>
-<pre><code>Faraday_flux_wedge 将通量施加于局部电极区域，包含径向扩散，计算至 0.05 s。最终最大单元浓度约为 1.78719726733 mol/m³。该结果应结合局部电极面积与计算时间分析，不能直接与一维例一秒时的最大值比较。轴对称总量需要使用实际楔形体积和全周换算。</code></pre>
+<p>Faraday_flux_wedge 将通量施加于局部电极区域，包含径向扩散，计算至 0.05 s。最终最大单元浓度约为 1.78719726733 mol/m³。该结果应结合局部电极面积与计算时间分析，不能直接与一维例一秒时的最大值比较。轴对称总量需要使用实际楔形体积和全周换算。</p>
 <h2>4 等效注气边界与初始气泡</h2>
 <p>注气例以 interFoam 求水和氢气，电极入口 U 沿正 y 为 0.05 m/s，基底 noSlip，顶部 pressureInletOutletVelocity。入口速度与相分数共同给定气体输入，已有初始气泡用于研究后续生长。</p>
 <pre><code>electrode
@@ -77,19 +77,19 @@
 <p>给定初始气泡可避免在本模型中处理微观成核，但其体积、位置和与入口的连接范围影响初期响应。网格改变时，按单元初始化会改变离散初始体积。因此每个算例都应保存初始体积统计，并在生长曲线中扣除该初值后比较输入导致的增量。</p>
 <h2>5 生长律与网格对照</h2>
 <p>恒定体积流入、无流出时 V=V₀+Qt，等效半径满足 R³=R₀³+3Qt/(4π)。仅在 Qt 远大于 V₀ 时才趋于 R∝t^(1/3)，早期拟合须保留初始体积影响。</p>
-<pre><code>N24、N32、N48 三组采用不同网格。初始气体体积分别为 4.0932×10⁻¹¹、4.9119×10⁻¹¹、6.3672×10⁻¹¹ m³；最终体积分别约为 5.0768×10⁻¹¹、5.8942×10⁻¹¹、7.3490×10⁻¹¹ m³。三组实际结束时刻均接近 0.001 s，但因自适应步长略有差异。</code></pre>
+<p>N24、N32、N48 三组采用不同网格。初始气体体积分别为 4.0932×10⁻¹¹、4.9119×10⁻¹¹、6.3672×10⁻¹¹ m³；最终体积分别约为 5.0768×10⁻¹¹、5.8942×10⁻¹¹、7.3490×10⁻¹¹ m³。三组实际结束时刻均接近 0.001 s，但因自适应步长略有差异。</p>
 <p>以 εV=|Vnum−(V0+Qt)|/(V0+Qt) 定义气体总体积的相对误差，三组结果分别约为 0.01228%、0.01061% 和 0.008512%。比较时应使用每组实际时间和初始体积，而非只比较最终体积大小。细网格的初始体积较大是当前初始化离散结果，不应解释为细网格预测了更强反应。</p>
 <figure><img loading="lazy" src="/assets/lessons/26/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图中不同网格曲线的初始偏移可由离散体积解释。更适合检查输入守恒的量是 V(t)−V0 与 Qt。形状、局部压力和最大速度仍需单独进行网格检验，体积输入误差小不自动说明这些局部量已经收敛。</p>
 <h2>6 延长计算的实际生长结果</h2>
-<pre><code>injection_growth 将结束时间设置为 0.03 s，最大时间步为 1×10⁻⁵ s，maxCo=0.25，maxAlphaCo=0.2，保存间隔为 0.002 s。</code></pre>
+<p>injection_growth 将结束时间设置为 0.03 s，最大时间步为 1×10⁻⁵ s，maxCo=0.25，maxAlphaCo=0.2，保存间隔为 0.002 s。</p>
 <p>最新保存时刻为 0.02999703081 s，初始体积为 4.0932133976735996×10⁻¹¹ m³，最终为 3.35613940857535×10⁻¹⁰ m³，已形成明显体积增长。</p>
 <p>按上述 εV 定义计算，该算例气体总体积的相对误差约为 0.05564%，连通性检查未检测到脱落。结果说明当前时段气泡在持续注气下增长，并保持与壁面连接。形状变化需要结合入口钉扎、接触角、浮力和毛细力共同解释。</p>
 <figure><img loading="lazy" src="/assets/lessons/26/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图中界面来自实际保存场，观察气泡高度、横向扩展和与壁面的连接位置。体积曲线采用积分定义，图形仅提供几何解释。气泡内部最高压力可随曲率变化而降低，但固定速度入口仍保持给定体积流量；摩尔输入是否恒定需要另行考虑气体状态关系。</p>
 <p>续算时应保留网格与最新场，将 startFrom 设为 latestTime 并延长 endTime，直接执行求解器。重新执行初始化会改变起始气泡，因此续算与从初值重新计算应分开操作。已有 Allrun.sh 用于完整重算，日志和时间目录应对应实际采用的起算方式。</p>
 <h2>7 固定界面CST参考模型</h2>
-<pre><code>CST_fixed_interface 是独立一维 Python 有限体积算例，采用归一化坐标和参数。左半域 H=0.2、D=1，右半域 H=1、D=4，定义 c=Hψ，求解 H∂ψ/∂t=∂(DH∂ψ/∂x)/∂x。外端无通量，界面位置固定。平衡时 ψ 连续且趋于常数，c 因 H 不同而出现分配跳跃。</code></pre>
+<p>CST_fixed_interface 是独立一维 Python 有限体积算例，采用归一化坐标和参数。左半域 H=0.2、D=1，右半域 H=1、D=4，定义 c=Hψ，求解 H∂ψ/∂t=∂(DH∂ψ/∂x)/∂x。外端无通量，界面位置固定。平衡时 ψ 连续且趋于常数，c 因 H 不同而出现分配跳跃。</p>
 <p>当前初值左侧 ψ=3、右侧 ψ=0.2，故初始浓度分别为 0.6 和 0.2。两半域等长，总积分为 0.4。平衡时平均 H 为 0.6，因此 ψ平衡=0.4/0.6=2/3，左右平衡浓度分别为 2/15 和 2/3，其比为 0.2。该解析关系同时检验分配和守恒。</p>
 <p>程序采用 160 个单元、时间步 0.0005、隐式 Euler 和三对角消元，共推进 2000 步。相邻面的 DH 使用调和平均，反映串联扩散阻力。运行命令为：</p>
 <pre><code>python3 CST.py &gt; log.CST 2&gt;&amp;1</code></pre>
@@ -117,21 +117,21 @@
 <h2>10 计算问题与几何</h2>
 <p>计算域为5°轴对称楔形域，轴向为y，径向坐标为r。外半径4 mm，总高度8 mm。底部中心圆孔半径0.25 mm，内环为0.25–0.55 mm，外环为0.55–1 mm，外围基底为1–4 mm。几何和润湿条件均绕轴保持不变，因此可使用楔形模型；单方向横流会破坏这一对称条件，需另建三维计算域。</p>
 <p>网格沿径向依次布置4、6、9、24个单元。轴向下部0–2 mm布置40层，上部2–8 mm布置40层，共3440个单元。近壁最小轴向尺寸为50 μm。初始球面半径0.4 mm、球心位于原点，域内部分构成半球。初场几何角为气侧90°。分区润湿案例改变壁面约束后包含初始形状调整，应与随后持续注气共同分析。</p>
-<pre><code>气体从孔口以0.025 m/s进入，入口alpha.water为0。液体与气体密度分别为998和0.0838 kg/m³，运动黏度分别为1e-6和1.05e-4 m²/s，表面张力0.072 N/m。固体表面使用noSlip，顶面使用prghPressure和pressureInletOutletVelocity，允许液体排出。
-alpha.water顶面采用inletOutlet，反流时进入水；两侧面为wedge，退化轴面为empty。</code></pre>
+<p>气体从孔口以0.025 m/s进入，入口alpha.water为0。液体与气体密度分别为998和0.0838 kg/m³，运动黏度分别为1e-6和1.05e-4 m²/s，表面张力0.072 N/m。固体表面使用noSlip，顶面使用prghPressure和pressureInletOutletVelocity，允许液体排出。</p>
+<p>alpha.water顶面采用inletOutlet，反流时进入水；两侧面为wedge，退化轴面为empty。</p>
 <h2>11 物理尺度与离散设置</h2>
-<pre><code>以孔径0.5 mm和入口速度计算，Re=Uin d/νl=12.5，Ca=μl Uin/σ≈3.47e-4，We=ρl Uin²d/σ≈4.33e-3。以初始球面半径0.4 mm计算，Bo=ΔρgR²/σ≈0.0218，毛细时间sqrt(ρlR³/σ)≈0.942 ms。当前条件下表面张力作用显著，30 ms对应约32个初始毛细时间。
-求解器为本机v2512 interIsoFoam，界面采用isoAdvector输运、plicRDF重构。plicRDF通过重构距离函数获得界面法向，并在界面单元中构造分片平面；随后依据面被不同相占据的时空比例计算相通量。该过程与interFoam的代数MULES处理不同。
-fvSolution中的cAlpha保留为interfaceProperties所需读入条目，并不代表isoAdvector采用界面压缩通量。
-时间离散为Euler，对流动量项采用Gauss upwind，压力校正3次，外循环1次。初始时间步1e-5 s，上限1e-5 s；maxCo=0.2、maxAlphaCo=0.15约束自适应时间步。Courant约束依赖速度和网格，不能代替毛细时间尺度检查。使用adjustableRunTime每2 ms保存一次，终点为30 ms。</code></pre>
+<p>以孔径0.5 mm和入口速度计算，Re=Uin d/νl=12.5，Ca=μl Uin/σ≈3.47e-4，We=ρl Uin²d/σ≈4.33e-3。以初始球面半径0.4 mm计算，Bo=ΔρgR²/σ≈0.0218，毛细时间sqrt(ρlR³/σ)≈0.942 ms。当前条件下表面张力作用显著，30 ms对应约32个初始毛细时间。</p>
+<p>求解器为本机v2512 interIsoFoam，界面采用isoAdvector输运、plicRDF重构。plicRDF通过重构距离函数获得界面法向，并在界面单元中构造分片平面；随后依据面被不同相占据的时空比例计算相通量。该过程与interFoam的代数MULES处理不同。</p>
+<p>fvSolution中的cAlpha保留为interfaceProperties所需读入条目，并不代表isoAdvector采用界面压缩通量。</p>
+<p>时间离散为Euler，对流动量项采用Gauss upwind，压力校正3次，外循环1次。初始时间步1e-5 s，上限1e-5 s；maxCo=0.2、maxAlphaCo=0.15约束自适应时间步。Courant约束依赖速度和网格，不能代替毛细时间尺度检查。使用adjustableRunTime每2 ms保存一次，终点为30 ms。</p>
 <h2>12 运行与文件阅读</h2>
-<pre><code>在已加载v2512环境的终端中进入当前算例，执行./Allrun.sh。脚本依次执行blockMesh、checkMesh、初始化命令和interIsoFoam，所有字典均位于本目录。
-blockMesh读取system/blockMeshDict；初始化工具写入0/alpha.water；求解器读取0、constant和system，并将场写入时间目录。日志中的“Selecting reconstructionScheme plicRDF”和“isoAdvection”用于确认实际算法。
-blockMesh &gt; log.blockMesh 2&gt;&amp;1
+<p>在已加载v2512环境的终端中进入当前算例，执行./Allrun.sh。脚本依次执行blockMesh、checkMesh、初始化命令和interIsoFoam，所有字典均位于本目录。</p>
+<p>blockMesh读取system/blockMeshDict；初始化工具写入0/alpha.water；求解器读取0、constant和system，并将场写入时间目录。日志中的“Selecting reconstructionScheme plicRDF”和“isoAdvection”用于确认实际算法。</p>
+<pre><code>blockMesh &gt; log.blockMesh 2&gt;&amp;1
 checkMesh &gt; log.checkMesh 2&gt;&amp;1
 setFields &gt; log.setFields 2&gt;&amp;1
-interIsoFoam &gt; log.interIsoFoam 2&gt;&amp;1
-几何初始化案例的第三条命令为setAlphaField &gt; log.setAlphaField 2&gt;&amp;1。随后读取孔口的alpha.water边界值，确认其为uniform 0，保证输入气体。查看图形时打开case.foam，在alpha.water上提取0.5等值线，并显示底部不同patch的位置。各参数组分别存放，比较时使用相同物理时刻。</code></pre>
+interIsoFoam &gt; log.interIsoFoam 2&gt;&amp;1</code></pre>
+<p>几何初始化案例的第三条命令为setAlphaField &gt; log.setAlphaField 2&gt;&amp;1。随后读取孔口的alpha.water边界值，确认其为uniform 0，保证输入气体。查看图形时打开case.foam，在alpha.water上提取0.5等值线，并显示底部不同patch的位置。各参数组分别存放，比较时使用相同物理时刻。</p>
 <h2>13 三组实际结果及其含义</h2>
 <p>三例均计算到0.03 s。统一润湿与分区润湿的初始体积为1.403808467e-10 m³，几何初始化例为1.331292790e-10 m³。精确半球体积为1.340412866e-10 m³。初始化方法造成的体积差异不能用后续守恒误差解释：前者由曲面离散产生，后者检验输运过程中是否符合给定流量。</p>
 <p>统一润湿与分区润湿的最终壁面alpha=0.5半径分别为0.496394、0.546860 mm。分区半径为0.55 mm，内环较大的液侧角对应较小的气侧角，气泡更易铺展；进入外环后边界角改变，接触范围的增长受到影响。应使用整个时间序列判断这一过程，而不能只凭末帧认定接触线已经达到静态平衡。</p>
@@ -140,7 +140,7 @@ interIsoFoam &gt; log.interIsoFoam 2&gt;&amp;1
 <figure><img loading="lazy" src="/assets/lessons/26/image6.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>两组网格、入口速度、物性与初始球冠相同，仅润湿分区改变。</p>
 <h2>14 初始化与研究设计</h2>
-<pre><code>setAlphaField使用球面隐式函数在网格点上的值切割单元。本例设置sphere、origin (0 0 0)、radius 0.0004及scale -1。切割得到混合单元体积分数，比按中心赋0或1更接近原始几何；但单元内曲面仍由局部平面近似，因此不能将几何初始化理解为消除了网格误差。</code></pre>
+<p>setAlphaField使用球面隐式函数在网格点上的值切割单元。本例设置sphere、origin (0 0 0)、radius 0.0004及scale -1。切割得到混合单元体积分数，比按中心赋0或1更接近原始几何；但单元内曲面仍由局部平面近似，因此不能将几何初始化理解为消除了网格误差。</p>
 <p>几何初始化例的最终体积为2.804849741e-10 m³，体积收支相对误差4.545576e-08。比较不同初始化方法时，先使用各自离散V0计算V0+Qt，再比较壁面位置和质心。若直接比较末体积而忽略初值差异，会把初始化差异误认为输运误差。</p>
 <figure><img loading="lazy" src="/assets/lessons/26/image7.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>内环 θ0=90°；外环 θ0=90°；Uin=0.025 m/s。轮廓由实际保存场提取，不表示接触角已达到平衡。</p>

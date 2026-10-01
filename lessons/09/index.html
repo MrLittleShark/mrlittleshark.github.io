@@ -51,14 +51,14 @@
 <p>配套算例位于原课程“09_snappyHexMesh原理”目录。文中相对路径以该讲目录或已注明的算例目录为准。</p>
 <pre><code>OpenCFD OpenFOAM v2512</code></pre>
 <h2>1 表面几何与背景网格</h2>
-<pre><code>snappyHexMesh 由背景体网格和表面几何出发，经局部细化、区域保留、贴体及加层生成网格，适合三角面片描述的曲面和多凸起结构。本讲以四个凸起表面为例，分别用 castellated、snap、layers 独立目录比较各阶段的实际结果。
-constant/triSurface/posts.stl 通过三角面片及其顶点坐标描述物体表面。求解所需体单元由后续网格生成过程建立，表面三角形数与体单元数没有固定比例关系。
-surfaceCheck 显示 512 个三角形、1 个命名区域和 4 个不连通部分。各部分包含 128 个三角形，均为闭合表面，每条边连接两个面。四个独立凸起共同归于 posts 名称，说明一个命名区域可包含多个分离实体。</code></pre>
+<p>snappyHexMesh 由背景体网格和表面几何出发，经局部细化、区域保留、贴体及加层生成网格，适合三角面片描述的曲面和多凸起结构。本讲以四个凸起表面为例，分别用 castellated、snap、layers 独立目录比较各阶段的实际结果。</p>
+<p>constant/triSurface/posts.stl 通过三角面片及其顶点坐标描述物体表面。求解所需体单元由后续网格生成过程建立，表面三角形数与体单元数没有固定比例关系。</p>
+<p>surfaceCheck 显示 512 个三角形、1 个命名区域和 4 个不连通部分。各部分包含 128 个三角形，均为闭合表面，每条边连接两个面。四个独立凸起共同归于 posts 名称，说明一个命名区域可包含多个分离实体。</p>
 <p>表面包围盒为 (−0.0011,−0.0002,−0.0011)～(0.0011,0.0015,0.0011) m。背景网格从 y=0 开始，凸起底部延伸至 y=−0.0002 m，与底边界相交。保留区域应依据表面与背景网格的相对位置确定。</p>
 <p>表面检查应同时核对法向、连接关系及闭合性。法向不一致会影响内外区域识别，重复三角形、非流形边和缝隙可能改变连通关系。本例的四个法向一致部分分别对应四个凸起。新几何应先修复表面问题，再调整网格参数。</p>
 <h2>2 三阶段的输入与处理顺序</h2>
 <p>三组背景域相同：x、z 为 −0.002～0.002 m，y 为 0～0.004 m。各方向 16 个单元，总计 4096，初始边长 0.25 mm。该网格覆盖目标域，并确定后续细化的基准尺度。</p>
-<pre><code>snappyHexMeshDict 的三个开关分别控制执行阶段：castellatedMesh 负责切割、细化和区域选择，snap 负责顶点贴合，addLayers 负责壁面层生成。三组目录的设置如下。</code></pre>
+<p>snappyHexMeshDict 的三个开关分别控制执行阶段：castellatedMesh 负责切割、细化和区域选择，snap 负责顶点贴合，addLayers 负责壁面层生成。三组目录的设置如下。</p>
 <div class="table-scroll"><table>
 <tr><th>目录</th><th>castellatedMesh</th><th>snap</th><th>addLayers</th></tr>
 <tr><td>castellated</td><td>true</td><td>false</td><td>false</td></tr>
@@ -74,8 +74,8 @@ surfaceCheck 显示 512 个三角形、1 个命名区域和 4 个不连通部分
         type triSurfaceMesh;
         name posts;
     &#125;
-&#125;
-posts.stl 是输入文件名，triSurfaceMesh 指定三角面片几何，posts 是后续 refinementSurfaces 等字典引用的名称。文件名、几何名称和最终边界名称彼此有关，但应分别核对，尤其是在一个 STL 含有多个命名区域时。</code></pre>
+&#125;</code></pre>
+<p>posts.stl 是输入文件名，triSurfaceMesh 指定三角面片几何，posts 是后续 refinementSurfaces 等字典引用的名称。文件名、几何名称和最终边界名称彼此有关，但应分别核对，尤其是在一个 STL 含有多个命名区域时。</p>
 <h2>3 castellated 细化与区域选择</h2>
 <p>六面体每细化一级，各方向边长通常减半，形成八个子单元，等级 l 的名义尺度为 h₀/2ˡ。本例表面 level (1 1) 对应 0.125 mm。粗细交界含过渡单元，最终数量以日志为准。</p>
 <pre><code>refinementSurfaces
@@ -87,16 +87,16 @@ posts.stl 是输入文件名，triSurfaceMesh 指定三角面片几何，posts �
     &#125;
 &#125;
 nCellsBetweenLevels 3;
-locationInMesh (0.0018 0.0038 0.0018);
-level 的两个值规定表面细化的最小和最大等级；本例二者相同，均为一级。nCellsBetweenLevels 为相邻细化等级之间的缓冲单元层数，用于限制尺寸过渡过于集中。它与表面细化等级不同，数值三不表示把整个表面细化三级。</code></pre>
+locationInMesh (0.0018 0.0038 0.0018);</code></pre>
+<p>level 的两个值规定表面细化的最小和最大等级；本例二者相同，均为一级。nCellsBetweenLevels 为相邻细化等级之间的缓冲单元层数，用于限制尺寸过渡过于集中。它与表面细化等级不同，数值三不表示把整个表面细化三级。</p>
 <p>细化和切割将背景网格划分为不同区域后，locationInMesh 指定需要保留的连通区域。本例选点位于计算域上部、远离四个实体内部。该点应处于目标流体区域内部，避开几何表面和网格面；选入固体内部可能保留错误的一侧，导致流体域外形和体积异常。</p>
-<pre><code>maxLocalCells=100000、maxGlobalCells=200000 用于控制细化过程的规模。它们不是要求达到的单元数。实际日志从初始 4096 个单元开始，经过细化一度达到 9854 个单元，区域选择后保留 9066 个单元。这一过程包含增加和删除单元，不能只把初始数量乘以八预测最终结果。</code></pre>
+<p>maxLocalCells=100000、maxGlobalCells=200000 用于控制细化过程的规模。它们不是要求达到的单元数。实际日志从初始 4096 个单元开始，经过细化一度达到 9854 个单元，区域选择后保留 9066 个单元。这一过程包含增加和删除单元，不能只把初始数量乘以八预测最终结果。</p>
 <figure><img loading="lazy" src="/assets/lessons/09/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
 <p>图 1 为 castellated 的结果。靠近凸起的单元更细，几何边界仍呈阶梯状。总体积为 6.203125×10⁻⁸ m³，小于原背景长方体的 6.4×10⁻⁸ m³，差值对应当前网格对实体占据区域的离散表示。</p>
 <p>细化等级的代价可以用一个局部区域估算。若一百个规则六面体全部细化一级，它们将由八百个子单元替代，总数净增加七百个；再细化一级，局部单元数量还会继续增加。实际流程为维持等级过渡，可能同时细化邻近区域。因此选择局部加密范围时，应将表面分辨率、缓冲区宽度和允许单元规模一并记录。</p>
 <h2>4 snap 顶点移动与贴体</h2>
-<pre><code>snap 移动边界顶点并平滑邻近位移，使离散边界接近输入表面。网格面仍为平面多边形，贴体后仍存在曲面近似误差，应结合轮廓、局部截面及质量指标评价。
-snapControls
+<p>snap 移动边界顶点并平滑邻近位移，使离散边界接近输入表面。网格面仍为平面多边形，贴体后仍存在曲面近似误差，应结合轮廓、局部截面及质量指标评价。</p>
+<pre><code>snapControls
 &#123;
     nSmoothPatch 3;
     tolerance 2;
@@ -106,9 +106,9 @@ snapControls
     implicitFeatureSnap true;
     explicitFeatureSnap false;
     multiRegionFeatureSnap false;
-&#125;
-nSmoothPatch 控制表面平滑迭代，nSolveIter 和 nRelaxIter 控制位移求解及相关松弛过程。tolerance 是结合局部网格尺度确定搜索距离的系数，本例的二没有米的单位。nFeatureSnapIter 给出特征贴合迭代次数，几何棱边附近的点移动与这些控制共同有关。
-本例采用隐式特征处理，implicitFeatureSnap 为 true，explicitFeatureSnap 为 false，细化控制中的 features 列表为空。显式特征处理需要先提取特征边，在字典中引用相应 eMesh 文件，并启用对应设置。</code></pre>
+&#125;</code></pre>
+<p>nSmoothPatch 控制表面平滑迭代，nSolveIter 和 nRelaxIter 控制位移求解及相关松弛过程。tolerance 是结合局部网格尺度确定搜索距离的系数，本例的二没有米的单位。nFeatureSnapIter 给出特征贴合迭代次数，几何棱边附近的点移动与这些控制共同有关。</p>
+<p>本例采用隐式特征处理，implicitFeatureSnap 为 true，explicitFeatureSnap 为 false，细化控制中的 features 列表为空。显式特征处理需要先提取特征边，在字典中引用相应 eMesh 文件，并启用对应设置。</p>
 <p>本例 Allrun.sh 没有执行 surfaceFeatureExtract，阅读其他版本教程时应先确认其所用方式。</p>
 <p>贴合后单元数仍为 9066，但点数由 11627 减少到 11435，面数由 29712 减少到 29520。日志记录了面合并，因此单元数不变并不表示网格完全没有改变。posts 边界面数也由 1044 降到 852，点坐标和边界面组织均发生调整。</p>
 <figure><img loading="lazy" src="/assets/lessons/09/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
@@ -125,14 +125,14 @@ layers
 &#125;
 expansionRatio 1.2;
 finalLayerThickness 0.3;
-minThickness 0.05;
-这些条目位于 addLayersControls。&quot;posts.*&quot; 按名称匹配目标边界；本例生成的 posts 边界被匹配。nSurfaceLayers=2 是目标层数，expansionRatio=1.2 表示向外相邻层厚度的增长关系。
-relativeSizes=true 表示厚度参数相对于局部网格尺度定义，finalLayerThickness=0.3 对应最外层的目标相对厚度，minThickness 给出允许保留的最小相对总厚度。</code></pre>
+minThickness 0.05;</code></pre>
+<p>这些条目位于 addLayersControls。&quot;posts.*&quot; 按名称匹配目标边界；本例生成的 posts 边界被匹配。nSurfaceLayers=2 是目标层数，expansionRatio=1.2 表示向外相邻层厚度的增长关系。</p>
+<p>relativeSizes=true 表示厚度参数相对于局部网格尺度定义，finalLayerThickness=0.3 对应最外层的目标相对厚度，minThickness 给出允许保留的最小相对总厚度。</p>
 <p>可用规则网格作厚度估算。若局部基准尺寸 h=0.125 mm，则最外层目标厚度为 0.3h=37.5 μm，两层按 1.2 的比值排列，第一层约为 31.25 μm，总厚度约为 68.75 μm。实际贴合后各位置的尺度、法向和约束不同，应以生成场及日志统计检查最终厚度。</p>
-<pre><code>层数、厚度和覆盖面积必须分别评价。某些表面位置可能因尖角、狭缝、法向冲突或质量限制而停止挤出，最终层数也可能低于目标值。读取 nSurfaceLayers、thickness 和 thicknessFraction 可以检查实际层数、总厚度及其相对目标的比例。本例启用了 layerFields 和 layerSets，以保存这些诊断结果。</code></pre>
+<p>层数、厚度和覆盖面积必须分别评价。某些表面位置可能因尖角、狭缝、法向冲突或质量限制而停止挤出，最终层数也可能低于目标值。读取 nSurfaceLayers、thickness 和 thicknessFraction 可以检查实际层数、总厚度及其相对目标的比例。本例启用了 layerFields 和 layerSets，以保存这些诊断结果。</p>
 <h2>6 本例加层失败的实际过程</h2>
-<pre><code>layers 目录已启用加层阶段，但最终没有成功生成壁面层。其最终单元数、点数、面数及体积均与 snap 相同，仍为 9066 个单元。log.snappyHexMesh 最后的加层统计为：
-Extruding 0 out of 852 faces (0%).
+<p>layers 目录已启用加层阶段，但最终没有成功生成壁面层。其最终单元数、点数、面数及体积均与 snap 相同，仍为 9066 个单元。log.snappyHexMesh 最后的加层统计为：</p>
+<pre><code>Extruding 0 out of 852 faces (0%).
 Added 0 out of 1704 cells (0%).
 Writing 0 faces inside added layer to faceSet layerFaces
 Layer mesh : cells:9066  faces:29520  points:11435</code></pre>
@@ -155,13 +155,13 @@ checkMesh &gt; log.checkMesh 2&gt;&amp;1
 surfaceCheck constant/triSurface/posts.stl &gt; log.surfaceCheck 2&gt;&amp;1
 snappyHexMesh -overwrite &gt; log.snappyHexMesh 2&gt;&amp;1
 checkMesh &gt; log.checkMesh.2 2&gt;&amp;1
-touch case.foam
-第一次 checkMesh 检查背景网格，第二次检查最终网格，日志分别保存为 log.checkMesh 与 log.checkMesh.2。比较单元数量或质量时，应读取后者。-overwrite 将最终网格写回输入网格位置，使 case.foam 打开后使用本次结果；不用该选项时，应检查新产生的网格时间目录。</code></pre>
+touch case.foam</code></pre>
+<p>第一次 checkMesh 检查背景网格，第二次检查最终网格，日志分别保存为 log.checkMesh 与 log.checkMesh.2。比较单元数量或质量时，应读取后者。-overwrite 将最终网格写回输入网格位置，使 case.foam 打开后使用本次结果；不用该选项时，应检查新产生的网格时间目录。</p>
 <p>完成一个目录后，可以进入相邻的 snap 或 layers 目录执行各自脚本。运行前查看三个开关，有助于确认目录中的实际设置：</p>
 <pre><code>foamDictionary system/snappyHexMeshDict -entry castellatedMesh -value
 foamDictionary system/snappyHexMeshDict -entry snap -value
-foamDictionary system/snappyHexMeshDict -entry addLayers -value
-surfaceCheck 输出几何尺寸、三角形、边连接和闭合性；surfaceFeatureExtract -help 用于查看显式特征提取帮助；snappyHexMesh -help 用于查看本机支持的选项。-help 只显示说明，不生成特征文件或网格。当前案例以本机 v2512 帮助和实际字典为准。</code></pre>
+foamDictionary system/snappyHexMeshDict -entry addLayers -value</code></pre>
+<p>surfaceCheck 输出几何尺寸、三角形、边连接和闭合性；surfaceFeatureExtract -help 用于查看显式特征提取帮助；snappyHexMesh -help 用于查看本机支持的选项。-help 只显示说明，不生成特征文件或网格。当前案例以本机 v2512 帮助和实际字典为准。</p>
 <h2>8 结果对比与网格质量判断</h2>
 <p>三个算例的脚本均正常结束，最终网格均通过本次 checkMesh 检查。测试中的 PASS 表示执行及相应网格检查通过；加层目标仍需依据上一节的实际层数评价。本讲没有执行流场求解，不包含阻力、速度或传热结果。</p>
 <div class="table-scroll"><table>
@@ -173,7 +173,7 @@ surfaceCheck 输出几何尺寸、三角形、边连接和闭合性；surfaceFea
 <tr><td>最大非正交角/°</td><td>25.2394</td><td>28.6383</td><td>28.6383</td></tr>
 <tr><td>最终新增壁面层面数</td><td>未启用</td><td>未启用</td><td>0</td></tr>
 </table></div>
-<pre><code>在 ParaView 中打开各自 case.foam，选择 Surface With Edges，并设置相同视角。外表面用于检查几何贴合，穿过凸起的截面用于检查内部尺寸过渡和壁面法向网格。若同时显示 STL 与网格，应选择不同颜色或透明度，避免两个表面重叠后掩盖局部偏差。</code></pre>
+<p>在 ParaView 中打开各自 case.foam，选择 Surface With Edges，并设置相同视角。外表面用于检查几何贴合，穿过凸起的截面用于检查内部尺寸过渡和壁面法向网格。若同时显示 STL 与网格，应选择不同颜色或透明度，避免两个表面重叠后掩盖局部偏差。</p>
 <p>单元数相同而几何质量不同，是本例的重要观察。snap 改变点的位置并合并部分面，几何体积和质量指标均随之变化；layers 则因最终挤出全部撤销而保持与 snap 相同。解释结果时，应同时列出开关、拓扑数量、几何量和阶段日志。</p>
 <p>若需要进一步量化几何误差，可以在多个固定高度提取凸起截面，把网格边界位置与输入 STL 的截面比较，并报告局部距离或截面面积差。只比较流体域总体积可能掩盖局部误差，因为不同位置的边界偏移可能相互抵消。几何比较的坐标、截面位置和误差单位应保持一致，才能判断加密或贴合设置是否改善了目标部位。</p>
 <h2>9 错误原因与参数比较方法</h2>
@@ -183,12 +183,12 @@ surfaceCheck 输出几何尺寸、三角形、边连接和闭合性；surfaceFea
 <p>减小层厚会减少所需挤出空间，却也可能进一步减小面金字塔体积；增加层厚可能改善体积尺度，又可能在狭窄区域导致挤出冲突。因此调整方向需要由实际失败指标决定。关闭检查项目仅改变接受规则，不能说明新增单元已经具有足够质量。</p>
 <p>最后还需区分几何分辨率与近壁流动分辨率。获得两层网格后，仍要根据后续流动物性、雷诺数和壁面处理方法确定第一层高度是否合适。当前阶段先完成可靠的几何与网格检查，再在对应流动课程中评价梯度和壁面量。</p>
 <h2>10 几何分辨率 体网格分辨率与质量阈值</h2>
-<pre><code>STL近似曲面的误差可以先作几何估算。将半径R的圆周离散为N段，弦与圆弧的最大径向差为R[1−cos(π/N)]。本例R=0.3mm、N=32，弦高约1.44μm；当前一级细化体网格尺度约125μm。该比较说明几何面片与体单元控制不同的误差来源，增加其中一类分辨率不能自动消除另一类误差。</code></pre>
+<p>STL近似曲面的误差可以先作几何估算。将半径R的圆周离散为N段，弦与圆弧的最大径向差为R[1−cos(π/N)]。本例R=0.3mm、N=32，弦高约1.44μm；当前一级细化体网格尺度约125μm。该比较说明几何面片与体单元控制不同的误差来源，增加其中一类分辨率不能自动消除另一类误差。</p>
 <p>生成边界首先应与输入STL在相同截面比较，核对柱顶、柱侧与间隙位置。随后再评价STL相对设计几何的误差。若只观察流场云图，很难区分边界几何误差与方程离散误差；两者都可能改变局部梯度和通量。</p>
 <p>细化等级还会改变绝对体积尺度。边长减半，体积缩小八倍，因此minVol等绝对阈值需要结合目标最小单元重新判断。非正交角、偏斜度和相邻体积比属于不同类型的条件。第10讲以正的minVol阈值修复毫米尺度层生成失败，并用实际覆盖与扩展几何检查评价结果，形成从参数估算到真实网格检查的完整训练。</p>
 <h2>11 资料来源</h2>
-<pre><code>本讲依据 castellated、snap、layers 的完整字典、surfaceCheck 日志、snappyHexMesh 日志和最终 checkMesh 结果编写。质量阈值取自本机 v2512 安装目录中的 caseDicts/meshQualityDict。
-继续阅读可查阅本机 snappyHexMesh、surfaceCheck、surfaceFeatureExtract 帮助，以及《OpenFOAM 命令与文件大全 v2512》第 6.2—6.3、16.1—16.4、17.7、18.7 章，并对照实际三阶段结果理解各参数作用。</code></pre>
+<p>本讲依据 castellated、snap、layers 的完整字典、surfaceCheck 日志、snappyHexMesh 日志和最终 checkMesh 结果编写。质量阈值取自本机 v2512 安装目录中的 caseDicts/meshQualityDict。</p>
+<p>继续阅读可查阅本机 snappyHexMesh、surfaceCheck、surfaceFeatureExtract 帮助，以及《OpenFOAM 命令与文件大全 v2512》第 6.2—6.3、16.1—16.4、17.7、18.7 章，并对照实际三阶段结果理解各参数作用。</p>
 <section class="exercise"><h2>课后练习</h2><p>通读一份完整 snappyHexMeshDict 注释，按三个阶段分类标出关键参数并注明各自控制什么。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
 </div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="9">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=9">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/08/">← 上一讲<span>blockMesh 与轴对称</span></a><a href="/lessons/10/">下一讲 →<span>snappyHexMesh 实战</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
 </main>
