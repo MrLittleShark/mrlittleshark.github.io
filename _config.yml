@@ -1,0 +1,49 @@
+title: OpenFOAM v2512 学习站
+subtitle: FoamLab
+description: 从第一个算例到电极气泡建模，面向初学者的 OpenFOAM v2512 中文学习网站。
+author: MrLittleShark
+language: zh-CN
+timezone: Asia/Shanghai
+url: https://mrlittleshark.github.io
+root: /
+permalink: :title/
+source_dir: source-openfoam
+public_dir: public-openfoam
+theme: foam-lab
+default_layout: page
+post_asset_folder: false
+relative_link: false
+syntax_highlighter: ''
+highlight:
+  enable: false
+prismjs:
+  enable: false
+marked:
+  headerIds: true
+  mangle: false
+external_link:
+  enable: false
+skip_render:
+  - 'assets/**'
+  - 'downloads/**'
+exclude: []
+include:
+  - '.nojekyll'
+per_page: 0
+index_generator:
+  path: archive-unused
+  per_page: 0
+search:
+  path: search.xml
+  field: page
+  content: false
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  content: false
+deploy:
+  type: git-safe
+  repo: https://github.com/MrLittleShark/MrLittleShark.github.io.git
+  branch: main
+  source_branch: foamlab-source

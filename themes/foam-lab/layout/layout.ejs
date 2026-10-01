@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><%= page.title || 'OpenFOAM 学习站' %> · FoamLab</title>
+  <meta name="description" content="<%= page.description || '面向初学者的 OpenFOAM v2512 学习站。28 讲课程、命令查询、配置手册与电极气泡建模。' %>">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+</head>
+<body data-section="<%= page.section || page.layout || '' %>" data-lesson="<%= page.lesson_id || '' %>">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    <% const nav=[['/','home','学习概览'],['/courses/','book','课程学习','28'],['/start/','arrow','快速开始'],['/commands/','terminal','命令速查'],['/dictionaries/','file','文件与 Dict'],['/reference/','book','参考手册'],['/bubble/','bubble','电极气泡专题']]; nav.forEach(([url,ico,label,badge])=>{ const active = url==='/' ? page.path==='index.html' : page.path && (page.path.startsWith(url.slice(1)) || (url==='/courses/' && page.path.startsWith('lessons/'))); %>
+    <a href="<%= url %>" class="nav-item <%= active?'active':'' %>" <%- active?'aria-current="page"':'' %>><%- icon(ico) %><span><%= label %></span><% if(badge){ %><span class="nav-badge"><%= badge %></span><% } %></a>
+    <% }); %>
+    <a href="/account/" class="nav-item <%= page.section==='account'?'active':'' %>"><%- icon('grid') %><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    <% [['assignments','task','作业中心'],['announcements','bell','课程公告'],['community','chat','提问与答疑'],['resources','download','资料下载']].forEach(([slug,ico,label])=>{ %>
+    <a href="/<%= slug %>/" class="nav-item <%= page.section===slug?'active':'' %>" <%- page.section===slug?'aria-current="page"':'' %>><%- icon(ico) %><span><%= label %></span></a><% }); %>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><%- icon('menu') %></button><div class="breadcrumb">学习空间 <span>/</span> <strong><%= page.title || '学习概览' %></strong></div><button class="search-trigger" data-open-search><%- icon('search') %><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><%- icon('github') %></a></header>
+  <main id="main"><%- body %></main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><%- icon('search') %><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

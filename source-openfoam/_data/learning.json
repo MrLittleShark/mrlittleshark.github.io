@@ -1,0 +1,3984 @@
+{
+  "lessons": [
+    {
+      "id": 1,
+      "title": "环境与 Linux",
+      "fullTitle": "CFD 工作流程 · Linux 必备 · OpenFOAM 安装与环境",
+      "stage": 1,
+      "stageName": "环境与首次上手",
+      "url": "/lessons/01/",
+      "summary": "CFD 完整链条：几何 → 网格 → 物理模型 → 离散 → 求解 → 后处理 → 验证；以“微电极上的一个析氢气泡”为例，说明各阶段的输入、输出及检查方法；②OpenFOAM 是什么，三大分支（.org / .com / foam-extend）的差异与字典不兼容问题；本课程统一用 v2512（.com）的理由；③安装：WSL2+Ubuntu / 原生 Linux / Docker 三条路径，选择一种方式完成安装与验证；④环境变量与 bashrc：$WM_PROJECT_DIR、$FOAM_RUN、$FOAM_TUTORIALS、$FOAM_SOLVERS、$FOAM_SRC；⑤Linux 必备命令：ls / cd / cp / rm / find / grep / tail -f / vim 基本操作、管道与重定向；⑥源码目录组织与一个 application 的标准结构（Make/files、Make/options）。",
+      "topics": "①CFD 完整链条：几何 → 网格 → 物理模型 → 离散 → 求解 → 后处理 → 验证；以“微电极上的一个析氢气泡”为例，说明各阶段的输入、输出及检查方法；②OpenFOAM 是什么，三大分支（.org / .com / foam-extend）的差异与字典不兼容问题；本课程统一用 v2512（.com）的理由；③安装：WSL2+Ubuntu / 原生 Linux / Docker 三条路径，选择一种方式完成安装与验证；④环境变量与 bashrc：$WM_PROJECT_DIR、$FOAM_RUN、$FOAM_TUTORIALS、$FOAM_SOLVERS、$FOAM_SRC；⑤Linux 必备命令：ls / cd / cp / rm / find / grep / tail -f / vim 基本操作、管道与重定向；⑥源码目录组织与一个 application 的标准结构（Make/files、Make/options）。",
+      "homework": "独立完成安装并成功执行 foamVersion 与 interFoam -help；用 grep 在 $FOAM_SOLVERS 中找出全部 VOF 类多相求解器并列表，标出哪些含相变或传质。",
+      "duration": 90
+    },
+    {
+      "id": 2,
+      "title": "方腔流动与 ParaView",
+      "fullTitle": "第一个算例：运行顶盖驱动方腔 + ParaView 入门",
+      "stage": 1,
+      "stageName": "环境与首次上手",
+      "url": "/lessons/02/",
+      "summary": "cavity 算例全流程：blockMesh → icoFoam → paraFoam，先执行基准算例并记录输出，再分析参数含义；②日志与后台运行习惯：solver > log 2>&1 &、tail -f log、foamMonitor 画残差；③ParaView 基础操作：界面布局、鼠标操作、场变量显示、Slice / Glyph / Plot Over Line / Stream Tracer；④中途停止与续算（stopAt writeNow / startFrom latestTime）；⑤算例目录清理（foamCleanTutorials、foamListTimes -rm）。",
+      "topics": "①cavity 算例全流程：blockMesh → icoFoam → paraFoam，先执行基准算例并记录输出，再分析参数含义；②日志与后台运行习惯：solver > log 2>&1 &、tail -f log、foamMonitor 画残差；③ParaView 基础操作：界面布局、鼠标操作、场变量显示、Slice / Glyph / Plot Over Line / Stream Tracer；④中途停止与续算（stopAt writeNow / startFrom latestTime）；⑤算例目录清理（foamCleanTutorials、foamListTimes -rm）。",
+      "homework": "把 Re 从 100 改到 1000 重新计算，记录求解耗时与主涡中心位置的变化，并截图对比。",
+      "duration": 90
+    },
+    {
+      "id": 3,
+      "title": "算例目录与量纲",
+      "fullTitle": "算例目录结构：0 / constant / system 三目录",
+      "stage": 1,
+      "stageName": "环境与首次上手",
+      "url": "/lessons/03/",
+      "summary": "三目录职责分工：初始与边界场 / 物性与网格 / 数值控制；②量纲向量 [kg m s K mol A cd] 的读法与常见错误（顺带指出浓度用 mol/m³ 时第五位 mol 的写法）；③constant：transportProperties、polyMesh、boundary 文件与 patch 类型；④system：controlDict（时间控制、写盘、functions）、fvSchemes、fvSolution 各管什么；⑤0 目录场文件结构：FoamFile header 中的 class（volScalarField / volVectorField）、dimensions、internalField、boundaryField；⑥重点提示：不可压单相求解器中的 p 是运动学压力 p/ρ，单位 m²/s²；而 interFoam 等两相求解器中的 p、p_rgh 是真实压力，单位 Pa——同一个名字，两套单位。",
+      "topics": "①三目录职责分工：初始与边界场 / 物性与网格 / 数值控制；②量纲向量 [kg m s K mol A cd] 的读法与常见错误（顺带指出浓度用 mol/m³ 时第五位 mol 的写法）；③constant：transportProperties、polyMesh、boundary 文件与 patch 类型；④system：controlDict（时间控制、写盘、functions）、fvSchemes、fvSolution 各管什么；⑤0 目录场文件结构：FoamFile header 中的 class（volScalarField / volVectorField）、dimensions、internalField、boundaryField；⑥重点提示：不可压单相求解器中的 p 是运动学压力 p/ρ，单位 m²/s²；而 interFoam 等两相求解器中的 p、p_rgh 是真实压力，单位 Pa——同一个名字，两套单位。",
+      "homework": "手写一份 0/U，分别制造量纲错误与边界名不匹配错误，记录两种报错信息的差异。",
+      "duration": 90
+    },
+    {
+      "id": 4,
+      "title": "日志阅读与排错",
+      "fullTitle": "读日志、定位报错、字典语法与自助查询能力",
+      "stage": 1,
+      "stageName": "环境与首次上手",
+      "url": "/lessons/04/",
+      "summary": "屏幕输出逐行解读：Time、Courant Number、各方程初/终残差、continuity errors、ExecutionTime/ClockTime；②高频报错诊断路径：keyword not found、inconsistent dimensions、floating point exception、Maximum number of iterations exceeded、cannot find file；③字典通用语法：#include、#includeEtc、宏替换 $、正则表达式匹配 patch、注释与 #calc；④自助查询三件套：solver -help、故意写非法关键词让程序列出全部合法选项、在 $FOAM_TUTORIALS 与源码中 grep 检索。",
+      "topics": "①屏幕输出逐行解读：Time、Courant Number、各方程初/终残差、continuity errors、ExecutionTime/ClockTime；②高频报错诊断路径：keyword not found、inconsistent dimensions、floating point exception、Maximum number of iterations exceeded、cannot find file；③字典通用语法：#include、#includeEtc、宏替换 $、正则表达式匹配 patch、注释与 #calc；④自助查询三件套：solver -help、故意写非法关键词让程序列出全部合法选项、在 $FOAM_TUTORIALS 与源码中 grep 检索。",
+      "homework": "在 cavity 中人为制造三类不同报错，各写一段“现象 → 定位 → 原因 → 修复”的诊断记录。",
+      "duration": 90
+    },
+    {
+      "id": 5,
+      "title": "溃坝与上升气泡",
+      "fullTitle": "三维溃坝：VOF 自由面流动",
+      "stage": 2,
+      "stageName": "典型算例与物理分析",
+      "url": "/lessons/05/",
+      "summary": "interFoam 与 VOF 方法的基本思路；②新出现的字典：g、两相 transportProperties（含表面张力系数 sigma）、turbulenceProperties（laminar）；③新出现的场：alpha.water、p_rgh 与 p 的区别与换算；④setFields + setFieldsDict 做初始液柱；⑤adjustableRunTime、maxCo 与 maxAlphaCo 的联动；⑥ParaView 中用 Contour(alpha=0.5) 重构自由面；⑦延伸：用 sphereToCell 放一个气泡——同一套设置从“水柱倒塌”变成“气泡上升”。",
+      "topics": "①interFoam 与 VOF 方法的基本思路；②新出现的字典：g、两相 transportProperties（含表面张力系数 sigma）、turbulenceProperties（laminar）；③新出现的场：alpha.water、p_rgh 与 p 的区别与换算；④setFields + setFieldsDict 做初始液柱；⑤adjustableRunTime、maxCo 与 maxAlphaCo 的联动；⑥ParaView 中用 Contour(alpha=0.5) 重构自由面；⑦延伸：用 sphereToCell 放一个气泡——同一套设置从“水柱倒塌”变成“气泡上升”。",
+      "homework": "把溃坝改成静止水中的单个气泡上升（二维，setFields 放圆形气泡），提取气泡体积与质心高度随时间的变化并求上升速度；换两套网格对比，记录你看到的异常现象。",
+      "duration": 90
+    },
+    {
+      "id": 6,
+      "title": "圆柱绕流",
+      "fullTitle": "圆柱绕流：低 Re 对照实验与受力分析",
+      "stage": 2,
+      "stageName": "典型算例与物理分析",
+      "url": "/lessons/06/",
+      "summary": "同一几何在 Re=10 / 40 / 100 / 200 下的设置差异与结果差异（附着流 → 对称回流泡 → 卡门涡街）；②多块 blockMesh 网格与近壁加密；③forceCoeffs functionObject 计算 Cd、Cl，FFT 求 Strouhal 数；④何时必须引入湍流模型：判据与代价，并说明本课题尺度下为什么基本不需要；⑤时间步、离散格式对涡街形态的影响（同一 Re 下的多组对照）。",
+      "topics": "①同一几何在 Re=10 / 40 / 100 / 200 下的设置差异与结果差异（附着流 → 对称回流泡 → 卡门涡街）；②多块 blockMesh 网格与近壁加密；③forceCoeffs functionObject 计算 Cd、Cl，FFT 求 Strouhal 数；④何时必须引入湍流模型：判据与代价，并说明本课题尺度下为什么基本不需要；⑤时间步、离散格式对涡街形态的影响（同一 Re 下的多组对照）。",
+      "homework": "复现 Re=100 的 St 数并与实验值对比，写出偏差来源的分析（网格、计算域大小、时间步、格式）。",
+      "duration": 90
+    },
+    {
+      "id": 7,
+      "title": "网格质量",
+      "fullTitle": "网格质量：什么是好网格 + checkMesh 判读",
+      "stage": 3,
+      "stageName": "网格生成与质量",
+      "url": "/lessons/07/",
+      "summary": "网格类型：结构化 / 非结构化 / 多面体 / 切割体，各自的适用场景；②质量指标的几何定义与其对离散精度的作用机制：非正交度、偏斜度、纵横比、体积比、面翘曲、负体积；③checkMesh 输出逐项解读与可接受阈值（含 -allGeometry -allTopology）；④质量指标与数值设置的耦合：非正交度大 → 需开非正交修正 → 迭代变多 → 变慢；⑤界面问题的特殊要求：界面扫过的区域要用尺寸均匀、接近立方的单元，并保证气泡半径方向有足够的网格数（具体多少，第 17 讲自己测）。",
+      "topics": "①网格类型：结构化 / 非结构化 / 多面体 / 切割体，各自的适用场景；②质量指标的几何定义与其对离散精度的作用机制：非正交度、偏斜度、纵横比、体积比、面翘曲、负体积；③checkMesh 输出逐项解读与可接受阈值（含 -allGeometry -allTopology）；④质量指标与数值设置的耦合：非正交度大 → 需开非正交修正 → 迭代变多 → 变慢；⑤界面问题的特殊要求：界面扫过的区域要用尺寸均匀、接近立方的单元，并保证气泡半径方向有足够的网格数（具体多少，第 17 讲自己测）。",
+      "homework": "对三套质量不同的网格跑 checkMesh，分别写出各自需要配套的数值设置及理由。",
+      "duration": 90
+    },
+    {
+      "id": 8,
+      "title": "blockMesh 与轴对称",
+      "fullTitle": "blockMesh：结构化网格与轴对称计算域",
+      "stage": 3,
+      "stageName": "网格生成与质量",
+      "url": "/lessons/08/",
+      "summary": "blockMeshDict 结构：scale、vertices、blocks、edges、boundary、mergePatchPairs；②hex 顶点顺序与右手法则（写反的后果与识别方法）；③simpleGrading / edgeGrading / multi-grading 做加密，以及“哪里不能加密”；④弧线边（arc / spline）与曲面块；⑤patch 类型：wall / patch / empty / symmetry / wedge；二维算例的 empty 与轴对称算例的 wedge；⑥多块拼接与共节点检查；把电极面与绝缘基底分成两个 patch。",
+      "topics": "①blockMeshDict 结构：scale、vertices、blocks、edges、boundary、mergePatchPairs；②hex 顶点顺序与右手法则（写反的后果与识别方法）；③simpleGrading / edgeGrading / multi-grading 做加密，以及“哪里不能加密”；④弧线边（arc / spline）与曲面块；⑤patch 类型：wall / patch / empty / symmetry / wedge；二维算例的 empty 与轴对称算例的 wedge；⑥多块拼接与共节点检查；把电极面与绝缘基底分成两个 patch。",
+      "homework": "用 blockMesh 建一个二维轴对称（wedge）微电极计算域：电极面与绝缘基底为两个 patch，气泡活动区为均匀方网格、外围逐渐放粗；checkMesh 全部通过。",
+      "duration": 90
+    },
+    {
+      "id": 9,
+      "title": "snappyHexMesh 原理",
+      "fullTitle": "snappyHexMesh 原理：三步走框架",
+      "stage": 3,
+      "stageName": "网格生成与质量",
+      "url": "/lessons/09/",
+      "summary": "前提：背景网格 blockMesh + 水密 STL + surfaceFeatures 特征线提取；②castellation：refinementSurfaces / refinementRegions / 细化层级 / locationInMesh；③snap：贴体迭代、特征线捕捉、nSmoothPatch / tolerance / nSolveIter；④addLayers：expansionRatio、finalLayerThickness、minThickness、relativeSizes 与覆盖率；⑤meshQualityControls 在三个阶段中的作用。",
+      "topics": "①前提：背景网格 blockMesh + 水密 STL + surfaceFeatures 特征线提取；②castellation：refinementSurfaces / refinementRegions / 细化层级 / locationInMesh；③snap：贴体迭代、特征线捕捉、nSmoothPatch / tolerance / nSolveIter；④addLayers：expansionRatio、finalLayerThickness、minThickness、relativeSizes 与覆盖率；⑤meshQualityControls 在三个阶段中的作用。",
+      "homework": "通读一份完整 snappyHexMeshDict 注释，按三个阶段分类标出关键参数并注明各自控制什么。",
+      "duration": 90
+    },
+    {
+      "id": 10,
+      "title": "snappyHexMesh 实战",
+      "fullTitle": "snappyHexMesh 操作与验证与调参",
+      "stage": 3,
+      "stageName": "网格生成与质量",
+      "url": "/lessons/10/",
+      "summary": "圆柱、混合弯管两个梯度算例，再加一个微柱阵列电极；②从 STL 到可用网格的脚本化流程（run_mesh.sh / Allrun）；③故意用一组会导致边界层覆盖率不足的参数，读日志自行定位并修好；④并行加网格：decomposePar → snappyHexMesh -parallel → reconstructParMesh；⑤surfaceCheck 与 STL 修补要点（微米级几何的单位陷阱）；⑥本方向的取舍：浓度边界层需要贴壁加密，但高纵横比的贴壁层会恶化接触线附近的曲率计算。",
+      "topics": "①圆柱、混合弯管两个梯度算例，再加一个微柱阵列电极；②从 STL 到可用网格的脚本化流程（run_mesh.sh / Allrun）；③故意用一组会导致边界层覆盖率不足的参数，读日志自行定位并修好；④并行加网格：decomposePar → snappyHexMesh -parallel → reconstructParMesh；⑤surfaceCheck 与 STL 修补要点（微米级几何的单位陷阱）；⑥本方向的取舍：浓度边界层需要贴壁加密，但高纵横比的贴壁层会恶化接触线附近的曲率计算。",
+      "homework": "对微柱阵列电极 STL 生成网格，要求最大非正交度 <65、无负体积单元；若加贴壁层，覆盖率 >85%，并写出你对贴壁层的取舍理由。",
+      "duration": 90
+    },
+    {
+      "id": 11,
+      "title": "网格转换与边界分区",
+      "fullTitle": "网格转换、topoSet / createPatch 与 CAD 建模要点",
+      "stage": 3,
+      "stageName": "网格生成与质量",
+      "url": "/lessons/11/",
+      "summary": "网格转换：fluentMeshToFoam、gmshToFoam、ideasUnvToFoam、cfMesh 简介与常见转换失败原因；②操作工具：transformPoints、mirrorMesh、mergeMeshes、refineMesh、createPatch、renumberMesh；③topoSet / setSet：按几何形状（box、sphere、cylinder）选取 cellSet / faceSet，并转为 cellZone；④用 faceSet + createPatch 从一整块壁面上切出电极面（或多个成核位点）；⑤CAD 建模要点：水密性、特征线保留、STL 导出精度与单位（微米级几何尤其要核对单位）。",
+      "topics": "①网格转换：fluentMeshToFoam、gmshToFoam、ideasUnvToFoam、cfMesh 简介与常见转换失败原因；②操作工具：transformPoints、mirrorMesh、mergeMeshes、refineMesh、createPatch、renumberMesh；③topoSet / setSet：按几何形状（box、sphere、cylinder）选取 cellSet / faceSet，并转为 cellZone；④用 faceSet + createPatch 从一整块壁面上切出电极面（或多个成核位点）；⑤CAD 建模要点：水密性、特征线保留、STL 导出精度与单位（微米级几何尤其要核对单位）。",
+      "homework": "把一个 gmsh（或 Fluent）网格转入 OpenFOAM；在底面用 topoSet + createPatch 切出一个圆形电极面，并用 setFields 在电极中心放一个半球形种子气泡，用 ParaView 确认位置正确。",
+      "duration": 90
+    },
+    {
+      "id": 12,
+      "title": "有限体积与离散格式",
+      "fullTitle": "有限体积法速成（一）：离散与格式的代价",
+      "stage": 4,
+      "stageName": "数值方法与验证",
+      "url": "/lessons/12/",
+      "summary": "通用输运方程与控制体积分、高斯定理；②对流项格式族：upwind / linear / linearUpwind / limitedLinear / vanLeer / TVD 限制器；③梯度格式：Gauss linear、leastSquares、cellLimited / faceLimited；④拉普拉斯项、snGrad 与非正交修正（corrected / limited / orthogonal）；⑤精度—有界性—稳定性的三角权衡；⑥fvSchemes 每一条目与方程中每一项的一一对应。",
+      "topics": "①通用输运方程与控制体积分、高斯定理；②对流项格式族：upwind / linear / linearUpwind / limitedLinear / vanLeer / TVD 限制器；③梯度格式：Gauss linear、leastSquares、cellLimited / faceLimited；④拉普拉斯项、snGrad 与非正交修正（corrected / limited / orthogonal）；⑤精度—有界性—稳定性的三角权衡；⑥fvSchemes 每一条目与方程中每一项的一一对应。",
+      "homework": "列表说明本课程用过的所有算例中 fvSchemes 每个关键词对应的方程项，以及你会怎么选、为什么。",
+      "duration": 90
+    },
+    {
+      "id": 13,
+      "title": "时间步与线性求解器",
+      "fullTitle": "有限体积法速成（二）：CFL、毛细时间步与线性求解器",
+      "stage": 4,
+      "stageName": "数值方法与验证",
+      "url": "/lessons/13/",
+      "summary": "CFL 数的定义、物理含义与显式/隐式稳定性差异；maxCo、adjustTimeStep 与写盘时刻对齐；②毛细时间步约束（Brackbill）：Δt ≲ √(ρ̄Δx³/(2πσ))，网格越细越苛刻；与 CFL 限制的比较；③线性方程组求解：PCG / PBiCGStab / GAMG / smoothSolver、预条件子与光顺器；④tolerance 与 relTol 的区别，收敛准则怎么定才不浪费机时；⑤澄清概念：solver（求解器应用）≠ linear solver（线性方程组求解器）。",
+      "topics": "①CFL 数的定义、物理含义与显式/隐式稳定性差异；maxCo、adjustTimeStep 与写盘时刻对齐；②毛细时间步约束（Brackbill）：Δt ≲ √(ρ̄Δx³/(2πσ))，网格越细越苛刻；与 CFL 限制的比较；③线性方程组求解：PCG / PBiCGStab / GAMG / smoothSolver、预条件子与光顺器；④tolerance 与 relTol 的区别，收敛准则怎么定才不浪费机时；⑤澄清概念：solver（求解器应用）≠ linear solver（线性方程组求解器）。",
+      "homework": "对同一算例分别用 PCG 与 GAMG 求解压力方程，对比壁钟时间与迭代次数并解释差异；另对自己第 8 讲的网格估算毛细时间步与 CFL 时间步，说明哪个起控制作用。",
+      "duration": 90
+    },
+    {
+      "id": 14,
+      "title": "压力速度耦合",
+      "fullTitle": "压力—速度耦合与稳态/瞬态求解",
+      "stage": 4,
+      "stageName": "数值方法与验证",
+      "url": "/lessons/14/",
+      "summary": "不可压方程组的“压力没有独立方程”问题从何而来；②SIMPLE：稳态、松弛因子、外迭代；③PISO：瞬态、nCorrectors、时间步受 CFL 限制；④PIMPLE：大时间步瞬态、nOuterCorrectors、残差控制 residualControl；⑤nNonOrthogonalCorrectors 与网格非正交度的定量关系；⑥两相求解器中的 PIMPLE：p_rgh 方程如何把表面张力和重力放进面通量（平衡力离散）；momentumPredictor 为何常关。",
+      "topics": "①不可压方程组的“压力没有独立方程”问题从何而来；②SIMPLE：稳态、松弛因子、外迭代；③PISO：瞬态、nCorrectors、时间步受 CFL 限制；④PIMPLE：大时间步瞬态、nOuterCorrectors、残差控制 residualControl；⑤nNonOrthogonalCorrectors 与网格非正交度的定量关系；⑥两相求解器中的 PIMPLE：p_rgh 方程如何把表面张力和重力放进面通量（平衡力离散）；momentumPredictor 为何常关。",
+      "homework": "把一个 PISO 算例改为 PIMPLE，把时间步放大 5 倍，记录稳定性与总耗时的变化并解释。",
+      "duration": 90
+    },
+    {
+      "id": 15,
+      "title": "残差与边界条件",
+      "fullTitle": "残差判读与边界/初始条件全景",
+      "stage": 4,
+      "stageName": "数值方法与验证",
+      "url": "/lessons/15/",
+      "summary": "初始残差 / 最终残差 / 连续性误差的定义；“收敛”的双重判据：残差下降 + 物理监控量稳定 + 守恒量闭合；假收敛与残差平台的识别；②边界条件按数学类型归类：Dirichlet / Neumann / Robin，再映射到 OpenFOAM 名称（fixedValue / fixedGradient / mixed）；③常用边界条件族：zeroGradient、inletOutlet、totalPressure、noSlip、slip、symmetry、wedge；④两相专用：p_rgh 壁面的 fixedFluxPressure、开放顶面的 prghPressure / prghTotalPressure、alpha 的 inletOutlet、接触角条件 constantAlphaContactAngle / dynamicAlphaContactAngle；⑤把电化学条件翻译成边界：Faraday 定律 → 浓度的 fixedGradient（通量边界）；电极动力学 → 电势的 mixed（Robin）；⑥初始条件与种子气泡；mapFields 做初场映射。",
+      "topics": "①初始残差 / 最终残差 / 连续性误差的定义；“收敛”的双重判据：残差下降 + 物理监控量稳定 + 守恒量闭合；假收敛与残差平台的识别；②边界条件按数学类型归类：Dirichlet / Neumann / Robin，再映射到 OpenFOAM 名称（fixedValue / fixedGradient / mixed）；③常用边界条件族：zeroGradient、inletOutlet、totalPressure、noSlip、slip、symmetry、wedge；④两相专用：p_rgh 壁面的 fixedFluxPressure、开放顶面的 prghPressure / prghTotalPressure、alpha 的 inletOutlet、接触角条件 constantAlphaContactAngle / dynamicAlphaContactAngle；⑤把电化学条件翻译成边界：Faraday 定律 → 浓度的 fixedGradient（通量边界）；电极动力学 → 电势的 mixed（Robin）；⑥初始条件与种子气泡；mapFields 做初场映射。",
+      "homework": "为“微电极上单个气泡生长”设计完整的边界条件方案（U、p_rgh、alpha.water、溶解气体浓度 c、电势 φ 五个场），逐条说明选择理由与失效风险。",
+      "duration": 90
+    },
+    {
+      "id": 16,
+      "title": "格式误差实验",
+      "fullTitle": "数值实验室（一）：用解析解量化格式误差",
+      "stage": 4,
+      "stageName": "数值方法与验证",
+      "url": "/lessons/16/",
+      "summary": "一维纯对流（scalarTransportFoam）：不同对流格式的数值耗散与色散，与行波解析解对比；②二维拉普拉斯方程：单元类型与梯度格式对梯度精度的影响；③非正交方腔：非正交修正开/关的对照，以及配套的 fvSolution 设置；④高 Péclet 数对流—扩散：用溶解气体的真实扩散系数重复实验①，观察负浓度与过冲从何而来；⑤误差—耗时权衡曲线的做法。",
+      "topics": "①一维纯对流（scalarTransportFoam）：不同对流格式的数值耗散与色散，与行波解析解对比；②二维拉普拉斯方程：单元类型与梯度格式对梯度精度的影响；③非正交方腔：非正交修正开/关的对照，以及配套的 fvSolution 设置；④高 Péclet 数对流—扩散：用溶解气体的真实扩散系数重复实验①，观察负浓度与过冲从何而来；⑤误差—耗时权衡曲线的做法。",
+      "homework": "用同一算例扫描 5 种对流格式 × 3 个 CFL 数，绘制误差—耗时散点图并给出选型建议。",
+      "duration": 90
+    },
+    {
+      "id": 17,
+      "title": "静止气泡与寄生流",
+      "fullTitle": "数值实验室（二）：静止气泡与寄生流【与专业直接对接】",
+      "stage": 4,
+      "stageName": "数值方法与验证",
+      "url": "/lessons/17/",
+      "summary": "Young–Laplace 解析解：轴对称静止气泡的压力跳跃 Δp = 2σ/R；寄生流的来源（曲率误差 + 力不平衡）；②用第 8 讲自己画的轴对称网格 + setFields 放一个静止气泡；③分别用 interFoam（MULES + cAlpha）与 interIsoFoam（几何 VOF）求解，对比压力跳跃误差与寄生流最大速度；④时间步超过毛细约束时的失稳现象（验证第 13 讲的估算）；⑤网格收敛性：Laplace 压力误差与寄生流速度随“每个半径的网格数”的变化；把寄生流速度与课题中的物理速度（上升速度、Marangoni 流速）比较。",
+      "topics": "①Young–Laplace 解析解：轴对称静止气泡的压力跳跃 Δp = 2σ/R；寄生流的来源（曲率误差 + 力不平衡）；②用第 8 讲自己画的轴对称网格 + setFields 放一个静止气泡；③分别用 interFoam（MULES + cAlpha）与 interIsoFoam（几何 VOF）求解，对比压力跳跃误差与寄生流最大速度；④时间步超过毛细约束时的失稳现象（验证第 13 讲的估算）；⑤网格收敛性：Laplace 压力误差与寄生流速度随“每个半径的网格数”的变化；把寄生流速度与课题中的物理速度（上升速度、Marangoni 流速）比较。",
+      "homework": "提交静止气泡定量报告：Laplace 压力误差与寄生流最大速度随网格加密的变化曲线、收敛阶估计，以及两种求解器的对比结论。",
+      "duration": 90
+    },
+    {
+      "id": 18,
+      "title": "并行计算",
+      "fullTitle": "并行计算",
+      "stage": 5,
+      "stageName": "并行与定量后处理",
+      "url": "/lessons/18/",
+      "summary": "lscpu 查硬件；物理核 vs 逻辑核；②decomposeParDict：simple / hierarchical / scotch / manual 及各自适用场景；③decomposePar → mpirun -np N solver -parallel → reconstructPar 全流程；④并行日志、并行后处理（不重构直接读 processor* 目录）；⑤强/弱扩展性测试、“每核网格量”经验值、过度分区与 I/O 瓶颈。",
+      "topics": "①lscpu 查硬件；物理核 vs 逻辑核；②decomposeParDict：simple / hierarchical / scotch / manual 及各自适用场景；③decomposePar → mpirun -np N solver -parallel → reconstructPar 全流程；④并行日志、并行后处理（不重构直接读 processor* 目录）；⑤强/弱扩展性测试、“每核网格量”经验值、过度分区与 I/O 瓶颈。",
+      "homework": "对同一算例用 1/2/4/8 核测扩展性曲线，找出拐点并解释原因。",
+      "duration": 90
+    },
+    {
+      "id": 19,
+      "title": "气泡特征量与后处理",
+      "fullTitle": "后处理体系：functionObjects、采样与气泡特征量提取",
+      "stage": 5,
+      "stageName": "并行与定量后处理",
+      "url": "/lessons/19/",
+      "summary": "运行时后处理 functionObjects：probes、volFieldValue、surfaceFieldValue、fieldMinMax、surfaces、residuals、writeObjects；②postProcess 工具的事后处理与 -func 用法；③线/面/等值面采样，配 gnuplot 或 Python(matplotlib) 出图；④气泡专用量：气泡体积与等效半径（对 1−alpha 体积分）、质心高度与上升速度、接触线半径与表观接触角、电极面平均浓度梯度（→ Sherwood 数）与电流密度；⑤foamToVTK / foamToEnsight 与第三方软件对接。",
+      "topics": "①运行时后处理 functionObjects：probes、volFieldValue、surfaceFieldValue、fieldMinMax、surfaces、residuals、writeObjects；②postProcess 工具的事后处理与 -func 用法；③线/面/等值面采样，配 gnuplot 或 Python(matplotlib) 出图；④气泡专用量：气泡体积与等效半径（对 1−alpha 体积分）、质心高度与上升速度、接触线半径与表观接触角、电极面平均浓度梯度（→ Sherwood 数）与电流密度；⑤foamToVTK / foamToEnsight 与第三方软件对接。",
+      "homework": "为第 5 讲的上升气泡算例配置运行时采集，输出气泡等效半径、质心高度与上升速度时程，并用 Python 画图。",
+      "duration": 90
+    },
+    {
+      "id": 20,
+      "title": "VOF 与接触角",
+      "fullTitle": "多相流深入：VOF、表面张力与接触角",
+      "stage": 6,
+      "stageName": "多相流与传质",
+      "url": "/lessons/20/",
+      "summary": "多相流分类：自由面 / 弥散相 / 欧拉—欧拉 / 欧拉—拉格朗日；电解体系从单气泡到气泡流的尺度谱；②VOF 方程、界面压缩 cAlpha 与 MULES 限制器；几何 VOF（interIsoFoam：isoAlpha / plicRDF 界面重构）；③表面张力：CSF 模型、由 alpha 梯度算曲率、寄生流的成因与缓解（曲率平滑、几何重构、足够分辨率）；④接触角：静态接触角、滞后（前进角 / 后退角）与 dynamicAlphaContactAngle；接触线钉扎；接触角是从哪一相量起的；⑤无量纲数判定：Bo、Ca、We、Oh、Re 在电解气泡尺度下的量级，判断谁主导；⑥实操：capillaryRise 算例，并回收第 5 讲的上升气泡（解释当时看到的寄生流与形状问题）。",
+      "topics": "①多相流分类：自由面 / 弥散相 / 欧拉—欧拉 / 欧拉—拉格朗日；电解体系从单气泡到气泡流的尺度谱；②VOF 方程、界面压缩 cAlpha 与 MULES 限制器；几何 VOF（interIsoFoam：isoAlpha / plicRDF 界面重构）；③表面张力：CSF 模型、由 alpha 梯度算曲率、寄生流的成因与缓解（曲率平滑、几何重构、足够分辨率）；④接触角：静态接触角、滞后（前进角 / 后退角）与 dynamicAlphaContactAngle；接触线钉扎；接触角是从哪一相量起的；⑤无量纲数判定：Bo、Ca、We、Oh、Re 在电解气泡尺度下的量级，判断谁主导；⑥实操：capillaryRise 算例，并回收第 5 讲的上升气泡（解释当时看到的寄生流与形状问题）。",
+      "homework": "在第 17 讲的网格上放一个贴壁气泡，扫描接触角（至少 3 档），测量平衡形状的接触线半径与表观接触角，与设定值及球冠几何解对比。",
+      "duration": 90
+    },
+    {
+      "id": 21,
+      "title": "标量扩散与通量边界",
+      "fullTitle": "溶解气体输运：Faraday 通量边界与过饱和",
+      "stage": 6,
+      "stageName": "多相流与传质",
+      "url": "/lessons/21/",
+      "summary": "析气的物质链：电流 → Faraday 定律产气 → 溶解气体在电极附近过饱和 → 向气泡扩散；②溶解气体输运方程；scalarTransportFoam 与 scalarTransport 函数对象的用法；③电极通量边界：fixedGradient 的梯度 = j/(zFD)，法向与符号约定；④Henry 定律、饱和浓度与过饱和度的定义；⑤浓度边界层：Sc 数、边界层厚度与所需网格；⑥解析解验证：恒通量半无限扩散的表面浓度 c(0,t) = 2N√(t/(πD))。",
+      "topics": "①析气的物质链：电流 → Faraday 定律产气 → 溶解气体在电极附近过饱和 → 向气泡扩散；②溶解气体输运方程；scalarTransportFoam 与 scalarTransport 函数对象的用法；③电极通量边界：fixedGradient 的梯度 = j/(zFD)，法向与符号约定；④Henry 定律、饱和浓度与过饱和度的定义；⑤浓度边界层：Sc 数、边界层厚度与所需网格；⑥解析解验证：恒通量半无限扩散的表面浓度 c(0,t) = 2N√(t/(πD))。",
+      "homework": "在第 8 讲的轴对称微电极网格上，按恒电流密度施加 Faraday 通量，计算电极表面过饱和度随时间的增长，与一维解析解对比（说明解析解只在早期成立的原因），并估算达到成核过饱和度所需的时间。",
+      "duration": 90
+    },
+    {
+      "id": 22,
+      "title": "稳态扩散与混合边界",
+      "fullTitle": "电势场与电流分布：气泡的遮蔽效应",
+      "stage": 6,
+      "stageName": "多相流与传质",
+      "url": "/lessons/22/",
+      "summary": "电解液中的电荷守恒：∇·(κ∇φ) = 0（均匀电解液、忽略浓差时）；一次 / 二次电流分布的区别与 Wagner 数；②用 laplacianFoam 求电势：电极、对电极与绝缘壁的边界；③气泡作为绝缘体：用 snappyHexMesh 把一个静止气泡从计算域里“挖掉”，看电流线绕行与电极电流密度的重新分布；④电极动力学：Butler–Volmer 及其线性化；线性化后是 Robin 条件，用 mixed 边界实现，非线性形式留到第 24 讲；⑤有效电导率：VOF 中电导率随 alpha 变化的写法（线性混合、Bruggeman）与后续耦合思路。",
+      "topics": "①电解液中的电荷守恒：∇·(κ∇φ) = 0（均匀电解液、忽略浓差时）；一次 / 二次电流分布的区别与 Wagner 数；②用 laplacianFoam 求电势：电极、对电极与绝缘壁的边界；③气泡作为绝缘体：用 snappyHexMesh 把一个静止气泡从计算域里“挖掉”，看电流线绕行与电极电流密度的重新分布；④电极动力学：Butler–Volmer 及其线性化；线性化后是 Robin 条件，用 mixed 边界实现，非线性形式留到第 24 讲；⑤有效电导率：VOF 中电导率随 alpha 变化的写法（线性混合、Bruggeman）与后续耦合思路。",
+      "homework": "在含一个静止半球形气泡的电极网格上，分别用恒电位（一次分布）与线性化动力学（二次分布）边界求电势场，对比电极表面电流密度分布，并计算气泡造成的有效电极面积损失。",
+      "duration": 90
+    },
+    {
+      "id": 23,
+      "title": "源项与自适应加密",
+      "fullTitle": "源项、fvOptions 与自适应网格加密",
+      "stage": 6,
+      "stageName": "多相流与传质",
+      "url": "/lessons/23/",
+      "summary": "fvOptions 源项机制：semiImplicitSource、buoyancyForce 等；selectionMode 与 cellZone；②配合 topoSet 在指定区域施加源项：电极附近的焦耳热、种子气泡区的等效产气、浓度或温度引起的自然对流；③自适应网格加密 dynamicRefineFvMesh：沿界面加密的判据、代价与限制（官方实现只支持三维）；④动网格与运动物体的概念地图（solidBody、六自由度、AMI、overset），说明本课题为何基本用不到。",
+      "topics": "①fvOptions 源项机制：semiImplicitSource、buoyancyForce 等；selectionMode 与 cellZone；②配合 topoSet 在指定区域施加源项：电极附近的焦耳热、种子气泡区的等效产气、浓度或温度引起的自然对流；③自适应网格加密 dynamicRefineFvMesh：沿界面加密的判据、代价与限制（官方实现只支持三维）；④动网格与运动物体的概念地图（solidBody、六自由度、AMI、overset），说明本课题为何基本用不到。",
+      "homework": "在电极上方的 cellZone 施加体积热源（焦耳热的近似），用 buoyantPimpleFoam 观察自然对流的形成，估算其速度量级并与气泡上升诱导流比较。",
+      "duration": 90
+    },
+    {
+      "id": 24,
+      "title": "codeStream 与 coded 边界",
+      "fullTitle": "codeStream 与 coded 系列：写种子气泡、电极动力学与自定义力",
+      "stage": 6,
+      "stageName": "多相流与传质",
+      "url": "/lessons/24/",
+      "summary": "codeStream 机制与运行时编译原理；②用 codeStream 做初始化：给定体积与接触角的球冠种子气泡、多个成核位点；③时变边界：先用 uniformFixedGradient + Function1（如方波）实现脉冲电流，再对比 coded 写法——能不写代码就不写；④codedMixed：非线性 Butler–Volmer 电极边界（回收第 22 讲）；⑤codedSource（fvOptions）：以给定温度分布下的 Marangoni 力为例，在动量方程里加自定义源项；⑥运行时编译的报错定位与调试方法。",
+      "topics": "①codeStream 机制与运行时编译原理；②用 codeStream 做初始化：给定体积与接触角的球冠种子气泡、多个成核位点；③时变边界：先用 uniformFixedGradient + Function1（如方波）实现脉冲电流，再对比 coded 写法——能不写代码就不写；④codedMixed：非线性 Butler–Volmer 电极边界（回收第 22 讲）；⑤codedSource（fvOptions）：以给定温度分布下的 Marangoni 力为例，在动量方程里加自定义源项；⑥运行时编译的报错定位与调试方法。",
+      "homework": "用 codeStream 写一个参数化的球冠种子气泡初始化模板（体积、接触角、位置可改），用 ParaView 验证初始体积与接触角正确。",
+      "duration": 90
+    },
+    {
+      "id": 25,
+      "title": "自定义 myInterFoam",
+      "fullTitle": "源码结构与自定义求解器：从 icoFoam 到 myInterFoam",
+      "stage": 7,
+      "stageName": "电极气泡与结课项目",
+      "url": "/lessons/25/",
+      "summary": "OpenFOAM 的 C++ 面向对象设计与场运算符重载；方程怎么写成接近数学形式的代码；②fvm 与 fvc 的本质区别：隐式装配矩阵 vs 显式求值；③逐行读懂 icoFoam 主程序；④读 interFoam：alphaEqn、UEqn、pEqn 中表面张力与重力如何进入面通量（接回第 14 讲的平衡力离散）；⑤wmake 编译系统：Make/files、Make/options、$FOAM_USER_APPBIN；⑥复制并改造：myInterFoam 加一个溶解气体浓度方程（先不处理界面跳跃）；调试手段。",
+      "topics": "①OpenFOAM 的 C++ 面向对象设计与场运算符重载；方程怎么写成接近数学形式的代码；②fvm 与 fvc 的本质区别：隐式装配矩阵 vs 显式求值；③逐行读懂 icoFoam 主程序；④读 interFoam：alphaEqn、UEqn、pEqn 中表面张力与重力如何进入面通量（接回第 14 讲的平衡力离散）；⑤wmake 编译系统：Make/files、Make/options、$FOAM_USER_APPBIN；⑥复制并改造：myInterFoam 加一个溶解气体浓度方程（先不处理界面跳跃）；调试手段。",
+      "homework": "在 interFoam 基础上增加溶解气体浓度方程，完成编译、运行，描述浓度在界面附近的异常行为并写出你猜测的原因。",
+      "duration": 90
+    },
+    {
+      "id": 26,
+      "title": "电极气泡的产气与生长",
+      "fullTitle": "电极气泡专题（一）：生长——两条建模路线与生长律验证",
+      "stage": 7,
+      "stageName": "电极气泡与结课项目",
+      "url": "/lessons/26/",
+      "summary": "电解气泡的物理图景与时间尺度：成核（连续介质模型无法解析，用种子气泡代替）→ 生长 → 脱落 → 上升；②路线 A 等效注气：把电极中心一小块设为气体入口，流量按 Faraday 定律 × 析气效率换算——不改代码，专注脱落力学；③路线 B 溶解气体 + 界面传质：连续组分传输（CST）方法、Henry 定律跳跃、界面质量通量作为 alpha 方程与连续性方程的源项（在第 25 讲 myInterFoam 上实现）；④两条路线的精度、代价与各自能回答的问题；⑤时间尺度分离的对策：加大电流密度或过饱和度以加速生长、二维轴对称、远场放粗，以及这些做法各自的代价；⑥验证：扩散控制生长 R ∝ t^1/2（Scriven 解）与恒电流产气控制 R ∝ t^1/3；网格收敛性。",
+      "topics": "①电解气泡的物理图景与时间尺度：成核（连续介质模型无法解析，用种子气泡代替）→ 生长 → 脱落 → 上升；②路线 A 等效注气：把电极中心一小块设为气体入口，流量按 Faraday 定律 × 析气效率换算——不改代码，专注脱落力学；③路线 B 溶解气体 + 界面传质：连续组分传输（CST）方法、Henry 定律跳跃、界面质量通量作为 alpha 方程与连续性方程的源项（在第 25 讲 myInterFoam 上实现）；④两条路线的精度、代价与各自能回答的问题；⑤时间尺度分离的对策：加大电流密度或过饱和度以加速生长、二维轴对称、远场放粗，以及这些做法各自的代价；⑥验证：扩散控制生长 R ∝ t^1/2（Scriven 解）与恒电流产气控制 R ∝ t^1/3；网格收敛性。",
+      "homework": "用路线 A 或 B 完成微电极上单气泡生长算例（至少算到脱落），提取 R(t) 并在双对数坐标下拟合生长指数，给出至少 3 档网格的收敛性证据。",
+      "duration": 90
+    },
+    {
+      "id": 27,
+      "title": "电势耦合与气泡脱落",
+      "fullTitle": "电极气泡专题（二）：脱落、Marangoni 效应、多气泡与工具生态",
+      "stage": 7,
+      "stageName": "电极气泡与结课项目",
+      "url": "/lessons/27/",
+      "summary": "脱落力平衡：浮力、接触线表面张力、接触压力、曳力、Marangoni 力；Fritz 公式与接触角的线性关系；②接触角滞后与接触线钉扎对脱落直径的影响；③Marangoni 效应：热毛细与溶质毛细的来源与方向；标准 CSF 只含法向力、不含切向的 ∇sσ，必须自己加（回收第 24 讲）；④多气泡：多个成核位点、聚并诱导脱落、电极覆盖率与电流遮蔽的双向耦合（回收第 22 讲）；必须三维，靠并行与自适应加密（回收第 18、23 讲）；⑤工具生态：OpenFOAM 原生 + 自研、TwoPhaseFlow 等开源框架、CSECGEFoam、Basilisk、COMSOL，以及电解槽尺度的欧拉—欧拉方法；⑥为自己的课题做方案选型。",
+      "topics": "①脱落力平衡：浮力、接触线表面张力、接触压力、曳力、Marangoni 力；Fritz 公式与接触角的线性关系；②接触角滞后与接触线钉扎对脱落直径的影响；③Marangoni 效应：热毛细与溶质毛细的来源与方向；标准 CSF 只含法向力、不含切向的 ∇sσ，必须自己加（回收第 24 讲）；④多气泡：多个成核位点、聚并诱导脱落、电极覆盖率与电流遮蔽的双向耦合（回收第 22 讲）；必须三维，靠并行与自适应加密（回收第 18、23 讲）；⑤工具生态：OpenFOAM 原生 + 自研、TwoPhaseFlow 等开源框架、CSECGEFoam、Basilisk、COMSOL，以及电解槽尺度的欧拉—欧拉方法；⑥为自己的课题做方案选型。",
+      "homework": "用路线 A 扫描接触角（至少 3 档），将脱落半径与 Fritz 公式对比；并针对自己的学位论文课题写一份求解方案选型报告，含主选方案、备选方案与选择理由。",
+      "duration": 90
+    },
+    {
+      "id": 28,
+      "title": "结课项目与定量验证",
+      "fullTitle": "结课项目：自选课题全流程与汇报",
+      "stage": 7,
+      "stageName": "电极气泡与结课项目",
+      "url": "/lessons/28/",
+      "summary": "学员自选与学位论文相关的课题（单气泡或多气泡均可）；②完成几何 → 网格 → 物理设置 → 数值设置 → 并行计算 → 后处理 → 验证的全流程；③提交可复现算例包（含 Allrun / Allclean 脚本）+ 计算报告；④10 分钟汇报，教师逐项点评设置合理性、验证充分性与可改进点。",
+      "topics": "①学员自选与学位论文相关的课题（单气泡或多气泡均可）；②完成几何 → 网格 → 物理设置 → 数值设置 → 并行计算 → 后处理 → 验证的全流程；③提交可复现算例包（含 Allrun / Allclean 脚本）+ 计算报告；④10 分钟汇报，教师逐项点评设置合理性、验证充分性与可改进点。",
+      "homework": "—（结课交付）",
+      "duration": 90
+    }
+  ],
+  "stages": [
+    {
+      "id": 1,
+      "name": "环境与首次上手",
+      "range": "01—04",
+      "description": "配置运行环境，执行算例并分析日志。",
+      "start": 1,
+      "end": 4
+    },
+    {
+      "id": 2,
+      "name": "典型算例与物理分析",
+      "range": "05—06",
+      "description": "比较两相流与绕流的模型设置和结果。",
+      "start": 5,
+      "end": 6
+    },
+    {
+      "id": 3,
+      "name": "网格生成与质量",
+      "range": "07—11",
+      "description": "学习结构网格、复杂几何与边界分区。",
+      "start": 7,
+      "end": 11
+    },
+    {
+      "id": 4,
+      "name": "数值方法与验证",
+      "range": "12—17",
+      "description": "理解离散、耦合与误差，验证静止气泡。",
+      "start": 12,
+      "end": 17
+    },
+    {
+      "id": 5,
+      "name": "并行与定量后处理",
+      "range": "18—19",
+      "description": "提高计算效率，提取可比较的气泡特征量。",
+      "start": 18,
+      "end": 19
+    },
+    {
+      "id": 6,
+      "name": "多相流与传质",
+      "range": "20—24",
+      "description": "理解 VOF、润湿、扩散与自定义边界。",
+      "start": 20,
+      "end": 24
+    },
+    {
+      "id": 7,
+      "name": "电极气泡与结课项目",
+      "range": "25—28",
+      "description": "建立守恒模型，研究生长与脱落。",
+      "start": 25,
+      "end": 28
+    }
+  ],
+  "commands": [
+    {
+      "name": "foamGetDict",
+      "title": "foamGetDict  复制配置字典模板",
+      "description": "默认写入 system，*Properties 通常写入 constant。-target 指定目标目录，-force 覆盖已有文件。",
+      "example": "foamGetDict decomposeParDict",
+      "details": "默认写入 system，*Properties 通常写入 constant。-target 指定目标目录，-force 覆盖已有文件。 用法：foamGetDict [选项] 文件名 示例：foamGetDict decomposeParDict",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamHelp",
+      "title": "foamHelp  查询边界条件、函数对象和求解器信息",
+      "description": "查询类别包括 boundary、functionObject 和 solver。示例需在具有网格和 0/U 文件的算例中运行。",
+      "example": "foamHelp boundary -field U",
+      "details": "查询类别包括 boundary、functionObject 和 solver。示例需在具有网格和 0/U 文件的算例中运行。 用法：foamHelp 类别 [选项] 示例：foamHelp boundary -field U",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamDictionary",
+      "title": "foamDictionary  读取或修改字典条目",
+      "description": "-value 读取条目值，-keywords 列出关键字，-expand 展开引用。子条目采用 solvers/p/tolerance 等路径表示。",
+      "example": "foamDictionary system/controlDict -entry endTime -set 100",
+      "details": "-value 读取条目值，-keywords 列出关键字，-expand 展开引用。子条目采用 solvers/p/tolerance 等路径表示。 用法：foamDictionary 字典 [-entry 路径] [-value/-set 值] 示例：foamDictionary system/controlDict -entry endTime -set 100",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamSearch",
+      "title": "foamSearch  搜索各算例字典中的指定条目",
+      "description": "键路径以点号分隔，-count 统计相同配置的出现次数。",
+      "example": "foamSearch \"$FOAM_TUTORIALS\" ddtSchemes.default fvSchemes",
+      "details": "键路径以点号分隔，-count 统计相同配置的出现次数。 用法：foamSearch [目录] 键路径 文件名 示例：foamSearch \"$FOAM_TUTORIALS\" ddtSchemes.default fvSchemes",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamEtcFile",
+      "title": "foamEtcFile  按配置层级查找 etc 文件",
+      "description": "按用户、站点和安装目录搜索并输出文件路径。-all 列出全部匹配项，-list 列出搜索目录。",
+      "example": "foamEtcFile caseDicts/meshQualityDict",
+      "details": "按用户、站点和安装目录搜索并输出文件路径。-all 列出全部匹配项，-list 列出搜索目录。 用法：foamEtcFile [选项] 相对文件 示例：foamEtcFile caseDicts/meshQualityDict",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamInstallationTest",
+      "title": "foamInstallationTest  检查安装及环境设置",
+      "description": "用于诊断安装路径及环境配置。",
+      "example": "foamInstallationTest",
+      "details": "用于诊断安装路径及环境配置。 用法：foamInstallationTest [选项] 示例：foamInstallationTest",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamSystemCheck",
+      "title": "foamSystemCheck  检查 OpenFOAM 编译环境",
+      "description": "检查构建所需的系统和编译条件。",
+      "example": "foamSystemCheck",
+      "details": "检查构建所需的系统和编译条件。 用法：foamSystemCheck [选项] 示例：foamSystemCheck",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamCloneCase",
+      "title": "foamCloneCase  复制算例初始场及配置",
+      "description": "默认复制初始时刻、constant 和 system。-latestTime 选择最后时刻，-force 覆盖目标目录。",
+      "example": "foamCloneCase ../cavity ./cavityCopy",
+      "details": "默认复制初始时刻、constant 和 system。-latestTime 选择最后时刻，-force 覆盖目标目录。 用法：foamCloneCase [选项] 源算例 目标算例 示例：foamCloneCase ../cavity ./cavityCopy",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamCopySettings",
+      "title": "foamCopySettings  复制算例配置",
+      "description": "采用 rsync，按 foamCopySettings.rc 定义的规则复制，不包含网格和计算结果。",
+      "example": "foamCopySettings ../baseCase ./",
+      "details": "采用 rsync，按 foamCopySettings.rc 定义的规则复制，不包含网格和计算结果。 用法：foamCopySettings 源目录 目标目录 示例：foamCopySettings ../baseCase ./",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamNewCase",
+      "title": "foamNewCase  按应用模板创建算例",
+      "description": "模板来自用户或站点配置。-list 列出可用模板；创建命令为 foamNewCase -app simpleFoam -case newCase。",
+      "example": "foamNewCase -list",
+      "details": "模板来自用户或站点配置。-list 列出可用模板；创建命令为 foamNewCase -app simpleFoam -case newCase。 用法：foamNewCase [-app 应用] [-case 目录] 示例：foamNewCase -list",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamRunTutorials",
+      "title": "foamRunTutorials  递归执行算例脚本",
+      "description": "执行目标目录中的 Allrun 或 Alltest。-dry-run 列出待执行脚本。",
+      "example": "foamRunTutorials -dry-run -case ./cases",
+      "details": "执行目标目录中的 Allrun 或 Alltest。-dry-run 列出待执行脚本。 用法：foamRunTutorials [选项] [-case 目录] 示例：foamRunTutorials -dry-run -case ./cases",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamTestTutorial",
+      "title": "foamTestTutorial  执行教程测试",
+      "description": "默认在临时目录运行一个时间步。-full 执行完整教程，-output=DIR 保留输出，指定目录须预先建立。",
+      "example": "foamTestTutorial -1 incompressible/icoFoam/cavity/cavity",
+      "details": "默认在临时目录运行一个时间步。-full 执行完整教程，-output=DIR 保留输出，指定目录须预先建立。 用法：foamTestTutorial [选项] 教程相对路径 示例：foamTestTutorial -1 incompressible/icoFoam/cavity/cavity",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamNew",
+      "title": "foamNew  生成源码或模板文件",
+      "description": "示例生成 MyModel.H。C、H、I、IO 和 App 等模板由 foamNewSource 配套提供。",
+      "example": "foamNew source H MyModel",
+      "details": "示例生成 MyModel.H。C、H、I、IO 和 App 等模板由 foamNewSource 配套提供。 用法：foamNew source 文件类型 类名 示例：foamNew source H MyModel",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamNewApp",
+      "title": "foamNewApp  生成自定义应用代码",
+      "description": "生成应用源码和 Make 文件。在生成目录运行 wmake，程序通常输出至 FOAM_USER_APPBIN。",
+      "example": "foamNewApp myScalarFoam",
+      "details": "生成应用源码和 Make 文件。在生成目录运行 wmake，程序通常输出至 FOAM_USER_APPBIN。 用法：foamNewApp 应用名 示例：foamNewApp myScalarFoam",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamNewBC",
+      "title": "foamNewBC  生成自定义边界条件代码",
+      "description": "在生成目录运行 wmake libso，并在算例的 libs 中加载生成的库。",
+      "example": "foamNewBC fixedValue scalar myTemperature",
+      "details": "在生成目录运行 wmake libso，并在算例的 libs 中加载生成的库。 用法：foamNewBC 基类 场类型 名称 示例：foamNewBC fixedValue scalar myTemperature",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamNewFunctionObject",
+      "title": "foamNewFunctionObject  生成函数对象代码",
+      "description": "在生成目录运行 wmake libso，随后在 functions 中配置并加载该对象。",
+      "example": "foamNewFunctionObject myProbe",
+      "details": "在生成目录运行 wmake libso，随后在 functions 中配置并加载该对象。 用法：foamNewFunctionObject 名称 示例：foamNewFunctionObject myProbe",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamCalc",
+      "title": "foamCalc  计算标量表达式",
+      "description": "v2512 中该命令为标量计算器，旧版同名场处理程序采用不同接口。",
+      "example": "foamCalc '2*3+1'",
+      "details": "v2512 中该命令为标量计算器，旧版同名场处理程序采用不同接口。 用法：foamCalc [选项] 表达式 示例：foamCalc '2*3+1'",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamExprParserInfo",
+      "title": "foamExprParserInfo  查询表达式解析器信息",
+      "description": "用于查询表达式语法及解析器支持范围。",
+      "example": "foamExprParserInfo -volume -rules",
+      "details": "用于查询表达式语法及解析器支持范围。 用法：foamExprParserInfo [选项] 示例：foamExprParserInfo -volume -rules",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamCleanPath",
+      "title": "foamCleanPath  清理路径列表",
+      "description": "删除重复项或指定条目后输出路径文本，当前 shell 的 PATH 保持不变。",
+      "example": "foamCleanPath \"$PATH\"",
+      "details": "删除重复项或指定条目后输出路径文本，当前 shell 的 PATH 保持不变。 用法：foamCleanPath [选项] 路径 [过滤项] 示例：foamCleanPath \"$PATH\"",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamHasLibrary",
+      "title": "foamHasLibrary  检查共享库能否加载",
+      "description": "-detail 输出详细信息。",
+      "example": "foamHasLibrary libfieldFunctionObjects.so",
+      "details": "-detail 输出详细信息。 用法：foamHasLibrary 库名列表 [选项] 示例：foamHasLibrary libfieldFunctionObjects.so",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamListRegions",
+      "title": "foamListRegions  列出网格区域",
+      "description": "可按 fluid、solid 等 regionType 筛选，-finite-area 选择有限面积区域。",
+      "example": "foamListRegions",
+      "details": "可按 fluid、solid 等 regionType 筛选，-finite-area 选择有限面积区域。 用法：foamListRegions [区域类型] 示例：foamListRegions",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamUpgradeFiniteArea",
+      "title": "foamUpgradeFiniteArea  迁移旧版有限面积文件",
+      "description": "将旧版文件调整为包含 finite-area 子目录的结构。-dry-run 预览迁移内容。",
+      "example": "foamUpgradeFiniteArea -dry-run -case ./legacyCase",
+      "details": "将旧版文件调整为包含 finite-area 子目录的结构。-dry-run 预览迁移内容。 用法：foamUpgradeFiniteArea [选项] 示例：foamUpgradeFiniteArea -dry-run -case ./legacyCase",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "foamUpgradeCyclics",
+      "title": "foamUpgradeCyclics  将旧版循环边界转换为拆分形式",
+      "description": "用于迁移旧版算例。",
+      "example": "foamUpgradeCyclics",
+      "details": "用于迁移旧版算例。 用法：foamUpgradeCyclics [选项] 示例：foamUpgradeCyclics",
+      "category": "系统工具",
+      "configs": []
+    },
+    {
+      "name": "checkFaMesh",
+      "title": "checkFaMesh  检查有限面积网格",
+      "description": "检查对象为有限面积网格。",
+      "example": "checkFaMesh",
+      "details": "检查对象为有限面积网格。 用法：checkFaMesh [选项] 示例：checkFaMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "makeFaMesh",
+      "title": "makeFaMesh  从体网格面生成有限面积网格",
+      "description": "v2512 的常用字典位置为 system/finite-area/faMeshDefinition。",
+      "example": "makeFaMesh",
+      "details": "v2512 的常用字典位置为 system/finite-area/faMeshDefinition。 用法：makeFaMesh [-dict 文件] 示例：makeFaMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "PDRblockMesh",
+      "title": "PDRblockMesh  生成 PDR 专用直角单块网格",
+      "description": "读取 PDRblockMeshDict。",
+      "example": "PDRblockMesh",
+      "details": "读取 PDRblockMeshDict。 用法：PDRblockMesh [-dict 文件] 示例：PDRblockMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "blockMesh",
+      "title": "blockMesh  根据块拓扑生成六面体网格",
+      "description": "读取 system/blockMeshDict，生成后使用 checkMesh 检查。",
+      "example": "blockMesh",
+      "details": "读取 system/blockMeshDict，生成后使用 checkMesh 检查。 用法：blockMesh [-dict 文件] [-case 目录] 示例：blockMesh",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "blockMeshDict",
+          "url": "/dictionaries/system-blockmeshdict/"
+        }
+      ]
+    },
+    {
+      "name": "extrudeMesh",
+      "title": "extrudeMesh  沿指定模型挤出网格或表面",
+      "description": "读取 extrudeMeshDict。",
+      "example": "extrudeMesh",
+      "details": "读取 extrudeMeshDict。 用法：extrudeMesh [-dict 文件] 示例：extrudeMesh",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "extrudeMeshDict",
+          "url": "/dictionaries/system-extrudemeshdict/"
+        }
+      ]
+    },
+    {
+      "name": "extrudeToRegionMesh",
+      "title": "extrudeToRegionMesh  将面集合挤出为独立区域",
+      "description": "用于薄层或膜区域，源面和目标区域名称由字典指定。",
+      "example": "extrudeToRegionMesh",
+      "details": "用于薄层或膜区域，源面和目标区域名称由字典指定。 用法：extrudeToRegionMesh [-dict 文件] 示例：extrudeToRegionMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "extrude2DMesh",
+      "title": "extrude2DMesh  将二维网格挤出为三维网格",
+      "description": "读取 system/extrude2DMeshDict。polyMesh2D 输入为仅含顶点和边的二维网格。",
+      "example": "extrude2DMesh polyMesh2D -overwrite",
+      "details": "读取 system/extrude2DMeshDict。polyMesh2D 输入为仅含顶点和边的二维网格。 用法：extrude2DMesh polyMesh2D 或 MeshedSurface [选项] 示例：extrude2DMesh polyMesh2D -overwrite",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "cellSizeAndAlignmentGrid",
+      "title": "cellSizeAndAlignmentGrid  生成网格尺寸和方向辅助场",
+      "description": "用于 foamyMesh 网格生成流程。",
+      "example": "cellSizeAndAlignmentGrid",
+      "details": "用于 foamyMesh 网格生成流程。 用法：cellSizeAndAlignmentGrid [选项] 示例：cellSizeAndAlignmentGrid",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "foamyHexMesh",
+      "title": "foamyHexMesh  生成共形 Voronoi 体网格",
+      "description": "读取 foamyHexMeshDict 和相关几何，运行需具备对应编译依赖。",
+      "example": "foamyHexMesh",
+      "details": "读取 foamyHexMeshDict 和相关几何，运行需具备对应编译依赖。 用法：foamyHexMesh [选项] 示例：foamyHexMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "foamyHexMeshBackgroundMesh",
+      "title": "foamyHexMeshBackgroundMesh  生成 foamyHexMesh 背景网格",
+      "description": "为 foamyHexMesh 提供背景网格。",
+      "example": "foamyHexMeshBackgroundMesh",
+      "details": "为 foamyHexMesh 提供背景网格。 用法：foamyHexMeshBackgroundMesh [选项] 示例：foamyHexMeshBackgroundMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "foamyHexMeshSurfaceSimplify",
+      "title": "foamyHexMeshSurfaceSimplify  为 foamyHexMesh 简化表面",
+      "description": "输出用于 triSurface 表面处理。",
+      "example": "foamyHexMeshSurfaceSimplify simplified.stl",
+      "details": "输出用于 triSurface 表面处理。 用法：foamyHexMeshSurfaceSimplify 输出表面名 示例：foamyHexMeshSurfaceSimplify simplified.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "foamyQuadMesh",
+      "title": "foamyQuadMesh  生成以四边形为主的二维 Voronoi 网格",
+      "description": "参数由专用字典定义，-pointsFile 可指定初始点。",
+      "example": "foamyQuadMesh",
+      "details": "参数由专用字典定义，-pointsFile 可指定初始点。 用法：foamyQuadMesh [选项] 示例：foamyQuadMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "snappyHexMesh",
+      "title": "snappyHexMesh  细化背景网格并生成贴体网格和边界层",
+      "description": "输入包括背景网格及 constant/triSurface 中的表面。并行运行通过 mpirun 启动，并使用 -parallel。",
+      "example": "snappyHexMesh -overwrite",
+      "details": "输入包括背景网格及 constant/triSurface 中的表面。并行运行通过 mpirun 启动，并使用 -parallel。 用法：snappyHexMesh [-dict 文件] [-overwrite] 示例：snappyHexMesh -overwrite",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "snappyHexMeshDict",
+          "url": "/dictionaries/system-snappyhexmeshdict/"
+        },
+        {
+          "name": "meshQualityDict",
+          "url": "/dictionaries/system-meshqualitydict/"
+        }
+      ]
+    },
+    {
+      "name": "checkMesh",
+      "title": "checkMesh  检查网格拓扑和几何质量",
+      "description": "-meshQuality 读取网格质量约束。",
+      "example": "checkMesh -allTopology -allGeometry",
+      "details": "-meshQuality 读取网格质量约束。 用法：checkMesh [选项] 示例：checkMesh -allTopology -allGeometry",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "meshQualityDict",
+          "url": "/dictionaries/system-meshqualitydict/"
+        }
+      ]
+    },
+    {
+      "name": "surfaceAdd",
+      "title": "surfaceAdd  合并表面数据",
+      "description": "连接两个表面数据集，不执行几何布尔并集。",
+      "example": "surfaceAdd a.stl b.stl combined.stl",
+      "details": "连接两个表面数据集，不执行几何布尔并集。 用法：surfaceAdd 表面1 表面2 输出 示例：surfaceAdd a.stl b.stl combined.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceBooleanFeatures",
+      "title": "surfaceBooleanFeatures  提取表面布尔运算特征线",
+      "description": "支持 intersection、union 和 difference，相关构建可依赖 CGAL。",
+      "example": "surfaceBooleanFeatures intersection a.stl b.stl",
+      "details": "支持 intersection、union 和 difference，相关构建可依赖 CGAL。 用法：surfaceBooleanFeatures 操作 表面1 表面2 示例：surfaceBooleanFeatures intersection a.stl b.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceCheck",
+      "title": "surfaceCheck  检查表面网格闭合性和相交情况",
+      "description": "用于检查 snappyHexMesh 等工具的输入表面。",
+      "example": "surfaceCheck constant/triSurface/body.stl -checkSelfIntersection",
+      "details": "用于检查 snappyHexMesh 等工具的输入表面。 用法：surfaceCheck 表面文件 [选项] 示例：surfaceCheck constant/triSurface/body.stl -checkSelfIntersection",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceClean",
+      "title": "surfaceClean  清理短边及低质量三角形",
+      "description": "长度和质量阈值按几何尺度设置；清理会改变局部表面细节。",
+      "example": "surfaceClean body.stl 1e-6 0.01 bodyClean.stl",
+      "details": "长度和质量阈值按几何尺度设置；清理会改变局部表面细节。 用法：surfaceClean 输入 最短边 最低质量 输出 示例：surfaceClean body.stl 1e-6 0.01 bodyClean.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceCoarsen",
+      "title": "surfaceCoarsen  简化表面三角网格",
+      "description": "简化因子取值范围为 [0,1)，简化后检查几何完整性。",
+      "example": "surfaceCoarsen body.stl 0.5 coarse.stl",
+      "details": "简化因子取值范围为 [0,1)，简化后检查几何完整性。 用法：surfaceCoarsen 输入 简化因子 输出 示例：surfaceCoarsen body.stl 0.5 coarse.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceConvert",
+      "title": "surfaceConvert  转换三角表面文件格式",
+      "description": "-scale 指定几何缩放系数，按输入与输出长度单位换算。",
+      "example": "surfaceConvert body.obj body.stl",
+      "details": "-scale 指定几何缩放系数，按输入与输出长度单位换算。 用法：surfaceConvert 输入 输出 [选项] 示例：surfaceConvert body.obj body.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceFeatureConvert",
+      "title": "surfaceFeatureConvert  转换边线和特征线文件格式",
+      "description": "输入和输出采用该程序支持的边线格式。",
+      "example": "surfaceFeatureConvert body.eMesh body.obj",
+      "details": "输入和输出采用该程序支持的边线格式。 用法：surfaceFeatureConvert 输入 输出 示例：surfaceFeatureConvert body.eMesh body.obj",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceFeatureExtract",
+      "title": "surfaceFeatureExtract  提取几何表面特征线",
+      "description": "读取 surfaceFeatureExtractDict，生成 eMesh 等特征文件。",
+      "example": "surfaceFeatureExtract",
+      "details": "读取 surfaceFeatureExtractDict，生成 eMesh 等特征文件。 用法：surfaceFeatureExtract [-dict 文件] 示例：surfaceFeatureExtract",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "surfaceFeatureExtractDict",
+          "url": "/dictionaries/system-surfacefeatureextractdict/"
+        }
+      ]
+    },
+    {
+      "name": "surfaceFind",
+      "title": "surfaceFind  按坐标查询表面信息",
+      "description": "用于定位和检查表面坐标。",
+      "example": "surfaceFind body.stl -x 0.1",
+      "details": "用于定位和检查表面坐标。 用法：surfaceFind 输入 [-x X] [-y Y] [-z Z] 示例：surfaceFind body.stl -x 0.1",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceHookUp",
+      "title": "surfaceHookUp  按容差连接表面",
+      "description": "连接规则和输入表面由相应字典指定。",
+      "example": "surfaceHookUp 1e-5",
+      "details": "连接规则和输入表面由相应字典指定。 用法：surfaceHookUp 连接容差 [-dict 文件] 示例：surfaceHookUp 1e-5",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceInertia",
+      "title": "surfaceInertia  计算封闭表面的惯性参数",
+      "description": "按选项采用实体或薄壳模型，密度单位与几何长度单位保持一致。",
+      "example": "surfaceInertia body.stl -density 1000",
+      "details": "按选项采用实体或薄壳模型，密度单位与几何长度单位保持一致。 用法：surfaceInertia 输入 [选项] 示例：surfaceInertia body.stl -density 1000",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceInflate",
+      "title": "surfaceInflate  沿法向膨胀表面",
+      "description": "安全因子范围为 [1,10]，膨胀后检查表面自相交。",
+      "example": "surfaceInflate body.stl 0.001 2",
+      "details": "安全因子范围为 [1,10]，膨胀后检查表面自相交。 用法：surfaceInflate 输入 距离 安全因子 示例：surfaceInflate body.stl 0.001 2",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceLambdaMuSmooth",
+      "title": "surfaceLambdaMuSmooth  采用 lambda mu 算法平滑表面",
+      "description": "lambda 和 mu 均采用该程序定义的 [0,1] 系数。",
+      "example": "surfaceLambdaMuSmooth body.stl 0.5 0.5 10 smooth.stl",
+      "details": "lambda 和 mu 均采用该程序定义的 [0,1] 系数。 用法：surfaceLambdaMuSmooth 输入 lambda mu 迭代数 输出 示例：surfaceLambdaMuSmooth body.stl 0.5 0.5 10 smooth.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceMeshConvert",
+      "title": "surfaceMeshConvert  转换 surfaceMesh 格式和坐标",
+      "description": "采用 surfaceMesh 读写接口。",
+      "example": "surfaceMeshConvert body.obj body.stl",
+      "details": "采用 surfaceMesh 读写接口。 用法：surfaceMeshConvert 输入 输出 [选项] 示例：surfaceMeshConvert body.obj body.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceMeshExport",
+      "title": "surfaceMeshExport  导出算例中的 surfaceMesh",
+      "description": "输入为算例中已有的 surfaceMesh。",
+      "example": "surfaceMeshExport body.obj",
+      "details": "输入为算例中已有的 surfaceMesh。 用法：surfaceMeshExport 输出 [选项] 示例：surfaceMeshExport body.obj",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceMeshExtract",
+      "title": "surfaceMeshExtract  提取体网格边界表面",
+      "description": "-patches 指定网格中已有的边界名称。",
+      "example": "surfaceMeshExtract walls.stl -patches '(walls)'",
+      "details": "-patches 指定网格中已有的边界名称。 用法：surfaceMeshExtract 输出 [选项] 示例：surfaceMeshExtract walls.stl -patches '(walls)'",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceMeshImport",
+      "title": "surfaceMeshImport  导入表面至算例的 surfaceMesh",
+      "description": "导入对象为表面网格，-name 指定名称。",
+      "example": "surfaceMeshImport body.stl",
+      "details": "导入对象为表面网格，-name 指定名称。 用法：surfaceMeshImport 输入 [选项] 示例：surfaceMeshImport body.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceMeshInfo",
+      "title": "surfaceMeshInfo  输出表面网格统计信息",
+      "description": "-areas 输出面积统计，可用于核查几何尺度。",
+      "example": "surfaceMeshInfo body.stl -areas",
+      "details": "-areas 输出面积统计，可用于核查几何尺度。 用法：surfaceMeshInfo 输入 [选项] 示例：surfaceMeshInfo body.stl -areas",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceOrient",
+      "title": "surfaceOrient  统一表面法向",
+      "description": "默认按物体外部观察点定向，-inside 将指定点按内部点处理。",
+      "example": "surfaceOrient body.stl '(10 10 10)' bodyOriented.stl",
+      "details": "默认按物体外部观察点定向，-inside 将指定点按内部点处理。 用法：surfaceOrient 输入 外部点 输出 示例：surfaceOrient body.stl '(10 10 10)' bodyOriented.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfacePatch",
+      "title": "surfacePatch  按几何规则重划表面区域",
+      "description": "读取 surfacePatchDict。",
+      "example": "surfacePatch",
+      "details": "读取 surfacePatchDict。 用法：surfacePatch [-dict 文件] 示例：surfacePatch",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfacePointMerge",
+      "title": "surfacePointMerge  按距离阈值合并表面点",
+      "description": "距离阈值采用表面坐标的长度单位。",
+      "example": "surfacePointMerge body.stl 1e-6 merged.stl",
+      "details": "距离阈值采用表面坐标的长度单位。 用法：surfacePointMerge 输入 距离 输出 示例：surfacePointMerge body.stl 1e-6 merged.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceRedistributePar",
+      "title": "surfaceRedistributePar  并行重分配三角表面",
+      "description": "示例采用 4 个进程，并读取 constant/triSurface/body.stl。分配方式包括 follow、independent、distributed 和 frozen；follow 按网格包围盒划分。",
+      "example": "mpirun -np 4 surfaceRedistributePar body.stl follow -parallel",
+      "details": "示例采用 4 个进程，并读取 constant/triSurface/body.stl。分配方式包括 follow、independent、distributed 和 frozen；follow 按网格包围盒划分。 用法：surfaceRedistributePar 表面名 分配方式 -parallel 示例：mpirun -np 4 surfaceRedistributePar body.stl follow -parallel",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceRefineRedGreen",
+      "title": "surfaceRefineRedGreen  采用红绿细分加密三角表面",
+      "description": "-steps 指定细分次数。",
+      "example": "surfaceRefineRedGreen body.stl fine.stl -steps 1",
+      "details": "-steps 指定细分次数。 用法：surfaceRefineRedGreen 输入 输出 [-steps N] 示例：surfaceRefineRedGreen body.stl fine.stl -steps 1",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceSplitByPatch",
+      "title": "surfaceSplitByPatch  按区域拆分表面文件",
+      "description": "-patches 指定待拆分区域。",
+      "example": "surfaceSplitByPatch body.stl",
+      "details": "-patches 指定待拆分区域。 用法：surfaceSplitByPatch 输入 [选项] 示例：surfaceSplitByPatch body.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceSplitByTopology",
+      "title": "surfaceSplitByTopology  按连通关系拆分表面",
+      "description": "用于分离拓扑不连通的部件。",
+      "example": "surfaceSplitByTopology body.stl split.stl",
+      "details": "用于分离拓扑不连通的部件。 用法：surfaceSplitByTopology 输入 输出 示例：surfaceSplitByTopology body.stl split.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceSplitNonManifolds",
+      "title": "surfaceSplitNonManifolds  拆分表面非流形连接",
+      "description": "拆分后使用 surfaceCheck 检查表面。",
+      "example": "surfaceSplitNonManifolds body.stl manifold.stl",
+      "details": "拆分后使用 surfaceCheck 检查表面。 用法：surfaceSplitNonManifolds 输入 输出 示例：surfaceSplitNonManifolds body.stl manifold.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceSubset",
+      "title": "surfaceSubset  按字典选取表面子集",
+      "description": "选择规则由输入字典定义。",
+      "example": "surfaceSubset system/surfaceSubsetDict body.stl subset.stl",
+      "details": "选择规则由输入字典定义。 用法：surfaceSubset 字典 输入 输出 示例：surfaceSubset system/surfaceSubsetDict body.stl subset.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceToPatch",
+      "title": "surfaceToPatch  按给定表面重划体网格边界",
+      "description": "修改后同步检查场文件中的边界条目。",
+      "example": "surfaceToPatch body.stl",
+      "details": "修改后同步检查场文件中的边界条目。 用法：surfaceToPatch 表面文件 [选项] 示例：surfaceToPatch body.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "surfaceTransformPoints",
+      "title": "surfaceTransformPoints  对表面进行平移旋转和缩放",
+      "description": "-read-scale 和 -write-scale 分别指定读取和写出时的缩放系数。",
+      "example": "surfaceTransformPoints -translate '(0 0 1)' body.stl bodyMoved.stl",
+      "details": "-read-scale 和 -write-scale 分别指定读取和写出时的缩放系数。 用法：surfaceTransformPoints [选项] 输入 输出 示例：surfaceTransformPoints -translate '(0 0 1)' body.stl bodyMoved.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "ansysToFoam",
+      "title": "ansysToFoam  导入 ANSYS 网格输入文件",
+      "description": "输入采用转换器支持的 ANSYS 文件格式。",
+      "example": "ansysToFoam mesh.ans",
+      "details": "输入采用转换器支持的 ANSYS 文件格式。 用法：ansysToFoam ANSYS文件 示例：ansysToFoam mesh.ans",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "ccmToFoam",
+      "title": "ccmToFoam  导入 CCM 网格及数据",
+      "description": "需编译 CCM 支持。-list 列出文件内容，移除该选项后执行转换。",
+      "example": "ccmToFoam mesh.ccm -list",
+      "details": "需编译 CCM 支持。-list 列出文件内容，移除该选项后执行转换。 用法：ccmToFoam 输入.ccm [选项] 示例：ccmToFoam mesh.ccm -list",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "foamToCcm",
+      "title": "foamToCcm  导出 CCM 网格或结果",
+      "description": "需编译 CCM 库支持。",
+      "example": "foamToCcm",
+      "details": "需编译 CCM 库支持。 用法：foamToCcm [选项] 示例：foamToCcm",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "cfx4ToFoam",
+      "title": "cfx4ToFoam  导入 CFX4 几何网格",
+      "description": "-scale 指定长度缩放系数。",
+      "example": "cfx4ToFoam mesh.geo",
+      "details": "-scale 指定长度缩放系数。 用法：cfx4ToFoam CFX几何文件 [选项] 示例：cfx4ToFoam mesh.geo",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "datToFoam",
+      "title": "datToFoam  导入特定 DAT 网格格式",
+      "description": "输入内容须符合该转换器定义的 DAT 网格结构。",
+      "example": "datToFoam mesh.dat",
+      "details": "输入内容须符合该转换器定义的 DAT 网格结构。 用法：datToFoam DAT文件 示例：datToFoam mesh.dat",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "ensightToFoam",
+      "title": "ensightToFoam  导入 EnSight 几何网格",
+      "description": "转换范围为几何网格，物理模型在目标算例中配置。",
+      "example": "ensightToFoam mesh.geo",
+      "details": "转换范围为几何网格，物理模型在目标算例中配置。 用法：ensightToFoam 几何.geo [选项] 示例：ensightToFoam mesh.geo",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "fireToFoam",
+      "title": "fireToFoam  导入 AVL FIRE 多面体网格",
+      "description": "转换后检查长度单位。",
+      "example": "fireToFoam mesh.fpma",
+      "details": "转换后检查长度单位。 用法：fireToFoam FIRE网格 [选项] 示例：fireToFoam mesh.fpma",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "fluent3DMeshToFoam",
+      "title": "fluent3DMeshToFoam  导入 Fluent 三维网格",
+      "description": "用于 Fluent 三维网格的专用转换，按输入格式选择。",
+      "example": "fluent3DMeshToFoam mesh.msh",
+      "details": "用于 Fluent 三维网格的专用转换，按输入格式选择。 用法：fluent3DMeshToFoam 网格.msh 示例：fluent3DMeshToFoam mesh.msh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "fluentMeshToFoam",
+      "title": "fluentMeshToFoam  导入 Fluent 网格",
+      "description": "输入采用 Fluent mesh 格式；Gmsh 文件使用 gmshToFoam 转换。",
+      "example": "fluentMeshToFoam mesh.msh",
+      "details": "输入采用 Fluent mesh 格式；Gmsh 文件使用 gmshToFoam 转换。 用法：fluentMeshToFoam 网格.msh 示例：fluentMeshToFoam mesh.msh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "foamMeshToFluent",
+      "title": "foamMeshToFluent  导出 Fluent 格式网格",
+      "description": "导出范围为网格数据，求解配置在 Fluent 中设置。",
+      "example": "foamMeshToFluent",
+      "details": "导出范围为网格数据，求解配置在 Fluent 中设置。 用法：foamMeshToFluent [选项] 示例：foamMeshToFluent",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "foamToFireMesh",
+      "title": "foamToFireMesh  导出 AVL FIRE 网格",
+      "description": "-scale 指定长度缩放系数。",
+      "example": "foamToFireMesh",
+      "details": "-scale 指定长度缩放系数。 用法：foamToFireMesh [选项] 示例：foamToFireMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "foamToStarMesh",
+      "title": "foamToStarMesh  导出 STARCD PROSTAR 网格",
+      "description": "输出 bnd、cel 和 vrt 等文件。",
+      "example": "foamToStarMesh",
+      "details": "输出 bnd、cel 和 vrt 等文件。 用法：foamToStarMesh [选项] 示例：foamToStarMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "foamToSurface",
+      "title": "foamToSurface  将体网格边界导出为表面文件",
+      "description": "用于几何检查及外部软件数据交换。",
+      "example": "foamToSurface boundary.stl",
+      "details": "用于几何检查及外部软件数据交换。 用法：foamToSurface 输出 [选项] 示例：foamToSurface boundary.stl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "gambitToFoam",
+      "title": "gambitToFoam  导入 GAMBIT 中性网格",
+      "description": "转换后运行 checkMesh。",
+      "example": "gambitToFoam mesh.neu",
+      "details": "转换后运行 checkMesh。 用法：gambitToFoam 中性网格文件 示例：gambitToFoam mesh.neu",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "gmshToFoam",
+      "title": "gmshToFoam  导入 Gmsh 网格",
+      "description": "常用输入为 ASCII MSH2。转换后检查物理组与边界名称。",
+      "example": "gmshToFoam mesh.msh",
+      "details": "常用输入为 ASCII MSH2。转换后检查物理组与边界名称。 用法：gmshToFoam 网格.msh 示例：gmshToFoam mesh.msh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "ideasUnvToFoam",
+      "title": "ideasUnvToFoam  导入 I-DEAS 通用网格",
+      "description": "转换后检查边界、长度单位和单元类型。",
+      "example": "ideasUnvToFoam mesh.unv",
+      "details": "转换后检查边界、长度单位和单元类型。 用法：ideasUnvToFoam 网格.unv 示例：ideasUnvToFoam mesh.unv",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "kivaToFoam",
+      "title": "kivaToFoam  导入 KIVA3v 网格",
+      "description": "输入为 KIVA3v 发动机网格。",
+      "example": "kivaToFoam -file otape17",
+      "details": "输入为 KIVA3v 发动机网格。 用法：kivaToFoam [-file 文件] [-version 版本] 示例：kivaToFoam -file otape17",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "mshToFoam",
+      "title": "mshToFoam  导入该转换器支持的 MSH 网格",
+      "description": "输入须符合该转换器定义的 MSH 结构；Gmsh 网格使用 gmshToFoam。",
+      "example": "mshToFoam mesh.msh",
+      "details": "输入须符合该转换器定义的 MSH 结构；Gmsh 网格使用 gmshToFoam。 用法：mshToFoam 输入.msh 示例：mshToFoam mesh.msh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "netgenNeutralToFoam",
+      "title": "netgenNeutralToFoam  导入 Netgen 中性网格",
+      "description": "转换后检查边界划分。",
+      "example": "netgenNeutralToFoam mesh.neutral",
+      "details": "转换后检查边界划分。 用法：netgenNeutralToFoam 中性网格文件 示例：netgenNeutralToFoam mesh.neutral",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "plot3dToFoam",
+      "title": "plot3dToFoam  导入 PLOT3D 块网格",
+      "description": "-singleBlock 和 -2D 等选项用于指定输入网格形式。",
+      "example": "plot3dToFoam mesh.xyz",
+      "details": "-singleBlock 和 -2D 等选项用于指定输入网格形式。 用法：plot3dToFoam 几何文件 [选项] 示例：plot3dToFoam mesh.xyz",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "star4ToFoam",
+      "title": "star4ToFoam  导入 PROSTAR v4 网格",
+      "description": "按文件名前缀读取 mesh.vrt、mesh.cel 等配套文件。",
+      "example": "star4ToFoam mesh",
+      "details": "按文件名前缀读取 mesh.vrt、mesh.cel 等配套文件。 用法：star4ToFoam 文件名前缀 示例：star4ToFoam mesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "tetgenToFoam",
+      "title": "tetgenToFoam  导入 TetGen 网格",
+      "description": "按前缀读取配套的 node、ele 和 face 等文件。",
+      "example": "tetgenToFoam mesh",
+      "details": "按前缀读取配套的 node、ele 和 face 等文件。 用法：tetgenToFoam 文件名前缀 示例：tetgenToFoam mesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "vtkUnstructuredToFoam",
+      "title": "vtkUnstructuredToFoam  导入旧式 ASCII 非结构 VTK 网格",
+      "description": "输入采用旧式 ASCII VTK 格式。",
+      "example": "vtkUnstructuredToFoam mesh.vtk",
+      "details": "输入采用旧式 ASCII VTK 格式。 用法：vtkUnstructuredToFoam 输入.vtk 示例：vtkUnstructuredToFoam mesh.vtk",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "writeMeshObj",
+      "title": "writeMeshObj  将网格几何信息导出为 OBJ",
+      "description": "-cell、-face、-point 和 -cellSet 等选项指定诊断对象。",
+      "example": "writeMeshObj -cell 10",
+      "details": "-cell、-face、-point 和 -cellSet 等选项指定诊断对象。 用法：writeMeshObj [选项] 示例：writeMeshObj -cell 10",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "PDRMesh",
+      "title": "PDRMesh  为 PDR 模型准备网格和区域",
+      "description": "输入包括 blockedCells、blockedFaces 等集合。",
+      "example": "PDRMesh",
+      "details": "输入包括 blockedCells、blockedFaces 等集合。 用法：PDRMesh [选项] 示例：PDRMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "collapseEdges",
+      "title": "collapseEdges  按字典折叠短边和低质量面",
+      "description": "读取 collapseDict 或指定字典，折叠操作可改变网格拓扑。",
+      "example": "collapseEdges",
+      "details": "读取 collapseDict 或指定字典，折叠操作可改变网格拓扑。 用法：collapseEdges [-dict 文件] 示例：collapseEdges",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "combinePatchFaces",
+      "title": "combinePatchFaces  合并近共面的边界面",
+      "description": "通过 concaveAngle 及质量约束控制合并。",
+      "example": "combinePatchFaces 5 -overwrite",
+      "details": "通过 concaveAngle 及质量约束控制合并。 用法：combinePatchFaces 特征角 [选项] 示例：combinePatchFaces 5 -overwrite",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "modifyMesh",
+      "title": "modifyMesh  移动拆分或折叠网格元素",
+      "description": "按配置字典执行拓扑修改。",
+      "example": "modifyMesh",
+      "details": "按配置字典执行拓扑修改。 用法：modifyMesh [-dict 文件] 示例：modifyMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "refineHexMesh",
+      "title": "refineHexMesh  加密指定六面体集合",
+      "description": "待细化集合可通过 topoSet 建立。",
+      "example": "refineHexMesh refineCells -overwrite",
+      "details": "待细化集合可通过 topoSet 建立。 用法：refineHexMesh cellSet [选项] 示例：refineHexMesh refineCells -overwrite",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "refineWallLayer",
+      "title": "refineWallLayer  细化近壁网格",
+      "description": "输入比例指定边的细分位置。",
+      "example": "refineWallLayer '(walls)' 0.3 -overwrite",
+      "details": "输入比例指定边的细分位置。 用法：refineWallLayer patch列表 边比例 [选项] 示例：refineWallLayer '(walls)' 0.3 -overwrite",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "refinementLevel",
+      "title": "refinementLevel  估计笛卡尔网格细化级别",
+      "description": "用于贴体变形前的网格。",
+      "example": "refinementLevel",
+      "details": "用于贴体变形前的网格。 用法：refinementLevel [选项] 示例：refinementLevel",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "removeFaces",
+      "title": "removeFaces  删除指定面集合中的面",
+      "description": "输入为预先建立的 faceSet。",
+      "example": "removeFaces removeFacesSet",
+      "details": "输入为预先建立的 faceSet。 用法：removeFaces faceSet [选项] 示例：removeFaces removeFacesSet",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "selectCells",
+      "title": "selectCells  按表面选取内部外部或相交单元",
+      "description": "读取选择字典，生成 selected 集合。",
+      "example": "selectCells",
+      "details": "读取选择字典，生成 selected 集合。 用法：selectCells [选项] 示例：selectCells",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "snappyRefineMesh",
+      "title": "snappyRefineMesh  在表面附近加密体网格",
+      "description": "输入为待处理表面及细化字典。",
+      "example": "snappyRefineMesh",
+      "details": "输入为待处理表面及细化字典。 用法：snappyRefineMesh [选项] 示例：snappyRefineMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "splitCells",
+      "title": "splitCells  按边角度拆分单元",
+      "description": "用于网格单元的拓扑修复。",
+      "example": "splitCells 90",
+      "details": "用于网格单元的拓扑修复。 用法：splitCells 边角度 [选项] 示例：splitCells 90",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "attachMesh",
+      "title": "attachMesh  通过网格修改器连接分离网格",
+      "description": "用于相应的拓扑连接流程。",
+      "example": "attachMesh",
+      "details": "用于相应的拓扑连接流程。 用法：attachMesh [选项] 示例：attachMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "autoPatch",
+      "title": "autoPatch  按面夹角自动划分边界",
+      "description": "重划边界后更新对应场边界。",
+      "example": "autoPatch 45 -overwrite",
+      "details": "重划边界后更新对应场边界。 用法：autoPatch 特征角 [选项] 示例：autoPatch 45 -overwrite",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "createBaffles",
+      "title": "createBaffles  将内部面转换为成对边界",
+      "description": "读取 createBafflesDict。边界面生成与点拆分属于不同操作。",
+      "example": "createBaffles -overwrite",
+      "details": "读取 createBafflesDict。边界面生成与点拆分属于不同操作。 用法：createBaffles [-dict 文件] [-overwrite] 示例：createBaffles -overwrite",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "createBafflesDict",
+          "url": "/dictionaries/system-createbafflesdict/"
+        }
+      ]
+    },
+    {
+      "name": "createPatch",
+      "title": "createPatch  创建或重组网格边界",
+      "description": "读取 createPatchDict，修改后使场边界与新网格对应。",
+      "example": "createPatch -overwrite",
+      "details": "读取 createPatchDict，修改后使场边界与新网格对应。 用法：createPatch [-dict 文件] [-overwrite] 示例：createPatch -overwrite",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "createPatchDict",
+          "url": "/dictionaries/system-createpatchdict/"
+        }
+      ]
+    },
+    {
+      "name": "deformedGeom",
+      "title": "deformedGeom  按位移场生成缩放后的变形几何",
+      "description": "输入为已有位移结果场。",
+      "example": "deformedGeom 1",
+      "details": "输入为已有位移结果场。 用法：deformedGeom 缩放倍数 示例：deformedGeom 1",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "flattenMesh",
+      "title": "flattenMesh  压平二维网格前后平面",
+      "description": "适用于相应的二维笛卡尔网格。",
+      "example": "flattenMesh",
+      "details": "适用于相应的二维笛卡尔网格。 用法：flattenMesh [选项] 示例：flattenMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "insideCells",
+      "title": "insideCells  选取封闭表面内部单元",
+      "description": "输入表面应具备明确的内外区域。",
+      "example": "insideCells body.stl innerCells",
+      "details": "输入表面应具备明确的内外区域。 用法：insideCells 表面文件 cellSet 示例：insideCells body.stl innerCells",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "mergeMeshes",
+      "title": "mergeMeshes  合并两个算例网格",
+      "description": "接合处需共形连接时，合并后继续执行缝合。",
+      "example": "mergeMeshes ./mainCase ./extraCase -overwrite",
+      "details": "接合处需共形连接时，合并后继续执行缝合。 用法：mergeMeshes 主算例 附加算例 [选项] 示例：mergeMeshes ./mainCase ./extraCase -overwrite",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "mergeOrSplitBaffles",
+      "title": "mergeOrSplitBaffles  检测合并或拆分挡板面",
+      "description": "-detectOnly 执行检测，-split 执行拆分。",
+      "example": "mergeOrSplitBaffles -detectOnly",
+      "details": "-detectOnly 执行检测，-split 执行拆分。 用法：mergeOrSplitBaffles [选项] 示例：mergeOrSplitBaffles -detectOnly",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "mirrorMesh",
+      "title": "mirrorMesh  按平面对称复制网格",
+      "description": "读取 mirrorMeshDict。",
+      "example": "mirrorMesh",
+      "details": "读取 mirrorMeshDict。 用法：mirrorMesh [-dict 文件] 示例：mirrorMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "moveDynamicMesh",
+      "title": "moveDynamicMesh  执行网格运动",
+      "description": "读取 dynamicMeshDict，可用于独立检查网格运动过程。",
+      "example": "moveDynamicMesh",
+      "details": "读取 dynamicMeshDict，可用于独立检查网格运动过程。 用法：moveDynamicMesh [选项] 示例：moveDynamicMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "moveEngineMesh",
+      "title": "moveEngineMesh  执行发动机网格运动",
+      "description": "读取发动机网格及运动设置。",
+      "example": "moveEngineMesh",
+      "details": "读取发动机网格及运动设置。 用法：moveEngineMesh [选项] 示例：moveEngineMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "moveMesh",
+      "title": "moveMesh  求解网格运动",
+      "description": "输入包括网格运动方程及边界条件。",
+      "example": "moveMesh -deltaT 0.01 -endTime 1",
+      "details": "输入包括网格运动方程及边界条件。 用法：moveMesh [-deltaT 值] [-endTime 值] 示例：moveMesh -deltaT 0.01 -endTime 1",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "objToVTK",
+      "title": "objToVTK  将 OBJ 线文件转成 VTK",
+      "description": "用于线几何可视化。",
+      "example": "objToVTK edges.obj edges.vtk",
+      "details": "用于线几何可视化。 用法：objToVTK 输入.obj 输出.vtk 示例：objToVTK edges.obj edges.vtk",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "orientFaceZone",
+      "title": "orientFaceZone  按外部参考点统一面区域方向",
+      "description": "面方向用于通量计算及挡板处理。",
+      "example": "orientFaceZone interface '(10 0 0)'",
+      "details": "面方向用于通量计算及挡板处理。 用法：orientFaceZone faceZone 外部点 示例：orientFaceZone interface '(10 0 0)'",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "polyDualMesh",
+      "title": "polyDualMesh  生成多面体对偶网格",
+      "description": "生成后检查网格拓扑及场映射。",
+      "example": "polyDualMesh 60 -overwrite",
+      "details": "生成后检查网格拓扑及场映射。 用法：polyDualMesh 特征角 [选项] 示例：polyDualMesh 60 -overwrite",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "refineMesh",
+      "title": "refineMesh  全局或按集合定向加密体网格",
+      "description": "缺少 refineMeshDict 时可执行全域细化。",
+      "example": "refineMesh -overwrite",
+      "details": "缺少 refineMeshDict 时可执行全域细化。 用法：refineMesh [-dict 文件] [-overwrite] 示例：refineMesh -overwrite",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "refineMeshDict",
+          "url": "/dictionaries/system-refinemeshdict/"
+        }
+      ]
+    },
+    {
+      "name": "renumberMesh",
+      "title": "renumberMesh  重排网格编号以降低矩阵带宽",
+      "description": "-write-maps 输出新旧编号映射，供外部编号关联使用。",
+      "example": "renumberMesh -overwrite",
+      "details": "-write-maps 输出新旧编号映射，供外部编号关联使用。 用法：renumberMesh [选项] 示例：renumberMesh -overwrite",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "renumberMeshDict",
+          "url": "/dictionaries/system-renumbermeshdict/"
+        }
+      ]
+    },
+    {
+      "name": "rotateMesh",
+      "title": "rotateMesh  按两个方向向量旋转网格",
+      "description": "与几何方向关联的场和参数应同步检查。",
+      "example": "rotateMesh '(1 0 0)' '(0 1 0)'",
+      "details": "与几何方向关联的场和参数应同步检查。 用法：rotateMesh 起始向量 目标向量 示例：rotateMesh '(1 0 0)' '(0 1 0)'",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "setSet",
+      "title": "setSet  交互编辑单元面和点集合",
+      "description": "批处理文件逐行定义集合操作。",
+      "example": "setSet -batch system/sets.batch",
+      "details": "批处理文件逐行定义集合操作。 用法：setSet [-batch 文件] 示例：setSet -batch system/sets.batch",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "setsToZones",
+      "title": "setsToZones  将集合转换为同名网格区域",
+      "description": "转换面集合时需处理面方向信息。",
+      "example": "setsToZones",
+      "details": "转换面集合时需处理面方向信息。 用法：setsToZones [选项] 示例：setsToZones",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "singleCellMesh",
+      "title": "singleCellMesh  构建保留边界数据的单单元网格",
+      "description": "用于边界数据处理。",
+      "example": "singleCellMesh",
+      "details": "用于边界数据处理。 用法：singleCellMesh [选项] 示例：singleCellMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "splitMesh",
+      "title": "splitMesh  按面集合生成成对边界",
+      "description": "输入为预先建立的 cutFaces 等面集合。",
+      "example": "splitMesh cutFaces sideA sideB",
+      "details": "输入为预先建立的 cutFaces 等面集合。 用法：splitMesh faceSet 主patch 从patch 示例：splitMesh cutFaces sideA sideB",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "splitMeshRegions",
+      "title": "splitMeshRegions  按连通性或 cellZone 拆分网格区域",
+      "description": "各目标区域分别配置字典和场文件。",
+      "example": "splitMeshRegions -cellZones -overwrite",
+      "details": "各目标区域分别配置字典和场文件。 用法：splitMeshRegions [选项] 示例：splitMeshRegions -cellZones -overwrite",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "regionProperties",
+          "url": "/dictionaries/constant-regionproperties/"
+        }
+      ]
+    },
+    {
+      "name": "stitchMesh",
+      "title": "stitchMesh  缝合两个网格边界",
+      "description": "-perfect 要求几何匹配；其余接口可按相应条件采用 -partial 或 -integral。",
+      "example": "stitchMesh -perfect sideA sideB -overwrite",
+      "details": "-perfect 要求几何匹配；其余接口可按相应条件采用 -partial 或 -integral。 用法：stitchMesh [选项] 主patch 从patch 示例：stitchMesh -perfect sideA sideB -overwrite",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "subsetMesh",
+      "title": "subsetMesh  提取指定单元集合或区域的子网格",
+      "description": "默认读取已有单元集合，如 fluidCells；-zone 改为选择 cellZone。",
+      "example": "subsetMesh fluidCells -overwrite",
+      "details": "默认读取已有单元集合，如 fluidCells；-zone 改为选择 cellZone。 用法：subsetMesh 选择名 [选项] 示例：subsetMesh fluidCells -overwrite",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "topoSet",
+      "title": "topoSet  按规则创建或修改集合及区域",
+      "description": "读取 topoSetDict，按 type 选择 cellSet、cellZoneSet 等对象。",
+      "example": "topoSet",
+      "details": "读取 topoSetDict，按 type 选择 cellSet、cellZoneSet 等对象。 用法：topoSet [-dict 文件] 示例：topoSet",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "topoSetDict",
+          "url": "/dictionaries/system-toposetdict/"
+        }
+      ]
+    },
+    {
+      "name": "transformPoints",
+      "title": "transformPoints  对体网格进行平移旋转和缩放",
+      "description": "示例将毫米坐标换算为米。外部源项位置和参考点需同步换算。",
+      "example": "transformPoints -scale '(0.001 0.001 0.001)'",
+      "details": "示例将毫米坐标换算为米。外部源项位置和参考点需同步换算。 用法：transformPoints 变换选项 示例：transformPoints -scale '(0.001 0.001 0.001)'",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "zipUpMesh",
+      "title": "zipUpMesh  修复悬挂顶点引起的单元不闭合",
+      "description": "适用于网格转换产生的相应拓扑缺陷。",
+      "example": "zipUpMesh",
+      "details": "适用于网格转换产生的相应拓扑缺陷。 用法：zipUpMesh [选项] 示例：zipUpMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "PDRsetFields",
+      "title": "PDRsetFields  生成 PDRFoam 所需初始场",
+      "description": "输入为 PDR 阻塞模型等专用数据。",
+      "example": "PDRsetFields",
+      "details": "输入为 PDR 阻塞模型等专用数据。 用法：PDRsetFields [-dict 文件] 示例：PDRsetFields",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "applyBoundaryLayer",
+      "title": "applyBoundaryLayer  按七分之一次方律设置边界层初值",
+      "description": "用于符合该速度分布近似的初始场设置。",
+      "example": "applyBoundaryLayer -ybl 0.01",
+      "details": "用于符合该速度分布近似的初始场设置。 用法：applyBoundaryLayer [-ybl 厚度] [-writeTurbulenceFields] 示例：applyBoundaryLayer -ybl 0.01",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "boxTurb",
+      "title": "boxTurb  生成给定能谱的无散度湍流盒",
+      "description": "通过专用配置指定湍流能谱。",
+      "example": "boxTurb",
+      "details": "通过专用配置指定湍流能谱。 用法：boxTurb [选项] 示例：boxTurb",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "changeDictionary",
+      "title": "changeDictionary  批量修改场和边界条目",
+      "description": "读取 changeDictionaryDict，并将替换结果写回文件。",
+      "example": "changeDictionary",
+      "details": "读取 changeDictionaryDict，并将替换结果写回文件。 用法：changeDictionary [-dict 文件] 示例：changeDictionary",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "changeDictionaryDict",
+          "url": "/dictionaries/system-changedictionarydict/"
+        }
+      ]
+    },
+    {
+      "name": "createBoxTurb",
+      "title": "createBoxTurb  生成各向同性合成湍流盒",
+      "description": "按配套配置生成湍流盒，并可输出 blockMesh 输入。",
+      "example": "createBoxTurb -createBlockMesh",
+      "details": "按配套配置生成湍流盒，并可输出 blockMesh 输入。 用法：createBoxTurb [选项] 示例：createBoxTurb -createBlockMesh",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "createExternalCoupledPatchGeometry",
+      "title": "createExternalCoupledPatchGeometry  输出外部耦合边界几何",
+      "description": "组名和通信目录与耦合配置对应。",
+      "example": "createExternalCoupledPatchGeometry coupledWalls",
+      "details": "组名和通信目录与耦合配置对应。 用法：createExternalCoupledPatchGeometry patch组 [选项] 示例：createExternalCoupledPatchGeometry coupledWalls",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "createViewFactors",
+      "title": "createViewFactors  生成辐射视角因子",
+      "description": "读取 constant/viewFactorsDict 等辐射配置。",
+      "example": "createViewFactors",
+      "details": "读取 constant/viewFactorsDict 等辐射配置。 用法：createViewFactors [选项] 示例：createViewFactors",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "createZeroDirectory",
+      "title": "createZeroDirectory  按模板创建初始场",
+      "description": "按 solver、boundary 等配置生成初始目录和场文件。",
+      "example": "createZeroDirectory",
+      "details": "按 solver、boundary 等配置生成初始目录和场文件。 用法：createZeroDirectory [-templateDir 目录] 示例：createZeroDirectory",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "dsmcInitialise",
+      "title": "dsmcInitialise  初始化 DSMC 粒子算例",
+      "description": "读取 system/dsmcInitialise。",
+      "example": "dsmcInitialise",
+      "details": "读取 system/dsmcInitialise。 用法：dsmcInitialise [选项] 示例：dsmcInitialise",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "engineSwirl",
+      "title": "engineSwirl  生成发动机旋流初场",
+      "description": "读取发动机几何及旋流参数。",
+      "example": "engineSwirl",
+      "details": "读取发动机几何及旋流参数。 用法：engineSwirl [选项] 示例：engineSwirl",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "faceAgglomerate",
+      "title": "faceAgglomerate  聚合辐射边界面并输出映射",
+      "description": "用于视角因子计算的前处理。",
+      "example": "faceAgglomerate",
+      "details": "用于视角因子计算的前处理。 用法：faceAgglomerate [-dict 文件] 示例：faceAgglomerate",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "mapFields",
+      "title": "mapFields  将源算例场映射至目标算例",
+      "description": "-consistent 适用于边界拓扑匹配的情形；边界不一致时配置 mapFieldsDict。",
+      "example": "mapFields ../coarseCase -sourceTime latestTime -consistent",
+      "details": "-consistent 适用于边界拓扑匹配的情形；边界不一致时配置 mapFieldsDict。 用法：mapFields 源算例 [选项] 示例：mapFields ../coarseCase -sourceTime latestTime -consistent",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "mapFieldsDict",
+          "url": "/dictionaries/system-mapfieldsdict/"
+        }
+      ]
+    },
+    {
+      "name": "mapFieldsPar",
+      "title": "mapFieldsPar  执行并行算例场映射",
+      "description": "通过 mpirun 启动，并添加 -parallel。其参数按自身接口设置。",
+      "example": "mapFieldsPar ../sourceCase -sourceTime latestTime -consistent",
+      "details": "通过 mpirun 启动，并添加 -parallel。其参数按自身接口设置。 用法：mapFieldsPar 源算例 [选项] 示例：mapFieldsPar ../sourceCase -sourceTime latestTime -consistent",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "mapFieldsDict",
+          "url": "/dictionaries/system-mapfieldsdict/"
+        }
+      ]
+    },
+    {
+      "name": "mdInitialise",
+      "title": "mdInitialise  初始化分子动力学算例",
+      "description": "读取分子动力学初值字典。",
+      "example": "mdInitialise",
+      "details": "读取分子动力学初值字典。 用法：mdInitialise [选项] 示例：mdInitialise",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "writeMorpherCPs",
+      "title": "writeMorpherCPs  导出 NURBS 变形控制点",
+      "description": "读取 dynamicMeshDict 中的 NURBS3DVolume 配置。",
+      "example": "writeMorpherCPs",
+      "details": "读取 dynamicMeshDict 中的 NURBS3DVolume 配置。 用法：writeMorpherCPs [选项] 示例：writeMorpherCPs",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "setAlphaField",
+      "title": "setAlphaField  按几何切割设置体积分数",
+      "description": "可用于平面、球面和圆柱面等界面的初始化。",
+      "example": "setAlphaField",
+      "details": "可用于平面、球面和圆柱面等界面的初始化。 用法：setAlphaField [-dict 文件] 示例：setAlphaField",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "setAlphaFieldDict",
+          "url": "/dictionaries/system-setalphafielddict/"
+        }
+      ]
+    },
+    {
+      "name": "setExprBoundaryFields",
+      "title": "setExprBoundaryFields  按表达式设置边界场",
+      "description": "读取边界表达式字典，-backup 保留原场。",
+      "example": "setExprBoundaryFields",
+      "details": "读取边界表达式字典，-backup 保留原场。 用法：setExprBoundaryFields [-dict 文件] 示例：setExprBoundaryFields",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "setExprFields",
+      "title": "setExprFields  按表达式设置体场",
+      "description": "示例修改已有 T 场；采用 -create 新建场时需设置 dimensions。",
+      "example": "setExprFields -field T -expression '300 + 10*pos().x()'",
+      "details": "示例修改已有 T 场；采用 -create 新建场时需设置 dimensions。 用法：setExprFields [-dict 文件] 或表达式选项 示例：setExprFields -field T -expression '300 + 10*pos().x()'",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "setExprFieldsDict",
+          "url": "/dictionaries/system-setexprfieldsdict/"
+        }
+      ]
+    },
+    {
+      "name": "setFields",
+      "title": "setFields  按几何区域初始化场",
+      "description": "读取 setFieldsDict，通常在网格生成后、分区前执行。",
+      "example": "setFields",
+      "details": "读取 setFieldsDict，通常在网格生成后、分区前执行。 用法：setFields [-dict 文件] 示例：setFields",
+      "category": "前处理",
+      "configs": [
+        {
+          "name": "setFieldsDict",
+          "url": "/dictionaries/system-setfieldsdict/"
+        },
+        {
+          "name": "alpha.water",
+          "url": "/dictionaries/0-alpha-water/"
+        }
+      ]
+    },
+    {
+      "name": "setTurbulenceFields",
+      "title": "setTurbulenceFields  按经验关系初始化湍流量",
+      "description": "模型和场名采用所用求解器的定义。",
+      "example": "setTurbulenceFields",
+      "details": "模型和场名采用所用求解器的定义。 用法：setTurbulenceFields [-dict 文件] 示例：setTurbulenceFields",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "smoothSurfaceData",
+      "title": "smoothSurfaceData  平滑表面数据字段",
+      "description": "输入采用程序支持的表面数据格式。",
+      "example": "smoothSurfaceData sample.vtp -radius 0.01",
+      "details": "输入采用程序支持的表面数据格式。 用法：smoothSurfaceData 输入 [选项] 示例：smoothSurfaceData sample.vtp -radius 0.01",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "viewFactorsGen",
+      "title": "viewFactorsGen  采用面积和线积分生成视角因子",
+      "description": "参数由对应辐射模型及字典定义。",
+      "example": "viewFactorsGen",
+      "details": "参数由对应辐射模型及字典定义。 用法：viewFactorsGen [选项] 示例：viewFactorsGen",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "wallFunctionTable",
+      "title": "wallFunctionTable  生成表格式壁面函数数据",
+      "description": "由字典指定壁面模型及数据范围。",
+      "example": "wallFunctionTable",
+      "details": "由字典指定壁面模型及数据范围。 用法：wallFunctionTable [选项] 示例：wallFunctionTable",
+      "category": "前处理",
+      "configs": []
+    },
+    {
+      "name": "foamJob",
+      "title": "foamJob  启动后台计算并记录日志",
+      "description": "默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。",
+      "example": "foamJob -log-app simpleFoam",
+      "details": "默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。 用法：foamJob [选项] 应用 [应用参数] 示例：foamJob -log-app simpleFoam",
+      "category": "求解与并行",
+      "configs": []
+    },
+    {
+      "name": "foamEndJob",
+      "title": "foamEndJob  通过 stopAt 结束算例计算",
+      "description": "需启用 runTimeModifiable。默认在下一写出时刻结束，-now 请求立即写出并结束；PID 使用实际进程号。",
+      "example": "foamEndJob -case . -now 12345",
+      "details": "需启用 runTimeModifiable。默认在下一写出时刻结束，-now 请求立即写出并结束；PID 使用实际进程号。 用法：foamEndJob [-case 目录] [-now] PID 示例：foamEndJob -case . -now 12345",
+      "category": "求解与并行",
+      "configs": []
+    },
+    {
+      "name": "foamCheckJobs",
+      "title": "foamCheckJobs  检查作业记录及运行锁状态",
+      "description": "通过 FOAM_JOB_DIR 中的作业记录检查状态，访问远程主机时使用 SSH。",
+      "example": "foamCheckJobs jobState",
+      "details": "通过 FOAM_JOB_DIR 中的作业记录检查状态，访问远程主机时使用 SSH。 用法：foamCheckJobs [状态输出文件] 示例：foamCheckJobs jobState",
+      "category": "求解与并行",
+      "configs": []
+    },
+    {
+      "name": "foamPrintJobs",
+      "title": "foamPrintJobs  输出 OpenFOAM 作业记录",
+      "description": "与 foamCheckJobs 配合使用。",
+      "example": "foamPrintJobs jobState",
+      "details": "与 foamCheckJobs 配合使用。 用法：foamPrintJobs [状态文件] 示例：foamPrintJobs jobState",
+      "category": "求解与并行",
+      "configs": []
+    },
+    {
+      "name": "mpirunDebug",
+      "title": "mpirunDebug  记录 MPI 分进程日志或启动调试",
+      "description": "计算前完成分区。图形调试模式需配置 xterm 及对应调试器。",
+      "example": "mpirunDebug -log -np 4 simpleFoam -parallel",
+      "details": "计算前完成分区。图形调试模式需配置 xterm 及对应调试器。 用法：mpirunDebug [选项] -np N 程序 参数 示例：mpirunDebug -log -np 4 simpleFoam -parallel",
+      "category": "求解与并行",
+      "configs": []
+    },
+    {
+      "name": "decomposePar",
+      "title": "decomposePar  将网格和场分解为并行子域",
+      "description": "读取 decomposeParDict，-force 替换已有 processor 目录。",
+      "example": "decomposePar",
+      "details": "读取 decomposeParDict，-force 替换已有 processor 目录。 用法：decomposePar [选项] 示例：decomposePar",
+      "category": "求解与并行",
+      "configs": [
+        {
+          "name": "decomposeParDict",
+          "url": "/dictionaries/system-decomposepardict/"
+        }
+      ]
+    },
+    {
+      "name": "reconstructPar",
+      "title": "reconstructPar  将并行场重构为串行结果",
+      "description": "-fields 指定场。动网格结果按需先重构网格。",
+      "example": "reconstructPar -latestTime",
+      "details": "-fields 指定场。动网格结果按需先重构网格。 用法：reconstructPar [选项] 示例：reconstructPar -latestTime",
+      "category": "求解与并行",
+      "configs": []
+    },
+    {
+      "name": "reconstructParMesh",
+      "title": "reconstructParMesh  重构分区网格及处理器寻址",
+      "description": "用于并行网格生成后的主网格及寻址重构。",
+      "example": "reconstructParMesh -constant",
+      "details": "用于并行网格生成后的主网格及寻址重构。 用法：reconstructParMesh [选项] 示例：reconstructParMesh -constant",
+      "category": "求解与并行",
+      "configs": []
+    },
+    {
+      "name": "redistributePar",
+      "title": "redistributePar  并行重分区或重构网格和场",
+      "description": "修改 decomposeParDict 后执行重分配，MPI 进程数取源分区数与目标分区数的较大值。",
+      "example": "mpirun -np 8 redistributePar -parallel -overwrite",
+      "details": "修改 decomposeParDict 后执行重分配，MPI 进程数取源分区数与目标分区数的较大值。 用法：redistributePar [选项] 示例：mpirun -np 8 redistributePar -parallel -overwrite MPI 程序采用 mpirun -np N 应用 -parallel 启动，其中 N 为进程数。例如，执行 mpirun -np 4 pimpleFoam -parallel 前，将 numberOfSubdomains 设为 4，并运行 decomposePar。",
+      "category": "求解与并行",
+      "configs": [
+        {
+          "name": "decomposeParDict",
+          "url": "/dictionaries/system-decomposepardict/"
+        }
+      ]
+    },
+    {
+      "name": "postProcess",
+      "title": "postProcess  执行函数对象后处理",
+      "description": "-list 列出预配置函数。依赖湍流或热物性的函数通过相应求解器的 -postProcess 选项执行。",
+      "example": "postProcess -func 'mag(U)' -latestTime",
+      "details": "-list 列出预配置函数。依赖湍流或热物性的函数通过相应求解器的 -postProcess 选项执行。 用法：postProcess [-func 名称] [-time 范围] [-latestTime] 示例：postProcess -func 'mag(U)' -latestTime",
+      "category": "后处理",
+      "configs": [
+        {
+          "name": "probes",
+          "url": "/dictionaries/functions-probes/"
+        },
+        {
+          "name": "sets",
+          "url": "/dictionaries/functions-sets/"
+        },
+        {
+          "name": "surfaces",
+          "url": "/dictionaries/functions-surfaces/"
+        },
+        {
+          "name": "forces",
+          "url": "/dictionaries/functions-forces/"
+        },
+        {
+          "name": "forceCoeffs",
+          "url": "/dictionaries/functions-forcecoeffs/"
+        },
+        {
+          "name": "fieldAverage",
+          "url": "/dictionaries/functions-fieldaverage/"
+        },
+        {
+          "name": "volFieldValue",
+          "url": "/dictionaries/functions-volfieldvalue/"
+        },
+        {
+          "name": "surfaceFieldValue",
+          "url": "/dictionaries/functions-surfacefieldvalue/"
+        },
+        {
+          "name": "yPlus",
+          "url": "/dictionaries/functions-yplus/"
+        },
+        {
+          "name": "Q",
+          "url": "/dictionaries/functions-q/"
+        }
+      ]
+    },
+    {
+      "name": "paraFoam",
+      "title": "paraFoam  在 ParaView 中打开算例",
+      "description": "-builtin 选择 ParaView 内置 OpenFOAM 读取器，运行需具备 ParaView 和图形环境。",
+      "example": "paraFoam -builtin",
+      "details": "-builtin 选择 ParaView 内置 OpenFOAM 读取器，运行需具备 ParaView 和图形环境。 用法：paraFoam [选项] 示例：paraFoam -builtin",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamLog",
+      "title": "foamLog  提取日志中的残差等数值记录",
+      "description": "结果写入 logs/。-list 列出可提取的变量。",
+      "example": "foamLog log.simpleFoam",
+      "details": "结果写入 logs/。-list 列出可提取的变量。 用法：foamLog [选项] 日志文件 示例：foamLog log.simpleFoam",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamMonitor",
+      "title": "foamMonitor  实时绘制数值文件曲线",
+      "description": "调用 Gnuplot 读取数值列文件。-r 2 将刷新间隔设为 2 s。",
+      "example": "foamMonitor -l postProcessing/residuals/0/residuals.dat",
+      "details": "调用 Gnuplot 读取数值列文件。-r 2 将刷新间隔设为 2 s。 用法：foamMonitor [选项] 数据文件 示例：foamMonitor -l postProcessing/residuals/0/residuals.dat",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamSolverSweeps",
+      "title": "foamSolverSweeps  统计求解迭代次数及耗时",
+      "description": "启动后交互输入日志名，如 log.simpleFoam。脚本按预设的旧式日志行格式提取统计量。",
+      "example": "foamSolverSweeps",
+      "details": "启动后交互输入日志名，如 log.simpleFoam。脚本按预设的旧式日志行格式提取统计量。 用法：foamSolverSweeps 随后输入日志文件名 示例：foamSolverSweeps",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamToVTK",
+      "title": "foamToVTK  将网格与场导出为 VTK",
+      "description": "支持 XML VTK 输出，-legacy 选择旧式格式，-ascii 选择文本格式。",
+      "example": "foamToVTK -latestTime -fields '(U p)'",
+      "details": "支持 XML VTK 输出，-legacy 选择旧式格式，-ascii 选择文本格式。 用法：foamToVTK [选项] 示例：foamToVTK -latestTime -fields '(U p)'",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamToEnsight",
+      "title": "foamToEnsight  导出 EnSight 数据集",
+      "description": "选项可控制区域、粒子及场数据的输出范围。",
+      "example": "foamToEnsight -latestTime -fields '(U p)'",
+      "details": "选项可控制区域、粒子及场数据的输出范围。 用法：foamToEnsight [选项] 示例：foamToEnsight -latestTime -fields '(U p)'",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamToGMV",
+      "title": "foamToGMV  导出 GMV 后处理数据",
+      "description": "结果供支持 GMV 格式的软件读取。",
+      "example": "foamToGMV",
+      "details": "结果供支持 GMV 格式的软件读取。 用法：foamToGMV [选项] 示例：foamToGMV",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamDataToFluent",
+      "title": "foamDataToFluent  将 OpenFOAM 场转换为 Fluent 数据",
+      "description": "转换范围为场数据，求解设置在目标软件中配置。",
+      "example": "foamDataToFluent",
+      "details": "转换范围为场数据，求解设置在目标软件中配置。 用法：foamDataToFluent [选项] 示例：foamDataToFluent",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamToTetDualMesh",
+      "title": "foamToTetDualMesh  将结果转换为四面体对偶网格形式",
+      "description": "用于相应的后处理流程。",
+      "example": "foamToTetDualMesh",
+      "details": "用于相应的后处理流程。 用法：foamToTetDualMesh [选项] 示例：foamToTetDualMesh",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "smapToFoam",
+      "title": "smapToFoam  导入 SMAP 格式数据",
+      "description": "输入采用程序支持的 SMAP 数据结构。",
+      "example": "smapToFoam input.smap",
+      "details": "输入采用程序支持的 SMAP 数据结构。 用法：smapToFoam SMAP文件 示例：smapToFoam input.smap",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "patchSummary",
+      "title": "patchSummary  汇总网格边界及场条件",
+      "description": "用于检查网格边界与场配置的对应关系。",
+      "example": "patchSummary -latestTime -expand",
+      "details": "用于检查网格边界与场配置的对应关系。 用法：patchSummary [选项] 示例：patchSummary -latestTime -expand",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamListTimes",
+      "title": "foamListTimes  列出或删除指定时间目录",
+      "description": "foamListTimes -time '0.1:0.5' -rm 删除指定时段目录；移除 -rm 可预览，-noZero 排除 0 目录。",
+      "example": "foamListTimes -latestTime",
+      "details": "foamListTimes -time '0.1:0.5' -rm 删除指定时段目录；移除 -rm 可预览，-noZero 排除 0 目录。 用法：foamListTimes [选项] 示例：foamListTimes -latestTime",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamFormatConvert",
+      "title": "foamFormatConvert  按指定格式重写场和网格",
+      "description": "输出格式由 controlDict 中的 writeFormat 指定，可设为 ascii 或 binary。",
+      "example": "foamFormatConvert -latestTime",
+      "details": "输出格式由 controlDict 中的 writeFormat 指定，可设为 ascii 或 binary。 用法：foamFormatConvert [选项] 示例：foamFormatConvert -latestTime",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamRestoreFields",
+      "title": "foamRestoreFields  恢复备份或转换后的场",
+      "description": "从已有备份恢复，method 按命令帮助指定。",
+      "example": "foamRestoreFields U p",
+      "details": "从已有备份恢复，method 按命令帮助指定。 用法：foamRestoreFields [选项] 场名列表 示例：foamRestoreFields U p",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamSequenceVTKFiles",
+      "title": "foamSequenceVTKFiles  为 VTK 文件建立连续编号链接",
+      "description": "生成的符号链接供 ParaView 识别时间序列。",
+      "example": "foamSequenceVTKFiles -dir postProcessing -out sequencedVTK",
+      "details": "生成的符号链接供 ParaView 识别时间序列。 用法：foamSequenceVTKFiles [选项] 示例：foamSequenceVTKFiles -dir postProcessing -out sequencedVTK",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamCreateVideo",
+      "title": "foamCreateVideo  将 PNG 图像序列合成为视频",
+      "description": "通过 ffmpeg 等工具处理图像序列，默认名称为 image.0000.png 等。-image 指定图像前缀。",
+      "example": "foamCreateVideo -dir frames -fps 20 -out flow",
+      "details": "通过 ffmpeg 等工具处理图像序列，默认名称为 image.0000.png 等。-image 指定图像前缀。 用法：foamCreateVideo [选项] 示例：foamCreateVideo -dir frames -fps 20 -out flow",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamCleanPolyMesh",
+      "title": "foamCleanPolyMesh  清理体网格文件",
+      "description": "-dry-run 预览清理范围，移除该选项后执行删除。",
+      "example": "foamCleanPolyMesh -dry-run",
+      "details": "-dry-run 预览清理范围，移除该选项后执行删除。 用法：foamCleanPolyMesh [-case 目录] [-dry-run] 示例：foamCleanPolyMesh -dry-run",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamCleanFaMesh",
+      "title": "foamCleanFaMesh  清理有限面积网格文件",
+      "description": "对应 constant/finite-area/faMesh，-area-region 指定有限面积区域。",
+      "example": "foamCleanFaMesh -dry-run",
+      "details": "对应 constant/finite-area/faMesh，-area-region 指定有限面积区域。 用法：foamCleanFaMesh [-case 目录] [-dry-run] 示例：foamCleanFaMesh -dry-run",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamCleanTutorials",
+      "title": "foamCleanTutorials  递归清理教程结果",
+      "description": "按规则删除结果并执行相关 Allclean；存在 0.orig 时，默认清理过程可移除 0 目录。",
+      "example": "foamCleanTutorials -case ./caseCopy",
+      "details": "按规则删除结果并执行相关 Allclean；存在 0.orig 时，默认清理过程可移除 0 目录。 用法：foamCleanTutorials [选项] [目录] 示例：foamCleanTutorials -case ./caseCopy",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "addr2line",
+      "title": "addr2line  将程序地址映射到源码行",
+      "description": "源码包提供 macOS 兼容实现；Linux 通常使用 GNU Binutils 同名工具。地址解析需具备调试符号。",
+      "example": "addr2line -e mySolver 0x1234",
+      "details": "源码包提供 macOS 兼容实现；Linux 通常使用 GNU Binutils 同名工具。地址解析需具备调试符号。 用法：addr2line -e 可执行文件 地址 示例：addr2line -e mySolver 0x1234",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "particleTracks",
+      "title": "particleTracks  根据粒子记录重建轨迹",
+      "description": "输入包括粒子标识信息和轨迹输出字典。",
+      "example": "particleTracks",
+      "details": "输入包括粒子标识信息和轨迹输出字典。 用法：particleTracks [-dict 文件] 示例：particleTracks",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "steadyParticleTracks",
+      "title": "steadyParticleTracks  导出稳态粒子轨迹为旧式 VTK",
+      "description": "并行结果通常先重构，再导出轨迹。",
+      "example": "steadyParticleTracks",
+      "details": "并行结果通常先重构，再导出轨迹。 用法：steadyParticleTracks [-dict 文件] 示例：steadyParticleTracks",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "lumpedPointForces",
+      "title": "lumpedPointForces  提取集中点运动模型的力和力矩",
+      "description": "读取集中点运动模型数据。",
+      "example": "lumpedPointForces",
+      "details": "读取集中点运动模型数据。 用法：lumpedPointForces [选项] 示例：lumpedPointForces",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "lumpedPointMovement",
+      "title": "lumpedPointMovement  测试集中点运动及响应文件",
+      "description": "采用对应耦合模型配置。",
+      "example": "lumpedPointMovement response.dat",
+      "details": "采用对应耦合模型配置。 用法：lumpedPointMovement 响应文件 [选项] 示例：lumpedPointMovement response.dat",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "lumpedPointZones",
+      "title": "lumpedPointZones  输出集中点压力积分区域",
+      "description": "通常生成用于可视化的 lumpedPointZones.vtp。",
+      "example": "lumpedPointZones",
+      "details": "通常生成用于可视化的 lumpedPointZones.vtp。 用法：lumpedPointZones [选项] 示例：lumpedPointZones",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "createROMfields",
+      "title": "createROMfields  根据降阶模型重建指定时刻的场",
+      "description": "输入为已有 ROM 数据。",
+      "example": "createROMfields",
+      "details": "输入为已有 ROM 数据。 用法：createROMfields [-dict 文件] 示例：createROMfields",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "engineCompRatio",
+      "title": "engineCompRatio  根据发动机几何计算压缩比",
+      "description": "适用范围由所采用的几何容积模型确定。",
+      "example": "engineCompRatio",
+      "details": "适用范围由所采用的几何容积模型确定。 用法：engineCompRatio [选项] 示例：engineCompRatio",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "pdfPlot",
+      "title": "pdfPlot  输出概率密度分布曲线",
+      "description": "按字典配置概率密度函数。",
+      "example": "pdfPlot",
+      "details": "按字典配置概率密度函数。 用法：pdfPlot [选项] 示例：pdfPlot",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "postChannel",
+      "title": "postChannel  统计通道流结果",
+      "description": "按程序规定的周期方向及平均场定义进行统计。",
+      "example": "postChannel",
+      "details": "按程序规定的周期方向及平均场定义进行统计。 用法：postChannel [选项] 示例：postChannel",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "profilingSummary",
+      "title": "profilingSummary  汇总并行性能统计",
+      "description": "读取启用 profiling 后生成的性能统计文件。",
+      "example": "profilingSummary",
+      "details": "读取启用 profiling 后生成的性能统计文件。 用法：profilingSummary [选项] 示例：profilingSummary",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "temporalInterpolate",
+      "title": "temporalInterpolate  对已有时刻的场进行时间插值",
+      "description": "根据离散时刻结果生成中间时刻的场。",
+      "example": "temporalInterpolate -divisions 3 -fields '(U p)'",
+      "details": "根据离散时刻结果生成中间时刻的场。 用法：temporalInterpolate [选项] 示例：temporalInterpolate -divisions 3 -fields '(U p)'",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "noise",
+      "title": "noise  分析压力时序或表面压力频谱",
+      "description": "读取 noiseDict。采样频率决定有效频率上限，采样时长决定频率分辨率。",
+      "example": "noise",
+      "details": "读取 noiseDict。采样频率决定有效频率上限，采样时长决定频率分辨率。 用法：noise [-dict 文件] 示例：noise",
+      "category": "后处理",
+      "configs": [
+        {
+          "name": "noiseDict",
+          "url": "/dictionaries/system-noisedict/"
+        }
+      ]
+    },
+    {
+      "name": "computeSensitivities",
+      "title": "computeSensitivities  依据优化字典计算灵敏度",
+      "description": "读取 optimisationDict 及相应原始场和伴随场。",
+      "example": "computeSensitivities",
+      "details": "读取 optimisationDict 及相应原始场和伴随场。 用法：computeSensitivities [选项] 示例：computeSensitivities",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "cumulativeDisplacement",
+      "title": "cumulativeDisplacement  计算相对初始网格的累计位移",
+      "description": "读取各时刻点坐标及 constant 中的初始网格。",
+      "example": "cumulativeDisplacement",
+      "details": "读取各时刻点坐标及 constant 中的初始网格。 用法：cumulativeDisplacement [选项] 示例：cumulativeDisplacement",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "adiabaticFlameT",
+      "title": "adiabaticFlameT  计算绝热火焰温度",
+      "description": "输入包括热物性和组分配置。",
+      "example": "adiabaticFlameT adiabaticFlameTDict",
+      "details": "输入包括热物性和组分配置。 用法：adiabaticFlameT 控制文件 示例：adiabaticFlameT adiabaticFlameTDict",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "chemkinToFoam",
+      "title": "chemkinToFoam  转换 CHEMKIN 反应机理和热物性文件",
+      "description": "反应、热力学和输运输入文件采用一致的物种名称。",
+      "example": "chemkinToFoam chem.inp therm.dat tran.dat reactions thermo",
+      "details": "反应、热力学和输运输入文件采用一致的物种名称。 用法：chemkinToFoam 反应文件 热力学文件 输运文件 输出反应 输出热物性 示例：chemkinToFoam chem.inp therm.dat tran.dat reactions thermo",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "equilibriumCO",
+      "title": "equilibriumCO  计算平衡一氧化碳浓度",
+      "description": "按所用热化学平衡模型计算。",
+      "example": "equilibriumCO",
+      "details": "按所用热化学平衡模型计算。 用法：equilibriumCO [选项] 示例：equilibriumCO",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "equilibriumFlameT",
+      "title": "equilibriumFlameT  计算平衡火焰温度",
+      "description": "物种数据与热力学模型保持一致。",
+      "example": "equilibriumFlameT equilibriumFlameTDict",
+      "details": "物种数据与热力学模型保持一致。 用法：equilibriumFlameT 控制文件 示例：equilibriumFlameT equilibriumFlameTDict",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "mixtureAdiabaticFlameT",
+      "title": "mixtureAdiabaticFlameT  计算混合物绝热火焰温度",
+      "description": "由输入字典指定混合物组成。",
+      "example": "mixtureAdiabaticFlameT mixtureFlameTDict",
+      "details": "由输入字典指定混合物组成。 用法：mixtureAdiabaticFlameT 控制文件 示例：mixtureAdiabaticFlameT mixtureFlameTDict",
+      "category": "后处理",
+      "configs": []
+    },
+    {
+      "name": "foamVersion",
+      "title": "foamVersion",
+      "description": "显示当前 OpenFOAM 环境版本。",
+      "example": "foamVersion",
+      "details": "显示当前 OpenFOAM 环境版本。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "wmake",
+      "title": "wmake",
+      "description": "编译应用程序或用户库，读取 Make/files 与 Make/options。",
+      "example": "wmake",
+      "details": "编译应用程序或用户库，读取 Make/files 与 Make/options。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": [
+        {
+          "name": "files",
+          "url": "/dictionaries/make-files/"
+        },
+        {
+          "name": "options",
+          "url": "/dictionaries/make-options/"
+        }
+      ]
+    },
+    {
+      "name": "wclean",
+      "title": "wclean",
+      "description": "清理当前应用的构建产物；执行前确认工作目录。",
+      "example": "wclean",
+      "details": "清理当前应用的构建产物；执行前确认工作目录。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "Allwmake",
+      "title": "Allwmake",
+      "description": "项目提供的批量编译脚本；需先阅读脚本和构建说明。",
+      "example": "./Allwmake",
+      "details": "项目提供的批量编译脚本；需先阅读脚本和构建说明。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "Allrun",
+      "title": "Allrun",
+      "description": "算例提供的运行脚本，具体执行步骤由该文件定义。",
+      "example": "./Allrun",
+      "details": "算例提供的运行脚本，具体执行步骤由该文件定义。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "Allclean",
+      "title": "Allclean",
+      "description": "算例提供的清理脚本，执行前检查其删除范围。",
+      "example": "less Allclean",
+      "details": "算例提供的清理脚本，执行前检查其删除范围。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "tut",
+      "title": "tut",
+      "description": "加载环境后可用的教程目录别名。",
+      "example": "tut",
+      "details": "加载环境后可用的教程目录别名。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "run",
+      "title": "run",
+      "description": "加载环境后切换到用户运行目录的别名。",
+      "example": "run",
+      "details": "加载环境后切换到用户运行目录的别名。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "sol",
+      "title": "sol",
+      "description": "加载环境后切换到求解器源码目录的别名。",
+      "example": "sol",
+      "details": "加载环境后切换到求解器源码目录的别名。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "foam",
+      "title": "foam",
+      "description": "加载环境后切换到 OpenFOAM 安装根目录。",
+      "example": "foam",
+      "details": "加载环境后切换到 OpenFOAM 安装根目录。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "src",
+      "title": "src",
+      "description": "加载环境后切换到库源码目录的别名。",
+      "example": "src",
+      "details": "加载环境后切换到库源码目录的别名。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "foamExec",
+      "title": "foamExec",
+      "description": "使用安装目录中提供的环境包装脚本运行应用。",
+      "example": "\"$WM_PROJECT_DIR/bin/tools/foamExec\" icoFoam -help",
+      "details": "使用安装目录中提供的环境包装脚本运行应用。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "环境与编译",
+      "configs": []
+    },
+    {
+      "name": "source",
+      "title": "source",
+      "description": "在当前 Bash 进程中执行环境脚本。",
+      "example": "source /usr/lib/openfoam/openfoam2512/etc/bashrc",
+      "details": "在当前 Bash 进程中执行环境脚本。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "pwd",
+      "title": "pwd",
+      "description": "显示当前工作目录。",
+      "example": "pwd",
+      "details": "显示当前工作目录。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "ls",
+      "title": "ls",
+      "description": "列出文件与目录。",
+      "example": "ls -lh 0 constant system",
+      "details": "列出文件与目录。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "cd",
+      "title": "cd",
+      "description": "切换工作目录；含空格的路径使用引号。",
+      "example": "cd \"$FOAM_RUN\"",
+      "details": "切换工作目录；含空格的路径使用引号。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "mkdir",
+      "title": "mkdir",
+      "description": "创建工作目录。",
+      "example": "mkdir -p \"$FOAM_RUN\"",
+      "details": "创建工作目录。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "cp",
+      "title": "cp",
+      "description": "复制算例与配置文件。",
+      "example": "cp -r cavity cavity-copy",
+      "details": "复制算例与配置文件。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "mv",
+      "title": "mv",
+      "description": "移动或重命名文件；检查目标是否已存在。",
+      "example": "mv log.icoFoam log.icoFoam.previous",
+      "details": "移动或重命名文件；检查目标是否已存在。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "rm",
+      "title": "rm",
+      "description": "删除文件；删除前逐项核对路径，删除通常无法撤销。",
+      "example": "rm -i ./unneeded.txt",
+      "details": "删除文件；删除前逐项核对路径，删除通常无法撤销。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "cat",
+      "title": "cat",
+      "description": "查看短文本文件。",
+      "example": "cat system/controlDict",
+      "details": "查看短文本文件。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "less",
+      "title": "less",
+      "description": "分页阅读配置与日志。",
+      "example": "less log.interFoam",
+      "details": "分页阅读配置与日志。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "head",
+      "title": "head",
+      "description": "查看文件开头。",
+      "example": "head -n 20 log.interFoam",
+      "details": "查看文件开头。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "tail",
+      "title": "tail",
+      "description": "查看或持续监视日志末尾。",
+      "example": "tail -f log.interFoam",
+      "details": "查看或持续监视日志末尾。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "grep",
+      "title": "grep",
+      "description": "按文本模式检索文件。",
+      "example": "grep -n \"Courant Number\" log.interFoam",
+      "details": "按文本模式检索文件。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "find",
+      "title": "find",
+      "description": "按路径和文件名查找文件。",
+      "example": "find \"$FOAM_TUTORIALS\" -name controlDict",
+      "details": "按路径和文件名查找文件。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "diff",
+      "title": "diff",
+      "description": "对比两份字典或日志。",
+      "example": "diff -u system/fvSchemes ../caseB/system/fvSchemes",
+      "details": "对比两份字典或日志。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "du",
+      "title": "du",
+      "description": "检查算例或结果目录的存储占用。",
+      "example": "du -sh .",
+      "details": "检查算例或结果目录的存储占用。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "df",
+      "title": "df",
+      "description": "检查文件系统可用空间。",
+      "example": "df -h .",
+      "details": "检查文件系统可用空间。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "ps",
+      "title": "ps",
+      "description": "查看当前用户的进程。",
+      "example": "ps -u \"$USER\"",
+      "details": "查看当前用户的进程。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "top",
+      "title": "top",
+      "description": "交互查看计算资源占用。",
+      "example": "top",
+      "details": "交互查看计算资源占用。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "nohup",
+      "title": "nohup",
+      "description": "使程序忽略挂断信号并重定向日志。",
+      "example": "nohup interFoam > log.interFoam 2>&1 &",
+      "details": "使程序忽略挂断信号并重定向日志。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "tmux",
+      "title": "tmux",
+      "description": "创建可分离终端会话；需安装 tmux。",
+      "example": "tmux new -s openfoam",
+      "details": "创建可分离终端会话；需安装 tmux。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "ssh",
+      "title": "ssh",
+      "description": "连接计算服务器。",
+      "example": "ssh username@hostname",
+      "details": "连接计算服务器。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "scp",
+      "title": "scp",
+      "description": "通过 SSH 复制文件，替换账号与主机名后使用。",
+      "example": "scp report.pdf username@hostname:~/",
+      "details": "通过 SSH 复制文件，替换账号与主机名后使用。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "tar",
+      "title": "tar",
+      "description": "打包算例目录。",
+      "example": "tar -czf case.tar.gz case/",
+      "details": "打包算例目录。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "chmod",
+      "title": "chmod",
+      "description": "设置脚本执行权限。",
+      "example": "chmod u+x Allrun",
+      "details": "设置脚本执行权限。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "command",
+      "title": "command",
+      "description": "查询外部程序的实际位置。",
+      "example": "command -v interFoam",
+      "details": "查询外部程序的实际位置。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "type",
+      "title": "type",
+      "description": "识别命令是别名、函数还是程序文件。",
+      "example": "type foamVersion",
+      "details": "识别命令是别名、函数还是程序文件。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    },
+    {
+      "name": "echo",
+      "title": "echo",
+      "description": "显示环境变量或简单文本。",
+      "example": "echo \"$WM_PROJECT_VERSION\"",
+      "details": "显示环境变量或简单文本。 示例中的算例名、路径与主机名须按实际环境替换。",
+      "category": "Linux",
+      "configs": []
+    }
+  ],
+  "chapters": [
+    {
+      "title": "01 版本说明与使用方法",
+      "url": "/reference/manual-01/",
+      "manual": 1
+    },
+    {
+      "title": "02 系统命令与辅助工具",
+      "url": "/reference/manual-02/",
+      "manual": 1
+    },
+    {
+      "title": "03 前处理命令",
+      "url": "/reference/manual-03/",
+      "manual": 1
+    },
+    {
+      "title": "04 求解器与并行计算",
+      "url": "/reference/manual-04/",
+      "manual": 1
+    },
+    {
+      "title": "05 后处理及其他命令",
+      "url": "/reference/manual-05/",
+      "manual": 1
+    },
+    {
+      "title": "06 常见文件与字典语法",
+      "url": "/reference/manual-06/",
+      "manual": 1
+    },
+    {
+      "title": "07 网格生成与前处理配置",
+      "url": "/reference/manual-07/",
+      "manual": 1
+    },
+    {
+      "title": "08 时间控制与数值求解设置",
+      "url": "/reference/manual-08/",
+      "manual": 1
+    },
+    {
+      "title": "09 场文件与物理模型配置",
+      "url": "/reference/manual-09/",
+      "manual": 1
+    },
+    {
+      "title": "10 后处理函数对象与数据采样",
+      "url": "/reference/manual-10/",
+      "manual": 1
+    },
+    {
+      "title": "11 环境变量与编译工具",
+      "url": "/reference/manual-11/",
+      "manual": 1
+    },
+    {
+      "title": "12 常用 Linux 命令",
+      "url": "/reference/manual-12/",
+      "manual": 1
+    },
+    {
+      "title": "13 典型算例运行流程",
+      "url": "/reference/manual-13/",
+      "manual": 1
+    },
+    {
+      "title": "14 常见错误与排查方法",
+      "url": "/reference/manual-14/",
+      "manual": 1
+    },
+    {
+      "title": "15 参考资料",
+      "url": "/reference/manual-15/",
+      "manual": 1
+    },
+    {
+      "title": "第 1 章　OpenFOAM 分支与版本识别",
+      "url": "/reference/guide-01/",
+      "manual": 2
+    },
+    {
+      "title": "第 2 章　安装与环境激活",
+      "url": "/reference/guide-02/",
+      "manual": 2
+    },
+    {
+      "title": "第 3 章　目录结构：文件都放在哪儿",
+      "url": "/reference/guide-03/",
+      "manual": 2
+    },
+    {
+      "title": "第 4 章　环境变量大全（$WM_* 与 $FOAM_*）",
+      "url": "/reference/guide-04/",
+      "manual": 2
+    },
+    {
+      "title": "第 5 章　系统与通用命令",
+      "url": "/reference/guide-05/",
+      "manual": 2
+    },
+    {
+      "title": "第 6 章　前处理命令（网格与初场）",
+      "url": "/reference/guide-06/",
+      "manual": 2
+    },
+    {
+      "title": "第 7 章　求解器与运行控制",
+      "url": "/reference/guide-07/",
+      "manual": 2
+    },
+    {
+      "title": "第 8 章　后处理命令与 functionObject",
+      "url": "/reference/guide-08/",
+      "manual": 2
+    },
+    {
+      "title": "第 9 章　并行计算与集群作业",
+      "url": "/reference/guide-09/",
+      "manual": 2
+    },
+    {
+      "title": "第 10 章　编译与二次开发命令",
+      "url": "/reference/guide-10/",
+      "manual": 2
+    },
+    {
+      "title": "第 11 章　字典文件的通用语法",
+      "url": "/reference/guide-11/",
+      "manual": 2
+    },
+    {
+      "title": "第 12 章　system/controlDict",
+      "url": "/reference/guide-12/",
+      "manual": 2
+    },
+    {
+      "title": "第 13 章　system/fvSchemes（离散格式）",
+      "url": "/reference/guide-13/",
+      "manual": 2
+    },
+    {
+      "title": "第 14 章　system/fvSolution（线性求解器与算法控制）",
+      "url": "/reference/guide-14/",
+      "manual": 2
+    },
+    {
+      "title": "第 15 章　system/blockMeshDict",
+      "url": "/reference/guide-15/",
+      "manual": 2
+    },
+    {
+      "title": "第 16 章　system/snappyHexMeshDict",
+      "url": "/reference/guide-16/",
+      "manual": 2
+    },
+    {
+      "title": "第 17 章　system/ 下的其他字典",
+      "url": "/reference/guide-17/",
+      "manual": 2
+    },
+    {
+      "title": "第 18 章　constant/ 目录下的文件",
+      "url": "/reference/guide-18/",
+      "manual": 2
+    },
+    {
+      "title": "第 19 章　0/ 目录与边界条件大全",
+      "url": "/reference/guide-19/",
+      "manual": 2
+    },
+    {
+      "title": "第 20 章　OpenFOAM 运行所需的 Linux 命令",
+      "url": "/reference/guide-20/",
+      "manual": 2
+    },
+    {
+      "title": "第 21 章　常见报错速查",
+      "url": "/reference/guide-21/",
+      "manual": 2
+    },
+    {
+      "title": "第 22 章　附录",
+      "url": "/reference/guide-22/",
+      "manual": 2
+    }
+  ],
+  "documents": [
+    {
+      "name": "OpenFOAM_v2512命令与配置参考手册（GPT整理）",
+      "url": "/downloads/reference-1.docx",
+      "bytes": 116819,
+      "sha256": "876a42c34195cd030519e46cafba66556026ceac3fe62bab7e0b51554842bd25"
+    },
+    {
+      "name": "OpenFOAM命令与文件大全_v2512（Claude整理）",
+      "url": "/downloads/reference-2.docx",
+      "bytes": 109008,
+      "sha256": "1b25998345262b3212489bff83a1b044e44e729eabe5a479a5d17e5a13d4eb51"
+    },
+    {
+      "name": "OpenFOAM教学备课大纲_28讲_电极气泡",
+      "url": "/downloads/reference-3.docx",
+      "bytes": 84698,
+      "sha256": "89c4fe99225fdd916ecb15cfabfb8d69daaf3aa61d9fccb8b0f0104a85f081b4"
+    },
+    {
+      "name": "OpenFOAM教学课程大纲_电极气泡",
+      "url": "/downloads/reference-4.docx",
+      "bytes": 42740,
+      "sha256": "84f3023fcef0e03390e1ddc48dea878b1a952930b49aac7379129eed13eb7c4a"
+    }
+  ],
+  "dictionaries": [
+    {
+      "name": "blockMeshDict",
+      "path": "system/blockMeshDict",
+      "group": "网格",
+      "description": "blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。",
+      "keys": [
+        "vertices",
+        "blocks",
+        "edges",
+        "boundary",
+        "scale",
+        "convertToMeters",
+        "simpleGrading"
+      ],
+      "commands": [
+        "blockMesh"
+      ],
+      "url": "/dictionaries/system-blockmeshdict/",
+      "searchText": "blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。 下例建立长 1 m、宽 0.1 m、厚 0.01 m 的二维通道。厚度方向设置一层单元，两侧边界设为 empty。 FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object blockMeshDict;\n}\nscale 1;\nvertices\n(\n    (0 0 0) (1 0 0) (1 0.1 0) (0 0.1 0)\n    (0 0 0.01) (1 0 0.01) (1 0.1 0.01) (0 0.1 0.01)\n);\nblocks\n(\n    hex (0 1 2 3 4 5 6 7) (100 20 1)\n        simpleGrading (1 1 1)\n);\nedges ();\nboundary\n(\n    inlet\n    {\n        type patch;\n        faces ((0 4 7 3));\n    }\n    outlet\n    {\n        type patch;\n        faces ((1 2 6 5));\n    }\n    walls\n    {\n        type wall;\n        faces ((0 1 5 4) (3 7 6 2));\n    }\n    frontAndBack\n    {\n        type empty;\n        faces ((0 3 2 1) (4 5 6 7));\n    }\n);\nmergePatchPairs (); 执行 blockMesh 生成网格，再执行 checkMesh -allTopology -allGeometry 检查拓扑和几何。边界面的顶点顺序按外法向排列；多块网格应统一局部坐标和顶点编号。 参数或结构 设置方法 使用条件 scale 如 0.001 表示原坐标按毫米给出 采用 scale 统一设置坐标缩放 simpleGrading 例如 (1 10 1) 沿块的局部方向设置；反向时取对应倒数 多段 grading 某方向可写 ((0.2 0.3 4) (0.6 0.4 1) (0.2 0.3 0.25)) 每段分别为长度比例、单元比例、扩张比 edgeGrading 对 12 条局部边分别指定扩张比 按块的局部边编号依次赋值 edges arc 0 1 (中间点)，或 spline、polyLine 弧线端点与控制点应满足非退化条件 boundary/type patch、wall、empty、symmetryPlane、wedge、cyclic 等 定义网格边界类型；场边界另行配置 defaultPatch 为未显式列出的面指定名称和类型 显式边界之外的面归入该边界 mergePatchPairs ((patchA patchB)) 合并指定的块接口"
+    },
+    {
+      "name": "snappyHexMeshDict",
+      "path": "system/snappyHexMeshDict",
+      "group": "网格",
+      "description": "snappyHexMesh 包括切割细化、表面贴合和边界层生成三个阶段。运行 foamGetDict snappyHexMeshDict 获取带注释模板，在已建立的背景网格上配置几何和各阶段参数。",
+      "keys": [
+        "castellatedMesh",
+        "snap",
+        "addLayers",
+        "geometry",
+        "refinementSurfaces",
+        "refinementRegions",
+        "locationInMesh",
+        "nCellsBetweenLevels"
+      ],
+      "commands": [
+        "snappyHexMesh"
+      ],
+      "url": "/dictionaries/system-snappyhexmeshdict/",
+      "searchText": "snappyHexMesh 包括切割细化、表面贴合和边界层生成三个阶段。运行 foamGetDict snappyHexMeshDict 获取带注释模板，在已建立的背景网格上配置几何和各阶段参数。 参数 含义 设置方法 castellatedMesh、snap、addLayers 分别控制切割细化、贴体和边界层生成 先检查切割细化和贴体，再配置边界层 geometry 表面及可搜索几何体 body.stl { type triSurfaceMesh; name body; } maxLocalCells、maxGlobalCells 局部及全局细化控制限额 根据可用内存设置单元数量上限 minRefinementCells 停止继续细化的候选单元阈值 设为 0 时继续处理剩余细化单元，计算量相应增加 nCellsBetweenLevels 相邻细化级别间的过渡层数 例如 3 features 显式特征文件和细化等级 ({ file \"body.eMesh\"; level 2; }) refinementSurfaces 表面的最小最大细化等级 body { level (2 3); patchInfo { type wall; } } resolveFeatureAngle 区分尖锐表面特征的角度 示例为 30，按表面几何特征确定 refinementRegions 体积或距离带细化 mode inside、outside 或 distance；levels 定义等级 locationInMesh 标记需要保留的连通流体区域 取目标流体区域内部点，避开边界面 allowFreeStandingZoneFaces 是否允许独立区域面 与 zone 生成方式匹配 snapControls 贴体松弛和迭代 nSmoothPatch、tolerance、nSolveIter、nRelaxIter 显式特征贴合 explicitFeatureSnap 与 nFeatureSnapIter 与 features 中的 eMesh 配合 layers 各 patch 的层数 \"body.*\" { nSurfaceLayers 3; } relativeSizes 层厚是否相对外层网格尺寸 true 相对尺寸；false 绝对长度 expansionRatio 层间厚度增长比 例如 1.2 finalLayerThickness、firstLayerThickness、thickness 不同的层厚约束 按层厚参数关系选取相容组合 minThickness 允许保留的最小总层厚指标 阈值过大时，局部边界层将被取消 nGrow、nBufferCellsNoExtrude 尖角附近的非挤出区域及过渡缓冲 控制未生成边界层区域的过渡 featureAngle、slipFeatureAngle 层网格遇尖角时的行为 按几何特征及边界层覆盖率调整 nLayerIter、nRelaxedIter 边界层生成迭代及质量阈值放宽迭代 几何有效性满足要求后设置迭代上限 meshQualityControls 质量约束 通常包含系统 meshQualityDict mergeTolerance 点合并相对容差 常用 1e-6，以几何包围盒尺度为基准 // 片段：放入对应的 snappyHexMeshDict\ngeometry\n{\n    body.stl { type triSurfaceMesh; name body; }\n    refineBox\n    {\n        type searchableBox;\n        min (-0.2 -0.2 -0.2);\n        max (1.2 0.2 0.2);\n    }\n}\ncastellatedMeshControls\n{\n    maxLocalCells 1000000;\n    maxGlobalCells 3000000;\n    minRefinementCells 0;\n    nCellsBetweenLevels 3;\n    features ({ file \"body.eMesh\"; level 2; });\n    refinementSurfaces\n    {\n        body { level (2 3); patchInfo { type wall; } }\n    }\n    resolveFeatureAngle 30;\n    refinementRegions\n    {\n        refineBox { mode inside; levels ((1e15 2)); }\n    }\n    locationInMesh (2 0 0);\n    allowFreeStandingZoneFaces true;\n}\nsnapControls\n{\n    nSmoothPatch 3; tolerance 2.0;\n    nSolveIter 30; nRelaxIter 5;\n    nFeatureSnapIter 10;\n    implicitFeatureSnap false;\n    explicitFeatureSnap true;\n    multiRegionFeatureSnap false;\n} locationInMesh 中的 (2 0 0) 表示待保留流体区域内的一点，该点须位于背景网格范围内及物体外部。网格生成前应消除 STL 自相交，统一长度单位，并检查背景网格。 边界层生成配置如下。snapControls 和质量控制参数保留模板中的完整设置。将 addLayers 设为 false，可单独检查切割细化和表面贴合结果。 castellatedMesh true;\nsnap true;\naddLayers true;\naddLayersControls\n{\n    relativeSizes true;\n    layers { body { nSurfaceLayers 3; } }\n    expansionRatio 1.2;\n    finalLayerThickness 0.3;\n    minThickness 0.1;\n    nGrow 0;\n    featureAngle 60;\n    nRelaxIter 5;\n    nSmoothSurfaceNormals 1;\n    nSmoothNormals 3;\n    nSmoothThickness 10;\n    maxFaceThicknessRatio 0.5;\n    maxThicknessToMedialRatio 0.3;\n    minMedialAxisAngle 90;\n    nBufferCellsNoExtrude 0;\n    nLayerIter 50;\n}\nmeshQualityControls\n{\n    #includeEtc \"caseDicts/meshQualityDict\"\n}\nmergeTolerance 1e-6;"
+    },
+    {
+      "name": "surfaceFeatureExtractDict",
+      "path": "system/surfaceFeatureExtractDict",
+      "group": "网格",
+      "description": "输入表面 body.stl 存放于 constant/triSurface。includedAngle 按特征提取器的包含角定义取值，其定义与 resolveFeatureAngle 不同。writeObj 控制可视化文件输出。运行 surfaceFeatureExtract 后，将生成的 eMesh 文件名用于后续特征线配置。",
+      "keys": [
+        "extractionMethod",
+        "extractFromSurfaceCoeffs",
+        "includedAngle",
+        "writeObj"
+      ],
+      "commands": [
+        "surfaceFeatureExtract"
+      ],
+      "url": "/dictionaries/system-surfacefeatureextractdict/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object surfaceFeatureExtractDict;\n}\nbody.stl\n{\n    extractionMethod extractFromSurface;\n    extractFromSurfaceCoeffs { includedAngle 150; }\n    writeObj yes;\n} 输入表面 body.stl 存放于 constant/triSurface。includedAngle 按特征提取器的包含角定义取值，其定义与 resolveFeatureAngle 不同。writeObj 控制可视化文件输出。运行 surfaceFeatureExtract 后，将生成的 eMesh 文件名用于后续特征线配置。 body.stl\n{\n    extractionMethod    extractFromSurface;\n    includedAngle       150;          // 夹角超过它的棱视为特征边\n    subsetFeatures      { nonManifoldEdges no; openEdges yes; }\n    writeObj            yes;          // 输出 obj 方便在 ParaView 里检查\n} includedAngle 越大，提取的边越多。150 是常用起点：太小会漏掉圆角过渡处的特征，太大会把曲面上的三角片棱也当成特征。"
+    },
+    {
+      "name": "meshQualityDict",
+      "path": "system/meshQualityDict",
+      "group": "网格",
+      "description": "运行 foamGetDict meshQualityDict 获取模板，或通过 #includeEtc \"caseDicts/meshQualityDict\" 引入。下表列出常用质量指标及示例阈值，阈值应结合网格尺度和求解要求确定。",
+      "keys": [
+        "maxNonOrtho",
+        "maxBoundarySkewness",
+        "maxInternalSkewness",
+        "minVol",
+        "minDeterminant"
+      ],
+      "commands": [
+        "checkMesh",
+        "snappyHexMesh"
+      ],
+      "url": "/dictionaries/system-meshqualitydict/",
+      "searchText": "运行 foamGetDict meshQualityDict 获取模板，或通过 #includeEtc \"caseDicts/meshQualityDict\" 引入。下表列出常用质量指标及示例阈值，阈值应结合网格尺度和求解要求确定。 参数 含义 示例值 maxNonOrtho 最大非正交角 65 maxBoundarySkewness 边界偏斜限制 20 maxInternalSkewness 内部偏斜限制 4 maxConcave 最大凹角 80 minVol 最小单元体积 示例为 1e-13，按实际网格尺度确定 minTetQuality 最小分解四面体质量 1e-15 minArea 最小面面积 负值可关闭相应面积检查 minTwist、minTriangleTwist 面扭曲限制 以模板值为初值，按不合格面分布调整 minDeterminant 单元几何行列式限制 0.001 minFaceWeight 面插值权重下限 0.05 minVolRatio 相邻单元体积比下限 0.01 nSmoothScale、errorReduction 质量失败时缩放处理参数 4、0.75 #includeEtc \"caseDicts/meshQualityDict\"     // 直接用官方默认阈值\nmaxNonOrtho 65;                             // 再局部覆盖 供 checkMesh -meshQuality 与 snappyHexMesh 共用。"
+    },
+    {
+      "name": "setFieldsDict",
+      "path": "system/setFieldsDict",
+      "group": "初始化",
+      "description": "setFields 首先按 defaultFieldValues 设置全域初值，再依次执行 regions 中的区域赋值。区域重叠时，后续赋值覆盖先前结果。目标场文件须预先建立，并设置相应的 class 和 dimensions。",
+      "keys": [
+        "defaultFieldValues",
+        "regions",
+        "boxToCell",
+        "sphereToCell",
+        "cylinderToCell",
+        "fieldValues"
+      ],
+      "commands": [
+        "setFields"
+      ],
+      "url": "/dictionaries/system-setfieldsdict/",
+      "searchText": "setFields 首先按 defaultFieldValues 设置全域初值，再依次执行 regions 中的区域赋值。区域重叠时，后续赋值覆盖先前结果。目标场文件须预先建立，并设置相应的 class 和 dimensions。 FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object setFieldsDict;\n}\ndefaultFieldValues\n(\n    volScalarFieldValue alpha.water 0\n    volVectorFieldValue U (0 0 0)\n);\nregions\n(\n    boxToCell\n    {\n        box (0 0 -1) (0.2 0.3 1);\n        fieldValues (volScalarFieldValue alpha.water 1);\n    }\n); boxToCell 按单元位置选取长方体区域；sphereToCell 通过 centre 和 radius 定义球形区域；cylinderToCell 通过 p1、p2 和 radius 定义圆柱区域。边界面可采用 boxToFace 等选择器。 赋值后检查 alpha.water 的极值与空间分布，边界条件在场文件中另行设置。需采用数学表达式赋值时，使用 setExprFields。 defaultFieldValues              // 先把全场设成默认值\n(\n    volScalarFieldValue alpha.water 0\n    volVectorFieldValue U (0 0 0)\n);\n\nregions                          // 再覆盖指定区域\n(\n    boxToCell\n    {\n        box (0 0 -1) (0.1461 0.292 1);\n        fieldValues ( volScalarFieldValue alpha.water 1 );\n    }\n\n    cylinderToCell\n    {\n        p1 (0 0 0);  p2 (0 0 0.1);  radius 0.05;\n        fieldValues ( volScalarFieldValue T 500 );\n    }\n\n    sphereToCell\n    {\n        origin (0 0 0);  radius 0.1;\n        fieldValues ( volScalarFieldValue p 1e6 );\n    }\n); 常用区域类型：boxToCell、sphereToCell、cylinderToCell、rotatedBoxToCell、surfaceToCell（用 STL 划区）、cellToCell（用已有 cellSet）、zoneToCell。 注意：setFields 直接修改 0/ 里的文件。跑之前先 cp -r 0.orig 0，否则第二次运行是在被改过的场上再改一次。"
+    },
+    {
+      "name": "setExprFieldsDict",
+      "path": "system/setExprFieldsDict",
+      "group": "初始化",
+      "description": "下例在已有温度场 T 上设置随坐标变化的温度，运行 setExprFields 后生效。fieldMask 限定赋值区域，create 和 dimensions 用于新建场。表达式语法可通过 foamExprParserInfo 查询。边界表达式使用 setExprBoundaryFieldsDict，其结构按边界场接口配置。",
+      "keys": [
+        "expressions",
+        "field",
+        "expression",
+        "fieldMask",
+        "dimensions",
+        "create"
+      ],
+      "commands": [
+        "setExprFields"
+      ],
+      "url": "/dictionaries/system-setexprfieldsdict/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object setExprFieldsDict;\n}\nexpressions\n(\n    setTemperature\n    {\n        field T;\n        expression \"300 + 10*pos().x()\";\n    }\n); 下例在已有温度场 T 上设置随坐标变化的温度，运行 setExprFields 后生效。fieldMask 限定赋值区域，create 和 dimensions 用于新建场。表达式语法可通过 foamExprParserInfo 查询。边界表达式使用 setExprBoundaryFieldsDict，其结构按边界场接口配置。"
+    },
+    {
+      "name": "topoSetDict",
+      "path": "system/topoSetDict",
+      "group": "网格",
+      "description": "常用 source 一览",
+      "keys": [
+        "actions",
+        "name",
+        "type",
+        "action",
+        "source",
+        "sourceInfo",
+        "cellSet",
+        "faceSet",
+        "cellZoneSet"
+      ],
+      "commands": [
+        "topoSet"
+      ],
+      "url": "/dictionaries/system-toposetdict/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object topoSetDict;\n}\nactions\n(\n    {\n        name heaterCells;\n        type cellSet;\n        action new;\n        source boxToCell;\n        box (0.2 0 0) (0.4 0.1 0.01);\n    }\n    {\n        name heater;\n        type cellZoneSet;\n        action new;\n        source setToCellZone;\n        set heaterCells;\n    }\n); 条目 含义 设置方法与取值 name 输出集合或区域名称 与源项中的 cellZone 匹配 type 对象类别 cellSet、faceSet、pointSet、cellZoneSet、faceZoneSet action 集合操作 new、add、subtract、subset、invert、clear、remove source 选择算法 boxToCell、sphereToCell、cylinderToCell、patchToFace、fieldToCell 等 sourceInfo 选择源参数子字典 多数选择源可将参数直接写入动作字典；名称冲突时采用 sourceInfo actions\n(\n    {\n        name    c0;\n        type    cellSet;        // cellSet / faceSet / pointSet / cellZoneSet / faceZoneSet\n        action  new;            // new / add / subtract / subset / invert / clear / remove\n        source  boxToCell;\n        box     (0 0 0) (1 1 1);\n    }\n    {\n        name    porous;\n        type    cellZoneSet;\n        action  new;\n        source  setToCellZone;\n        set     c0;\n    }\n); 常用 source 一览 类别 source 关键参数 几何选单元 boxToCell box (min) (max) 或 boxes ((..)(..))  rotatedBoxToCell origin, i, j, k  sphereToCell origin, radius  cylinderToCell p1, p2, radius  surfaceToCell file \"x.stl\", outsidePoints, includeCut 拓扑选单元 zoneToCell / setToCell / labelToCell zone/set/value  cellToCell set 选面 boxToFace、patchToFace、normalToFace、cellToFace   boundaryToFace 全部边界面 选点 boxToPoint、labelToPoint、surfaceToPoint  转 zone setToCellZone、setsToFaceZone、setToPointZone  Set 与 Zone 的区别（重要）：Set 是临时选择结果，写在 constant/polyMesh/sets/；Zone 是网格的正式组成部分，写进 cellZones/faceZones。求解器里的多孔介质、MRF、fvOptions、动网格全都认 Zone 不认 Set，所以典型流程是”先 xxxToCell 造 Set，再 setToCellZone 转 Zone”。"
+    },
+    {
+      "name": "createPatchDict",
+      "path": "system/createPatchDict",
+      "group": "网格",
+      "description": "constructFrom patches 从已有边界选面；constructFrom set 从指定 faceSet 选面。pointSync 控制耦合点同步。执行 createPatch -overwrite 后，将 0/U、0/p 等场文件中的边界条目与新建 walls 对应。",
+      "keys": [
+        "pointSync",
+        "patches",
+        "name",
+        "patchInfo",
+        "constructFrom",
+        "set"
+      ],
+      "commands": [
+        "createPatch"
+      ],
+      "url": "/dictionaries/system-createpatchdict/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object createPatchDict;\n}\npointSync false;\npatches\n(\n    {\n        name walls;\n        patchInfo { type wall; }\n        constructFrom patches;\n        patches (wallA wallB);\n    }\n); constructFrom patches 从已有边界选面；constructFrom set 从指定 faceSet 选面。pointSync 控制耦合点同步。执行 createPatch -overwrite 后，将 0/U、0/p 等场文件中的边界条目与新建 walls 对应。 pointSync false;\n\npatches\n(\n    {\n        name            cyclicLeft;\n        patchInfo       { type cyclic; neighbourPatch cyclicRight; }\n        constructFrom   patches;\n        patches         (left);\n    }\n); 用途：把网格转换器生成的一堆零散 patch 合并；把两个面配成周期边界；改 patch 类型。"
+    },
+    {
+      "name": "createBafflesDict",
+      "path": "system/createBafflesDict",
+      "group": "网格",
+      "description": "createBaffles 将内部面转换为成对边界面。internalFacesOnly 控制选面范围，baffles 定义各挡板的 type、zoneName 和 patches。下例采用预先建立的 interfaceZone 面区域。",
+      "keys": [
+        "internalFacesOnly",
+        "baffles",
+        "faceZone",
+        "zoneName",
+        "master",
+        "slave"
+      ],
+      "commands": [
+        "createBaffles"
+      ],
+      "url": "/dictionaries/system-createbafflesdict/",
+      "searchText": "createBaffles 将内部面转换为成对边界面。internalFacesOnly 控制选面范围，baffles 定义各挡板的 type、zoneName 和 patches。下例采用预先建立的 interfaceZone 面区域。 internalFacesOnly true;\nbaffles\n{\n    interface\n    {\n        type faceZone;\n        zoneName interfaceZone;\n        patches\n        {\n            master { name sideA; type wall; }\n            slave  { name sideB; type wall; }\n        }\n    }\n} 运行 createBaffles -overwrite 生成挡板边界。两侧的传热和流动耦合由场边界条件及物理模型确定。"
+    },
+    {
+      "name": "refineMeshDict",
+      "path": "system/refineMeshDict",
+      "group": "网格",
+      "description": "set 指定待细化的单元集合，directions 指定细化方向。二维网格仅沿面内方向细化，厚度方向保持 empty 边界要求的单层结构。运行 refineMesh -overwrite 后，检查场、区域和边界与新网格的对应关系。",
+      "keys": [
+        "set",
+        "coordinateSystem",
+        "globalCoeffs",
+        "directions",
+        "useHexTopology",
+        "geometricCut"
+      ],
+      "commands": [
+        "refineMesh"
+      ],
+      "url": "/dictionaries/system-refinemeshdict/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object refineMeshDict;\n}\nset heaterCells;\ncoordinateSystem global;\nglobalCoeffs\n{\n    tan1 (1 0 0);\n    tan2 (0 1 0);\n}\ndirections (tan1 tan2);\nuseHexTopology true;\ngeometricCut false;\nwriteMesh false; set 指定待细化的单元集合，directions 指定细化方向。二维网格仅沿面内方向细化，厚度方向保持 empty 边界要求的单层结构。运行 refineMesh -overwrite 后，检查场、区域和边界与新网格的对应关系。 set             c0;                 // 对哪个 cellSet 加密\ncoordinateSystem global;\nglobalCoeffs    { tan1 (1 0 0); tan2 (0 1 0); }\ndirections      ( tan1 tan2 );      // 只在这两个方向加密（各向异性）\nuseHexTopology  yes;\ngeometricCut    no;\nwriteMesh       no; $ topoSet && refineMesh -overwrite -dict system/refineMeshDict"
+    },
+    {
+      "name": "extrudeMeshDict",
+      "path": "system/extrudeMeshDict",
+      "group": "网格",
+      "description": "constructFrom 指定挤出来源，sourceCase 和 sourcePatches 指定源算例及边界，exposedPatchName 定义新暴露边界。extrudeModel 选择挤出模型，nLayers 和 expansionRatio 控制层数及层厚比，mergeFaces 和 mergeTol 控制合并。linearNormal 通过 linearNormalCoeffs/thickness 设置总厚度；其他模型采用各自的系数字典。",
+      "keys": [
+        "constructFrom",
+        "sourceCase",
+        "sourcePatches",
+        "exposedPatchName",
+        "extrudeModel",
+        "nLayers",
+        "expansionRatio",
+        "thickness"
+      ],
+      "commands": [
+        "extrudeMesh"
+      ],
+      "url": "/dictionaries/system-extrudemeshdict/",
+      "searchText": "constructFrom 指定挤出来源，sourceCase 和 sourcePatches 指定源算例及边界，exposedPatchName 定义新暴露边界。extrudeModel 选择挤出模型，nLayers 和 expansionRatio 控制层数及层厚比，mergeFaces 和 mergeTol 控制合并。linearNormal 通过 linearNormalCoeffs/thickness 设置总厚度；其他模型采用各自的系数字典。 // 片段：沿已有 patch 外法向挤出\nconstructFrom patch;\nsourceCase \".\";\nsourcePatches (front);\nexposedPatchName back;\nextrudeModel linearNormal;\nnLayers 5;\nexpansionRatio 1;\nlinearNormalCoeffs { thickness 0.01; }\nmergeFaces false;\nmergeTol 0; constructFrom   patch;              // mesh / patch / surface\nsourceCase      \"../base\";\nsourcePatches   (front);\nexposedPatchName back;\n\nextrudeModel    linearNormal;       // linearNormal/linearDirection/wedge/sector/plane\nlinearNormalCoeffs { thickness 0.01; }\nsectorCoeffs   { axisPt (0 0 0); axis (0 0 1); angle 5; }\n\nnLayers         1;\nexpansionRatio  1.0;\nmergeFaces      false; 典型用途：把一个二维面拉伸成一层网格做二维算例；用 sector 模型做轴对称（wedge）算例。"
+    },
+    {
+      "name": "mapFieldsDict",
+      "path": "system/mapFieldsDict",
+      "group": "初始化",
+      "description": "mapFieldsDict 用于源算例与目标算例边界不一致时的场映射。patchMap 中每组名称依次为目标边界和源边界。",
+      "keys": [
+        "patchMap",
+        "cuttingPatches"
+      ],
+      "commands": [
+        "mapFields",
+        "mapFieldsPar"
+      ],
+      "url": "/dictionaries/system-mapfieldsdict/",
+      "searchText": "mapFieldsDict 用于源算例与目标算例边界不一致时的场映射。patchMap 中每组名称依次为目标边界和源边界。 FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object mapFieldsDict;\n}\npatchMap\n(\n    inlet sourceInlet\n    outlet sourceOutlet\n);\ncuttingPatches (newCutBoundary); 在目标算例中执行 mapFields ../sourceCase -sourceTime latestTime。cuttingPatches 指定切穿源计算域的目标边界，其数值由源域内部插值得到。-consistent 适用于边界拓扑匹配的算例。映射体积分数等守恒量后，应检查有界性及积分守恒。 patchMap        ( inlet1 inlet );   // 源算例 patch → 目标算例 patch\ncuttingPatches  ( outlet );         // 被切开的 patch（源网格不覆盖的部分） 网格边界一致时可以完全不用这个文件，直接 mapFields ../src -consistent。"
+    },
+    {
+      "name": "changeDictionaryDict",
+      "path": "system/changeDictionaryDict",
+      "group": "初始化",
+      "description": "dictionaryReplacement 按目标文件名组织替换条目，运行 changeDictionary 后写回相应文件。-instance 指定目标实例目录。单个键值可直接通过 foamDictionary 修改。",
+      "keys": [
+        "dictionaryReplacement",
+        "boundaryField"
+      ],
+      "commands": [
+        "changeDictionary"
+      ],
+      "url": "/dictionaries/system-changedictionarydict/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object changeDictionaryDict;\n}\ndictionaryReplacement\n{\n    U\n    {\n        boundaryField\n        {\n            inlet { type fixedValue; value uniform (2 0 0); }\n        }\n    }\n} dictionaryReplacement 按目标文件名组织替换条目，运行 changeDictionary 后写回相应文件。-instance 指定目标实例目录。单个键值可直接通过 foamDictionary 修改。 dictionaryReplacement\n{\n    boundary\n    {\n        minZ { type wall; }\n    }\n    U\n    {\n        boundaryField\n        {\n            \"(inlet|outlet)\" { type zeroGradient; }\n        }\n    }\n} 多区域算例（chtMultiRegionFoam）里，每个 region 一份，放在 system/<region>/changeDictionaryDict。"
+    },
+    {
+      "name": "controlDict",
+      "path": "system/controlDict",
+      "group": "计算控制",
+      "description": "Courant 数由局部速度、通量、单元尺寸和时间步共同决定。可压缩激波计算还需考虑声速约束，时间步上限应结合所用求解器和离散格式确定。",
+      "keys": [
+        "application",
+        "startFrom",
+        "startTime",
+        "stopAt",
+        "endTime",
+        "deltaT",
+        "writeControl",
+        "writeInterval",
+        "purgeWrite",
+        "adjustTimeStep",
+        "maxCo",
+        "maxAlphaCo",
+        "functions",
+        "libs"
+      ],
+      "commands": [
+        "icoFoam",
+        "interFoam",
+        "simpleFoam"
+      ],
+      "url": "/dictionaries/system-controldict/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object controlDict;\n}\napplication pimpleFoam;\nstartFrom startTime;\nstartTime 0;\nstopAt endTime;\nendTime 1;\ndeltaT 0.001;\nwriteControl adjustableRunTime;\nwriteInterval 0.05;\npurgeWrite 0;\nwriteFormat ascii;\nwritePrecision 8;\nwriteCompression off;\ntimeFormat general;\ntimePrecision 8;\nrunTimeModifiable true;\nadjustTimeStep true;\nmaxCo 0.5;\nmaxDeltaT 0.01;\nfunctions {}; 参数 含义与可选值 设置方法 application 供运行脚本选择的应用名称 脚本按此项调用程序；终端直接调用时执行指定程序 startFrom startTime、firstTime、latestTime 续算通常用 latestTime startTime 开始时刻 在采用相应 startFrom 模式时读取 stopAt endTime、writeNow、noWriteNow、nextWrite 指定停止时刻及结果写出方式 endTime 结束时刻或稳态迭代终点 稳态求解中的时间可表示迭代计数 deltaT 时间步或迭代步 瞬态计算按时间精度及稳定性确定 writeControl timeStep、runTime、adjustableRunTime、cpuTime、clockTime 等 timeStep 下 writeInterval 是步数；runTime 下是模拟时间 writeInterval 输出间隔 由 writeControl 确定单位，并按瞬态特征设置间隔 purgeWrite 仅保留最近若干常规输出时刻 0 保留全部输出；正整数指定保留的最近时刻数 writeFormat、writePrecision 格式与有效数字 ASCII 便于检查；binary 减少 IO writeCompression 输出压缩 on 或 off，后处理软件需支持相应格式 timeFormat、timePrecision 时间目录命名格式和精度 精度应能区分相邻输出时刻 runTimeModifiable 运行中重新读取可修改字典 可修改范围由模型和求解器的读取机制确定 adjustTimeStep、maxCo、maxDeltaT 自动时间步控制 仅在实现相应时间步控制的求解器中生效 maxAlphaCo VOF 相分数相关 Courant 限制 仅相关求解器使用 maxDi 热扩散数控制 仅相关传热求解器使用 libs 加载自定义或功能库 例如 (\"libMyBC.so\") functions 运行时函数对象 见第 10 章 Courant 数由局部速度、通量、单元尺寸和时间步共同决定。可压缩激波计算还需考虑声速约束，时间步上限应结合所用求解器和离散格式确定。 它管什么：算多久、多久输出一次、用什么求解器、跑哪些后处理。每个算例必需。"
+    },
+    {
+      "name": "fvSchemes",
+      "path": "system/fvSchemes",
+      "group": "数值方法",
+      "description": "下例给出不可压缩非稳态层流的离散设置。采用湍流模型或求解能量方程时，应补充相应方程的对流项。",
+      "keys": [
+        "ddtSchemes",
+        "gradSchemes",
+        "divSchemes",
+        "laplacianSchemes",
+        "interpolationSchemes",
+        "snGradSchemes",
+        "fluxRequired",
+        "wallDist"
+      ],
+      "commands": [
+        "icoFoam",
+        "interFoam",
+        "simpleFoam"
+      ],
+      "url": "/dictionaries/system-fvschemes/",
+      "searchText": "下例给出不可压缩非稳态层流的离散设置。采用湍流模型或求解能量方程时，应补充相应方程的对流项。 FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object fvSchemes;\n}\nddtSchemes { default Euler; }\ngradSchemes { default Gauss linear; }\ndivSchemes\n{\n    default none;\n    div(phi,U) Gauss linearUpwind grad(U);\n    div((nuEff*dev2(T(grad(U))))) Gauss linear;\n}\nlaplacianSchemes { default Gauss linear corrected; }\ninterpolationSchemes { default linear; }\nsnGradSchemes { default corrected; }\nwallDist { method meshWave; } 字典 控制对象 常用设置 ddtSchemes 时间导数 Euler 为一阶；backward 为二阶；CrankNicolson 0.9 为混合格式；steadyState 用于稳态 gradSchemes 梯度 Gauss linear、leastSquares、cellLimited Gauss linear 1 divSchemes 对流及显式散度 Gauss upwind 耗散较强；linearUpwind 阶数较高；limitedLinear 等限制格式按字段类型选择 laplacianSchemes 扩散项 常用 Gauss linear corrected；非正交程度较高时可采用 limited 修正 interpolationSchemes 面插值 linear 等 snGradSchemes 面法向梯度 corrected、uncorrected、limited 0.5 等 fluxRequired 指定需保留通量的场 按求解器要求标记 p 等场 wallDist 壁距算法 meshWave 等 default none 无默认格式 所需离散项必须显式配置，缺失时报告错误 湍流方程可采用 div(phi,k) Gauss upwind; 和 div(phi,omega) Gauss upwind;，字段名称随模型确定。VOF 求解器的 div(phi,alpha)、div(phirb,alpha) 等条目采用其配套教程的定义。rhoCentralFoam 还需设置 fluxScheme 及变量重构格式。 它管什么：每一项微分算子用什么数值格式离散。这是精度与稳定性的主要旋钮，也是初学者最容易被卡住的地方。"
+    },
+    {
+      "name": "fvSolution",
+      "path": "system/fvSolution",
+      "group": "数值方法",
+      "description": "SIMPLE、PISO 和 PIMPLE 分别采用对应的算法子字典。SIMPLE 常用 nNonOrthogonalCorrectors、consistent、residualControl 和 pRefCell/pRefValue；PISO 通过 nCorrectors 控制校正次数；PIMPLE 另设 nOuterCorrectors 控制外迭代。压力方程需要参考值且求解器采用该机制时，设置 pRefCell 和 pRefValue。",
+      "keys": [
+        "solvers",
+        "solver",
+        "tolerance",
+        "relTol",
+        "preconditioner",
+        "smoother",
+        "PISO",
+        "PIMPLE",
+        "SIMPLE",
+        "nCorrectors",
+        "nOuterCorrectors",
+        "nNonOrthogonalCorrectors",
+        "relaxationFactors",
+        "residualControl",
+        "pRefCell",
+        "pRefValue"
+      ],
+      "commands": [
+        "icoFoam",
+        "interFoam",
+        "simpleFoam"
+      ],
+      "url": "/dictionaries/system-fvsolution/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object fvSolution;\n}\nsolvers\n{\n    p\n    {\n        solver GAMG;\n        tolerance 1e-7;\n        relTol 0.05;\n        smoother GaussSeidel;\n    }\n    pFinal { $p; relTol 0; }\n    U\n    {\n        solver smoothSolver;\n        smoother symGaussSeidel;\n        tolerance 1e-8;\n        relTol 0;\n    }\n}\nPIMPLE\n{\n    nOuterCorrectors 2;\n    nCorrectors 2;\n    nNonOrthogonalCorrectors 0;\n    momentumPredictor yes;\n    pRefCell 0;\n    pRefValue 0;\n}\nrelaxationFactors\n{\n    equations { U 1; }\n} 条目 含义 设置原则 solver 线性代数求解器 PCG 适于相容的对称矩阵；PBiCGStab 可处理非对称矩阵；GAMG 为多重网格 preconditioner 预条件器 DIC、DILU 等须与矩阵和 solver 相容 smoother 平滑器 如 GaussSeidel、symGaussSeidel、DICGaussSeidel tolerance 绝对残差停止阈值 控制线性方程残差的停止条件 relTol 相对本次求解初始残差的停止阈值 0 表示关闭相对阈值，常用于最终校正 minIter、maxIter 线性迭代上下限 达到 maxIter 时结合残差判断收敛状态 nSweeps 每组平滑扫描次数 仅适用求解器使用 cacheAgglomeration 缓存 GAMG 聚合 静态网格可复用聚合结果 nCellsInCoarsestLevel GAMG 最粗层目标单元数 结合并行分区和收敛情况调整 pFinal、UFinal 等 最后一次校正的专用设置 是否使用由求解器控制 正则字段名 共享线性求解配置 如 \"(U|k|omega)\"，采用引号包围正则表达式 relaxationFactors/fields 场松弛 如稳态 p 0.3 relaxationFactors/equations 方程松弛 如稳态 U 0.7；较小因子降低更新幅度 SIMPLE、PISO 和 PIMPLE 分别采用对应的算法子字典。SIMPLE 常用 nNonOrthogonalCorrectors、consistent、residualControl 和 pRefCell/pRefValue；PISO 通过 nCorrectors 控制校正次数；PIMPLE 另设 nOuterCorrectors 控制外迭代。压力方程需要参考值且求解器采用该机制时，设置 pRefCell 和 pRefValue。 // SIMPLE 片段：稳态算例\nSIMPLE\n{\n    nNonOrthogonalCorrectors 0;\n    residualControl\n    {\n        p 1e-5;\n        U 1e-6;\n        \"(k|omega)\" 1e-6;\n    }\n}\nrelaxationFactors\n{\n    fields { p 0.3; }\n    equations { U 0.7; k 0.7; omega 0.7; }\n} residualControl 的结构由算法接口确定，部分 PIMPLE 控制采用 tolerance/relTol 子字典。收敛判定应同时考察残差、质量守恒及力、流量、温度等目标量的稳定性。 它管什么：每个方程用什么线性代数求解器、迭代到什么精度、外层算法（SIMPLE/PISO/PIMPLE）怎么循环、松弛因子多少。"
+    },
+    {
+      "name": "decomposeParDict",
+      "path": "system/decomposeParDict",
+      "group": "并行计算",
+      "description": "numberOfSubdomains 指定分区数，与求解阶段 mpirun -np 的进程数一致。scotch 采用图分割，simple 按坐标规则划分，hierarchical 按指定方向依次划分，manual 使用给定的处理器映射，multiLevel 组合多级分解方法。",
+      "keys": [
+        "numberOfSubdomains",
+        "method",
+        "scotch",
+        "simpleCoeffs",
+        "hierarchicalCoeffs",
+        "regions",
+        "constraints"
+      ],
+      "commands": [
+        "decomposePar",
+        "redistributePar"
+      ],
+      "url": "/dictionaries/system-decomposepardict/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object decomposeParDict;\n}\nnumberOfSubdomains 4;\nmethod scotch; numberOfSubdomains 指定分区数，与求解阶段 mpirun -np 的进程数一致。scotch 采用图分割，simple 按坐标规则划分，hierarchical 按指定方向依次划分，manual 使用给定的处理器映射，multiLevel 组合多级分解方法。 // 用 simple 替换上面的 method 时，加入以下系数\nmethod simple;\nsimpleCoeffs\n{\n    n (2 2 1);\n    delta 0.001;\n} 示例中 n 的三个分量乘积为 4。hierarchicalCoeffs 还通过 order 指定划分顺序，如 xyz。多区域算例可在 regions 子字典中分别设置方法和子域数。constraints 用于保持挡板、面区域及指定连接关系，约束范围同时影响负载均衡。 numberOfSubdomains  8;          // 必须等于 mpirun -np 的数字\n\nmethod              scotch;     // 分区算法\n\n// 各算法的参数（只需写你用的那个）\nsimpleCoeffs    { n (2 2 2); delta 0.001; }        // 按 x/y/z 均分\nhierarchicalCoeffs { n (2 2 2); delta 0.001; order xyz; }\nmanualCoeffs    { dataFile \"decompositionData\"; } method 说明 何时用 scotch 自动最小化交界面，默认首选 绝大多数情况 hierarchical 按指定顺序在 x/y/z 上依次均分 规则区域、想控制分区形状 simple 直接三向均分 简单几何 kahip / metis 其他图分区库 有装才有 multiLevel 多级分区（跨节点/节点内分别优化） 大规模集群 structured 沿某方向不切（保持结构） 边界层方向不切分 manual 读文件指定每个单元归谁 特殊需求 约束条件（保证某些面不被切开）： constraints\n{\n    baffles       { type preserveBaffles; }\n    cyclics       { type preservePatches; patches (cyc1 cyc2); }\n    faces         { type singleProcessorFaceSets; sets ((f0 -1)); }\n} n (2 2 2) 的乘积必须等于 numberOfSubdomains，写不一致会直接报错。"
+    },
+    {
+      "name": "renumberMeshDict",
+      "path": "system/renumberMeshDict",
+      "group": "网格",
+      "description": "renumberMethod 指定网格编号算法，如 CuthillMcKee；算法参数置于对应系数字典。运行 renumberMesh -list-renumber 可查询可用方法。重新编号用于调整稀疏矩阵带宽，网格几何分辨率保持不变。",
+      "keys": [
+        "renumberMethod",
+        "CuthillMcKee"
+      ],
+      "commands": [
+        "renumberMesh"
+      ],
+      "url": "/dictionaries/system-renumbermeshdict/",
+      "searchText": "renumberMethod 指定网格编号算法，如 CuthillMcKee；算法参数置于对应系数字典。运行 renumberMesh -list-renumber 可查询可用方法。重新编号用于调整稀疏矩阵带宽，网格几何分辨率保持不变。 FOAM_FILEHANDLER 设置默认文件处理器，常用值为 uncollated 和 collated；命令行 -fileHandler 可覆盖该设置。collated 通过合并并行 I/O 减少文件数量，其性能取决于文件系统、MPI 和缓冲策略。结果读取及重分配应使用支持该格式的工具。"
+    },
+    {
+      "name": "transportProperties",
+      "path": "constant/transportProperties",
+      "group": "物理模型",
+      "description": "不可压缩牛顿流体的配置如下。求解器可直接读取 nu，也可通过 transportModel 创建输运模型，相应条目采用该求解器的配置结构。",
+      "keys": [
+        "transportModel",
+        "nu",
+        "rho",
+        "phases",
+        "sigma"
+      ],
+      "commands": [
+        "icoFoam",
+        "interFoam"
+      ],
+      "url": "/dictionaries/constant-transportproperties/",
+      "searchText": "不可压缩牛顿流体的配置如下。求解器可直接读取 nu，也可通过 transportModel 创建输运模型，相应条目采用该求解器的配置结构。 FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object transportProperties;\n}\ntransportModel Newtonian;\nnu [0 2 -1 0 0 0 0] 1e-6; nu 为运动黏度，mu 为动力黏度，两者满足 mu = rho*nu。powerLaw、BirdCarreau 等非牛顿模型采用各自的系数字典，参数定义见对应模型源码和教程。 不可压缩 VOF 的两相物性配置如下。 phases (water air);\nwater { transportModel Newtonian; nu 1e-6; rho 1000; }\nair   { transportModel Newtonian; nu 1.5e-5; rho 1.2; }\nsigma 0.072; rho 表示相密度，sigma 表示表面张力系数。示例数值为常温条件下的近似示例。可压缩多相模型通常分别设置各相热物性。 单相不可压 transportModel  Newtonian;\nnu              [0 2 -1 0 0 0 0] 1e-05;      // 运动粘度 m²/s\n// 新版也可以简写（量纲由程序推断）：nu 1e-05; 非牛顿流体可选 CrossPowerLaw、BirdCarreau、HerschelBulkley、powerLaw，各自再跟一个系数子字典。 两相（interFoam） phases (water air);\n\nwater { transportModel Newtonian; nu 1e-06; rho 1000; }\nair   { transportModel Newtonian; nu 1.48e-05; rho 1; }\n\nsigma  0.07;          // 表面张力系数 N/m laplacianFoam DT              [0 2 -1 0 0 0 0] 4e-05;      // 扩散系数"
+    },
+    {
+      "name": "turbulenceProperties",
+      "path": "constant/turbulenceProperties",
+      "group": "物理模型",
+      "description": "v2512 常见流体求解器通过 turbulenceProperties 配置湍流，RASModel 和 LESModel 分别指定 RAS 与 LES 模型。Foundation 分支采用的 momentumTransport 属于另一套配置接口。",
+      "keys": [
+        "simulationType",
+        "laminar",
+        "RAS",
+        "LES",
+        "RASModel",
+        "turbulence",
+        "printCoeffs"
+      ],
+      "commands": [
+        "simpleFoam",
+        "pimpleFoam"
+      ],
+      "url": "/dictionaries/constant-turbulenceproperties/",
+      "searchText": "v2512 常见流体求解器通过 turbulenceProperties 配置湍流，RASModel 和 LESModel 分别指定 RAS 与 LES 模型。Foundation 分支采用的 momentumTransport 属于另一套配置接口。 FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object turbulenceProperties;\n}\nsimulationType RAS;\nRAS\n{\n    RASModel kOmegaSST;\n    turbulence on;\n    printCoeffs on;\n} 层流采用 simulationType laminar;。LES 可采用 simulationType LES; LES { LESModel WALE; turbulence on; printCoeffs on; delta cubeRootVol; }。 LES 配置还需确定滤波宽度、近壁处理、入口脉动和时间分辨率，并与网格及边界条件配合。 simulationType  RAS;          // laminar / RAS / LES\n\nRAS\n{\n    RASModel        kOmegaSST;\n    turbulence      on;\n    printCoeffs     on;        // 启动时把模型系数打印到日志，便于确认\n} simulationType  LES;\n\nLES\n{\n    LESModel        WALE;              // 或 Smagorinsky / kEqn / dynamicKEqn\n    delta           cubeRootVol;       // 滤波尺度：cubeRootVol / vanDriest / smooth\n    turbulence      on;\n    printCoeffs     on;\n\n    cubeRootVolCoeffs { deltaCoeff 1; }\n} 常用 RANS 模型怎么挑 模型 特点 场合 kEpsilon 最经典，壁面靠壁函数 内流、自由剪切流 realizableKE 对旋转/分离更好 旋流 kOmegaSST 近壁用 k-ω、远场用 k-ε，逆压梯度和分离预测好 外流绕流、翼型，最常用 SpalartAllmaras 单方程，便宜 航空外流 LaunderSharmaKE 低雷诺数版本，需要 y⁺≈1 不用壁函数时 v2512 的 kEpsilon 新增 twoLayerTreatment 开关，可以在近壁内层用代数关系式，降低对第一层网格的要求： RAS\n{\n    RASModel        kEpsilon;\n    turbulence      on;\n    kEpsilonCoeffs  { twoLayerTreatment true; }\n} 层流就写 simulationType laminar;，此时 0/ 里不需要 k、epsilon、nut 等文件。"
+    },
+    {
+      "name": "thermophysicalProperties",
+      "path": "constant/thermophysicalProperties",
+      "group": "物理模型",
+      "description": "下例采用单相理想气体、常热容和常输运系数，能量变量为显焓。热物性类型和能量形式应与求解器接口对应。",
+      "keys": [
+        "thermoType",
+        "type",
+        "mixture",
+        "transport",
+        "thermo",
+        "equationOfState",
+        "specie",
+        "energy"
+      ],
+      "commands": [
+        "rhoPimpleFoam",
+        "chtMultiRegionFoam"
+      ],
+      "url": "/dictionaries/constant-thermophysicalproperties/",
+      "searchText": "下例采用单相理想气体、常热容和常输运系数，能量变量为显焓。热物性类型和能量形式应与求解器接口对应。 FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object thermophysicalProperties;\n}\nthermoType\n{\n    type hePsiThermo;\n    mixture pureMixture;\n    transport const;\n    thermo hConst;\n    equationOfState perfectGas;\n    specie specie;\n    energy sensibleEnthalpy;\n}\nmixture\n{\n    specie { molWeight 28.96; }\n    thermodynamics { Cp 1005; Hf 0; }\n    transport { mu 1.8e-5; Pr 0.7; }\n} 参数 作用 设置方法 type 热物性基类 hePsiThermo、heRhoThermo 等；须与求解器匹配 mixture 混合物模型 pureMixture 单组分；反应流使用相应多组分模型 transport 输运模型 const、sutherland 等 thermo 热容模型 hConst 常热容；janaf 温度相关多项式 equationOfState 状态方程 perfectGas、rhoConst 等，按介质状态关系选择 energy 能量变量 sensibleEnthalpy 或 sensibleInternalEnergy 等 molWeight 摩尔质量 单位为 kg/kmol，空气示例为 28.96 Cp、Hf 定压比热、生成焓 按模型定义及参考态赋值 mu、Pr 动力黏度和 Prandtl 数 采用一致的单位与适用温度范围 As、Ts Sutherland 输运系数 选择 sutherland 后按该模型填写 Tlow、Thigh、Tcommon、lowCpCoeffs、highCpCoeffs JANAF 温度区间及系数 从可靠物性数据或机理文件提取 rhoCentralFoam 等采用相应的热物性基类和能量变量。使用显内能的求解器应配置 sensibleInternalEnergy，并保留配套教程中的热物性组合。 thermoType\n{\n    type            hePsiThermo;          // hePsiThermo(可压理想气体) / heRhoThermo(液体)\n    mixture         pureMixture;          // 单组分\n    transport       sutherland;           // const / sutherland / polynomial\n    thermo          janaf;                // hConst / eConst / janaf\n    equationOfState perfectGas;           // perfectGas / rhoConst / Boussinesq / PengRobinson\n    specie          specie;\n    energy          sensibleInternalEnergy;   // sensibleEnthalpy / sensibleInternalEnergy\n}\n\nmixture\n{\n    specie          { molWeight  28.96; }\n    thermodynamics  { Cp 1004.5; Hf 0; }\n    transport       { mu 1.8e-05; Pr 0.7; }\n} 七个字段各自的意思：type 决定用 ψ(=1/RT) 还是 ρ 作为基本量；mixture 是单组分还是多组分；transport 是粘性/导热系数的模型；thermo 是比热模型（hConst 常数比热，janaf 用 JANAF 多项式）；equationOfState 是状态方程；energy 是用焓还是内能作为求解变量。修改时七个字段必须相互兼容，不兼容时报错信息会把所有合法组合列出来——照着报错里的列表挑就行，这是 OpenFOAM 少数几个报错比文档还好用的地方。 sensibleEnthalpy 还是 sensibleInternalEnergy：基于压力的求解器（rhoPimpleFoam）一般用焓；基于密度的（rhoCentralFoam）用内能。照抄对应教程即可。"
+    },
+    {
+      "name": "fvOptions",
+      "path": "constant/fvOptions",
+      "group": "物理模型",
+      "description": "fvOptions 用于配置源项和约束，文件位置由求解器的读取路径确定，常见于 constant 或 system。下例在指定 cellZone 内施加速度方程源项，采用 sources 条目。",
+      "keys": [
+        "type",
+        "active",
+        "selectionMode",
+        "cellZone",
+        "semiImplicitSource",
+        "scalarSemiImplicitSource",
+        "vectorSemiImplicitSource"
+      ],
+      "commands": [
+        "simpleFoam",
+        "pimpleFoam"
+      ],
+      "url": "/dictionaries/constant-fvoptions/",
+      "searchText": "fvOptions 用于配置源项和约束，文件位置由求解器的读取路径确定，常见于 constant 或 system。下例在指定 cellZone 内施加速度方程源项，采用 sources 条目。 FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object fvOptions;\n}\ndrive\n{\n    type vectorSemiImplicitSource;\n    active true;\n    selectionMode cellZone;\n    cellZone heater;\n    volumeMode specific;\n    sources\n    {\n        U ((0.1 0 0) 0);\n    }\n} 半隐式源项写为 Su + Sp*字段，括号内依次给出显式项和隐式系数。specific 按单位体积定义，absolute 按所选体积的总量定义。源项量纲取决于控制方程；速度、动量以及以 h、e 或 T 为变量的能量方程应分别确定量纲和密度因子。 selectionMode 指定作用范围，可选 all、cellZone、cellSet 等；timeStart 和 duration 指定作用时间。常用类型包括 scalarSemiImplicitSource、vectorSemiImplicitSource、meanVelocityForce、explicitPorositySource、scalarFixedValueConstraint、limitTemperature 和 codedSource，其参数按对应模型设置。 放在 system/fvOptions（或 constant/fvOptions）。它让你不改求解器就能加源项。 momentumSource\n{\n    type            meanVelocityForce;      // 恒定流量驱动（周期性槽道流必用）\n    active          yes;\n    selectionMode   all;\n    fields          (U);\n    Ubar            (0.1335 0 0);\n}\n\nheatSource\n{\n    type            scalarSemiImplicitSource;\n    active          yes;\n    selectionMode   cellZone;\n    cellZone        heater;\n    volumeMode      absolute;               // absolute / specific\n    sources         { h (500 0); }          // (显式部分 隐式部分)\n}\n\nporous\n{\n    type            explicitPorositySource;\n    active          yes;\n    selectionMode   cellZone;\n    cellZone        porousZone;\n    type            DarcyForchheimer;\n    d   (5e7 -1000 -1000);\n    f   (0 0 0);\n    coordinateSystem { ... }\n}\n\nMRF1\n{\n    type            MRFSource;             // 旋转参考系（风机、搅拌器）\n    selectionMode   cellZone;\n    cellZone        rotor;\n    origin          (0 0 0);\n    axis            (0 0 1);\n    omega           constant 104.72;       // rad/s\n} 常用类型还有：limitTemperature（限温，防发散）、limitVelocity、fixedTemperatureConstraint、buoyancyEnergy、radiation、solidificationMeltingSource（相变）、atmAmbientTurbSource（大气边界层）。 为什么它重要：初学者遇到”我要在某个区域加个热源/阻力/旋转”，第一反应常是去改求解器源码。用 fvOptions 一个字典就能解决，且不影响可维护性。"
+    },
+    {
+      "name": "MRFProperties",
+      "path": "constant/MRFProperties",
+      "group": "物理模型",
+      "description": "rotor 为预先建立的 cellZone，omega 的单位为 rad/s。nonRotatingPatches 指定区域内保持静止的边界。MRF 在固定网格上采用旋转参考系近似处理。",
+      "keys": [
+        "cellZone",
+        "active",
+        "origin",
+        "axis",
+        "omega",
+        "nonRotatingPatches"
+      ],
+      "commands": [
+        "simpleFoam",
+        "pimpleFoam"
+      ],
+      "url": "/dictionaries/constant-mrfproperties/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object MRFProperties;\n}\nrotorZone\n{\n    active yes;\n    cellZone rotor;\n    nonRotatingPatches (stator);\n    origin (0 0 0);\n    axis (0 0 1);\n    omega constant 100;\n} rotor 为预先建立的 cellZone，omega 的单位为 rad/s。nonRotatingPatches 指定区域内保持静止的边界。MRF 在固定网格上采用旋转参考系近似处理。 SRFProperties 配置单参考系模型，常用 SRFModel rpm 和 rpmCoeffs/rpm，以 rpm 表示转速。使用两种模型时应分别采用对应的角速度单位。"
+    },
+    {
+      "name": "SRFProperties",
+      "path": "constant/SRFProperties",
+      "group": "物理模型",
+      "description": "rotor 为预先建立的 cellZone，omega 的单位为 rad/s。nonRotatingPatches 指定区域内保持静止的边界。MRF 在固定网格上采用旋转参考系近似处理。",
+      "keys": [
+        "SRFModel",
+        "origin",
+        "axis",
+        "rpm"
+      ],
+      "commands": [
+        "SRFSimpleFoam"
+      ],
+      "url": "/dictionaries/constant-srfproperties/",
+      "searchText": "FoamFile\n{\n    version 2.0; format ascii;\n    class dictionary; object MRFProperties;\n}\nrotorZone\n{\n    active yes;\n    cellZone rotor;\n    nonRotatingPatches (stator);\n    origin (0 0 0);\n    axis (0 0 1);\n    omega constant 100;\n} rotor 为预先建立的 cellZone，omega 的单位为 rad/s。nonRotatingPatches 指定区域内保持静止的边界。MRF 在固定网格上采用旋转参考系近似处理。 SRFProperties 配置单参考系模型，常用 SRFModel rpm 和 rpmCoeffs/rpm，以 rpm 表示转速。使用两种模型时应分别采用对应的角速度单位。"
+    },
+    {
+      "name": "dynamicMeshDict",
+      "path": "constant/dynamicMeshDict",
+      "group": "网格",
+      "description": "下例采用位移拉普拉斯方法平滑网格运动，并通过 0/pointDisplacement 指定位移。求解器需支持该运动模型。",
+      "keys": [
+        "dynamicFvMesh",
+        "dynamicRefineFvMesh",
+        "dynamicMotionSolverFvMesh",
+        "motionSolver",
+        "field",
+        "lowerRefineLevel",
+        "upperRefineLevel",
+        "refineInterval",
+        "maxRefinement",
+        "maxCells"
+      ],
+      "commands": [
+        "interFoam",
+        "pimpleFoam"
+      ],
+      "url": "/dictionaries/constant-dynamicmeshdict/",
+      "searchText": "下例采用位移拉普拉斯方法平滑网格运动，并通过 0/pointDisplacement 指定位移。求解器需支持该运动模型。 dynamicFvMesh dynamicMotionSolverFvMesh;\nmotionSolverLibs (\"libfvMotionSolvers.so\");\nsolver displacementLaplacian;\ndisplacementLaplacianCoeffs\n{\n    diffusivity uniform;\n} pointDisplacement 为 pointVectorField，采用长度量纲。运动壁面指定相应位移，固定壁面指定零位移。motionSolver 或兼容键 solver 按 v2512 对应模型的接口设置。 模型或功能 配置项 相关参数 规定刚体运动 solidBodyMotionFvMesh、solidBodyMotionFunction 及相应系数 旋转中心、轴、速度或时间函数 六自由度 sixDoFRigidBodyMotion 运动求解器 mass、momentOfInertia、centreOfMass、力矩参考与约束 自适应细化 dynamicRefineFvMesh field、refineInterval、lowerRefineLevel、upperRefineLevel、unrefineLevel 细化限制 maxRefinement、maxCells、nBufferLayers 内存估计和细化一致性 拓扑改变通量修正 correctFluxes 通量和关联速度字段的配对，依求解器设置 重叠网格 dynamicOversetFvMesh 等、oversetInterpolation zoneID、overset patch、孔切割和插值层 先运行 moveDynamicMesh 检查网格运动，重点检查运动过程中质量最差的时刻，再进行流场求解。运动和拓扑变化类型应处于求解器的支持范围内。 刚体运动（最简单） dynamicFvMesh   dynamicMotionSolverFvMesh;\nmotionSolver    solidBody;\nsolidBodyMotionFunction  rotatingMotion;\nrotatingMotionCoeffs\n{\n    origin  (0 0 0);\n    axis    (0 0 1);\n    omega   6.28;                 // rad/s\n}\ncellZone        rotor;            // 只让这个 zone 动 其他运动函数：oscillatingLinearMotion、linearMotion、SDA、tabulated6DoFMotion、multiMotion。 六自由度耦合（自由运动物体） motionSolver    sixDoFRigidBodyMotion;\nsixDoFRigidBodyMotionCoeffs\n{\n    patches         (floatingObject);\n    innerDistance   0.05;\n    outerDistance   0.35;\n    mass            9.6;\n    centreOfMass    (0.5 0.45 0.4);\n    momentOfInertia (0.08 0.08 0.06);\n    accelerationRelaxation 0.7;\n    solver          { type Newmark; }\n    constraints     { zAxis { sixDoFRigidBodyMotionConstraint line; direction (0 0 1);} }\n} 动态加密（AMR） dynamicFvMesh   dynamicRefineFvMesh;\nrefineInterval  10;\nfield           alpha.water;      // 按哪个场判断\nlowerRefineLevel 0.001;\nupperRefineLevel 0.999;\nmaxRefinement   2;\nmaxCells        2000000;\nnBufferLayers   1; 用途：VOF 里只在界面附近加密，单元数可以省一个量级。"
+    },
+    {
+      "name": "regionProperties",
+      "path": "constant/regionProperties",
+      "group": "物理模型",
+      "description": "air 和 solidBlock 分别配置 constant/区域名/polyMesh、热物性文件以及 system/区域名 下的 fvSchemes 和 fvSolution。初始场位于 0/区域名/。流固界面通常采用 mappedWall 网格边界，并设置相邻区域映射和温度耦合条件。",
+      "keys": [
+        "regions",
+        "fluid",
+        "solid"
+      ],
+      "commands": [
+        "chtMultiRegionFoam",
+        "splitMeshRegions"
+      ],
+      "url": "/dictionaries/constant-regionproperties/",
+      "searchText": "// constant/regionProperties 片段\nregions\n(\n    fluid (air)\n    solid (solidBlock)\n); air 和 solidBlock 分别配置 constant/区域名/polyMesh、热物性文件以及 system/区域名 下的 fvSchemes 和 fvSolution。初始场位于 0/区域名/。流固界面通常采用 mappedWall 网格边界，并设置相邻区域映射和温度耦合条件。 文件 用途 主要参数 constant/radiationProperties 辐射模型 radiation on/off、radiationModel（P1、fvDOM、viewFactor 等）、solverFreq 及模型专用系数 constant/viewFactorsDict 视角因子设置 指定参与边界，按生成工具配置积分或射线参数 constant/chemistryProperties 化学积分 chemistry、chemistryType 中的 solver/method、initialChemicalTimeStep、ODE 系数 constant/combustionProperties 燃烧闭合模型 combustionModel 及 PaSR、EDC、laminar 等模型的专用系数 constant/reactions 反应机理 物种名称、反应式、速率系数；可由 chemkinToFoam 转换 constant/thermophysicalProperties.相名 多相分相热物性 各相 thermoType、状态方程、热容与输运 constant/phaseProperties Euler 多相体系或特定多相模型 phases、直径模型、阻力、升力、传热等分相和相间模型 constant/kinematicCloudProperties 等 拉格朗日粒子云 solution、constantProperties、subModels、injectionModels、forces、patchInteractionModel constant/sprayCloudProperties 喷雾云 在粒子设置基础上加入 atomization、breakup、phaseChange 等模型 constant/porosityProperties 部分求解器的多孔阻力入口 zone、Darcy–Forchheimer 系数及局部坐标；也可通过 fvOptions 配置 constant/solidProperties 或 mechanicalProperties 固体材料 按固体求解器设置 rho、E、nu 和 planeStress；此处 nu 表示泊松比 system/faSchemes、faSolution 的有限面积位置 面上离散与求解 v2512 常位于 system/finite-area/；使用 faMesh 对应的字段和算子 system/finite-area/faMeshDefinition 有限面积网格生成 polyMeshPatches、boundary、面选取和边界命名 system/optimisationDict 伴随优化 优化类型、设计变量、目标函数、约束和更新算法 专用模型的配置项随物种机理、粒子模型、燃烧模型和优化算法变化。可通过 find \"$FOAM_TUTORIALS\" -name 文件名 查找对应求解器算例，并据模型源码确定条目层级及参数。"
+    },
+    {
+      "name": "radiationProperties",
+      "path": "constant/radiationProperties",
+      "group": "物理模型",
+      "description": "air 和 solidBlock 分别配置 constant/区域名/polyMesh、热物性文件以及 system/区域名 下的 fvSchemes 和 fvSolution。初始场位于 0/区域名/。流固界面通常采用 mappedWall 网格边界，并设置相邻区域映射和温度耦合条件。",
+      "keys": [
+        "radiation",
+        "radiationModel",
+        "absorptionEmissionModel",
+        "scatterModel",
+        "sootModel"
+      ],
+      "commands": [
+        "buoyantSimpleFoam"
+      ],
+      "url": "/dictionaries/constant-radiationproperties/",
+      "searchText": "// constant/regionProperties 片段\nregions\n(\n    fluid (air)\n    solid (solidBlock)\n); air 和 solidBlock 分别配置 constant/区域名/polyMesh、热物性文件以及 system/区域名 下的 fvSchemes 和 fvSolution。初始场位于 0/区域名/。流固界面通常采用 mappedWall 网格边界，并设置相邻区域映射和温度耦合条件。 文件 用途 主要参数 constant/radiationProperties 辐射模型 radiation on/off、radiationModel（P1、fvDOM、viewFactor 等）、solverFreq 及模型专用系数 constant/viewFactorsDict 视角因子设置 指定参与边界，按生成工具配置积分或射线参数 constant/chemistryProperties 化学积分 chemistry、chemistryType 中的 solver/method、initialChemicalTimeStep、ODE 系数 constant/combustionProperties 燃烧闭合模型 combustionModel 及 PaSR、EDC、laminar 等模型的专用系数 constant/reactions 反应机理 物种名称、反应式、速率系数；可由 chemkinToFoam 转换 constant/thermophysicalProperties.相名 多相分相热物性 各相 thermoType、状态方程、热容与输运 constant/phaseProperties Euler 多相体系或特定多相模型 phases、直径模型、阻力、升力、传热等分相和相间模型 constant/kinematicCloudProperties 等 拉格朗日粒子云 solution、constantProperties、subModels、injectionModels、forces、patchInteractionModel constant/sprayCloudProperties 喷雾云 在粒子设置基础上加入 atomization、breakup、phaseChange 等模型 constant/porosityProperties 部分求解器的多孔阻力入口 zone、Darcy–Forchheimer 系数及局部坐标；也可通过 fvOptions 配置 constant/solidProperties 或 mechanicalProperties 固体材料 按固体求解器设置 rho、E、nu 和 planeStress；此处 nu 表示泊松比 system/faSchemes、faSolution 的有限面积位置 面上离散与求解 v2512 常位于 system/finite-area/；使用 faMesh 对应的字段和算子 system/finite-area/faMeshDefinition 有限面积网格生成 polyMeshPatches、boundary、面选取和边界命名 system/optimisationDict 伴随优化 优化类型、设计变量、目标函数、约束和更新算法 专用模型的配置项随物种机理、粒子模型、燃烧模型和优化算法变化。可通过 find \"$FOAM_TUTORIALS\" -name 文件名 查找对应求解器算例，并据模型源码确定条目层级及参数。 radiation       on;\nradiationModel  P1;              // none / P1 / fvDOM / viewFactor / opaqueSolid\nsolverFreq      10;\nabsorptionEmissionModel constantAbsorptionEmission;\nconstantAbsorptionEmissionCoeffs { absorptivity 0.5; emissivity 0.5; E 0; }\nscatterModel    none;"
+    },
+    {
+      "name": "g",
+      "path": "constant/g",
+      "group": "物理模型",
+      "description": "g 定义重力矢量，其方向与几何坐标系对应。hRef 定义静水压参考高度，通常采用 uniformDimensionedScalarField 和长度量纲；pRef 按求解器接口设置。fvSolution 中的 pRefCell/pRefValue 用于压力方程参考值，作用不同。",
+      "keys": [
+        "dimensions",
+        "value"
+      ],
+      "commands": [
+        "interFoam"
+      ],
+      "url": "/dictionaries/constant-g/",
+      "searchText": "// constant/g 完整示例\nFoamFile\n{\n    version 2.0; format ascii;\n    class uniformDimensionedVectorField; object g;\n}\ndimensions [0 1 -2 0 0 0 0];\nvalue (0 -9.81 0); g 定义重力矢量，其方向与几何坐标系对应。hRef 定义静水压参考高度，通常采用 uniformDimensionedScalarField 和长度量纲；pRef 按求解器接口设置。fvSolution 中的 pRefCell/pRefValue 用于压力方程参考值，作用不同。"
+    },
+    {
+      "name": "U",
+      "path": "0/U",
+      "group": "初始场",
+      "description": "下例给出与第 7 章二维通道网格对应的速度和压力场。内部初始速度等于入口速度，壁面采用无滑移条件，出口速度采用零梯度条件。",
+      "keys": [
+        "dimensions",
+        "internalField",
+        "boundaryField",
+        "fixedValue",
+        "noSlip",
+        "movingWallVelocity",
+        "flowRateInletVelocity"
+      ],
+      "commands": [
+        "icoFoam",
+        "interFoam"
+      ],
+      "url": "/dictionaries/0-u/",
+      "searchText": "下例给出与第 7 章二维通道网格对应的速度和压力场。内部初始速度等于入口速度，壁面采用无滑移条件，出口速度采用零梯度条件。 FoamFile\n{\n    version 2.0; format ascii;\n    class volVectorField; object U;\n}\ndimensions [0 1 -1 0 0 0 0];\ninternalField uniform (1 0 0);\nboundaryField\n{\n    inlet { type fixedValue; value uniform (1 0 0); }\n    outlet { type zeroGradient; }\n    walls { type noSlip; }\n    frontAndBack { type empty; }\n} FoamFile\n{\n    version 2.0; format ascii;\n    class volScalarField; object p;\n}\ndimensions [0 2 -2 0 0 0 0];\ninternalField uniform 0;\nboundaryField\n{\n    inlet { type zeroGradient; }\n    outlet { type fixedValue; value uniform 0; }\n    walls { type zeroGradient; }\n    frontAndBack { type empty; }\n} 本例 p 为运动学压力，适用于相应的不可压缩求解器。采用绝对压力的可压缩求解器时，dimensions 设为 [1 -1 -2 0 0 0 0]，压力值按状态方程设置，如 101325 Pa。"
+    },
+    {
+      "name": "p",
+      "path": "0/p",
+      "group": "初始场",
+      "description": "下例给出与第 7 章二维通道网格对应的速度和压力场。内部初始速度等于入口速度，壁面采用无滑移条件，出口速度采用零梯度条件。",
+      "keys": [
+        "dimensions",
+        "internalField",
+        "boundaryField",
+        "fixedValue",
+        "zeroGradient",
+        "totalPressure"
+      ],
+      "commands": [
+        "icoFoam",
+        "simpleFoam"
+      ],
+      "url": "/dictionaries/0-p/",
+      "searchText": "下例给出与第 7 章二维通道网格对应的速度和压力场。内部初始速度等于入口速度，壁面采用无滑移条件，出口速度采用零梯度条件。 FoamFile\n{\n    version 2.0; format ascii;\n    class volVectorField; object U;\n}\ndimensions [0 1 -1 0 0 0 0];\ninternalField uniform (1 0 0);\nboundaryField\n{\n    inlet { type fixedValue; value uniform (1 0 0); }\n    outlet { type zeroGradient; }\n    walls { type noSlip; }\n    frontAndBack { type empty; }\n} FoamFile\n{\n    version 2.0; format ascii;\n    class volScalarField; object p;\n}\ndimensions [0 2 -2 0 0 0 0];\ninternalField uniform 0;\nboundaryField\n{\n    inlet { type zeroGradient; }\n    outlet { type fixedValue; value uniform 0; }\n    walls { type zeroGradient; }\n    frontAndBack { type empty; }\n} 本例 p 为运动学压力，适用于相应的不可压缩求解器。采用绝对压力的可压缩求解器时，dimensions 设为 [1 -1 -2 0 0 0 0]，压力值按状态方程设置，如 101325 Pa。"
+    },
+    {
+      "name": "p_rgh",
+      "path": "0/p_rgh",
+      "group": "初始场",
+      "description": "温度场 T 采用温度量纲，初值示例为 internalField uniform 300;。等温壁面使用 fixedValue，绝热壁面通常使用 zeroGradient。externalWallHeatFluxTemperature 可指定热通量或功率，并通过 mode、kappaMethod 等参数定义施加方式和导热率来源。",
+      "keys": [
+        "dimensions",
+        "internalField",
+        "boundaryField",
+        "fixedFluxPressure",
+        "prghPressure"
+      ],
+      "commands": [
+        "interFoam"
+      ],
+      "url": "/dictionaries/0-p-rgh/",
+      "searchText": "温度场 T 采用温度量纲，初值示例为 internalField uniform 300;。等温壁面使用 fixedValue，绝热壁面通常使用 zeroGradient。externalWallHeatFluxTemperature 可指定热通量或功率，并通过 mode、kappaMethod 等参数定义施加方式和导热率来源。 p_rgh 表示扣除静水压项后的压力，常见定义为 p_rgh = p - rho*gh。参考高度和量纲由求解器确定，不可压缩 Boussinesq 模型可采用归一化形式。恢复实际压力时，应按该求解器的定义还原静水压项。 alpha.water 表示水相体积分数，为无量纲量，取值范围为 [0,1]；多相体系中各相体积分数之和为 1。入口可指定相分数，开放边界可采用 inletOutlet，壁面可采用 zeroGradient 或接触角条件。字段后缀 water 与 phases 中的相名对应。 type 作用 zeroGradient 壁面标准做法（不可压） fixedValue 出口给定压力（不可压时值是 p/ρ） totalPressure 给定总压，静压随速度自动调整 fixedFluxPressure 壁面与动网格的正确做法：保证边界通量与速度边界一致 prghPressure / prghTotalPressure 多相流的 p_rgh（已扣除静水压） freestreamPressure 远场 waveTransmissive 无反射出口（可压缩，防激波反射回来） // 不可压出口\noutlet { type fixedValue; value uniform 0; }\n\n// 壁面（含浮力/动网格时必须这样写）\nwalls  { type fixedFluxPressure; value uniform 0; }\n\n// 可压超声速出口，防止反射\noutlet\n{\n    type            waveTransmissive;\n    field           p;\n    gamma           1.4;\n    value           uniform 1e5;\n} 为什么壁面上不能简单写 zeroGradient：有重力或者动网格时，壁面法向压力梯度并不为零（要平衡重力/加速度）。fixedFluxPressure 会自动按动量方程推出正确的梯度。写错的后果是质量不守恒、界面处出现虚假速度。 p 和 p_rgh 的区别：多相流和浮力问题里求解的是 p_rgh = p − ρg·h（扣掉静水压），这样数值上更好解。你在 0/ 里给的是 p_rgh，p 由程序算出。边界条件要给在 p_rgh 上。"
+    },
+    {
+      "name": "alpha.water",
+      "path": "0/alpha.water",
+      "group": "初始场",
+      "description": "温度场 T 采用温度量纲，初值示例为 internalField uniform 300;。等温壁面使用 fixedValue，绝热壁面通常使用 zeroGradient。externalWallHeatFluxTemperature 可指定热通量或功率，并通过 mode、kappaMethod 等参数定义施加方式和导热率来源。",
+      "keys": [
+        "dimensions",
+        "internalField",
+        "boundaryField",
+        "inletOutlet",
+        "constantAlphaContactAngle",
+        "dynamicAlphaContactAngle",
+        "theta0",
+        "limit"
+      ],
+      "commands": [
+        "interFoam",
+        "interIsoFoam",
+        "setFields"
+      ],
+      "url": "/dictionaries/0-alpha-water/",
+      "searchText": "温度场 T 采用温度量纲，初值示例为 internalField uniform 300;。等温壁面使用 fixedValue，绝热壁面通常使用 zeroGradient。externalWallHeatFluxTemperature 可指定热通量或功率，并通过 mode、kappaMethod 等参数定义施加方式和导热率来源。 p_rgh 表示扣除静水压项后的压力，常见定义为 p_rgh = p - rho*gh。参考高度和量纲由求解器确定，不可压缩 Boussinesq 模型可采用归一化形式。恢复实际压力时，应按该求解器的定义还原静水压项。 alpha.water 表示水相体积分数，为无量纲量，取值范围为 [0,1]；多相体系中各相体积分数之和为 1。入口可指定相分数，开放边界可采用 inletOutlet，壁面可采用 zeroGradient 或接触角条件。字段后缀 water 与 phases 中的相名对应。"
+    },
+    {
+      "name": "T",
+      "path": "0/T",
+      "group": "初始场",
+      "description": "温度场 T 采用温度量纲，初值示例为 internalField uniform 300;。等温壁面使用 fixedValue，绝热壁面通常使用 zeroGradient。externalWallHeatFluxTemperature 可指定热通量或功率，并通过 mode、kappaMethod 等参数定义施加方式和导热率来源。",
+      "keys": [
+        "dimensions",
+        "internalField",
+        "boundaryField",
+        "externalWallHeatFluxTemperature",
+        "fixedValue",
+        "zeroGradient"
+      ],
+      "commands": [
+        "laplacianFoam",
+        "chtMultiRegionFoam"
+      ],
+      "url": "/dictionaries/0-t/",
+      "searchText": "温度场 T 采用温度量纲，初值示例为 internalField uniform 300;。等温壁面使用 fixedValue，绝热壁面通常使用 zeroGradient。externalWallHeatFluxTemperature 可指定热通量或功率，并通过 mode、kappaMethod 等参数定义施加方式和导热率来源。 p_rgh 表示扣除静水压项后的压力，常见定义为 p_rgh = p - rho*gh。参考高度和量纲由求解器确定，不可压缩 Boussinesq 模型可采用归一化形式。恢复实际压力时，应按该求解器的定义还原静水压项。 alpha.water 表示水相体积分数，为无量纲量，取值范围为 [0,1]；多相体系中各相体积分数之和为 1。入口可指定相分数，开放边界可采用 inletOutlet，壁面可采用 zeroGradient 或接触角条件。字段后缀 water 与 phases 中的相名对应。"
+    },
+    {
+      "name": "k",
+      "path": "0/k",
+      "group": "初始场",
+      "description": "入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。",
+      "keys": [
+        "dimensions",
+        "internalField",
+        "boundaryField",
+        "kqRWallFunction",
+        "turbulentIntensityKineticEnergyInlet"
+      ],
+      "commands": [
+        "simpleFoam",
+        "pimpleFoam"
+      ],
+      "url": "/dictionaries/0-k/",
+      "searchText": "字段 量纲 常见边界与设置 k [0 2 -2 0 0 0 0] 入口固定湍动能；壁面可配 kqRWallFunction epsilon [0 2 -3 0 0 0 0] k epsilon 模型使用；壁面 epsilonWallFunction omega [0 0 -1 0 0 0 0] k omega 模型使用；壁面 omegaWallFunction nut [0 2 -1 0 0 0 0] 湍动黏度，由模型给定；壁面可用 nutkWallFunction 等 alphat 由热模型定义，常见可压缩形式为 [1 -1 -1 0 0 0 0] 量纲按所用热模型确定 入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。 近壁处理方式应与网格设计一致。采用壁面函数或直接解析近壁区域时，分别据其要求确定第一层网格厚度及目标 y+。"
+    },
+    {
+      "name": "epsilon",
+      "path": "0/epsilon",
+      "group": "初始场",
+      "description": "入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。",
+      "keys": [
+        "dimensions",
+        "internalField",
+        "boundaryField",
+        "epsilonWallFunction"
+      ],
+      "commands": [
+        "simpleFoam"
+      ],
+      "url": "/dictionaries/0-epsilon/",
+      "searchText": "字段 量纲 常见边界与设置 k [0 2 -2 0 0 0 0] 入口固定湍动能；壁面可配 kqRWallFunction epsilon [0 2 -3 0 0 0 0] k epsilon 模型使用；壁面 epsilonWallFunction omega [0 0 -1 0 0 0 0] k omega 模型使用；壁面 omegaWallFunction nut [0 2 -1 0 0 0 0] 湍动黏度，由模型给定；壁面可用 nutkWallFunction 等 alphat 由热模型定义，常见可压缩形式为 [1 -1 -1 0 0 0 0] 量纲按所用热模型确定 入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。 近壁处理方式应与网格设计一致。采用壁面函数或直接解析近壁区域时，分别据其要求确定第一层网格厚度及目标 y+。"
+    },
+    {
+      "name": "omega",
+      "path": "0/omega",
+      "group": "初始场",
+      "description": "入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。",
+      "keys": [
+        "dimensions",
+        "internalField",
+        "boundaryField",
+        "omegaWallFunction"
+      ],
+      "commands": [
+        "simpleFoam"
+      ],
+      "url": "/dictionaries/0-omega/",
+      "searchText": "字段 量纲 常见边界与设置 k [0 2 -2 0 0 0 0] 入口固定湍动能；壁面可配 kqRWallFunction epsilon [0 2 -3 0 0 0 0] k epsilon 模型使用；壁面 epsilonWallFunction omega [0 0 -1 0 0 0 0] k omega 模型使用；壁面 omegaWallFunction nut [0 2 -1 0 0 0 0] 湍动黏度，由模型给定；壁面可用 nutkWallFunction 等 alphat 由热模型定义，常见可压缩形式为 [1 -1 -1 0 0 0 0] 量纲按所用热模型确定 入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。 近壁处理方式应与网格设计一致。采用壁面函数或直接解析近壁区域时，分别据其要求确定第一层网格厚度及目标 y+。"
+    },
+    {
+      "name": "nut",
+      "path": "0/nut",
+      "group": "初始场",
+      "description": "入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。",
+      "keys": [
+        "dimensions",
+        "internalField",
+        "boundaryField",
+        "nutkWallFunction",
+        "calculated"
+      ],
+      "commands": [
+        "simpleFoam"
+      ],
+      "url": "/dictionaries/0-nut/",
+      "searchText": "字段 量纲 常见边界与设置 k [0 2 -2 0 0 0 0] 入口固定湍动能；壁面可配 kqRWallFunction epsilon [0 2 -3 0 0 0 0] k epsilon 模型使用；壁面 epsilonWallFunction omega [0 0 -1 0 0 0 0] k omega 模型使用；壁面 omegaWallFunction nut [0 2 -1 0 0 0 0] 湍动黏度，由模型给定；壁面可用 nutkWallFunction 等 alphat 由热模型定义，常见可压缩形式为 [1 -1 -1 0 0 0 0] 量纲按所用热模型确定 入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。 近壁处理方式应与网格设计一致。采用壁面函数或直接解析近壁区域时，分别据其要求确定第一层网格厚度及目标 y+。"
+    },
+    {
+      "name": "alphat",
+      "path": "0/alphat",
+      "group": "初始场",
+      "description": "入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。",
+      "keys": [
+        "dimensions",
+        "internalField",
+        "boundaryField",
+        "compressible::alphatWallFunction"
+      ],
+      "commands": [
+        "buoyantSimpleFoam"
+      ],
+      "url": "/dictionaries/0-alphat/",
+      "searchText": "字段 量纲 常见边界与设置 k [0 2 -2 0 0 0 0] 入口固定湍动能；壁面可配 kqRWallFunction epsilon [0 2 -3 0 0 0 0] k epsilon 模型使用；壁面 epsilonWallFunction omega [0 0 -1 0 0 0 0] k omega 模型使用；壁面 omegaWallFunction nut [0 2 -1 0 0 0 0] 湍动黏度，由模型给定；壁面可用 nutkWallFunction 等 alphat 由热模型定义，常见可压缩形式为 [1 -1 -1 0 0 0 0] 量纲按所用热模型确定 入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。 近壁处理方式应与网格设计一致。采用壁面函数或直接解析近壁区域时，分别据其要求确定第一层网格厚度及目标 y+。"
+    },
+    {
+      "name": "files",
+      "path": "Make/files",
+      "group": "编译",
+      "description": "在源码目录运行 wmake 编译应用。编译共享库时，在 Make/files 中设置 LIB = $(FOAM_USER_LIBBIN)/libMyModel，在 Make/options 中设置 LIB_LIBS，并运行 wmake libso。Make 变量采用 $(FOAM_USER_APPBIN) 形式，Bash 变量采用 ${FOAM_USER_APPBIN} 形式。",
+      "keys": [
+        "EXE",
+        "LIB",
+        "FOAM_USER_APPBIN",
+        "FOAM_USER_LIBBIN"
+      ],
+      "commands": [
+        "wmake"
+      ],
+      "url": "/dictionaries/make-files/",
+      "searchText": "# Make/files\nmyScalarFoam.C\n\nEXE = $(FOAM_USER_APPBIN)/myScalarFoam EXE_INC = \\\n    -I$(LIB_SRC)/finiteVolume/lnInclude \\\n    -I$(LIB_SRC)/meshTools/lnInclude\n\nEXE_LIBS = \\\n    -lfiniteVolume \\\n    -lmeshTools 在源码目录运行 wmake 编译应用。编译共享库时，在 Make/files 中设置 LIB = $(FOAM_USER_LIBBIN)/libMyModel，在 Make/options 中设置 LIB_LIBS，并运行 wmake libso。Make 变量采用 $(FOAM_USER_APPBIN) 形式，Bash 变量采用 ${FOAM_USER_APPBIN} 形式。"
+    },
+    {
+      "name": "options",
+      "path": "Make/options",
+      "group": "编译",
+      "description": "在源码目录运行 wmake 编译应用。编译共享库时，在 Make/files 中设置 LIB = $(FOAM_USER_LIBBIN)/libMyModel，在 Make/options 中设置 LIB_LIBS，并运行 wmake libso。Make 变量采用 $(FOAM_USER_APPBIN) 形式，Bash 变量采用 ${FOAM_USER_APPBIN} 形式。",
+      "keys": [
+        "EXE_INC",
+        "EXE_LIBS",
+        "LIB_LIBS"
+      ],
+      "commands": [
+        "wmake"
+      ],
+      "url": "/dictionaries/make-options/",
+      "searchText": "# Make/files\nmyScalarFoam.C\n\nEXE = $(FOAM_USER_APPBIN)/myScalarFoam EXE_INC = \\\n    -I$(LIB_SRC)/finiteVolume/lnInclude \\\n    -I$(LIB_SRC)/meshTools/lnInclude\n\nEXE_LIBS = \\\n    -lfiniteVolume \\\n    -lmeshTools 在源码目录运行 wmake 编译应用。编译共享库时，在 Make/files 中设置 LIB = $(FOAM_USER_LIBBIN)/libMyModel，在 Make/options 中设置 LIB_LIBS，并运行 wmake libso。Make 变量采用 $(FOAM_USER_APPBIN) 形式，Bash 变量采用 ${FOAM_USER_APPBIN} 形式。"
+    },
+    {
+      "name": "setAlphaFieldDict",
+      "path": "system/setAlphaFieldDict",
+      "group": "初始化",
+      "description": "比 setFields 精细：界面所在单元会得到精确的部分体积分数（而不是 0 或 1），用于界面收敛性验证。",
+      "keys": [
+        "field",
+        "surfaces",
+        "plane",
+        "sphere"
+      ],
+      "commands": [
+        "setAlphaField"
+      ],
+      "url": "/dictionaries/system-setalphafielddict/",
+      "searchText": "field       alpha.water;\ntype        sphere;            // sphere / plane / cylinder / sin\norigin      (0.5 0.5 0);\nradius      0.15;\ndirection   (1 0 0); 比 setFields 精细：界面所在单元会得到精确的部分体积分数（而不是 0 或 1），用于界面收敛性验证。"
+    },
+    {
+      "name": "noiseDict",
+      "path": "system/noiseDict",
+      "group": "后处理",
+      "description": "noiseDict 通过 noiseModel 选择 pointNoise、surfaceNoise 等模型，并定义输入数据、FFT 分块和窗函数。频谱分析采用等时间间隔采样，采样时长决定频率分辨率，Nyquist 频率为采样频率的一半。",
+      "keys": [
+        "noiseModel",
+        "pointNoise",
+        "surfaceNoise"
+      ],
+      "commands": [
+        "noise"
+      ],
+      "url": "/dictionaries/system-noisedict/",
+      "searchText": "noiseDict 通过 noiseModel 选择 pointNoise、surfaceNoise 等模型，并定义输入数据、FFT 分块和窗函数。频谱分析采用等时间间隔采样，采样时长决定频率分辨率，Nyquist 频率为采样频率的一半。 particleTracksDict 指定粒子云、采样频率和轨迹长度，轨迹重建使用求解阶段保存的粒子标识。steadyParticleTracksDict 用于稳态轨迹处理。字段设置采用对应粒子模型的教程结构。"
+    },
+    {
+      "name": "probes",
+      "path": "system/controlDict → functions → probes",
+      "group": "函数对象",
+      "description": "探针位置应位于有效流体单元内，压力结果输出至 postProcessing/pressureProbes/起始时刻/p。冲击和快速瞬态计算需按目标时间尺度设置采样频率，以记录峰值及波形变化。",
+      "keys": [
+        "type",
+        "probes",
+        "libs",
+        "fields",
+        "probeLocations",
+        "writeControl",
+        "writeInterval"
+      ],
+      "commands": [
+        "postProcess"
+      ],
+      "url": "/dictionaries/functions-probes/",
+      "searchText": "// 放入 functions 内\npressureProbes\n{\n    type probes;\n    libs (\"libsampling.so\");\n    writeControl timeStep;\n    writeInterval 1;\n    fields (p U);\n    probeLocations\n    (\n        (0.25 0.05 0.005)\n        (0.75 0.05 0.005)\n    );\n} 探针位置应位于有效流体单元内，压力结果输出至 postProcessing/pressureProbes/起始时刻/p。冲击和快速瞬态计算需按目标时间尺度设置采样频率，以记录峰值及波形变化。"
+    },
+    {
+      "name": "sets",
+      "path": "system/controlDict → functions → sets",
+      "group": "函数对象",
+      "description": "转换面集合时需处理面方向信息。",
+      "keys": [
+        "type",
+        "sets",
+        "interpolationScheme",
+        "setFormat",
+        "fields",
+        "sets",
+        "axis",
+        "start",
+        "end",
+        "nPoints"
+      ],
+      "commands": [
+        "postProcess"
+      ],
+      "url": "/dictionaries/functions-sets/",
+      "searchText": "转换面集合时需处理面方向信息。 用法：setsToZones [选项] 示例：setsToZones lineSample\n{\n    type sets;\n    libs (\"libsampling.so\");\n    writeControl writeTime;\n    setFormat raw;\n    interpolationScheme cellPoint;\n    fields (U p);\n    sets\n    {\n        centreline\n        {\n            type uniform;\n            axis x;\n            start (0.01 0.05 0.005);\n            end (0.99 0.05 0.005);\n            nPoints 100;\n        }\n    }\n} axis 指定输出横坐标类型，nPoints 指定采样点数，interpolationScheme 指定单元或点插值方法。"
+    },
+    {
+      "name": "surfaces",
+      "path": "system/controlDict → functions → surfaces",
+      "group": "函数对象",
+      "description": "面采样还支持 patch、isoSurface 等类型。采用 isoSurface 时，通过字段、等值和采样算法定义所需相界面或涡结构。",
+      "keys": [
+        "type",
+        "surfaces",
+        "surfaceFormat",
+        "fields",
+        "surfaces",
+        "cuttingPlane",
+        "point",
+        "normal"
+      ],
+      "commands": [
+        "postProcess"
+      ],
+      "url": "/dictionaries/functions-surfaces/",
+      "searchText": "sectionSample\n{\n    type surfaces;\n    libs (\"libsampling.so\");\n    writeControl writeTime;\n    surfaceFormat vtk;\n    fields (U p);\n    interpolationScheme cellPoint;\n    surfaces\n    {\n        midPlane\n        {\n            type cuttingPlane;\n            planeType pointAndNormal;\n            pointAndNormalDict\n            {\n                point (0.5 0 0);\n                normal (1 0 0);\n            }\n            interpolate true;\n        }\n    }\n} 面采样还支持 patch、isoSurface 等类型。采用 isoSurface 时，通过字段、等值和采样算法定义所需相界面或涡结构。"
+    },
+    {
+      "name": "forces",
+      "path": "system/controlDict → functions → forces",
+      "group": "函数对象",
+      "description": "下例使用参考密度处理不可压缩压力场。可压缩计算通常指定实际 rho 字段及对应压力形式。CofR 定义力矩参考中心，压力基准应与载荷积分采用的压力定义一致。",
+      "keys": [
+        "type",
+        "forces",
+        "patches",
+        "rho",
+        "rhoInf",
+        "CofR"
+      ],
+      "commands": [
+        "simpleFoam",
+        "postProcess"
+      ],
+      "url": "/dictionaries/functions-forces/",
+      "searchText": "bodyForces\n{\n    type forces;\n    libs (\"libforces.so\");\n    patches (walls);\n    p p;\n    U U;\n    rho rhoInf;\n    rhoInf 1000;\n    CofR (0 0 0);\n    writeControl timeStep;\n    writeInterval 1;\n} 下例使用参考密度处理不可压缩压力场。可压缩计算通常指定实际 rho 字段及对应压力形式。CofR 定义力矩参考中心，压力基准应与载荷积分采用的压力定义一致。 计算力系数时，将 type 设为 forceCoeffs，并指定 liftDir、dragDir、pitchAxis、magUInf、lRef 和 Aref。若阻力沿 x 方向、升力沿 y 方向，可设置 dragDir (1 0 0); liftDir (0 1 0); pitchAxis (0 0 1);。lRef 和 Aref 分别为归一化参考长度和面积，二维算例的参考面积需计入所取厚度。"
+    },
+    {
+      "name": "forceCoeffs",
+      "path": "system/controlDict → functions → forceCoeffs",
+      "group": "函数对象",
+      "description": "下例使用参考密度处理不可压缩压力场。可压缩计算通常指定实际 rho 字段及对应压力形式。CofR 定义力矩参考中心，压力基准应与载荷积分采用的压力定义一致。",
+      "keys": [
+        "type",
+        "forceCoeffs",
+        "patches",
+        "liftDir",
+        "dragDir",
+        "pitchAxis",
+        "magUInf",
+        "lRef",
+        "Aref"
+      ],
+      "commands": [
+        "simpleFoam",
+        "postProcess"
+      ],
+      "url": "/dictionaries/functions-forcecoeffs/",
+      "searchText": "bodyForces\n{\n    type forces;\n    libs (\"libforces.so\");\n    patches (walls);\n    p p;\n    U U;\n    rho rhoInf;\n    rhoInf 1000;\n    CofR (0 0 0);\n    writeControl timeStep;\n    writeInterval 1;\n} 下例使用参考密度处理不可压缩压力场。可压缩计算通常指定实际 rho 字段及对应压力形式。CofR 定义力矩参考中心，压力基准应与载荷积分采用的压力定义一致。 计算力系数时，将 type 设为 forceCoeffs，并指定 liftDir、dragDir、pitchAxis、magUInf、lRef 和 Aref。若阻力沿 x 方向、升力沿 y 方向，可设置 dragDir (1 0 0); liftDir (0 1 0); pitchAxis (0 0 1);。lRef 和 Aref 分别为归一化参考长度和面积，二维算例的参考面积需计入所取厚度。"
+    },
+    {
+      "name": "fieldAverage",
+      "path": "system/controlDict → functions → fieldAverage",
+      "group": "函数对象",
+      "description": "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。",
+      "keys": [
+        "type",
+        "fieldAverage",
+        "fields",
+        "mean",
+        "prime2Mean",
+        "base"
+      ],
+      "commands": [
+        "postProcess"
+      ],
+      "url": "/dictionaries/functions-fieldaverage/",
+      "searchText": "类型 主要参数 配置与调用示例 fieldAverage fields 下每场的 mean、prime2Mean、base U { mean on; prime2Mean on; base time; }；生成 UMean 等 fieldMinMax fields、location、mode fields (p U); location true;，输出极值及位置 volFieldValue regionType、name、operation、fields regionType all; operation volAverage; fields (T); surfaceFieldValue regionType patch、name、operation、fields name outlet; operation sum; fields (phi);，输出带法向符号的通量 residuals fields fields (p U);，记录各方程初始残差 yPlus 湍流模型及壁面量 simpleFoam -postProcess -func yPlus -latestTime wallShearStress patches、writeControl simpleFoam -postProcess -func wallShearStress -latestTime wallHeatFlux 热模型和壁面 通过相应传热求解器 -postProcess -func wallHeatFlux CourantNo 通量及密度条件 postProcess -func CourantNo -latestTime，读取所需通量等场 mag、grad、div 操作字段 postProcess -func 'mag(U)' -latestTime vorticity、Q 速度梯度派生量 postProcess -func vorticity -latestTime MachNo 速度和热物性声速 通过可压缩求解器 -postProcess -func MachNo streamLine seedSampleSet、direction、lifeTime、trackLength 等 foamGetDict streamlines 获取模板，随后配置种子点 表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。 statistics\n{\n    type fieldAverage;\n    libs (\"libfieldFunctionObjects.so\");\n    timeStart 0.2;\n    executeControl timeStep;\n    executeInterval 1;\n    writeControl writeTime;\n    fields\n    (\n        U { mean on; prime2Mean on; base time; }\n        p { mean on; prime2Mean off; base time; }\n    );\n}"
+    },
+    {
+      "name": "volFieldValue",
+      "path": "system/controlDict → functions → volFieldValue",
+      "group": "函数对象",
+      "description": "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。",
+      "keys": [
+        "type",
+        "volFieldValue",
+        "operation",
+        "regionType",
+        "fields"
+      ],
+      "commands": [
+        "postProcess"
+      ],
+      "url": "/dictionaries/functions-volfieldvalue/",
+      "searchText": "类型 主要参数 配置与调用示例 fieldAverage fields 下每场的 mean、prime2Mean、base U { mean on; prime2Mean on; base time; }；生成 UMean 等 fieldMinMax fields、location、mode fields (p U); location true;，输出极值及位置 volFieldValue regionType、name、operation、fields regionType all; operation volAverage; fields (T); surfaceFieldValue regionType patch、name、operation、fields name outlet; operation sum; fields (phi);，输出带法向符号的通量 residuals fields fields (p U);，记录各方程初始残差 yPlus 湍流模型及壁面量 simpleFoam -postProcess -func yPlus -latestTime wallShearStress patches、writeControl simpleFoam -postProcess -func wallShearStress -latestTime wallHeatFlux 热模型和壁面 通过相应传热求解器 -postProcess -func wallHeatFlux CourantNo 通量及密度条件 postProcess -func CourantNo -latestTime，读取所需通量等场 mag、grad、div 操作字段 postProcess -func 'mag(U)' -latestTime vorticity、Q 速度梯度派生量 postProcess -func vorticity -latestTime MachNo 速度和热物性声速 通过可压缩求解器 -postProcess -func MachNo streamLine seedSampleSet、direction、lifeTime、trackLength 等 foamGetDict streamlines 获取模板，随后配置种子点 表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。 statistics\n{\n    type fieldAverage;\n    libs (\"libfieldFunctionObjects.so\");\n    timeStart 0.2;\n    executeControl timeStep;\n    executeInterval 1;\n    writeControl writeTime;\n    fields\n    (\n        U { mean on; prime2Mean on; base time; }\n        p { mean on; prime2Mean off; base time; }\n    );\n}"
+    },
+    {
+      "name": "surfaceFieldValue",
+      "path": "system/controlDict → functions → surfaceFieldValue",
+      "group": "函数对象",
+      "description": "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。",
+      "keys": [
+        "type",
+        "surfaceFieldValue",
+        "regionType",
+        "name",
+        "operation",
+        "fields"
+      ],
+      "commands": [
+        "postProcess"
+      ],
+      "url": "/dictionaries/functions-surfacefieldvalue/",
+      "searchText": "类型 主要参数 配置与调用示例 fieldAverage fields 下每场的 mean、prime2Mean、base U { mean on; prime2Mean on; base time; }；生成 UMean 等 fieldMinMax fields、location、mode fields (p U); location true;，输出极值及位置 volFieldValue regionType、name、operation、fields regionType all; operation volAverage; fields (T); surfaceFieldValue regionType patch、name、operation、fields name outlet; operation sum; fields (phi);，输出带法向符号的通量 residuals fields fields (p U);，记录各方程初始残差 yPlus 湍流模型及壁面量 simpleFoam -postProcess -func yPlus -latestTime wallShearStress patches、writeControl simpleFoam -postProcess -func wallShearStress -latestTime wallHeatFlux 热模型和壁面 通过相应传热求解器 -postProcess -func wallHeatFlux CourantNo 通量及密度条件 postProcess -func CourantNo -latestTime，读取所需通量等场 mag、grad、div 操作字段 postProcess -func 'mag(U)' -latestTime vorticity、Q 速度梯度派生量 postProcess -func vorticity -latestTime MachNo 速度和热物性声速 通过可压缩求解器 -postProcess -func MachNo streamLine seedSampleSet、direction、lifeTime、trackLength 等 foamGetDict streamlines 获取模板，随后配置种子点 表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。 statistics\n{\n    type fieldAverage;\n    libs (\"libfieldFunctionObjects.so\");\n    timeStart 0.2;\n    executeControl timeStep;\n    executeInterval 1;\n    writeControl writeTime;\n    fields\n    (\n        U { mean on; prime2Mean on; base time; }\n        p { mean on; prime2Mean off; base time; }\n    );\n}"
+    },
+    {
+      "name": "residuals",
+      "path": "system/controlDict → functions → residuals",
+      "group": "函数对象",
+      "description": "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。",
+      "keys": [
+        "type",
+        "residuals",
+        "libs",
+        "fields",
+        "writeControl"
+      ],
+      "commands": [
+        "icoFoam",
+        "simpleFoam"
+      ],
+      "url": "/dictionaries/functions-residuals/",
+      "searchText": "类型 主要参数 配置与调用示例 fieldAverage fields 下每场的 mean、prime2Mean、base U { mean on; prime2Mean on; base time; }；生成 UMean 等 fieldMinMax fields、location、mode fields (p U); location true;，输出极值及位置 volFieldValue regionType、name、operation、fields regionType all; operation volAverage; fields (T); surfaceFieldValue regionType patch、name、operation、fields name outlet; operation sum; fields (phi);，输出带法向符号的通量 residuals fields fields (p U);，记录各方程初始残差 yPlus 湍流模型及壁面量 simpleFoam -postProcess -func yPlus -latestTime wallShearStress patches、writeControl simpleFoam -postProcess -func wallShearStress -latestTime wallHeatFlux 热模型和壁面 通过相应传热求解器 -postProcess -func wallHeatFlux CourantNo 通量及密度条件 postProcess -func CourantNo -latestTime，读取所需通量等场 mag、grad、div 操作字段 postProcess -func 'mag(U)' -latestTime vorticity、Q 速度梯度派生量 postProcess -func vorticity -latestTime MachNo 速度和热物性声速 通过可压缩求解器 -postProcess -func MachNo streamLine seedSampleSet、direction、lifeTime、trackLength 等 foamGetDict streamlines 获取模板，随后配置种子点 表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。 statistics\n{\n    type fieldAverage;\n    libs (\"libfieldFunctionObjects.so\");\n    timeStart 0.2;\n    executeControl timeStep;\n    executeInterval 1;\n    writeControl writeTime;\n    fields\n    (\n        U { mean on; prime2Mean on; base time; }\n        p { mean on; prime2Mean off; base time; }\n    );\n}"
+    },
+    {
+      "name": "yPlus",
+      "path": "system/controlDict → functions → yPlus",
+      "group": "函数对象",
+      "description": "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。",
+      "keys": [
+        "type",
+        "yPlus",
+        "libs",
+        "executeControl",
+        "writeControl"
+      ],
+      "commands": [
+        "simpleFoam",
+        "postProcess"
+      ],
+      "url": "/dictionaries/functions-yplus/",
+      "searchText": "类型 主要参数 配置与调用示例 fieldAverage fields 下每场的 mean、prime2Mean、base U { mean on; prime2Mean on; base time; }；生成 UMean 等 fieldMinMax fields、location、mode fields (p U); location true;，输出极值及位置 volFieldValue regionType、name、operation、fields regionType all; operation volAverage; fields (T); surfaceFieldValue regionType patch、name、operation、fields name outlet; operation sum; fields (phi);，输出带法向符号的通量 residuals fields fields (p U);，记录各方程初始残差 yPlus 湍流模型及壁面量 simpleFoam -postProcess -func yPlus -latestTime wallShearStress patches、writeControl simpleFoam -postProcess -func wallShearStress -latestTime wallHeatFlux 热模型和壁面 通过相应传热求解器 -postProcess -func wallHeatFlux CourantNo 通量及密度条件 postProcess -func CourantNo -latestTime，读取所需通量等场 mag、grad、div 操作字段 postProcess -func 'mag(U)' -latestTime vorticity、Q 速度梯度派生量 postProcess -func vorticity -latestTime MachNo 速度和热物性声速 通过可压缩求解器 -postProcess -func MachNo streamLine seedSampleSet、direction、lifeTime、trackLength 等 foamGetDict streamlines 获取模板，随后配置种子点 表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。 statistics\n{\n    type fieldAverage;\n    libs (\"libfieldFunctionObjects.so\");\n    timeStart 0.2;\n    executeControl timeStep;\n    executeInterval 1;\n    writeControl writeTime;\n    fields\n    (\n        U { mean on; prime2Mean on; base time; }\n        p { mean on; prime2Mean off; base time; }\n    );\n}"
+    },
+    {
+      "name": "Q",
+      "path": "system/controlDict → functions → Q",
+      "group": "函数对象",
+      "description": "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。",
+      "keys": [
+        "type",
+        "Q",
+        "field",
+        "result"
+      ],
+      "commands": [
+        "postProcess"
+      ],
+      "url": "/dictionaries/functions-q/",
+      "searchText": "类型 主要参数 配置与调用示例 fieldAverage fields 下每场的 mean、prime2Mean、base U { mean on; prime2Mean on; base time; }；生成 UMean 等 fieldMinMax fields、location、mode fields (p U); location true;，输出极值及位置 volFieldValue regionType、name、operation、fields regionType all; operation volAverage; fields (T); surfaceFieldValue regionType patch、name、operation、fields name outlet; operation sum; fields (phi);，输出带法向符号的通量 residuals fields fields (p U);，记录各方程初始残差 yPlus 湍流模型及壁面量 simpleFoam -postProcess -func yPlus -latestTime wallShearStress patches、writeControl simpleFoam -postProcess -func wallShearStress -latestTime wallHeatFlux 热模型和壁面 通过相应传热求解器 -postProcess -func wallHeatFlux CourantNo 通量及密度条件 postProcess -func CourantNo -latestTime，读取所需通量等场 mag、grad、div 操作字段 postProcess -func 'mag(U)' -latestTime vorticity、Q 速度梯度派生量 postProcess -func vorticity -latestTime MachNo 速度和热物性声速 通过可压缩求解器 -postProcess -func MachNo streamLine seedSampleSet、direction、lifeTime、trackLength 等 foamGetDict streamlines 获取模板，随后配置种子点 表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。 statistics\n{\n    type fieldAverage;\n    libs (\"libfieldFunctionObjects.so\");\n    timeStart 0.2;\n    executeControl timeStep;\n    executeInterval 1;\n    writeControl writeTime;\n    fields\n    (\n        U { mean on; prime2Mean on; base time; }\n        p { mean on; prime2Mean off; base time; }\n    );\n}"
+    }
+  ]
+}
