@@ -470,6 +470,7 @@ def main():
   if isinstance(x['metadata'].get('source'),str):x['metadata']['source']=re.sub(r'[（(]Foundation\s*9[）)]','',x['metadata']['source']).replace('（概念参考，OF9 算例须适配）','（网格质量概念参考）')
   assert set(cfg['topics'])<={'turbulence','multiphase','meshing','dynamic-mesh'}
  for x in data:
+  x['body']=re.sub(r'(\*\*[^*\n]+：\*\*)(?=\S)',r'\1 ',x['body'])
   if x['slug']=='foamlab-build-log-2026-10':
    x['body']=focus_v2512(x['body'])
    if isinstance(x['metadata'].get('source'),str):x['metadata']['source']=re.sub(r'[（(]Foundation\s*9[）)]','',x['metadata']['source'])
