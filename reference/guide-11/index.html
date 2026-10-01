@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>第 11 章　字典文件的通用语法 · FoamLab</title>
+  <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="reference" data-lesson="">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>第 11 章　字典文件的通用语法</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>第 11 章　字典文件的通用语法</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
+<p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><p>OpenFOAM 的所有设置文件（叫”字典”，dictionary）用的是同一套语法。先花十分钟学会这套语法，后面所有文件都只是”填什么”的问题，而不是”怎么写”的问题。</p>
+<h4>11.1 文件头 FoamFile</h4>
+<p>每个字典文件开头都有这一段，缺了会直接报错：</p>
+<pre><code>/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2512                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+&#123;
+    version     2.0;
+    format      ascii;          // ascii 或 binary
+    class       dictionary;     // 这个文件装的是什么类型的数据
+    object      controlDict;    // 文件名，必须与实际文件名一致
+&#125;
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</code></pre>
+<p>class 常见取值</p>
+<div class="table-scroll"><table>
+<tr><th>class</th><th>用在</th></tr>
+<tr><td>dictionary</td><td>所有 system/、constant/ 下的设置文件</td></tr>
+<tr><td>volScalarField</td><td>0/ 下的标量场（p、T、k…）</td></tr>
+<tr><td>volVectorField</td><td>0/ 下的矢量场（U）</td></tr>
+<tr><td>volSymmTensorField</td><td>对称张量场（R）</td></tr>
+<tr><td>pointVectorField</td><td>点场（动网格位移）</td></tr>
+<tr><td>surfaceScalarField</td><td>面场（phi）</td></tr>
+</table></div>
+<p>object 与文件名不一致时，多数命令会警告甚至读错。手工复制文件时记得改 object——这是初学者的高频低级错误。</p>
+<h4>11.2 基本语法规则</h4>
+<pre><code>关键字   值;                       // 每条以分号结尾
+
+子字典
+&#123;
+    关键字   值;
+&#125;
+
+列表 ( a b c );                    // 括号 + 空格分隔
+带长度的列表 3 ( a b c );           // 也可以显式写长度
+
+// 单行注释
+/* 多行
+   注释 */</code></pre>
+<p>三条容易犯的错：① 忘记分号（报错信息通常指向下一行，所以要往上找）；② 子字典 {} 后面不加分号；③ 中文全角符号混进来（从 PDF 复制时常发生），报 ill defined primitiveEntry。</p>
+<h4>11.3 量纲 dimensions</h4>
+<pre><code>dimensions      [0 2 -2 0 0 0 0];      // 这是不可压求解器里 p 的量纲：m²/s²</code></pre>
+<p>七个数字依次是：</p>
+<div class="table-scroll"><table>
+<tr><th>位置</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+<tr><td>物理量</td><td>质量</td><td>长度</td><td>时间</td><td>温度</td><td>物质的量</td><td>电流</td><td>光强</td></tr>
+<tr><td>单位</td><td>kg</td><td>m</td><td>s</td><td>K</td><td>mol</td><td>A</td><td>cd</td></tr>
+</table></div>
+<p>常见量纲</p>
+<div class="table-scroll"><table>
+<tr><th>量</th><th>写法</th><th>单位</th></tr>
+<tr><td>速度 U</td><td>[0 1 -1 0 0 0 0]</td><td>m/s</td></tr>
+<tr><td>压力 p（不可压，已除以 ρ）</td><td>[0 2 -2 0 0 0 0]</td><td>m²/s²</td></tr>
+<tr><td>压力 p（可压，真实压力）</td><td>[1 -1 -2 0 0 0 0]</td><td>Pa</td></tr>
+<tr><td>运动粘度 ν</td><td>[0 2 -1 0 0 0 0]</td><td>m²/s</td></tr>
+<tr><td>动力粘度 μ</td><td>[1 -1 -1 0 0 0 0]</td><td>Pa·s</td></tr>
+<tr><td>密度 ρ</td><td>[1 -3 0 0 0 0 0]</td><td>kg/m³</td></tr>
+<tr><td>温度 T</td><td>[0 0 0 1 0 0 0]</td><td>K</td></tr>
+<tr><td>k（湍动能）</td><td>[0 2 -2 0 0 0 0]</td><td>m²/s²</td></tr>
+<tr><td>ε</td><td>[0 2 -3 0 0 0 0]</td><td>m²/s³</td></tr>
+<tr><td>ω</td><td>[0 0 -1 0 0 0 0]</td><td>1/s</td></tr>
+</table></div>
+<p>为什么 OpenFOAM 要检查量纲：所有方程运算都带量纲校验，一旦你把 Pa 和 m²/s² 混用，程序会直接报 incompatible dimensions for operation。这是个好东西——它在计算开始前就抓住了物理上的错误。看到量纲报错，先想”我这个求解器里 p 到底是什么”：不可压求解器（icoFoam/simpleFoam/pimpleFoam）里的 p 是 p/ρ。</p>
+<h4>11.4 场的赋值：uniform / nonuniform</h4>
+<pre><code>internalField   uniform (0 0 0);              // 全场同一个值
+internalField   uniform 0;
+
+internalField   nonuniform List&lt;vector&gt;       // 逐单元给值（一般由程序生成）
+400
+(
+(0 0 0)
+(0.1 0 0)
+...
+);</code></pre>
+<p>为什么要知道 nonuniform：setFields、mapFields 生成的场就是这种格式。文件可能有几十万行，不要用编辑器去改它，要改就用命令。</p>
+<h4>11.5 边界条件块 boundaryField 与正则匹配</h4>
+<pre><code>boundaryField
+&#123;
+    inlet           &#123; type fixedValue; value uniform (1 0 0); &#125;
+    outlet          &#123; type zeroGradient; &#125;
+
+    &quot;(top|bottom)&quot;  &#123; type symmetryPlane; &#125;        // 正则：同时匹配 top 和 bottom
+    &quot;wall.*&quot;        &#123; type noSlip; &#125;               // 所有以 wall 开头的 patch
+    &quot;.*&quot;            &#123; type zeroGradient; &#125;         // 兜底：其余全部
+&#125;</code></pre>
+<p>正则的两条规则：① 必须用双引号包起来，不然被当作普通名字；② 精确名字优先于正则，多个正则匹配时后面的优先。兜底 &quot;.*&quot; 放最后是个好习惯，可以避免”漏了一个 patch 导致启动失败”。</p>
+<h4>11.6 变量、宏与文件包含（把重复的东西提出来）</h4>
+<p>① 定义与引用变量</p>
+<pre><code>flowVelocity     (10 0 0);
+pressure         0;
+
+internalField    uniform $flowVelocity;      // 用 $ 引用</code></pre>
+<p>② 引用嵌套条目</p>
+<pre><code>$..solvers/p/tolerance      // .. 表示上一层
+$:solvers.p.tolerance       // 从文件根部开始的绝对路径</code></pre>
+<p>③ 包含另一个文件（最有用的技巧）</p>
+<pre><code>#include        &quot;initialConditions&quot;          // 相对本文件的路径
+#includeIfPresent &quot;myOverrides&quot;              // 存在才包含，不存在不报错
+#includeEtc     &quot;caseDicts/setConstraintTypes&quot;   // 从 $FOAM_ETC 里包含
+#includeFunc    residuals(p,U)               // 引入官方 functionObject 模板</code></pre>
+<p>典型用法：在算例根目录建一个 initialConditions 文件</p>
+<pre><code>// &lt;算例&gt;/initialConditions
+flowVelocity        (10 0 0);
+pressure            0;
+turbulentKE         0.375;
+turbulentEpsilon    14.855;</code></pre>
+<p>然后 0/U、0/p、0/k、0/epsilon 全都 #include &quot;../initialConditions&quot; 并用 $flowVelocity 这样引用。好处：改工况只改一个文件，不会出现”U 改了 k 忘了改”的错误。做参数扫描时这更是必须的。</p>
+<p>④ 表达式计算</p>
+<pre><code>#include &quot;initialConditions&quot;
+
+// 用 #calc 写一段 C++ 表达式（会动态编译）
+nu              #calc &quot;1.0/$Re&quot;;
+endTime         #calc &quot;10.0*$period&quot;;
+
+// v2012 起也可以用更轻量的 #eval（不需要编译，速度快）
+deltaT          #eval &quot;1e-3/2&quot;;</code></pre>
+<p>⑤ 删除继承来的条目</p>
+<pre><code>#remove         someKeyword;
+#remove         ( key1 key2 );</code></pre>
+<p>⑥ 检查展开结果</p>
+<p>用了一堆 #include 和 #calc 后，怎么知道程序最终读到了什么？</p>
+<pre><code>$ foamDictionary system/controlDict -expand
+$ foamDictionary 0/U -expand -entry boundaryField/inlet</code></pre>
+<p>这条命令能省掉大量猜测。</p>
+<h4>11.7 常用”填空词”</h4>
+<div class="table-scroll"><table>
+<tr><th>写法</th><th>含义</th></tr>
+<tr><td>uniform &lt;值&gt;</td><td>均匀场</td></tr>
+<tr><td>constant &lt;值&gt;</td><td>常数（部分模型用）</td></tr>
+<tr><td>table ((t1 v1) (t2 v2))</td><td>分段线性表（随时间变化）</td></tr>
+<tr><td>tableFile { file &quot;...&quot;; }</td><td>从文件读表</td></tr>
+<tr><td>polynomial ((c0 0)(c1 1))</td><td>多项式</td></tr>
+<tr><td>expression &quot;...&quot;</td><td>表达式（v2012+ 的 exprValue 类边界条件）</td></tr>
+<tr><td>$internalField</td><td>用内部场的值（边界 value 里常见）</td></tr>
+<tr><td>#include &quot;...&quot;</td><td>包含文件</td></tr>
+<tr><td>yes/no、true/false、on/off</td><td>开关都通用</td></tr>
+</table></div>
+</div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

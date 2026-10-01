@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>01 版本说明与使用方法 · FoamLab</title>
+  <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="reference" data-lesson="">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>01 版本说明与使用方法</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>01 版本说明与使用方法</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
+<p class="source-note">资料来源：OpenFOAM_v2512命令与配置参考手册（GPT整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><p>OpenFOAM v2512 属于 OpenCFD 发行分支。该分支与 OpenFOAM Foundation 发行版在命令、配置文件和模型接口方面存在差异，算例配置应采用对应分支的教程和文档。版本资料见 S1，源码见 S2。</p>
+<div class="table-scroll"><table>
+<tr><th>名称</th><th>v2512 定义</th><th>调用或配置示例</th></tr>
+<tr><td>foam</td><td>切换至安装根目录的别名</td><td>foam</td></tr>
+<tr><td>foamGet</td><td>官方核心发行包采用 foamGetDict</td><td>foamGetDict decomposeParDict</td></tr>
+<tr><td>foamHelp</td><td>按 boundary、functionObject、solver 类别查询</td><td>foamHelp boundary -field U</td></tr>
+<tr><td>ControlDict、SetFieldsDict</td><td>文件名区分大小写，采用小写首字母</td><td>system/controlDict、system/setFieldsDict</td></tr>
+<tr><td>$FOAM_TOTORIAL</td><td>教程目录变量应为 $FOAM_TUTORIALS</td><td>cd &quot;$FOAM_TUTORIALS&quot;</td></tr>
+<tr><td>tut、sol</td><td>分别切换至教程和求解器源码目录</td><td>tut 进入教程；sol 进入求解器源码</td></tr>
+<tr><td>fvModels、momentumTransport</td><td>其他发行分支的配置文件名</td><td>v2512 常用 fvOptions 和 turbulenceProperties</td></tr>
+<tr><td>yPlus、Q、forces</td><td>函数对象类型或 -func 预配置名称</td><td>simpleFoam -postProcess -func yPlus</td></tr>
+</table></div>
+<h3>1.1 命令语法约定</h3>
+<p>命令语法中，方括号表示可选参数，中文名称表示待替换的参数。未指定 -case 时，程序通常读取当前算例目录。示例中的文件名、边界名称和区域名称应与算例数据对应。</p>
+<p>各求解器条目给出功能和启动方式，所需网格、场文件及物理模型由对应算例提供。应用目录统计不含测试程序、第三方插件和用户自行编译的程序。</p>
+<h3>1.2 常用命令选项</h3>
+<div class="table-scroll"><table>
+<tr><th>选项</th><th>含义</th><th>示例</th></tr>
+<tr><td>-help、-help-full</td><td>简要帮助与完整帮助</td><td>blockMesh -help-full</td></tr>
+<tr><td>-case 路径</td><td>指定算例目录</td><td>checkMesh -case ./caseA</td></tr>
+<tr><td>-dict 文件</td><td>指定替代配置字典</td><td>topoSet -dict system/topoSetDict.alt</td></tr>
+<tr><td>-parallel</td><td>启用并行模式，由 MPI 启动各进程</td><td>mpirun -np 4 simpleFoam -parallel</td></tr>
+<tr><td>-region 名称</td><td>选择计算区域</td><td>checkMesh -region fluid</td></tr>
+<tr><td>-time 范围</td><td>选择时刻</td><td>postProcess -time &quot;0.1:0.5&quot;</td></tr>
+<tr><td>-latestTime</td><td>选择最后时刻</td><td>foamToVTK -latestTime</td></tr>
+<tr><td>-constant、-withZero、-noZero</td><td>包含 constant、包含 0 或排除 0</td><td>foamListTimes -noZero</td></tr>
+<tr><td>-overwrite</td><td>覆盖当前网格或相应输出</td><td>snappyHexMesh -overwrite</td></tr>
+<tr><td>-fileHandler 类型</td><td>选择文件处理器</td><td>simpleFoam -fileHandler collated</td></tr>
+<tr><td>-noFunctionObjects</td><td>关闭函数对象</td><td>simpleFoam -noFunctionObjects</td></tr>
+<tr><td>-doc、-srcDoc</td><td>打开程序文档或源码文档</td><td>blockMesh -doc</td></tr>
+</table></div>
+<p>各程序支持的选项可通过 -help 或 -help-full 查询。Shell 脚本与编译程序分别解析参数，具体接口见相应命令条目。</p>
+</div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

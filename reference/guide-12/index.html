@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>第 12 章　system/controlDict · FoamLab</title>
+  <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="reference" data-lesson="">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>第 12 章　system/controlDict</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>第 12 章　system/controlDict</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
+<p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><p>它管什么：算多久、多久输出一次、用什么求解器、跑哪些后处理。每个算例必需。</p>
+<h4>12.1 完整参数表</h4>
+<div class="table-scroll"><table>
+<tr><th>关键字</th><th>可选值</th><th>含义</th><th>备注</th></tr>
+<tr><td>application</td><td>求解器名</td><td>记录用哪个求解器</td><td>只是记录；Allrun 里 getApplication 读它</td></tr>
+<tr><td>startFrom</td><td>firstTime / startTime / latestTime</td><td>从哪开始</td><td>续算用 latestTime</td></tr>
+<tr><td>startTime</td><td>数值</td><td>startFrom startTime 时的起始时刻</td><td></td></tr>
+<tr><td>stopAt</td><td>endTime / writeNow / noWriteNow / nextWrite</td><td>何时停</td><td>见 7.5</td></tr>
+<tr><td>endTime</td><td>数值</td><td>结束时刻</td><td>稳态求解器里是”最大迭代步数”</td></tr>
+<tr><td>deltaT</td><td>数值</td><td>时间步长</td><td>稳态时通常写 1</td></tr>
+<tr><td>writeControl</td><td>timeStep / runTime / adjustableRunTime / cpuTime / clockTime</td><td>按什么控制输出</td><td>变步长时用 adjustableRunTime</td></tr>
+<tr><td>writeInterval</td><td>数值</td><td>输出间隔</td><td>配合上一条</td></tr>
+<tr><td>purgeWrite</td><td>整数</td><td>只保留最近 N 个时间目录，0 = 全保留</td><td>长算例防止撑爆硬盘</td></tr>
+<tr><td>writeFormat</td><td>ascii / binary</td><td>结果文件格式</td><td>大算例用 binary，省一半空间且快</td></tr>
+<tr><td>writePrecision</td><td>整数（默认 6）</td><td>输出有效数字</td><td></td></tr>
+<tr><td>writeCompression</td><td>on / off</td><td>是否 gzip 压缩</td><td>硬盘紧张时开</td></tr>
+<tr><td>timeFormat</td><td>general / fixed / scientific</td><td>时间目录名格式</td><td></td></tr>
+<tr><td>timePrecision</td><td>整数（默认 6）</td><td>时间目录名的有效数字</td><td>步长很小时要调大，否则目录重名</td></tr>
+<tr><td>runTimeModifiable</td><td>true / false</td><td>允许运行中改字典</td><td>建议一直开着</td></tr>
+<tr><td>adjustTimeStep</td><td>yes / no</td><td>自适应时间步</td><td>瞬态常用</td></tr>
+<tr><td>maxCo</td><td>数值</td><td>最大 Courant 数</td><td>配合上一条</td></tr>
+<tr><td>maxAlphaCo</td><td>数值</td><td>界面处最大 Co（VOF）</td><td>interFoam 类</td></tr>
+<tr><td>maxDeltaT</td><td>数值</td><td>时间步上限</td><td>防止步长失控变大</td></tr>
+<tr><td>graphFormat</td><td>raw / gnuplot / csv</td><td>曲线输出格式</td><td></td></tr>
+<tr><td>libs</td><td>库名列表</td><td>运行时加载额外库</td><td>用自定义边界条件时</td></tr>
+<tr><td>functions</td><td>子字典</td><td>functionObject 列表</td><td>见第 8 章</td></tr>
+<tr><td>DebugSwitches</td><td>子字典</td><td>打开某个类的调试输出</td><td>排查疑难问题时</td></tr>
+<tr><td>OptimisationSwitches</td><td>子字典</td><td>fileHandler、I/O 缓冲等</td><td>大规模并行时</td></tr>
+</table></div>
+<h4>12.2 两个典型例子</h4>
+<p>瞬态（interFoam 溃坝）</p>
+<pre><code>application     interFoam;
+startFrom       startTime;
+startTime       0;
+stopAt          endTime;
+endTime         1;
+deltaT          0.001;
+writeControl    adjustableRunTime;    // 按物理时间等间隔输出，且不打乱变步长
+writeInterval   0.05;
+purgeWrite      0;
+writeFormat     binary;
+writePrecision  6;
+writeCompression off;
+timeFormat      general;
+timePrecision   6;
+runTimeModifiable yes;
+adjustTimeStep  yes;
+maxCo           1;
+maxAlphaCo      1;
+maxDeltaT       1;</code></pre>
+<p>稳态（simpleFoam）</p>
+<pre><code>application     simpleFoam;
+startFrom       latestTime;
+stopAt          endTime;
+endTime         2000;         // ← 稳态时这是&quot;最多迭代 2000 步&quot;
+deltaT          1;            // ← 稳态时步长无物理意义，写 1
+writeControl    timeStep;
+writeInterval   200;          // 每 200 步存一次
+runTimeModifiable yes;
+
+functions
+&#123;
+    #includeFunc residuals(p,U,k,omega)
+    #includeFunc yPlus
+&#125;</code></pre>
+<p>writeControl 到底选哪个：变步长（adjustTimeStep yes）时选 runTime 会导致输出时刻对不齐（步长恰好跨过输出时刻就跳过了）；adjustableRunTime 会微调步长让它正好落在输出时刻上，这才是变步长算例的正确选择。做动画时尤其重要——帧间隔必须均匀。</p>
+</div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

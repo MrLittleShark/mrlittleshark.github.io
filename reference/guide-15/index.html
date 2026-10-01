@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>第 15 章　system/blockMeshDict · FoamLab</title>
+  <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="reference" data-lesson="">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>第 15 章　system/blockMeshDict</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>第 15 章　system/blockMeshDict</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
+<p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h4>15.1 完整结构与一个可运行的例子</h4>
+<p>下面是标准方腔算例（cavity）的字典，每一行都加了注释：</p>
+<pre><code>FoamFile &#123; version 2.0; format ascii; class dictionary; object blockMeshDict; &#125;
+
+scale   0.1;              // 所有坐标乘这个系数（旧版叫 convertToMeters）
+
+vertices                  // ① 顶点表，编号从 0 开始，顺序很重要
+(
+    (0 0 0)      // 0
+    (1 0 0)      // 1
+    (1 1 0)      // 2
+    (0 1 0)      // 3
+    (0 0 0.1)    // 4
+    (1 0 0.1)    // 5
+    (1 1 0.1)    // 6
+    (0 1 0.1)    // 7
+);
+
+blocks                    // ② 块定义
+(
+    hex (0 1 2 3 4 5 6 7)   // 8 个顶点，顺序见下文
+    (20 20 1)               // x、y、z 三个方向的网格数
+    simpleGrading (1 1 1)   // 三个方向的加密比
+);
+
+edges ( );                // ③ 曲边（不写就是直线）
+
+boundary                  // ④ 边界定义
+(
+    movingWall
+    &#123;
+        type            wall;
+        faces           ( (3 7 6 2) );
+    &#125;
+    fixedWalls
+    &#123;
+        type            wall;
+        faces           ( (0 4 7 3) (2 6 5 1) (1 5 4 0) );
+    &#125;
+    frontAndBack
+    &#123;
+        type            empty;          // 二维算例的前后面
+        faces           ( (0 3 2 1) (4 5 6 7) );
+    &#125;
+);
+
+mergePatchPairs ( );      // ⑤ 需要缝合的 patch 对</code></pre>
+<h4>15.2 顶点顺序的规则（最容易错的地方）</h4>
+<p>hex (v0 v1 v2 v3 v4 v5 v6 v7) 的顺序不是随便写的：</p>
+<p>先给块建立一个局部坐标系 (x₁, x₂, x₃)；</p>
+<p>前四个点（v0–v3）构成 x₃ = 0 的那个面，按逆时针（从 x₃ 正方向往回看）排列；</p>
+<p>后四个点（v4–v7）是把前四个点沿 x₃ 正方向平移得到的，顺序一一对应。</p>
+<p>写反了会得到”负体积”网格，blockMesh 会直接报错：</p>
+<pre><code>--&gt; FOAM FATAL ERROR: Block ... has negative volume</code></pre>
+<p>看到这个报错，回去检查顶点顺序，不要怀疑别的。</p>
+<p>(20 20 1) 对应的是局部 x₁、x₂、x₃ 三个方向的单元数（不是节点数）。二维算例在厚度方向写 1，同时把前后两个面设为 empty。</p>
+<h4>15.3 网格加密 grading</h4>
+<p>均匀</p>
+<pre><code>simpleGrading (1 1 1)</code></pre>
+<p>单方向加密：数字表示”最后一个单元长度 ÷ 第一个单元长度”</p>
+<pre><code>simpleGrading (1 10 1)      // y 方向：最后一个单元是第一个的 10 倍（往下密）
+simpleGrading (1 0.1 1)     // 反过来（往上密）</code></pre>
+<p>多段加密（一个方向分几段，各段单独控制）——边界层网格常用：</p>
+<pre><code>simpleGrading
+(
+    1                                  // x 方向均匀
+    (                                  // y 方向分三段：
+        (0.2  0.3  4)                  // 占长度 20%，占单元 30%，段内比例 4
+        (0.6  0.4  1)                  // 中间均匀
+        (0.2  0.3  0.25)               // 对称加密
+    )
+    1
+);</code></pre>
+<p>三个数依次是 长度占比、单元数占比、段内首末比。三段的长度占比之和、单元数占比之和都应为 1。</p>
+<p>edgeGrading：给 12 条边分别指定比例，用于更精细的控制（很少手写）。</p>
+<p>怎么定第一层厚度：想让 y⁺ ≈ 1，先估算第一层厚度 Δy，再由总高 H、单元数 N 和 Δy 反解加密比。实际做法通常是先猜一个比例算一遍，用 simpleFoam -postProcess -func yPlus 看实际 y⁺，再调整——这是标准的迭代过程，一次猜中反而不正常。</p>
+<h4>15.4 曲边 edges</h4>
+<pre><code>edges
+(
+    arc     1 5 (1.1 0.0 0.5)        // 过点 (1.1,0,0.5) 的圆弧
+    arc     1 5 origin (0 0 0)       // 或指定圆心
+    spline  0 3 ( (0.2 0.1 0) (0.4 0.3 0) )   // 样条
+    polyLine 2 6 ( (…) (…) )          // 折线
+    line    0 1                       // 直线（默认，可省）
+);</code></pre>
+<p>用途：圆柱绕流、弯管这类含圆弧的几何。不写 arc 的话，圆会被画成折线，网格贴不上真实几何。</p>
+<h4>15.5 boundary 里的 type</h4>
+<div class="table-scroll"><table>
+<tr><th>type</th><th>含义</th><th>场文件里怎么配</th></tr>
+<tr><td>patch</td><td>普通边界（进出口）</td><td>场里给 fixedValue、zeroGradient 等</td></tr>
+<tr><td>wall</td><td>壁面</td><td>必须用它，否则壁面函数、y⁺ 计算都不对</td></tr>
+<tr><td>empty</td><td>二维算例的前后面</td><td>场里必须写 empty</td></tr>
+<tr><td>symmetryPlane</td><td>对称面（平面）</td><td>场里写 symmetryPlane</td></tr>
+<tr><td>symmetry</td><td>对称（不要求平面）</td><td>场里写 symmetry</td></tr>
+<tr><td>wedge</td><td>轴对称楔形（张角一般 5°，一层单元）</td><td>场里写 wedge</td></tr>
+<tr><td>cyclic</td><td>周期性边界，需 neighbourPatch</td><td>场里写 cyclic</td></tr>
+<tr><td>cyclicAMI</td><td>非匹配周期（旋转机械）</td><td></td></tr>
+<tr><td>processor</td><td>并行内部边界</td><td>由 decomposePar 自动生成</td></tr>
+</table></div>
+<pre><code>inlet
+&#123;
+    type            patch;
+    faces           ( (0 4 7 3) );
+&#125;
+left
+&#123;
+    type            cyclic;
+    neighbourPatch  right;         // 成对出现，互相指认
+    faces           ( ... );
+&#125;</code></pre>
+<p>wall 与 patch 的区别为什么重要：湍流壁面函数（nutkWallFunction 等）只在 wall 类型的边界上生效；checkMesh、yPlus、forces 也都按 wall 来识别固壁。把壁面写成 patch，程序不报错，但湍流结果是错的——这是”能跑出结果但结果不对”的典型来源。</p>
+<h4>15.6 多块与 mergePatchPairs</h4>
+<p>多个块之间如果顶点完全共用，blockMesh 会自动连成一体（推荐做法）。如果两块的接触面网格不匹配，就要用 mergePatchPairs 缝合：</p>
+<pre><code>mergePatchPairs
+(
+    ( masterPatch slavePatch )
+);</code></pre>
+<h4>15.7 调试 blockMesh 的方法</h4>
+<pre><code>$ blockMesh                    # 看报错
+$ paraFoam -block              # ★ 直接可视化块结构与顶点编号，找错最快
+$ checkMesh -allGeometry</code></pre>
+<p>paraFoam -block 能把顶点编号、块、边界都画出来，比在脑子里想象八个顶点的顺序可靠得多。</p>
+</div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

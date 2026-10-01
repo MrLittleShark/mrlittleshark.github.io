@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>结课项目与定量验证 · FoamLab</title>
+  <meta name="description" content="学员自选与学位论文相关的课题（单气泡或多气泡均可）；②完成几何 → 网格 → 物理设置 → 数值设置 → 并行计算 → 后处理 → 验证的全流程；③提交可复现算例包（含 Allrun / Allclean 脚本）+ 计算报告；④10 分钟汇报，教师逐项点评设置合理性、验证充分性与可改进点。">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="lesson" data-lesson="28">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>结课项目与定量验证</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">LESSON 28 / 28 · 电极气泡与结课项目</div><h1>结课项目与定量验证</h1><div class="article-meta"><span>建议学习 90 分钟</span><span>OpenFOAM v2512</span><a href="/downloads/lesson-28.docx" download>下载本讲讲义 ↓</a><a href="/downloads/lesson-28-cases.zip" download>下载配套算例 ↓</a></div><div class="prose">
+<section class="lesson-intro"><h2>本讲学习任务</h2><p>①学员自选与学位论文相关的课题（单气泡或多气泡均可）；②完成几何 → 网格 → 物理设置 → 数值设置 → 并行计算 → 后处理 → 验证的全流程；③提交可复现算例包（含 Allrun / Allclean 脚本）+ 计算报告；④10 分钟汇报，教师逐项点评设置合理性、验证充分性与可改进点。</p></section>
+<p class="source-note">配套算例来自已有课程。下载解压后阅读其中的 README 与运行脚本，并在已加载 v2512 环境的 Linux 终端执行。本站未重新运行这些算例；原讲义中的本机路径需改为自己的实际路径。</p>
+<p>配套算例位于原课程“28_结课项目”目录。文中相对路径以该讲目录或已注明的算例目录为准。</p>
+<pre><code>OpenCFD OpenFOAM v2512</code></pre>
+<h2>1 研究问题与项目选择</h2>
+<p>项目应在明确模型和计算条件下回答定量问题。本讲提供多孔通道与流固共轭传热两组项目，各含两套已计算的独立输入。报告需解释参数影响，并用守恒及分辨率对照支撑结论。</p>
+<p>多孔项目比较清洁通道和含多孔区的扩张通道，研究压力损失、局部速度及阻力。共轭传热项目比较两种固体导热率，研究界面热流、固体温差、出口温度和热阻比例。各组均可在第 28 讲目录内独立运行；已有结果提供基准，练习需补充网格或参数对照。</p>
+<h2>2 控制方程与目标量</h2>
+<p>多孔区以连续介质阻力 Sm=−(μd+ρf|U|/2)U 表示，其中 d 为 m⁻²，f 为 m⁻¹。系数与速度定义配套，须区分总截面积表观速度和孔隙内平均速度。本讲按当前 fvOptions 约定解释，不解析真实孔隙。</p>
+<p>共轭传热联合求解流体对流扩散与固体导热，理想接触界面满足温度和热流连续，两侧温差应降至离散误差水平。改变固体导热率会改变传热阻力及出口温度，但总热量还受流体侧对流和入口条件限制，不能按导热率倍数直接推算。</p>
+<p>报告分别列出输入与求解量。多孔项目给定流量和阻力系数，由动量方程求压力降；共轭项目给定物性和热边界，由两区域耦合求界面温度与热流。分析中应保持这种因果关系，避免将结果误列为独立输入。</p>
+<h2>3 几何 网格与区域划分</h2>
+<p>几何报告包括尺寸、出入口、扩张、多孔区及流固接口，并展示全域与局部网格。topoSet 生成 cellZone 后核对数量和位置；共轭传热逐 region 检查网格、物性、边界及两侧映射。</p>
+<p>网格检查包括拓扑、正体积、非正交性、扭曲和尺寸过渡。质量合格仍需检验目标量的网格收敛性：压力损失重点检查扩张区，热流重点检查壁面法向分辨率。加密应围绕主要梯度区域布置。</p>
+<p>三档网格应采用相同几何、区域边界和相似加密方式。选区偏移可能同时改变多孔体积或加热面积，故各档均须记录实际体积、边界面积和通道尺寸，再比较压力降或热流，区分几何变化与离散误差。</p>
+<h2>4 收敛与守恒的联合判断</h2>
+<p>稳态判定同时检查残差、积分量变化和守恒。压降、出口温度及总热流反映目标结果是否稳定，应报告后段迭代区间的均值与最大变化。</p>
+<p>对不可压缩通道，质量收支可由边界面通量求和检查。压力差需要规定取样截面与平均方式；扩张流动中静压可能因速度降低而恢复，因此某两截面的静压差不一定等于总压损失。若研究能量耗散，应进一步比较总压或机械能通量，并计入截面速度分布。</p>
+<p>共轭传热的能量检查应分别覆盖固体、流体和整体。固体稳态时，加热输入与流固界面热流应相互平衡；流体中，界面输入与进出口焓流、进出口导热以及其他壁面热流共同平衡。低速且入口温度梯度较大的配置，入口轴向导热可能不可忽略。只使用质量流量乘定压比热及进出口温差，会遗漏这部分能量传递。需按照实际方程和边界项建立完整积分式。</p>
+<h2>5 参数对照与误差估计</h2>
+<p>参数对照按机制设计：先变 d，再固定 d 变 f，避免同时改变流量和阻力而难以归因。按速度与区域长度估算 Darcy–Forchheimer 压降，再分析实际结果中的扩张损失与非均匀效应。</p>
+<p>共轭项目改变固体导热率时，应保持入口质量流量、流体物性、加热条件和几何不变。用固体热阻与流体侧有效热阻串联的近似解释趋势，并说明近似忽略了哪些二维效应。至少同时报告总传热量、出口质量加权温度及固体最高温度。单独展示温度云图的颜色变化，无法区分色标调整与实际温差。</p>
+<p>网格或时间步研究需固定比较定义。对于瞬态问题，在相同物理时刻或相同稳定统计区间比较；对于稳态问题，应先让每档网格上的迭代误差充分降低。只有进入渐近收敛区且误差变化规律稳定，才适合使用Richardson外推或网格收敛指数。三档数据如果振荡或不呈单调趋势，应先调查网格几何、边界和迭代误差，不能强行计算一个收敛阶作为结论。</p>
+<h2>6 独立运行与资料组织</h2>
+<pre><code>每组参数设置独立目录，保留 0、constant、system、Allrun.sh、Allclean.sh 和 README。当前参数直接写入字典，Allrun.sh 列出网格、区域生成、求解及必要后处理命令。重新计算前另存需保留的结果，再执行当前目录的 Allclean.sh。</code></pre>
+<p>本讲四个项目均在新的独立目录重新执行Allrun.sh，并记录脚本、退出码、计算时段和原始日志。复算时先核对OpenFOAM版本和完整输入，再比较同一定义下的积分量。不同并行划分或线性求解路径可能产生小幅数值差异，差异应按相对误差量化，而非只比较输出文件是否逐字相同。</p>
+<p>结果图采用统一单位、相同色标及清楚的取样位置。每张图均应能够找到对应算例、时间或迭代状态、字段及原始数据。正文中选取能够支持研究结论的结果，完整日志、网格报告和参数表放入项目附件。没有实际完成的参数组应写为后续计算任务，不列入已验证结果。</p>
+<h2>7 项目报告与项目汇报</h2>
+<p>项目报告依次说明研究问题、控制方程、计算条件、验证结果和参数规律。方程说明应足以识别所用模型；计算条件应使另一位使用者能够按输入重现；验证部分说明守恒、收敛及网格影响；结果部分解释主要变化及其数量级。报告不以图表数量评分，而以问题、方法和结果之间的对应关系评分。</p>
+<p>项目练习依次完成模型与误差定义复核、关键字典检查、独立运行和后处理，再设计网格或参数对照。已有结果用于建立基准，新增参数组由学生独立计算。汇报应明确数据支持的结论，并说明扩大其适用范围所需的补充计算。</p>
+<h2>8 结课项目 共轭传热与扩张过滤通道</h2>
+<h3>项目组织和研究量</h3>
+<p>本讲提供两个工程问题、四个完整目录。project_cht_k0p1 与 project_cht_k10 构成材料导热率对照；project_filter_clean 与 project_filter_porous 构成清洁通道与多孔阻力对照。每个目录均保存本项目的初始场、物性、网格和算法字典，可在第 28 讲目录中直接运行。项目要求从模型方程出发，明确控制参数和目标量，再通过独立运行、守恒核算及参数对照形成报告。</p>
+<p>传热项目以接口总热流和出口质量加权温度为主要目标量。过滤项目以给定流量下的压力差、阻力耗散和扩张后回流为主要目标量。两项研究都需要网格和数值参数检查，但积分对象不同：传热需要流体焓流与固体导热收支，过滤需要体积流量和动量阻力。不能只用一张场图代替这些量化检查。</p>
+<h3>项目一 固体导热率与流体侧热阻</h3>
+<p>空气通道长 0.10 m、高 0.01 m，底部固体板厚 0.002 m，计算厚度为 0.01 m。入口空气速度为 0.25 m/s、温度为 300 K，固体底面为 350 K；其余外部热边界为绝热。fluid 区域有 2560 单元，solid 区域有 640 单元，流固接触面两侧均为 80 个面。两个目录只改变固体导热率，分别为 0.1 和 10 W/(m·K)。</p>
+<pre><code>流体满足质量、动量和显热输运方程，固体满足稳态导热方程。理想接触要求 T_f=T_s，且两侧外法向导热通量之和为零。constant/regionProperties 声明区域，mappedWall 指定几何对应，温度耦合条件从 fluidThermo 和 solidThermo 读取材料导热信息。该问题没有接触热阻，界面温度不是事先给定的常数，而由两侧热阻共同决定。</code></pre>
+<p>先用 R_s&#x27;&#x27;=δ_s/k_s 估计固体面热阻，分别得到 0.02 和 0.0002 m²·K/W。若只有固体导热，导热率增加会显著减小温差；在共轭问题中，流体侧热边界层仍限制总传热。</p>
+<p>按本项目重新运行的结果，接口传热量分别为 0.35322206 和 0.41108555 W，出口质量加权温度分别为 312.06159 和 313.89942 K。导热率增加 100 倍，传热量只增加约 16.382%。</p>
+<p>守恒核查分三步进行。首先核对固体底面输入与固体界面放热，再比较两侧接口温度和带符号热流，最后检查流体进出口的显热与动能输运。低导热率项目的接口热流为 0.35322206 W，显热对流增加为 0.34937118 W，固定温度入口还存在净轴向导热 -0.00385027 W。</p>
+<p>将动能输运的小量变化一并计入后，流体能量相对不平衡约为 2.69e-08。这一步说明，出口热量与壁面热量之间的差额可能来自实际边界通量，而不一定是耦合错误。</p>
+<p>两组均使用 chtMultiRegionSimpleFoam 完整执行 2000 次稳态迭代。项目扩展先固定材料和所有边界条件，分别细化流体近壁网格、固体厚度方向网格，比较总热流与出口温度。若同时改变材料和网格，就无法单独评价材料效应。增加接触热阻属于模型扩展，应另写温度跳跃与热流的关系，并建立独立目录验证。</p>
+<h3>项目二 扩张通道与多孔阻力</h3>
+<p>过滤通道总长 80 mm，入口段高 6 mm，在 x=20 mm 处扩张为 10 mm，厚度为 1 mm。滤层位于 x=35–45 mm，长度 10 mm。网格共 2880 单元，滤层区包含 400 单元。</p>
+<p>多孔算例先执行 blockMesh，再由 topoSet 根据几何范围选取滤层单元并创建 filterZone；清洁算例不添加区域阻力。两个目录均可从输入文件重新生成网格。</p>
+<pre><code>流体密度按 1000 kg/m³ 换算压力，运动黏度为 10⁻⁵ m²/s，入口速度为 0.1 m/s，入口高度对应 Re_H=60。入口体积流量为 6×10⁻⁷ m³/s，出口指定运动学压力零。两组几何和流量相同，清洁目录不启用阻力源项，多孔目录在 filterZone 内加入 Darcy–Forchheimer 阻力。
+各向同性阻力可写为 S_U=−(μd+ρf|U|/2)U，其中 d 的单位为 m⁻²，f 的单位为 m⁻¹。本例 d=10⁸ m⁻²、f=1000 m⁻¹。先按滤层平均速度 U_m=Q/A≈0.06 m/s 估计压力差，Darcy 项约为 600.0000 Pa，Forchheimer 项约为 18.0000 Pa。这个估算忽略了非均匀速度、入口发展和扩张损失，适合核对数量级，不能替代完整控制方程。</code></pre>
+<p>本项目新运行结果中，清洁通道压力差为 10.859478 Pa，多孔通道为 621.843441 Pa，两者增加约 610.983963 Pa。通过在相同几何和流量下比较两组，能够更清楚地观察区域阻力的影响。</p>
+<p>滤层阻力耗散由 −∫S_U·U dV 计算，当前约为 0.00035895631 W；通道进出口压力功、动能通量变化和其他黏性耗散需要另行区分，不能把整个通道压力功都归入滤层。</p>
+<p>两组均从初始场完整运行至 8 s，时间步为 0.002 s，共 4000 步。清洁和多孔项目的相对体积流量不平衡分别为 1e-12 和 6.17e-12。最后一秒的压力差变化用于判断监测量是否稳定，但时间步独立性还需减半时间步后比较相同物理时刻。稳态监测量稳定与离散误差较小属于两项不同要求。</p>
+<h3>报告内容与评价</h3>
+<p>报告先说明几何、控制方程、材料或阻力参数及边界条件，再给出网格、离散格式、耦合算法和运行区间。结果部分至少包含一张真实场图、一张目标量对照图以及一张守恒表。图中注明变量、单位、坐标、时刻和数据目录；读取运动学压力时应写出乘密度换算为帕的步骤。</p>
+<p>独立性研究应在完整副本中进行。传热项目重点检查区域网格和耦合迭代；过滤项目重点检查扩张区与滤层网格、时间步和阻力离散。三档网格或时间步的目标量可用于估算变化趋势和收敛阶，但需要保持其他输入一致。最终结论应回答材料或区域阻力如何影响目标量，并给出仍影响精度的具体因素。</p>
+<h2>9 计算结果与数据来源</h2>
+<p>下列图表由本讲独立算例的实际保存场、采样数据或原始日志生成。各图的计算条件与误差定义见前述案例分析，原始数值保存在本讲测试结果。</p>
+<figure><img loading="lazy" src="/assets/lessons/28/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<figure><img loading="lazy" src="/assets/lessons/28/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<figure><img loading="lazy" src="/assets/lessons/28/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<figure><img loading="lazy" src="/assets/lessons/28/image4.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<figure><img loading="lazy" src="/assets/lessons/28/image5.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<figure><img loading="lazy" src="/assets/lessons/28/image6.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<section class="exercise"><h2>课后练习</h2><p>—（结课交付）</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
+</div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="28">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=28">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/27/">← 上一讲<span>电势耦合与气泡脱落</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

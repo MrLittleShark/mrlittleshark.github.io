@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>静止气泡与寄生流 · FoamLab</title>
+  <meta name="description" content="Young–Laplace 解析解：轴对称静止气泡的压力跳跃 Δp = 2σ/R；寄生流的来源（曲率误差 + 力不平衡）；②用第 8 讲自己画的轴对称网格 + setFields 放一个静止气泡；③分别用 interFoam（MULES + cAlpha）与 interIsoFoam（几何 VOF）求解，对比压力跳跃误差与寄生流最大速度；④时间步超过毛细约束时的失稳现象（验证第 13 讲的估算）；⑤网格收敛性：Laplace 压力误差与寄生流速度随“每个半径的网格数”的变化；把寄生流速度与课题中的物理速度（上升速度、Marangoni 流速）比较。">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="lesson" data-lesson="17">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>静止气泡与寄生流</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">LESSON 17 / 28 · 数值方法与验证</div><h1>静止气泡与寄生流</h1><div class="article-meta"><span>建议学习 90 分钟</span><span>OpenFOAM v2512</span><a href="/downloads/lesson-17.docx" download>下载本讲讲义 ↓</a><a href="/downloads/lesson-17-cases.zip" download>下载配套算例 ↓</a></div><div class="prose">
+<section class="lesson-intro"><h2>本讲学习任务</h2><p>①Young–Laplace 解析解：轴对称静止气泡的压力跳跃 Δp = 2σ/R；寄生流的来源（曲率误差 + 力不平衡）；②用第 8 讲自己画的轴对称网格 + setFields 放一个静止气泡；③分别用 interFoam（MULES + cAlpha）与 interIsoFoam（几何 VOF）求解，对比压力跳跃误差与寄生流最大速度；④时间步超过毛细约束时的失稳现象（验证第 13 讲的估算）；⑤网格收敛性：Laplace 压力误差与寄生流速度随“每个半径的网格数”的变化；把寄生流速度与课题中的物理速度（上升速度、Marangoni 流速）比较。</p></section>
+<p class="source-note">配套算例来自已有课程。下载解压后阅读其中的 README 与运行脚本，并在已加载 v2512 环境的 Linux 终端执行。本站未重新运行这些算例；原讲义中的本机路径需改为自己的实际路径。</p>
+<p>配套算例位于原课程“17_静止气泡与寄生流”目录。文中相对路径以该讲目录或已注明的算例目录为准。</p>
+<pre><code>OpenCFD OpenFOAM v2512</code></pre>
+<p>本讲同时提供0.15 ms初始化诊断及4 ms毛细调整对照。新增分析使用球形气泡的实际离散体积，并分别评价压力误差、寄生流与体积守恒；当前4 ms配置仍未达到静止平衡。</p>
+<h2>1 静态平衡与验证目标</h2>
+<p>无重力和外流时，球泡内外压差平衡表面张力，理想解速度为零、体积恒定、曲率均匀。该模型同时检验相输运、曲率、压力梯度及表面力的离散一致性。</p>
+<p>初始球泡半径为 0.5 mm，球心为 (0 0.002 0) m，重力为零。水的密度为 998 kg/m³、运动黏度为 10⁻⁶ m²/s；空气分别为 1.2 kg/m³ 和 1.5×10⁻⁵ m²/s。表面张力为 0.072 N/m。使用动力黏度形式的方程时，应以密度乘运动黏度换算。</p>
+<p>初始速度和 p_rgh 均为零，未预置球泡平衡所需的压力跳跃。启动后压力建立，界面随离散初值调整。因此早期速度同时包含初始不平衡响应和可能的寄生流，应通过时间演化及对照试验区分。</p>
+<p>本组只计算至 0.00015 s，属于短时诊断。现有数据能够检查程序执行、相体积收支及初始调整，不能据此宣称已经达到静态平衡。气体体积近似不变也不能替代零速度和正确压差两个条件。</p>
+<h2>2 Laplace 压差及几何尺度</h2>
+<pre><code>Laplace 压差由两个主曲率决定。球面两者均为 1/R，故 Δp=2σ/R；无限长圆柱轴向曲率为零，故 Δp=σ/R。平面圆泡与轴对称球泡对应不同几何，应分别使用相应关系。</code></pre>
+<p>R=0.0005 m、σ=0.072 N/m 时，球面压差 Δp=2σ/R=288 Pa。若误以 1 mm 直径代入半径，结果将减半至 144 Pa。σ/R 的单位为 (N/m)/m=N/m²=Pa，与压力一致。</p>
+<pre><code>p_rgh 的量纲为 [1 -1 -2 0 0 0 0]，单位为 Pa，通常定义为 p−ρgh。本例 g=0，重力项消失，但仍须指定一致的压力基准。顶部使用 prghPressure，其余固壁使用 fixedFluxPressure。</code></pre>
+<p>按液体密度估算，毛细时间 tσ=√(ρR³/σ)≈0.00132 s，当前时长仅覆盖其中一部分，压力和形状调整可能尚未完成。评价长期寄生流应延长计算，检查速度是否衰减至稳定幅度。</p>
+<h2>3 轴对称网格与初始体积</h2>
+<p>计算采用 5° wedge，径向 0～2 mm、轴向高 4 mm，气泡位于轴上且远离上下边界。wedgeFront、wedgeBack 为 wedge，轴退化面采用对应约束。网格仅表示完整旋转体的一部分。</p>
+<pre><code>N24 网格径向共二十四格、轴向四十八格、周向一格，共一千一百五十二个单元。径向分为零至零点二五毫米的三个单元和其外二十一个单元，名义径向间距均约为零点零八三三三毫米，轴向间距相同。球泡半径约跨六个单元。N16、N32 和 N48 对应不同分辨率，比较时应记录实际尺寸及初始体积。
+defaultFieldValues (volScalarFieldValue alpha.water 1);
+regions
+(
+    sphereToCell
+    &#123;
+        centre (0 0.002 0);
+        radius 0.0005;
+        fieldValues (volScalarFieldValue alpha.water 0);
+    &#125;
+);
+setFields 按单元中心是否位于球内设置相分数，球内 alpha.water 为零，外部为一。这个离散初值由整单元组成，界面呈阶梯状；网格加密后，被判定为球内的单元集合会改变。因此相同几何半径不保证各档网格的离散气体体积完全相同。</code></pre>
+<p>完整球体理论体积约为 5.23599×10⁻¹⁰ m³，N24 实际初始完整气体体积约为 5.16654×10⁻¹⁰ m³。N16 与 N32 约为 5.52584×10⁻¹⁰ m³，N48 约为 5.15745×10⁻¹⁰ m³。这些差异反映初始化的几何近似，需与后续输运中的体积漂移区分。实际体积可计算等效半径，再与输入半径分别列出。</p>
+<p>气体体积由 Σ(1−alpha.water)Vi 得到，混合单元按气体体积分数计入。完整旋转体体积再乘以七十二。质心是两个加权积分之比，比例因子相消，不需要把坐标再乘七十二；速度同样保持原单位与数值。不同统计量的轴对称换算必须分别推导。</p>
+<h2>4 界面输运 曲率与寄生流</h2>
+<p>代数 VOF 输运相分数并通过压缩限制扩散，法向由相分数梯度估计，曲率由法向散度得到。表面力与压力梯度若在离散上失衡，残余力将驱动界面附近寄生循环。</p>
+<p>曲率涉及体积分数的空间变化，对网格和初始化较敏感。阶梯状初值在有限单元上重新分布时，法向和曲率也发生变化。即使相总体积严格守恒，局部曲率误差仍可产生速度。反之，速度较小也不能单独证明曲率压差正确，可能受到黏性、时间步或过强耗散抑制。</p>
+<p>水与空气存在较大密度比，同样量级的局部不平衡力在低密度区域可能产生较大加速度。因此应记录最大速度所在位置，区分其位于气相、液相还是混合单元。全域最大速度是局部指标，不能直接解释为气泡上升速度；本例没有重力驱动的上升过程。</p>
+<pre><code>interFoam 使用代数界面输运，当前字典中相分数子循环数为二，修正次数为一，cAlpha 为一。interIsoFoam 采用几何界面重构输运，配置中另有 isoFaceTol、surfCellTol、nAlphaBounds、snapTol 和 clip 等条目。比较时应保留各自配套配置，而不只更改可执行程序名称。</code></pre>
+<p>两者都使用同样的物性、初始球及终止时间。动量对流采用上风格式，压力最终绝对容差为 10⁻⁷，速度绝对容差为 10⁻⁶，压力修正次数为三。时间步上限为 2×10⁻⁶ s，同时启用自动调步，maxCo 为零点二五，maxAlphaCo 为零点二。这些设置共同影响短时响应。</p>
+<p>本组目录名含 theta90，表示相关固壁的接触角设置为九十度。初始球泡位于域内，未与固壁接触，因此本讲主要检验自由球面，不是通过壁面球冠测量接触角。若后续界面接近壁面，边界法向处理和接触角约束才会直接影响局部形状。读取目录名时必须与实际几何位置结合，不能把所有带角度后缀的算例都当成接触角平衡实验。</p>
+<p>连续界面上的表面张力是局限于界面的作用，体积分数方法将其表示在有限厚度的混合单元区域中。若压力梯度与表面力分别采用不同插值和位置，理论上等大反向的项在离散单元中可能不能完全抵消。此时局部速度可形成相互反向的小循环，全域动量或体积变化仍很小。因此观察整体界面位置几乎不动，不足以排除界面附近已经存在较大局部速度。</p>
+<p>评价残余速度还可采用动能或界面附近速度的统计。全域最大值对单个异常单元较敏感，体积加权统计更能描述受影响区域的范围；两者可以共同报告。低密度气体中的高速点与较大液体区域的缓慢运动，对能量和传输的影响不同。后续研究组分输运时，应把寄生速度与真实扩散或对流尺度比较，确定其是否足以改变所需的传质结果。</p>
+<h2>5 运行过程与检查数据</h2>
+<pre><code>source /usr/lib/openfoam/openfoam2512/etc/bashrc
+cd 代码/interFoam_N24_theta90
+./Allrun.sh</code></pre>
+<p>脚本先生成并检查网格，再运行 setFields 初始化气泡，随后执行 interFoam，最后生成速度大小场。interIsoFoam 目录采用相同操作顺序，只调用相应求解器。setFields 必须在网格生成之后执行，非均匀初场列表也应与本目录网格匹配。</p>
+<pre><code>blockMesh &gt; log.blockMesh 2&gt;&amp;1
+checkMesh &gt; log.checkMesh 2&gt;&amp;1
+setFields &gt; log.setFields 2&gt;&amp;1
+interFoam &gt; log.interFoam 2&gt;&amp;1
+postProcess -func &#x27;mag(U)&#x27; -latestTime &gt; log.magU 2&gt;&amp;1
+touch case.foam</code></pre>
+<p>输出间隔约为 1.5×10⁻⁵ s，可观察初期速度变化。读取结果时先确认时间目录，再检查 alpha 极值、体积和速度。顶部允许压力相容的流入流出，相分数回流值为水；虽然当前气泡未接触顶部，整体体积收支仍应结合实际边界条件理解，而非把模型直接称为全封闭域。</p>
+<p>压力跳跃应选取气相内部和远离界面的液相数据比较，避免把混合单元极值当作纯相压力。若直接以全域最大压力减最小压力，可能包含局部振荡和压力参考附近的变化。合适的方法是明确相分数阈值、排除界面附近单元，再比较两侧代表值并报告采样范围。</p>
+<h2>6 实际结果及其含义</h2>
+<figure><img loading="lazy" src="/assets/lessons/17/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>当前 N24 的最终气体体积约为 5.166544913×10⁻¹⁰ m³，与其初值的相对漂移约为 3.70×10⁻¹⁰。相分数最小值接近零，最大值约为 1.000000005，只有很小的数值越界。这些结果支持当前时段内的体积输运收支检查，却不说明静态力平衡已经满足。</p>
+<pre><code>测试记录中的 max_speed 取全部保存时刻的最大速度大小。interFoam 的 N16、N24、N32、N48 分别约为 1.60966、2.29712、1.55041、2.13780 m/s；interIsoFoam 分别约为 1.43878、2.02870、2.66720、2.70397 m/s。它们明显偏离静态目标速度零，且随网格没有严格单调下降。</code></pre>
+<figure><img loading="lazy" src="/assets/lessons/17/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>因此当前比较主要显示短时初始化和离散平衡误差。某一网格中几何输运方法的速度较小，不能推广为所有网格均更小；N32 和 N48 的次序已有变化。初始离散体积和形状也不同，需要把几何近似与算法差异共同分析。</p>
+<pre><code>interIsoFoam 当前保存场的相分数极值为零和一，体积相对漂移约在 10⁻⁸ 量级以内；interFoam 的漂移也很小。两种方法都能在该短时段保持较好的体积收支，但寄生运动指标较大。这正说明有界性、守恒和静态力平衡必须分别报告。
+N24 的最终压力场全域范围约为 −38.9365 至 254.067 Pa，范围宽度接近但不等于理论压差。该范围包括局部极值，不能据此直接报告压差误差。后续需要按纯相区域提取代表压力，再检验是否接近 288 Pa，并同时观察其随时间变化。</code></pre>
+<h2>7 后续验证与常见错误</h2>
+<p>首先可在完整副本中延长计算，保留相同网格与物性，观察初始压力调整后的速度是否衰减。如果速度始终保持较大值，应进一步分析曲率及压力梯度离散、界面形状和局部网格。也可建立压力初值与理论跳跃相容的独立对照，以区分初始不平衡和持续离散误差，但必须记录新的初始化方法。</p>
+<p>时间步验证应固定空间网格，降低最大时间步并保持足够输出频率。若速度峰值明显变化，表明时间处理影响当前结果；若减小步长后峰值和压力误差仍受网格控制，需要进一步加密或改进空间离散。只降低对流 Courant 数不能保证曲率和表面张力项自动准确。</p>
+<p>网格验证应记录输入半径、实际初始体积、等效半径、半径跨越单元数、压力差及速度统计区间。将所有曲线在相同物理时刻比较，避免不同保存序列只取各自最高峰却遗漏发生时间。完整速度时间曲线有助于区分短时峰值与长期残余水平。</p>
+<p>常见输入错误包括把直径当半径、把运动学压力当帕、在几何网格改变后继续使用旧非均匀相分数列表，以及忘记把重力设为零。图形显示错误则包括把速度箭头放大倍数当成实际速度、仅展示 alpha 等值面而省略体积和压力数据。按模型、初始化、输运和力平衡顺序核查，可明确每项误差所对应的设置和数据。</p>
+<h2>8 命令查询与结果复核</h2>
+<p>以下命令在指定算例目录执行。运行脚本生成网格、日志及结果后，再进行结果查询；需要修改设置时，先保留完整算例副本。</p>
+<h3>表面张力 压力与初始条件</h3>
+<p>执行目录为 代码/interFoam_N24_theta90。</p>
+<pre><code>foamDictionary constant/transportProperties -entry sigma -value
+foamDictionary constant/g -entry value -value
+foamDictionary 0/p_rgh -entry dimensions -value
+foamDictionary 0/alpha.water -disableFunctionEntries -entry boundaryField
+sigma 的单位为 N/m，g 指定重力向量，本讲按静止气泡条件检查压力与表面张力平衡。</code></pre>
+<p>按本例定义由 p_rgh 恢复压力，再比较 Laplace 压差；alpha=0.5 等值面用于表示界面位置。</p>
+<p>本例气泡未接触壁面，应重点检查曲率、压力梯度与表面张力的离散配合，并记录气体体积、压差及最大速度。</p>
+<h3>界面算法的结果检查</h3>
+<p>执行目录为 代码/interIsoFoam_N24_theta90。</p>
+<pre><code>interIsoFoam -help
+postProcess -func &#x27;mag(U)&#x27; -latestTime
+postProcess -func &#x27;fieldMinMax(alpha.water)&#x27; -latestTime
+interFoam 和 interIsoFoam 采用不同界面输运方法，分别配置相应的 fvSolution 和 fvSchemes。</code></pre>
+<p>两种算法采用相同的网格尺度定义、比较时刻及色标，网格加密时另行检查时间步影响。</p>
+<pre><code>alpha 极值用于检查有界性，mag(U) 用于显示寄生流速度，同时记录几何及体积误差。</code></pre>
+<h2>9 静止气泡的初始化与长期平衡</h2>
+<p>理想球形气泡的界面两侧存在有限压力跳跃，但速度为零。若初始化只改变相分数，同时给两相相同压力，初始场就不满足静态平衡。随后求解过程包括压力建立、离散界面调整和可能的寄生运动。早期速度峰值因此不能直接代表长期平衡误差，也不能仅凭体积保持稳定判断气泡已经静止。</p>
+<pre><code>setFields 根据单元中心位置构造离散相区。不同网格上的初始体积及界面形状一般不同。体积换算为完整三维气泡体积后，可定义 R_eq=(3V_g/4π)^(1/3)，并将按设定半径和按等效半径得到的理论压差分别列出。wedge 计算应先明确其扇区体积如何换算，不能把原始扇区体积直接代入整球公式。</code></pre>
+<p>完整评价至少包含三组量：体积漂移和相分数极值，界面几何与纯相压差，最大速度或动能时间曲线。压力采样应避开混合单元，速度则注明是最终值还是全部保存时刻的最大值。原 0.15 ms 算例用于短时初始化检查，补充长时案例继续分析毛细调整；两类目录承担的验证范围应分别说明。</p>
+<h2>10 球形气泡的毛细调整及误差分解</h2>
+<p>静止球泡是两相求解器的离散平衡检验。连续模型要求气液压力差与界面曲率形成的表面张力平衡，同时速度为零。VOF离散需要依次计算体积分数梯度、单位法向、曲率及面上的作用力。界面重构提高相输运的几何精度后，曲率计算和压力梯度仍可能使用不同的离散近似。因此，界面较锐利并不意味着寄生流必然较小，应同时分析形状、压差和速度。</p>
+<p>新增四组算例采用原有水气物性，球心为(0,0.002,0) m，半径为0.0005 m，重力为零。气泡位于域内，未接触壁面。5°楔形网格表示轴对称球体，气体完整体积为楔形气相体积的72倍。N24和N48分别有1152和4608个单元，实际初始气体体积为5.16654×10⁻¹⁰和5.15745×10⁻¹⁰ m³。</p>
+<p>由Rv=(3Vg/4π)^(1/3)换算等效半径，得到参考压差289.285和289.455 Pa。直接使用名义半径时为288 Pa。两种参照均有明确含义：前者考虑初始体积的离散偏差，后者对应理想几何。</p>
+<p>计算时段从原有0.15 ms延长至4 ms。以水密度998 kg/m³、表面张力0.072 N/m计算，tc=√(ρR³/σ)=1.316 ms。本组结果覆盖约三个毛细时间尺度。气相核心取αwater&lt;0.05，液相核心取αwater&gt;0.95，分别按单元体积加权平均压力，两者之差作为数值压差。混合单元不参加核心区统计，但仍参加全域气体体积与最大速度计算。</p>
+<p>四组计算均完成规定时段，体积相对漂移小于8×10⁻⁸。interFoam的N24和N48末时刻压差分别为269.705和265.005 Pa，相对各自体积参照的误差为−6.77%和−8.45%；interIsoFoam对应为263.005和263.200 Pa，误差为−9.08%和−9.07%。</p>
+<p>末时刻最大速度分别为0.622、0.811、1.255和1.099 m/s。该速度范围表明残余流动仍然显著，当前计算尚未达到静止平衡。体积守恒检验通过与力平衡检验未通过应分别报告。</p>
+<p>分析曲线时需区分单一末时刻、后段平均量及保存序列峰值。末时刻恰好处于速度下降阶段时，不能据此推断寄生流已持续衰减。这里同时提供0.003–0.004 s区间的压差均值和最大速度，并保留完整保存序列。后续对照可先采用与Laplace压差相容的初始压力，再固定网格改变时间步，最后固定充分小的时间步改变网格。</p>
+<p>每次仅改变一个主要因素，才能判断误差变化是由初始化、时间离散还是空间离散引起。若速度没有降至研究对象允许的误差水平，该组配置不应直接用于测量微弱的界面驱动流动。</p>
+<h2>11 计算结果与数据来源</h2>
+<p>下列图表由本讲独立算例的实际保存场、采样数据或原始日志生成。各图的计算条件与误差定义见前述案例分析，原始数值保存在本讲测试结果。</p>
+<figure><img loading="lazy" src="/assets/lessons/17/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>真实单元中心相分数，保留等比例坐标。</p>
+<figure><img loading="lazy" src="/assets/lessons/17/image4.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>根据实际保存场计算，定义与统计区间见本例README和数值检查。</p>
+<figure><img loading="lazy" src="/assets/lessons/17/image5.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>真实单元中心相分数，保留等比例坐标。</p>
+<figure><img loading="lazy" src="/assets/lessons/17/image6.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>根据实际保存场计算，定义与统计区间见本例README和数值检查。</p>
+<figure><img loading="lazy" src="/assets/lessons/17/image7.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>真实单元中心相分数，保留等比例坐标。</p>
+<figure><img loading="lazy" src="/assets/lessons/17/image8.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>根据实际保存场计算，定义与统计区间见本例README和数值检查。</p>
+<figure><img loading="lazy" src="/assets/lessons/17/image9.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>真实单元中心相分数，保留等比例坐标。</p>
+<figure><img loading="lazy" src="/assets/lessons/17/image10.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>根据实际保存场计算，定义与统计区间见本例README和数值检查。</p>
+<h2>12 资料来源</h2>
+<pre><code>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 874–931 页介绍界面模型背景；本讲静止气泡验证为课程补充内容。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。</code></pre>
+<p>本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</p>
+<section class="exercise"><h2>课后练习</h2><p>提交静止气泡定量报告：Laplace 压力误差与寄生流最大速度随网格加密的变化曲线、收敛阶估计，以及两种求解器的对比结论。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
+</div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="17">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=17">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/16/">← 上一讲<span>格式误差实验</span></a><a href="/lessons/18/">下一讲 →<span>并行计算</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

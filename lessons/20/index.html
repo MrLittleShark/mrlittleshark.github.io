@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VOF 与接触角 · FoamLab</title>
+  <meta name="description" content="多相流分类：自由面 / 弥散相 / 欧拉—欧拉 / 欧拉—拉格朗日；电解体系从单气泡到气泡流的尺度谱；②VOF 方程、界面压缩 cAlpha 与 MULES 限制器；几何 VOF（interIsoFoam：isoAlpha / plicRDF 界面重构）；③表面张力：CSF 模型、由 alpha 梯度算曲率、寄生流的成因与缓解（曲率平滑、几何重构、足够分辨率）；④接触角：静态接触角、滞后（前进角 / 后退角）与 dynamicAlphaContactAngle；接触线钉扎；接触角是从哪一相量起的；⑤无量纲数判定：Bo、Ca、We、Oh、Re 在电解气泡尺度下的量级，判断谁主导；⑥实操：capillaryRise 算例，并回收第 5 讲的上升气泡（解释当时看到的寄生流与形状问题）。">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="lesson" data-lesson="20">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>VOF 与接触角</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">LESSON 20 / 28 · 多相流与传质</div><h1>VOF 与接触角</h1><div class="article-meta"><span>建议学习 90 分钟</span><span>OpenFOAM v2512</span><a href="/downloads/lesson-20.docx" download>下载本讲讲义 ↓</a><a href="/downloads/lesson-20-cases.zip" download>下载配套算例 ↓</a></div><div class="prose">
+<section class="lesson-intro"><h2>本讲学习任务</h2><p>①多相流分类：自由面 / 弥散相 / 欧拉—欧拉 / 欧拉—拉格朗日；电解体系从单气泡到气泡流的尺度谱；②VOF 方程、界面压缩 cAlpha 与 MULES 限制器；几何 VOF（interIsoFoam：isoAlpha / plicRDF 界面重构）；③表面张力：CSF 模型、由 alpha 梯度算曲率、寄生流的成因与缓解（曲率平滑、几何重构、足够分辨率）；④接触角：静态接触角、滞后（前进角 / 后退角）与 dynamicAlphaContactAngle；接触线钉扎；接触角是从哪一相量起的；⑤无量纲数判定：Bo、Ca、We、Oh、Re 在电解气泡尺度下的量级，判断谁主导；⑥实操：capillaryRise 算例，并回收第 5 讲的上升气泡（解释当时看到的寄生流与形状问题）。</p></section>
+<p class="source-note">配套算例来自已有课程。下载解压后阅读其中的 README 与运行脚本，并在已加载 v2512 环境的 Linux 终端执行。本站未重新运行这些算例；原讲义中的本机路径需改为自己的实际路径。</p>
+<p>配套算例位于原课程“20_VOF与接触角”目录。文中相对路径以该讲目录或已注明的算例目录为准。</p>
+<pre><code>OpenCFD OpenFOAM v2512</code></pre>
+<h2>1 相分数方程与界面表示</h2>
+<pre><code>VOF 以单元相体积比例表示界面。alpha.water 为 1、0 时分别表示水和气体，混合单元介于两者之间。αwater=0.5 等值面用于显示形状，守恒量由原始相分数积分获得，二者定义不同。</code></pre>
+<p>不可压缩且无相间质量交换时，相分数满足 ∂α/∂t+∇·(Uα)=0，并与速度连续性约束共同描述相的输运。离散对流可能使界面过渡展宽，代数 VOF 为此加入 ∇·[Urα(1−α)]。Ur 为数值压缩速度，α(1−α) 将压缩作用限制在界面附近。</p>
+<p>界面压缩用于控制数值界面厚度，不表示气体密度随压力变化；其强度需与网格、时间步和有界处理协调。本讲采用恒定物性：水为 998 kg/m³、1×10⁻⁶ m²/s，空气为 1.2 kg/m³、1.5×10⁻⁵ m²/s，表面张力为 0.072 N/m。</p>
+<h2>2 表面张力与接触角的几何意义</h2>
+<p>球泡曲率决定 Δp=2σ/R。接触固壁后，还需用接触角约束壁面与界面的交线方向。固定体积改变角度通常同时改变高度、接触半径及曲率，从而改变局部压力。</p>
+<p>接触角应明确测量相，以及固壁法向和界面法向。平滑界面的液侧角与气侧角互为补角，文献与模型的定义不同时应先换算。本机 interfaceProperties.C 由 alpha.water 梯度确定界面法向，再按壁面法向和给定角度修正近壁方向，角度含义须与该实现一致。</p>
+<p>测量接触角应选经过对称轴或接触线法平面的截面，避免斜截面投影改变切线方向。近壁界面只跨少量单元，单个等值点易受插值影响，宜在规定距离内拟合切线，并报告拟合范围、网格尺寸及加密后的变化。</p>
+<h2>3 接触角边界的实现</h2>
+<p>三个独立对照为 interFoam_N24_theta60、interFoam_N24_theta90、interFoam_N24_theta120。以下给出 theta90 的实际底部配置：</p>
+<pre><code>sourceWall
+&#123;
+    type constantAlphaContactAngle;
+    theta0 90;
+    limit gradient;
+    value uniform 1;
+&#125;
+constantAlphaContactAngle 采用恒定角度模型，theta0 以度表示。limit gradient 控制边界梯度限制，value 提供初始边界值。该条件通过近壁法向和相分数梯度影响曲率及毛细力，直接参与求解。
+当前 bottomWall 和 outer 也包含同类接触角设置，top 使用 inletOutlet；wedgeFront、wedgeBack 使用 wedge，axis 使用 empty。阅读边界条件时，应将场文件的每个边界名称与 constant/polyMesh/boundary 对照，确认它们在几何中的位置。只有实际与界面相交的固壁，其接触角约束才直接作用于当前接触线。</code></pre>
+<p>速度、压力与相分数边界需要共同构成闭合问题。例如，不透过固壁的速度约束决定法向体积通量，压力边界需与该通量及毛细力相容，接触角则提供界面方向。仅修改 alpha.water 中的角度，并不能替代壁面速度或压力条件。检查界面变化时，应同时查看近壁速度和压力，以判断毛细调整是否合理。</p>
+<h2>4 球冠初始场的构造</h2>
+<pre><code>codeStream 按单元中心生成初场。给定 V=2.6179938779914943×10⁻¹⁰ m³ 和气侧角 θg，球心为 y=−Rcosθg，球冠高 h=R(1−cosθg)。由 V=πh²(R−h/3) 可推得球半径：</code></pre>
+<p>V = πR³(2−3cosθg+cos³θg)/3。</p>
+<p>因此 R=[3V/(π(2−3cosθg+cos³θg))]^(1/3)。本例代码中的 thetaG 用于这一几何计算，边界中的 theta0 用于近壁法向约束。分析不同角度时，应分别核对两者的定义、数值和测量方向。九十度时球心位于壁面，气泡为半球，几何关系最便于直接检查。</p>
+<p>代码将满足单元中心到球心距离小于 R 的单元置为气相，其余置为水。该方法按单元中心判定区域，没有计算球面切割每个单元的精确体积分数，因此理论体积相同并不保证离散初始体积相同。网格越粗，接触线附近的几何差异越明显。参数对比必须先记录离散初始体积，再讨论后续形状和压力变化。</p>
+<p>固定体积的球冠比较与固定球半径的比较对应不同问题。前者改变接触角时，须同时调整球半径、球冠高度和接触半径；后者一般会改变体积。理解这一点，可以避免将初始气体量变化误认为接触角本身引起的生长或收缩。</p>
+<h2>5 算例运行与时间分辨率</h2>
+<p>三组采用同一运行流程。读取 alpha.water 时，codeStream 自动生成初场，因此 Allrun.sh 不再调用 setFields：</p>
+<pre><code>blockMesh &gt; log.blockMesh 2&gt;&amp;1
+checkMesh &gt; log.checkMesh 2&gt;&amp;1
+interFoam &gt; log.interFoam 2&gt;&amp;1
+postProcess -func &#x27;mag(U)&#x27; -latestTime &gt; log.magU 2&gt;&amp;1
+touch case.foam</code></pre>
+<p>首次求解包含运行时 C++ 编译，编译信息可能出现在求解器日志和 dynamicCode 目录中。修改几何代码后，应检查是否重新编译，并在求解结果分析前显示初始场。三个目录保存各自完整输入，比较时直接进入对应目录运行，参数名称和结果来源能够明确对应。</p>
+<p>计算终止时间为 0.00015 s，初始时间步与最大时间步为 2×10⁻⁶ s，maxCo=0.25，maxAlphaCo=0.2。该设置用于观察初始形状和毛细压力调整。毛细时间可按 tc≈√(ρR³/σ) 估算，物理过程的快慢还需与气泡尺度结合判断。将最后一帧称为平衡形状前，应继续检查速度衰减、形状变化及曲率压力关系。</p>
+<p>代数界面输运在 system/fvSchemes 中分别设置对流项与压缩项，相关方程控制位于 fvSolution。修改 cAlpha 或时间步时，应保留其他条件，分别记录相分数极值、体积漂移和近壁界面变化。更强的压缩并不必然提高接触角精度，因为法向与曲率误差还受近壁网格影响。</p>
+<h2>6 三组实际结果的比较</h2>
+<p>三组算例均完成 v2512 计算，结束时刻均为 0.00015 s。初始气体体积分别约为 2.7470×10⁻¹⁰、2.5833×10⁻¹⁰ 和 2.5287×10⁻¹⁰ m³，对应六十度、九十度和一百二十度设置。与相同理论体积相比，离散差异已经存在于初始场，因此最终体积的直接大小排序不能单独归因于接触角动态作用。</p>
+<p>六十度算例的体积相对变化约为 3.38×10⁻⁹，九十度约为 1.57×10⁻⁹，一百二十度约为 −1.26×10⁻⁹。三者在当前时段均基本保持各自的离散初始体积。各保存时刻中的最大速度分别约为 1.510、2.297 和 1.375 m/s，大小并不随角度单调变化，说明瞬态响应同时受到初场离散与毛细调整影响。</p>
+<figure><img loading="lazy" src="/assets/lessons/20/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<figure><img loading="lazy" src="/assets/lessons/20/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<figure><img loading="lazy" src="/assets/lessons/20/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>三图应在相同保存时刻、视角和色标下比较。主要观察气泡高度、接触范围和近壁界面方向，再结合初始体积说明差异。图形中的瞬时接触角还包含网格与界面插值影响，需要通过局部拟合得到数值，而非只根据视觉估计。</p>
+<h2>7 接触线运动与模型适用条件</h2>
+<p>恒定接触角模型把角度设为固定值，适合研究给定润湿条件下的界面运动。实际表面可存在接触角滞后，即接触线前进与后退时采用不同角度；微结构边缘还会造成接触线钉扎。这些过程需要相应的边界模型或几何描述，不能由单个静态角度完全确定。</p>
+<p>接触线附近同时涉及速度边界和界面输运。若需要研究接触线速度，应检查壁面滑移、网格分辨率及角度随速度的变化关系。在固定角度算例中观察到接触半径变化，首先反映所给边界和离散条件下的界面响应。将其用于具体材料表面时，应有相应接触角数据和表面条件作为输入依据。</p>
+<p>构造更严格的角度对照时，可先选定一个理论气体体积，根据球冠公式分别生成三个初始几何，再通过局部加密减小离散体积差。随后在相同物性和计算条件下运行至形状变化减弱，比较拟合角度、接触半径和压力。若目标是动态过程，则保留相同初始几何，只改变边界角度，并明确此时研究的是形状调整过程。</p>
+<h2>8 误差分析与阅读依据</h2>
+<p>相分数越界应结合幅度判断。当前三组最大值略高于一，超出量约为十亿分之几至一亿分之一，最小值为接近零的微小负数。若越界明显扩大，应检查时间步、界面压缩与网格质量。接触线附近出现锯齿时，应先确定是否由单元中心初场、等值面插值或局部法向误差引起，再选择加密或格式调整。</p>
+<p>压力比较应使用相同定义。p 是压力场，p_rgh 去除了相应静水贡献，两者在重力方向上的分布不同。检验 Laplace 压差时，可在气泡内外选取远离混合层的区域平均，减小单个界面单元压力振荡的影响。曲率、气泡尺度和接触角都应对应同一时刻。</p>
+<h3>初始几何角与边界输入角的关系</h3>
+<p>对于本例壁面以上的气泡，alpha.water 从气体内部的零增至外部水相的一，因此其梯度法向指向球面外侧。接触点处，球心至界面的单位向量在 y 方向的分量为 cosθg；底面外法向为负 y，二者点积为 −cosθg。本机角度修正要求该点积等于 cosθ0，因而几何与边界相容时应满足 θ0=180°−θg。</p>
+<p>当前目录名中的六十度、九十度和一百二十度均指边界输入角 θ0，对应的初始气侧几何角 θg 分别为一百二十度、九十度和六十度。三组均满足 θ0=180°−θg，初始几何方向与边界角度约束相容。单元中心初始化仍会产生体积、法向和曲率离散误差，并引起初期压力与速度调整。当前短时最大速度的差异应结合这些误差分析，不能直接作为静态平衡后的润湿性规律。</p>
+<p>研究平衡球冠时，应保持初始几何角与边界角的上述关系，并通过网格加密和延长计算检查体积偏差、速度衰减及形状变化。若研究突然改变润湿条件后的响应，可在独立副本中保持原初始几何，仅改变边界角度，同时注明初始角度、目标角度和改变时刻。</p>
+<h3>网格与测量范围的影响</h3>
+<p>球冠体积由全体气相单元积分，而接触角由少量近壁点确定，两者对网格的敏感程度不同。均匀加密能同时改善曲面离散和接触线分辨率，局部加密则需要检查尺寸过渡是否影响曲率。由于曲率涉及界面法向的空间变化，法向中的小幅离散波动会进一步反映在压力与速度中。</p>
+<p>拟合接触角时，应选定以网格尺度表示的取点范围，例如比较距离壁面若干层单元内的拟合结果，并记录该范围的实际长度。范围过小容易受单元阶梯影响，范围过大则会把球冠曲率计入直线斜率，使局部切线估计偏移。可以比较多个拟合范围的结果，并观察加密后差异是否减小。</p>
+<p>固定气体体积时，球冠高度和接触半径均有解析表达式：高度 h=R(1−cosθg)，接触半径 a=Rsinθg。根据体积先求 R，再计算 h 和 a，便可建立几何检查。数值图中测得的最大高度、壁面气相接触范围与这些值比较时，应使用相同角度定义，并区分理论球冠、离散初场与后续瞬态形状。</p>
+<p>体积随时间保持并不意味着初始体积已经准确。当前三组体积漂移很小，而初始体积仍具有不同程度的网格偏差。这两项误差分别对应初场构造与输运守恒，应分别记录。网格研究中可先绘制初始体积误差随网格尺寸的变化，再在各自初始体积基础上分析输运阶段的相对变化。</p>
+<p>对于九十度基准，可先利用半球几何检查角度约定，再分析其他角度。这一步将几何定义与数值实现联系起来，也便于发现气相侧和液相侧角度混用。图表中应同时注明几何初始角和边界输入角，使短时调整过程具有明确的初始条件。</p>
+<p>比较界面图时还应保持坐标比例一致。若横纵方向采用不同缩放，球冠高度和接触角的视觉判断都会改变。保存图像前可显示坐标轴及长度标尺，用等比例视图测量几何量。压力和速度的色标范围也应记录，以区分实际幅值变化与自动色标缩放的影响。</p>
+<pre><code>本讲依据本地 v2512 的 interfaceProperties.C、constantAlphaContactAngle 边界实现以及三组算例的 alpha.water、数值字典和测试记录。已有 all-slides.pdf 第 874—931 页提供两相流基础；球冠几何与本讲初始场应结合代码中的角度定义阅读。</code></pre>
+<h2>9 反转涡中的完整周期验证</h2>
+<p>接触角和气泡生长计算同时涉及界面输运、曲率与动量耦合。为了确定相输运算法自身的误差，本节采用给定速度的圆盘反转涡。初始水相圆盘位于x-z平面，半径0.15 m，圆心为(0.5,0.75) m，计算域为1 m×1 m，法向厚度0.02 m并采用empty边界。速度由setFlow函数对象给定，其方向随cos(2πt/16)变化。</p>
+<p>前4 s将圆盘拉伸为细丝，后4 s反向输运；精确解在8 s回到初态。因此，最终场与相同网格上的初始场可以直接比较。</p>
+<pre><code>Allrun.sh依次执行blockMesh、checkMesh、setAlphaField及相应求解器。frozenFlow启用后，速度按规定场更新，动量方程不参与本项验证。该设置排除了压力速度耦合误差，但保留了相分数输运与界面重构误差。
+N64三组分别采用MULES、isoAlpha和plicRDF，均使用64×64单元、Δt=0.002 s和同一几何切割初场。另提供plicRDF N128，网格各方向加倍，时间步减半。后者反映空间和时间共同加密的效果，不能用两组数据直接计算纯空间收敛阶。</code></pre>
+<p>形状误差采用单元体积加权L1范数。以计算域体积归一化得到EΩ，以初始水相体积归一化得到EV。EΩ会受到计算域中大片纯相区域的影响；对于占域比例较小的圆盘，EV更便于判断误差相对于输运对象的大小。本组MULES N64的EΩ为0.028829，EV为0.408722。若只报告2.88%的计算域误差，容易低估圆盘变形程度。报告中必须写明分子、分母和统计时刻。</p>
+<p>完整周期后，N64的isoAlpha与plicRDF相体积归一化误差分别为22.407%和28.112%，两者体积漂移均接近浮点舍入量级。MULES的体积相对漂移约1.49×10⁻⁸，最终最大相分数降至0.91476，说明圆盘峰值受到明显扩散。以0.001&lt;α&lt;0.999定义混合单元，三者分别为535、95和81个。</p>
+<pre><code>plicRDF的混合单元较少，但其形状恢复L1误差大于同网格isoAlpha；界面锐利程度与位置、形状精度应分别评价。
+plicRDF N128的EV降至4.127%，明显低于N64。最大拉伸时的细丝是否被充分分辨，是理解这一变化的重要依据。应在t=4 s图上叠加网格，测量最薄部分所跨单元数；当细丝宽度接近单元尺度时，体积守恒仍可成立，局部连接与回卷形状却可能发生较大误差。结果讨论应将0、4、8 s三个时刻结合，而非只比较最后一张界面图。</code></pre>
+<h2>10 计算结果与数据来源</h2>
+<p>下列图表由本讲独立算例的实际保存场、采样数据或原始日志生成。各图的计算条件与误差定义见前述案例分析，原始数值保存在本讲测试结果。</p>
+<figure><img loading="lazy" src="/assets/lessons/20/image4.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>根据实际保存场计算，定义与统计区间见本例README和数值检查。</p>
+<figure><img loading="lazy" src="/assets/lessons/20/image5.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>根据实际保存场计算，定义与统计区间见本例README和数值检查。</p>
+<figure><img loading="lazy" src="/assets/lessons/20/image6.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>根据实际保存场计算，定义与统计区间见本例README和数值检查。</p>
+<figure><img loading="lazy" src="/assets/lessons/20/image7.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>根据实际保存场计算，定义与统计区间见本例README和数值检查。</p>
+<section class="exercise"><h2>课后练习</h2><p>在第 17 讲的网格上放一个贴壁气泡，扫描接触角（至少 3 档），测量平衡形状的接触线半径与表观接触角，与设定值及球冠几何解对比。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
+</div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="20">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=20">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/19/">← 上一讲<span>气泡特征量与后处理</span></a><a href="/lessons/21/">下一讲 →<span>标量扩散与通量边界</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

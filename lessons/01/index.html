@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>环境与 Linux · FoamLab</title>
+  <meta name="description" content="CFD 完整链条：几何 → 网格 → 物理模型 → 离散 → 求解 → 后处理 → 验证；以“微电极上的一个析氢气泡”为例，说明各阶段的输入、输出及检查方法；②OpenFOAM 是什么，三大分支（.org / .com / foam-extend）的差异与字典不兼容问题；本课程统一用 v2512（.com）的理由；③安装：WSL2+Ubuntu / 原生 Linux / Docker 三条路径，选择一种方式完成安装与验证；④环境变量与 bashrc：$WM_PROJECT_DIR、$FOAM_RUN、$FOAM_TUTORIALS、$FOAM_SOLVERS、$FOAM_SRC；⑤Linux 必备命令：ls / cd / cp / rm / find / grep / tail -f / vim 基本操作、管道与重定向；⑥源码目录组织与一个 application 的标准结构（Make/files、Make/options）。">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="lesson" data-lesson="1">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>环境与 Linux</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">LESSON 01 / 28 · 环境与首次上手</div><h1>环境与 Linux</h1><div class="article-meta"><span>建议学习 90 分钟</span><span>OpenFOAM v2512</span><a href="/downloads/lesson-01.docx" download>下载本讲讲义 ↓</a><a href="/downloads/lesson-01-cases.zip" download>下载配套算例 ↓</a></div><div class="prose">
+<section class="lesson-intro"><h2>本讲学习任务</h2><p>①CFD 完整链条：几何 → 网格 → 物理模型 → 离散 → 求解 → 后处理 → 验证；以“微电极上的一个析氢气泡”为例，说明各阶段的输入、输出及检查方法；②OpenFOAM 是什么，三大分支（.org / .com / foam-extend）的差异与字典不兼容问题；本课程统一用 v2512（.com）的理由；③安装：WSL2+Ubuntu / 原生 Linux / Docker 三条路径，选择一种方式完成安装与验证；④环境变量与 bashrc：$WM_PROJECT_DIR、$FOAM_RUN、$FOAM_TUTORIALS、$FOAM_SOLVERS、$FOAM_SRC；⑤Linux 必备命令：ls / cd / cp / rm / find / grep / tail -f / vim 基本操作、管道与重定向；⑥源码目录组织与一个 application 的标准结构（Make/files、Make/options）。</p></section>
+<p class="source-note">配套算例来自已有课程。下载解压后阅读其中的 README 与运行脚本，并在已加载 v2512 环境的 Linux 终端执行。本站未重新运行这些算例；原讲义中的本机路径需改为自己的实际路径。</p>
+<h2>1 物理模型与算例文件</h2>
+<p>方腔流动计算需给定腔体尺寸、顶盖速度、黏度和初始状态，再确定网格、离散方法及计算时段。OpenFOAM 将这些输入保存在相应文本文件中，由各程序依次读取。本讲以完整方腔算例说明输入文件、运行命令与输出结果的对应关系。</p>
+<pre><code>OpenFOAM 由 C++ 库和应用程序组成。初学阶段主要使用现有应用：blockMesh 生成网格，checkMesh 检查几何与拓扑，icoFoam 读取初始场、物性和数值设置并求解不可压缩层流，后处理程序从保存场提取数据。各程序具有独立的输入和输出，按顺序衔接后构成一次完整计算。</code></pre>
+<p>终端用于执行命令，文本编辑器用于修改输入，ParaView 用于显示结果。执行 icoFoam 仅启动求解器，顶盖速度仍由速度场文件给定；修改速度文件后，也需重新计算才能得到对应结果。操作时应依次完成输入修改、程序运行和结果检查。</p>
+<p>本讲算例为 代码/cavity_first。方腔平面尺寸为 0.1 m×0.1 m，顶盖速度为 1 m/s，其余三个侧壁固定。计算厚度为 0.01 m，厚度方向划分一层单元，前后边界采用二维约束。运动黏度为 0.001 m²/s，平面网格为 20×20，共 400 个单元。流体由静止状态计算至 2 s，各参数均可在算例输入中核对。</p>
+<h2>2 安装目录 工作目录与运行环境</h2>
+<p>安装目录保存程序、库、头文件及官方示例，工作目录保存用户算例。本机安装于 /usr/lib/openfoam/openfoam2512，其中 applications、src 和 tutorials 分别对应应用程序、库源码和示例。算例修改在工作目录的副本中进行，以保留安装文件和官方示例。</p>
+<p>环境变量保存程序搜索路径及相关配置。shell 先识别内置命令、函数和别名，再按搜索路径查找外部可执行文件。因此，相同的 icoFoam 命令在不同终端中可能对应不同版本。加载 OpenFOAM 环境时，应同时确认程序、动态库和配套目录属于同一版本。</p>
+<p>在新终端中执行以下命令。source 使环境脚本在当前 shell 中生效，而非只在一个随后退出的子进程中修改变量。</p>
+<pre><code>source /usr/lib/openfoam/openfoam2512/etc/bashrc
+echo &quot;$WM_PROJECT_VERSION&quot;
+echo &quot;$WM_PROJECT_DIR&quot;
+echo &quot;$FOAM_TUTORIALS&quot;
+command -v blockMesh
+icoFoam -help</code></pre>
+<p>检查 WM_PROJECT_VERSION 是否为 v2512。WM_PROJECT_DIR 指向安装根目录，FOAM_TUTORIALS 指向官方算例目录；command -v 给出当前命令的位置。程序帮助中的版本与构建信息可用于交叉核对。变量值与程序路径不一致时，应先修正终端环境。</p>
+<pre><code>foamVersion 在本机交互环境中是 shell 函数，tut 是进入教程目录的别名。它们不一定作为独立文件出现在程序搜索路径中。下面的 type 能说明其实际类型，因而适合查询这类命令。参考资料中的 of9 则是资料作者自行定义的别名；要使用一个别名，需要先有对应定义。
+type foamVersion
+type tut
+foamVersion
+foamGetDict -help
+&quot;$WM_PROJECT_DIR/bin/tools/foamExec&quot; icoFoam -help</code></pre>
+<p>foamGetDict 用于查询或复制字典模板，foamExec 位于安装目录的 bin/tools 中，可在设置环境后执行所给命令。认识这些工具的目的，是理解本机已经提供哪些功能。运行本讲算例时，只需先加载环境，再执行算例目录中的 Allrun.sh；该脚本本身没有额外的课程环境参数。</p>
+<h2>3 工作路径与输入读取</h2>
+<p>Linux 按目录树组织文件。绝对路径从根目录 / 开始，相对路径以当前目录为起点，. 与 .. 分别表示当前目录和父目录。在代码目录中，控制字典路径为 cavity_first/system/controlDict；进入 cavity_first 后，该文件的相对路径为 system/controlDict。</p>
+<p>pwd 显示当前目录的完整路径，ls 列出目录内容，cd 改变当前目录。这三个命令虽然不参与流场求解，却直接影响接下来读取哪组文件。直接执行 blockMesh 时，程序默认在当前算例中查找 system/blockMeshDict。如果在上一级目录执行，程序会到另一个位置寻找 system，即使真正的网格字典就在相邻文件夹中，也不会自动采用它。</p>
+<p>下面假定已经打开本讲目录。第一步进入算例，第二步检查当前位置，第三步确认三个主要输入目录存在。只有在目录结构与预期一致后，才执行计算命令。</p>
+<pre><code>cd 代码/cavity_first
+pwd
+ls -lh
+ls 0 constant system</code></pre>
+<p>含空格的路径需要使用引号，使 shell 将其作为一个参数。中文目录也可采用相同写法。引号应为英文半角字符；从排版文档中复制命令时，中文引号有时不能承担相同作用。Tab 补全可以减少文件名拼写错误，也有助于确认路径是否实际存在。Linux 区分大小写，U、u 和 U.txt 是三个不同的文件名。</p>
+<p>完整路径和程序路径是两类不同信息。pwd 回答当前在哪个算例中工作，command -v 回答将调用哪个程序。前者错误时，程序可能读到另一组输入；后者错误时，可能运行另一版本的求解器。出现问题时分别检查二者，比反复修改算例参数更有针对性。</p>
+<h2>4 输入目录与参数修改</h2>
+<p>初始时刻目录 0 中，U、p 分别保存速度和压力的初值及边界条件。constant 保存物性与模型数据，生成网格位于其中的 polyMesh。system 保存网格字典、时间控制、离散格式及线性求解配置，便于分别调整物理模型与数值方法。</p>
+<p>本例的 controlDict 中，endTime 为终止时间，deltaT 为时间步，writeControl 决定输出间隔的解释方式。当前 writeControl 为 runTime，因此 writeInterval 的 0.1 表示每隔约 0.1 s 保存一组结果，而非每隔一次或十次迭代保存。</p>
+<p>固定时间步为 0.001 s，计算到 2 s 约需推进 2000 步；输出约每 100 步一次。计算时间步和结果保存间隔应分别阅读。</p>
+<pre><code>application icoFoam;
+startFrom startTime;
+startTime 0;
+stopAt endTime;
+endTime 2;
+deltaT 0.001;
+writeControl runTime;
+writeInterval 0.1;</code></pre>
+<p>修改参数前，先复制完整算例，例如将 cavity_first 复制为 my_case。复制整个目录能够保留几何、边界和数值设置之间的配套关系，也方便对比。若复制的是已经运行过的算例，目录中可能同时带有结果时间；从初始时刻重新计算前，应明确保留哪些结果并按本例 Allclean.sh 中的清理范围处理。</p>
+<p>用文本编辑器把副本的 endTime 改为 1 后，应再次读取该行，确认数值确实写入副本。条目末尾的英文分号属于字典语法，不能在替换数字时一并删除。文件头中的 version 2.0 表示文件格式版本，不能因使用 v2512 而改为 2512。初次修改以一个明确条目为宜，修改记录应写明文件位置、原值及新值。</p>
+<h2>5 Allrun.sh 的执行机制</h2>
+<p>Allrun.sh 按输入依赖依次生成网格、检查网格、求解流场，再导出结果并计算速度模。阅读时应逐行核对输入文件与输出位置，以确认各步骤使用的数据已由前序程序生成。</p>
+<pre><code>#!/bin/sh
+set -e
+blockMesh &gt; log.blockMesh 2&gt;&amp;1
+checkMesh &gt; log.checkMesh 2&gt;&amp;1
+icoFoam &gt; log.icoFoam 2&gt;&amp;1
+foamToVTK -latestTime -ascii &gt; log.foamToVTK 2&gt;&amp;1
+postProcess -func &#x27;mag(U)&#x27; -latestTime &gt; log.magU 2&gt;&amp;1
+touch case.foam</code></pre>
+<p>第一行指定脚本解释器。set -e 表示某条命令返回失败状态后停止执行，因而在网格检查或求解报错后，不会继续执行依赖其结果的后处理。进入算例目录后运行 ./Allrun.sh，其中 ./ 明确指定当前目录内的脚本。脚本没有自动切换到其他讲次，也没有自动生成另一组参数目录。</p>
+<p>输出重定向用于保存运行过程。&gt; 把标准输出写入指定文件，若文件已存在则覆盖；2&gt;&amp;1 把标准错误输出合并到标准输出的当前位置。因此，即使终端没有连续打印文字，程序也可能正在运行，进度应从日志中查看。若需要保留上一次故障记录，应在再次运行前将相应日志另存。</p>
+<pre><code>foamToVTK 将最后保存时刻的数据导出为 VTK 文件，postProcess 的 mag(U) 计算速度向量的模。函数名称中的括号使用引号保护，使其作为一个命令参数传入。touch case.foam 创建用于识别算例的空文件，它不是网格或场数据本身。ParaView 实际读取的仍是同目录下的网格及时间结果。</code></pre>
+<h2>6 阅读文件 检索日志与确认完成状态</h2>
+<p>查看短文件可用 cat，较长文件适合用 less 分页阅读。head 与 tail 分别显示开头和结尾，适用于快速查看文件头或计算结束信息。下面的命令在本例已经生成日志后执行。tail 的 -n 12 表示末尾十二行，文件名仍按当前路径解释。</p>
+<pre><code>head -n 15 system/controlDict
+tail -n 12 log.icoFoam
+rg -n &#x27;endTime&#x27; system/controlDict
+grep &#x27;Time =&#x27; log.icoFoam</code></pre>
+<p>rg 的 -n 显示匹配行号。检索结果需要结合所在文件和子字典理解，同一关键字在不同方程中可能有不同用途。grep 提取日志中的时间记录后，可以观察计算是否持续推进。日志中的 Time 是正在处理的计算时刻，而目录中只保存符合输出条件的时刻，二者不必逐一对应。</p>
+<p>完整的运行检查包括程序退出状态、最终计算时间、网格报告以及结果文件。本例运行结束后，constant/polyMesh 应含有 points、faces、owner、neighbour 和 boundary 等网格数据；最后保存的 2 目录中应有 U 和 p。日志末尾通常显示 End，但还需核对实际时间是否达到预定的 2 s，特别是在修改过停止条件以后。</p>
+<p>读取网格日志可进一步检查几何是否正确。本例报告 400 个单元，包围盒从 (0,0,0) 到 (0.1,0.1,0.01)，总网格体积为 0.0001 m³。其结果等于三个方向长度之积。这样的简单核算可以发现长度单位或网格尺寸错误，比仅依据程序正常结束判断输入更充分。</p>
+<h2>7 计算结果与操作示例</h2>
+<figure><img loading="lazy" src="/assets/lessons/01/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>图 1 为本讲实际生成的网格。平面内单元均匀分布，厚度方向只保留一层。400 个单元对应 20×20 的平面划分，网格图与 checkMesh 的包围盒和单元数量相互印证。初始速度为零，而顶盖给定非零速度，流动由边界运动逐渐建立。</p>
+<figure><img loading="lazy" src="/assets/lessons/01/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>图 2 显示运行所得的速度分布及流线。顶盖附近流体受壁面运动驱动，内部形成回流。这里首先观察边界运动是否传递到内部，以及流动方向是否与顶盖条件相符；速度大小、中线分布和雷诺数影响将在下一讲进一步分析。测试记录确认本例 U 和 p 的全部数值均为有限数。</p>
+<p>考虑一个完整操作题：当前在本讲的代码目录，希望把方腔计算终止时间改为 1 s，并保留原始算例。先执行目录复制，再进入副本，以 pwd 确认路径。使用编辑器修改副本中的 controlDict，并检索 endTime 确认新值。检查 Allrun.sh 所列程序后执行脚本，完成后读取日志中的最终时间和副本的结果目录。这样，修改对象、执行对象和结果对象均属于同一个副本。</p>
+<p>如果直接在代码目录执行 blockMesh，报错应首先按“程序在何处查找文件”分析。此时问题不是网格顶点或离散格式，而是当前工作目录不含所需字典。返回算例目录即可重新检查。若提示命令未找到，应检查环境；若提示脚本无执行权限，应检查文件权限；若求解器已启动后才提示字典错误，则应依据日志给出的文件路径处理。不同阶段的问题对应不同检查对象。</p>
+<p>文件权限也影响命令的执行。长格式目录列表开头的字符表示文件类型以及读、写、执行权限。读取脚本内容与直接执行脚本是两种操作：文本编辑器能够打开文件，并不必然表示 shell 可以把它作为程序执行。复制课程目录时应保留执行权限；若复制方式改变了权限，可依据目录中的权限信息判断原因。权限问题通常在程序启动之前出现，日志中也不会出现网格生成或求解时间记录。</p>
+<p>程序启动后会建立自身的数据对象并使用内存，其中一部分对象来自文件，一部分在计算过程中形成。关闭终端或终止进程后，未写入磁盘的状态不会自动成为结果文件。相反，已经保存的时间目录可以保留供后处理使用。因此，查看内存中的运行状态、读取磁盘中的日志和打开保存场是三种不同操作。暂停查看日志并不会暂停求解器，关闭结果显示窗口也不会删除已保存数据。</p>
+<p>还可以从一个具体保存间隔理解输出机制。设时间步保持不变，从零时刻开始计算，每完成一个时间步，求解器就更新一次场。只有达到相应写出条件时才把场保存到磁盘。本例的输出间隔大于时间步，因此多数步只有日志，没有单独的时间目录。后续若要分析更快的变化，应在计算前选择合适的输出间隔；单纯增加图像播放速度或在后处理程序中增加显示帧数，不会产生新的求解数据。</p>
+<p>阅读文本时还要区分数字、字符串和变量展开。命令中的环境变量由 shell 解释，字典中的关键字则由 OpenFOAM 读取。例如，终端内使用双引号包围路径，可以将带空格的路径保留为一个参数；控制字典中的大括号用于界定子字典，两者分别属于不同语法。将命令直接写进控制字典，或者把字典条目作为终端命令执行，都会在相应解释阶段失败。判断一段内容应放在何处，应先确认它是命令、参数文件内容还是日志输出。</p>
+<p>计算记录还需区分“修改了输入”和“读取了修改后的输入”。保留在编辑器中的未保存内容不会被求解器读取，修改另一份同名算例也不会影响当前工作目录。因此，参数修改完成后应保存文件，再从运行目录读取该条目。这个检查步骤使书面记录、磁盘文件和实际运行条件保持一致，后续开展网格、时间步或物性对比时仍适用。</p>
+<h2>8 文件管理与资料来源</h2>
+<p>一次计算的可复现记录至少包括完整输入、使用版本、运行命令和主要结果。保留一个算例目录时，应明确其中哪些文件来自输入，哪些由程序生成。对基础练习而言，目录名称可以记录参数组，README 可以记录目的和主要参数；时间目录及日志则说明这组输入已经执行到什么状态。图像适合展示结果，原始数值便于后续比较，二者承担不同用途。</p>
+<p>清理结果前先查看 Allclean.sh，再核对当前路径。需要保留的图片、数据和故障日志应提前另存。删除生成网格后，下次求解前需要重新执行网格生成；修改 blockMeshDict 后，也应重新生成网格，使实际单元与新输入一致。对已经启动的计算修改输入时，应先判断该条目是否支持运行期间读取，初学阶段采用停止后修改并重新运行的方式更容易核对全过程。</p>
+<p>本讲参数和命令依据本讲 cavity_first 的 Allrun.sh、system/controlDict、system/blockMeshDict、0/U、0/p，以及测试日志。</p>
+<p>进一步阅读可查看本机 v2512 的 icoFoam 帮助与 tutorials/incompressible/icoFoam/cavity 配套输入；目录和终端操作可结合参考资料 all-slides.pdf 第 10–50 页阅读。阅读旧版示例时，环境加载路径以本机实际安装为准。</p>
+<h2>9 计算记录与数值模型的组成</h2>
+<p>研究计算需要区分连续模型、离散模型和代数求解过程。连续模型由控制方程、初始条件、边界条件及物性组成；离散模型由网格、时间步和离散格式组成；代数过程由线性求解器、容差及压力—速度循环构成。修改运动黏度会改变连续问题，修改网格会改变离散近似，修改线性容差主要改变代数误差。三类操作影响不同，不应混用。</p>
+<p>一次可复现运行应能够从保存的输入重新获得结果。记录foamVersion、实际程序路径、Allrun.sh、关键字典及初始场，说明是否从初始时刻计算。若使用latestTime续算，初始状态实际来自已有时间目录，因此仅保存0目录并不能重现该段计算。生成网格也属于离散输入；修改blockMeshDict后，应重新执行blockMesh并核对包围盒和单元数。</p>
+<p>方腔在本讲用于建立这种记录方法。要求在执行前预测程序读写对象，执行后用目录、日志与最终时刻核对。该训练形成后续T形混合、过滤通道和两相流案例的共同操作基础，但方腔一次执行完成本身不构成完整的数值验证。</p>
+<section class="exercise"><h2>课后练习</h2><p>独立完成安装并成功执行 foamVersion 与 interFoam -help；用 grep 在 $FOAM_SOLVERS 中找出全部 VOF 类多相求解器并列表，标出哪些含相变或传质。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
+</div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="1">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=1">对本讲提问</a></div><div class="lesson-pagination"><a href="/start/">← 快速开始<span>运行前的准备</span></a><a href="/lessons/02/">下一讲 →<span>方腔流动与 ParaView</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

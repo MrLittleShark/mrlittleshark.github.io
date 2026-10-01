@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>电势耦合与气泡脱落 · FoamLab</title>
+  <meta name="description" content="脱落力平衡：浮力、接触线表面张力、接触压力、曳力、Marangoni 力；Fritz 公式与接触角的线性关系；②接触角滞后与接触线钉扎对脱落直径的影响；③Marangoni 效应：热毛细与溶质毛细的来源与方向；标准 CSF 只含法向力、不含切向的 ∇sσ，必须自己加（回收第 24 讲）；④多气泡：多个成核位点、聚并诱导脱落、电极覆盖率与电流遮蔽的双向耦合（回收第 22 讲）；必须三维，靠并行与自适应加密（回收第 18、23 讲）；⑤工具生态：OpenFOAM 原生 + 自研、TwoPhaseFlow 等开源框架、CSECGEFoam、Basilisk、COMSOL，以及电解槽尺度的欧拉—欧拉方法；⑥为自己的课题做方案选型。">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="lesson" data-lesson="27">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>电势耦合与气泡脱落</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">LESSON 27 / 28 · 电极气泡与结课项目</div><h1>电势耦合与气泡脱落</h1><div class="article-meta"><span>建议学习 90 分钟</span><span>OpenFOAM v2512</span><a href="/downloads/lesson-27.docx" download>下载本讲讲义 ↓</a><a href="/downloads/lesson-27-cases.zip" download>下载配套算例 ↓</a></div><div class="prose">
+<section class="lesson-intro"><h2>本讲学习任务</h2><p>①脱落力平衡：浮力、接触线表面张力、接触压力、曳力、Marangoni 力；Fritz 公式与接触角的线性关系；②接触角滞后与接触线钉扎对脱落直径的影响；③Marangoni 效应：热毛细与溶质毛细的来源与方向；标准 CSF 只含法向力、不含切向的 ∇sσ，必须自己加（回收第 24 讲）；④多气泡：多个成核位点、聚并诱导脱落、电极覆盖率与电流遮蔽的双向耦合（回收第 22 讲）；必须三维，靠并行与自适应加密（回收第 18、23 讲）；⑤工具生态：OpenFOAM 原生 + 自研、TwoPhaseFlow 等开源框架、CSECGEFoam、Basilisk、COMSOL，以及电解槽尺度的欧拉—欧拉方法；⑥为自己的课题做方案选型。</p></section>
+<p class="source-note">配套算例来自已有课程。下载解压后阅读其中的 README 与运行脚本，并在已加载 v2512 环境的 Linux 终端执行。本站未重新运行这些算例；原讲义中的本机路径需改为自己的实际路径。</p>
+<p>配套算例位于原课程“27_电极气泡_电势与脱落”目录。文中相对路径以该讲目录或已注明的算例目录为准。</p>
+<pre><code>OpenCFD OpenFOAM v2512</code></pre>
+<p>本讲在固定几何电势验证的基础上，增加myElectroIsoFoam电流与移动气泡的顺序耦合。新增模型将电极产气等效汇集至中心孔口注入，电导率随相分数更新；它与下述固定绝缘障碍例具有不同的求解关系。</p>
+<h2>1 导电方程与计算变量</h2>
+<p>忽略扩散电势等贡献时，电流密度 i=−κ∇φ。稳态电荷守恒给出 ∇·(κ∇φ)=0，常 κ 时为 Laplace 方程。其数学形式与稳态扩散相同，但 φ 的单位和通量含义不同。</p>
+<p>电势算例使用 laplacianFoam 读取 T，量纲 [1 2 −3 0 0 −1 0] 对应 V。该求解器用于求解常系数 Laplace 方程，电流再由给定电导率与电势梯度计算。物性字典中的系数服务于数学方程，电学解释须另行明确电导率及电流定义。</p>
+<p>一次电流分布只考虑导电几何和电势边界，二次电流分布进一步包含电极反应关系。本讲依次用平板定值、线性混合和非线性 Butler–Volmer 边界验证实现，再以固定绝缘气泡分析遮蔽对局部电流的影响。</p>
+<h2>2 平板电势与线性反应边界</h2>
+<pre><code>potential_primary 高 0.001 m，底部 0.01 V、顶部零，κ=1 S/m 时解析电流为 κΔφ/L=10 A/m²。数值结果 10.000000000003334 A/m² 与线性解一致。
+potential_mixed 采用 j=h(Vref−φw)，Vref=0.01 V、h=1000 S/m²。溶液电阻与界面反应电阻相等，电流密度为 5 A/m²，底部溶液电势为 0.005 V，另一半电势差落在反应边界。因此 refValue 不等于实际壁面电势。
+bottom
+&#123;
+    type mixed;
+    refValue uniform 0.01;
+    refGradient uniform 0;
+    valueFraction uniform 0.012345679012345678;
+    value uniform 0;
+&#125;</code></pre>
+<p>混合权重取决于壁面至单元中心距离，推导与第 22 讲相同。网格改变而反应系数不变时，应重新计算权重。mixed 的最大、最小单元电势分别为 0.0049375 V 和 0.0000625 V，与解析线性剖面一致。</p>
+<figure><img loading="lazy" src="/assets/lessons/27/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>图中不同剖面斜率对应不同电流密度。解释电势差时应区分溶液内压降与边界反应贡献，并说明参考金属电势、平衡电势和溶液电势的定义。仅将同名场图叠加，不能代替这一物理量说明。</p>
+<h2>3 绝缘气泡造成的电流重分布</h2>
+<p>绝缘附着气泡可作为法向电流为零的障碍。导电域改变后，电势和电流重新分布，局部梯度可能集中。总电流还取决于有效电极面积及反应边界。</p>
+<pre><code>potential_insulating_bubble 与其 mixed 版本分别采用定值和混合边界。blockMesh、snappyHexMesh 生成包含固定气泡障碍的导电域，再求解电势。流动 VOF 在另一个算例中计算，两者不实时交换界面位置。</code></pre>
+<figure><img loading="lazy" src="/assets/lessons/27/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>图中电势分布应结合气泡表面零法向电流分析。在边缘处比较梯度时，需考虑局部网格分辨率和几何曲率。当前定值障碍例的单元电势范围约为 0.0003037 至 0.0098275 V，混合边界障碍例约为 0.0002373 至 0.0076598 V。这些场范围描述局部分布，总电流需进一步积分电极法向通量。</p>
+<p>有效面积减小与局部梯度增强可能同时发生，因此总电流变化不能只由裸露面积比例确定。比较时可采用相同电极参考条件，分别统计总电流与局部最大电流密度。固定障碍结果适合分析给定气泡形状下的导电问题，气泡移动导致的电流反馈需在耦合模型中实现。</p>
+<h2>4 Butler–Volmer边界及线性化</h2>
+<p>本例采用对称 Butler–Volmer 关系 j=j₀[exp(aη)−exp(−aη)]，a=F/(2RT)，η 为金属参考电势减壁面溶液电势。指数无量纲，计算前统一 T、R、F 与电势单位。</p>
+<p>算例设置 Vm=0.01 V、温度 298.15 K、j0=25.692579 A/m²、κ=1 S/m。代码在当前壁面电势附近计算反应电流 g 和斜率幅值 h，再将非线性关系写为本次迭代的混合边界。refValue 更新为旧壁面电势加 g/h，权重为 h/(h+κδ)，δ 为壁面距离倒数。</p>
+<p>小过电势时展开指数，exp(aη)−exp(−aη)≈2aη，得到线性关系 j≈2aj0η。本例参数使线性极限接近前述混合边界。实际计算的边界电流密度为 5.003937593596001 A/m²，相对于线性参考 5 A/m² 略大，反映当前有限过电势下的非线性影响。</p>
+<p>代码将过电势限制在 −0.5 至 0.5 V 范围内，用于控制指数求值范围。解释较大过电势计算时，应检查是否达到这一限制，因为达到限制后所求关系已经受到截断处理。当前基础验证应先核对小过电势极限，再研究非线性程度更强的工况。</p>
+<h2>5 气泡附着 生长与脱落判据</h2>
+<p>附着气泡受浮力、接触线表面力、压力和周围流动共同作用。注气增加体积，但脱落还受钉扎、滞后、入口几何及惯性影响。质心上升也可能发生在附着生长阶段，须另用连通性判断脱落。</p>
+<p>本课程采用气相单元共享面连通性分析。先选择 alpha.water&lt;0.5 的单元，再识别共享面连通区域，并保留至少含 8 个单元的区域。按气体体积选出其中最大的区域，检查其是否仍与 electrode 或 substrate 边界相邻。形状图与连通性应在同一保存时刻核对。</p>
+<pre><code>detachment_theta90 的实际最新时刻为 0.5999970308 s。气体体积由 4.0932133976735996×10⁻¹¹ 增至 5.935203521826938×10⁻⁹ m³，按 εV=|Vnum−(V0+Qt)|/(V0+Qt) 计算，总体积相对误差约为 0.06431%。共享面连通性检查未检测到脱落，因此该记录没有对应的脱落半径或脱落时刻。</code></pre>
+<figure><img loading="lazy" src="/assets/lessons/27/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>图中用于观察增长后的形状和壁面连接范围。若界面出现细颈，需要结合气相连接检查判断是否真正断开。保存间隔决定事件时间的分辨率；发生脱落时，也通常只能先定位在最后连接帧与首次断开帧之间。</p>
+<h2>6 接触角比较与Fritz尺度</h2>
+<p>短时注气算例分别使用六十度、九十度和一百二十度边界，初始体积相同，计算时间均约为 0.001 s。按上述 εV 定义，三组总体积相对误差均约为 0.0123%，且均未检测到脱落。当前对比主要反映初期近壁形状与流场调整，不能据此建立脱落尺寸随接触角变化的规律。</p>
+<p>常见 Fritz 关联式为 Dd=0.0208θ√[σ/(gΔρ)]，θ 以度表示，Dd 为直径。若需要半径，应将结果除以二。角度定义与原关联式约定应一致，表面张力、重力和密度差也应采用相应工况。长度尺度来自毛细与重力作用的平衡，系数则反映经验关联条件。</p>
+<p>当前孔口注气可能存在几何钉扎，恒定角度边界也未完整描述滞后，因此经验尺度只适合作为量级参照。比较时应列出实际脱落判据、接触线条件和入口几何。若计算时段没有脱落，应报告附着状态与体积，而非以最后半径代替脱落半径。</p>
+<p>延长计算前，还应检查顶部和外边界是否足够远，气泡增长是否受到有限域限制，以及网格是否能分辨变细的连接区域。提高时间分辨率和局部分辨率对应不同误差，应分别对照。仅改变结束时间不能保证脱落判定精度。</p>
+<h2>7 Marangoni切向应力</h2>
+<p>表面张力沿界面变化时，切向梯度可驱动界面附近流动。设单位界面法向为 n，切向投影算子为 I−nn，则 ∇sσ=(I−nn)∇σ。法向毛细力与这一切向力分别对应曲率和表面张力沿界面的变化，应在模型中区分。</p>
+<pre><code>marangoni_given_gradient 给定 ∇σ=(0,−0.01,0) N/m²。代码根据 alpha.water 梯度计算局部法向，将给定梯度减去法向投影，再乘界面梯度模长形成体积力。其核心关系为：
+const vector tangent=gradSigma-n*(n &amp; gradSigma);
+const vector force=magnitude*tangent;
+eqn.source()[celli] -= mesh().V()[celli]*force;</code></pre>
+<p>最后一行的符号与 fvOptions 在动量方程中的矩阵约定有关。代码同时输出法向投影误差，用于检查 n与切向力的点积是否接近零。纯相中接近舍入误差的相分数梯度不用于定义界面法向，以避免除以很小模长。</p>
+<figure><img loading="lazy" src="/assets/lessons/27/image4.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>该算例检验给定梯度源项，未求解温度或浓度对表面张力的反馈。若扩展热毛细问题，需要温度方程、σ(T) 关系和一致界面应力，并检查热量与动量交换。仅使法向毛细力系数随温度变化，不能替代切向应力项。</p>
+<h2>8 多过程模型与验证顺序</h2>
+<p>电势、气泡生长、脱落和切向应力分别对应不同方程与几何条件。组合这些过程时，应明确电势如何改变产气通量，气泡如何改变导电区域，界面传质如何改变体积，以及温度或浓度如何改变表面张力。每一项作用都需有对应输入、方程和可检验量。</p>
+<p>固定气泡障碍的电势求解与移动 VOF 在当前资料中分别运行，适合独立验证导电边界和两相力学。若要双向耦合，需要随界面更新电导率或导电区域，并将电流对应的产气量反馈给气体输运与体积方程。总电荷、总质量和气体体积应采用相容定义。</p>
+<h3>电流积分与局部峰值</h3>
+<p>电极总电流是法向电流密度对电极面积的积分，单位为安培。局部峰值则描述梯度集中，可能对网格和边缘几何更敏感。两者可以随气泡遮蔽表现出不同变化，因此应同时报告。电势最大值与最小值不足以确定总电流，还需边界梯度和实际面积。</p>
+<p>比较固定障碍的两种边界时，应保持几何和网格相同，分别查看电极参考电势、实际壁面电势和法向通量。若只保持某个字段名相同而改变反应条件，所得总电流差异就同时包含边界与几何作用。参数表应将这些条件分开列明。</p>
+<h3>连通性与界面分辨率</h3>
+<p>连通性判据依赖网格上是否存在共享面的气体通路。细颈厚度接近单元尺寸时，阈值改变可能影响连接状态。可在合理阈值范围内复核事件，并通过局部加密检查断开时刻是否稳定。对于多个气体分量，应区分主体气泡、残留气体和小尺度碎片。</p>
+<p>保存场之间可能发生短暂断开或重新连接，较大的输出间隔会遗漏这些过程。研究脱落事件时，宜在预计事件附近提高保存频率，并结合求解时间步检查。当前约零点六秒的记录没有检测到脱落，结论限定于实际计算和保存范围。</p>
+<h3>非线性边界的局部更新</h3>
+<p>在当前壁面电势附近对反应电流展开，可将非线性关系近似为一个参考电势与线性斜率组成的边界。每次更新重新计算反应电流和斜率，随后与溶液内部扩散形式方程共同求解。迭代收敛后，壁面电势应满足原反应关系，而不仅满足某一次线性近似。</p>
+<p>当前代码的过电势采用给定参考电势减去溶液电势，平衡电势已经包含在该参考定义中。应用到具体反应时，应分别明确金属电势、平衡电势和溶液电势，并根据电流正方向确定符号。若改变定义却沿用原指数符号，可能得到方向相反的反应电流。</p>
+<p>检查非线性边界时，可用最终壁面电势代回反应公式，再与溶液侧法向电流比较。两者一致说明界面反应和域内导电达到相容状态。若只查看线性求解器残差，仍可能遗漏边界外迭代未充分更新的问题。较大过电势下，还应检查指数截断和迭代步长对结果的影响。</p>
+<h3>切向投影与体积力单位</h3>
+<p>给定表面张力梯度的单位为牛顿每平方米，乘界面梯度模长后得到牛顿每立方米，再乘单元体积形成离散动量源。每一步单位转换对应界面作用向体积方程的转换。若遗漏单元体积，源强会随网格数量发生非物理变化，因此网格对照也可以帮助检查源项离散。</p>
+<p>法向投影检查可采用一个简单方向组合。给定界面法向沿某坐标方向，切向投影应消去该方向分量，同时保留正交分量。实际曲面上的法向逐单元变化，应在界面区域检查投影误差。纯相中的极小梯度不具有可靠几何方向，当前代码通过阈值跳过这类单元。</p>
+<p>多气泡研究还需区分遮蔽、聚并与传质各自的作用。若首先增加气泡数量而同时改变多项边界，很难从结果中确定主导因素。可保持单泡模型已经验证的方程和参数，逐项增加几何或耦合机制，分别检查总电流、气体质量和连通结构。</p>
+<p>本讲依据本地 v2512 电势边界、codedMixed、vectorCodedSource 实现，以及各算例的输入、日志和连通性统计。已有基础资料用于复习两相界面与运行时代码；Fritz关联式和反应动力学应结合各自的角度定义与适用条件使用。</p>
+<h2>9 导电场与附着气泡的双向反馈</h2>
+<h2>10 模型定义</h2>
+<p>本例表示电极产气经理想集气装置收集后，从中心孔口注入气泡的等效过程。环形电极产生的气体不直接在各电极面上生成VOF体积源；其总产气率经集气后统一成为孔口边界流量。模型求解流动、移动气液界面、稳态导电和入口产气反馈，未求解微观成核、溶解气体扩散、Henry分配及移动界面传质。</p>
+<p>计算域为5°轴对称楔形，半径4 mm、高8 mm。中心孔口半径0.25 mm；环形电极由0.25 mm延伸至1 mm；其余底面为绝缘基底。环形电极电势2 V，顶部0 V。孔口、侧壁和外围基底均为电学绝缘，流入气体不会通过孔口携带电流。流动边界中孔口速度由电流更新，环形电极及基底为noSlip，顶面为压力出口。全部固体的边界theta0=90°。该几何与边界绕轴保持不变。</p>
+<p>径向三段分别为4、12、24个单元，轴向0–2 mm和2–8 mm各40层，共3200个单元。初始气泡为半径0.4 mm的半球，通过setFields按单元中心初始化。水和氢气的物性写在constant/transportProperties；气体换算温度293.15 K、绝对压力101325 Pa，与采用的约20 ℃氢气密度0.0838 kg/m³一致。</p>
+<h2>11 方程 单位与反馈关系</h2>
+<pre><code>以alpha=alpha.water表示液相体积分数。两相体积分数由isoAdvector输运，界面采用plicRDF重构。混合密度为rho=alpha rho_l+(1−alpha)rho_g。速度满足不可压缩体积连续性方程div(U)=0和含重力、黏性及表面张力的动量方程。由于产气从边界输入，域内没有由电极反应直接产生的相分数体积源。
+电导率定义为kappa=kappa_l[alpha+epsilon(1−alpha)]，其中kappa_l=20 S/m。电势Velec的单位为V，电流密度i=−kappa grad(Velec)，单位A/m²。每个流动时间步求解div(kappa grad(Velec))=0。</code></pre>
+<p>0/Velec中的内部零值为首个稳态线性系统提供迭代初猜；电势方程无时间导数，每一步求解当前界面对应的导电场。气体电导率epsilon kappa_l为维持线性系统可解性设置的正则化参数，并非氢气真实电导率。epsilon设为零会使气相内部导电方程退化；因此需要比较多个足够小的正值，并单独检查网格影响。</p>
+<p>面电导率采用调和插值，即kappa_f=1/interpolate(1/kappa)。高、低电导率单元相邻时，调和插值保留低电导区域的主要阻力，避免简单算术平均过度增大跨界面电流。混合单元中的电导率仍由体积分数插值给定，因此界面厚度与网格尺寸会影响近界面导电分布。</p>
+<p>设电极流入计算域的电流为I，则I=−integral(i·n dA)，n为计算域外法向。底部n沿负y，给定电极正电势时电流向上进入液体，I为正。求解器由电势矩阵的离散面通量积分得到电极电流和顶部电流，使电流检查与实际离散方程采用同一通量。</p>
+<pre><code>氢气反应的电子转移数z=2。摩尔产气率为eta I/(zF)，其中本例集气效率eta=1，F=96485.33212 C/mol。孔口体积流量Q=eta IRT/(zFp_abs)，R=8.314462618 J/(mol·K)。孔口速度Uin=Q/Ain，方向为正y。电极面积和孔口面积不同，不能直接用电极电流密度替代孔口速度。
+RT/p采用给定绝对压力。初始球面Laplace压差约2σ/R=360 Pa，为参考绝对压力的0.36%，本例采用恒压体积换算。若研究更小气泡或较大压力变化，应在摩尔量到体积率的换算中更新气泡压力，并重新验证收支。当前incompressible两相方程未求解气体压缩过程。</code></pre>
+<h2>12 程序执行顺序</h2>
+<p>所有源码均在src/myElectroIsoFoam，保留本机interIsoFoam与其依赖头文件。新增createElectroFields.H读取电模型参数、创建电势、电导率和电流密度场，并建立electroBalance.csv。</p>
+<pre><code>updateElectricity.H用当前alpha计算电导率、求解电势、积分电流、更新孔口速度及边界phi。recordElectricity.H记录每一步的电流、累计电荷、气体体积与误差。
+在时间步开始时用alpha^n求得I^n和Q^n。改变孔口速度后先通过CorrectPhi求解辅助压力方程，对面体积通量进行投影，保证界面输运使用连续的phi。随后执行几何VOF输运、动量求解和压力校正，得到alpha^(n+1)与速度场。若只改入口U却不修正phi，界面方程可能使用与新边界流量不相容的面通量。
+该分步耦合在时间上为显式更新，电势与流量由时间步起点的界面决定。CSV中的time为更新后流动时刻，electricTime=time−dt为该行导电场对应的界面时刻。输出电势比同目录中的alpha落后一个时间步；当前步长远小于保存间隔，但读取场图和进行时间步研究时仍需区分两个时刻。
+kappa = sigmaL*(alpha1 + epsilon*(1-alpha1));
+surfaceScalarField kappaf(&quot;kappaf&quot;,1.0/fvc::interpolate(1.0/kappa));
+fvScalarMatrix electricEqn(fvm::laplacian(kappaf,Velec));
+electricEqn.solve();</code></pre>
+<p>上式为便于说明的核心关系，完整源码包含相分数范围限制、量纲声明、电流符号检查和边界赋值。修改电压时编辑0/Velec，修改电导率比、温度或反馈开关时编辑constant/electroProperties。只有更改C++实现时才需要重新编译。</p>
+<h2>13 编译与运行</h2>
+<pre><code>进入当前目录并加载v2512环境后执行./Allrun.sh。所有案例均包含各自源码和Make文件，程序输出至src/myElectroIsoFoam/myElectroIsoFoam。编译记录在log.wmake，求解记录在log.myElectroIsoFoam。
+blockMesh &gt; log.blockMesh 2&gt;&amp;1
+checkMesh &gt; log.checkMesh 2&gt;&amp;1
+setFields &gt; log.setFields 2&gt;&amp;1
+wmake -j 2 src/myElectroIsoFoam &gt; log.wmake 2&gt;&amp;1
+./src/myElectroIsoFoam/myElectroIsoFoam &gt; log.myElectroIsoFoam 2&gt;&amp;1
+wmake的-j 2允许至多两个并行编译任务；src/myElectroIsoFoam指定源目录。Make/files指定主程序和本例可执行文件位置，Make/options链接当前OpenFOAM的几何VOF、有限体积、物性和湍流模型库。源码与链接库须属于同一v2512环境。</code></pre>
+<h2>14 守恒检查与模型检验</h2>
+<p>全周量由5°楔形积分乘72得到。入口速度的计算在楔形域内完成，电流和面积采用同一几何范围，角度系数在其比值中相消。网格边界是平面离散面，实际面积应从网格读取，不能一处使用精确圆面积、另一处使用离散楔形面积而不说明差异。</p>
+<pre><code>每一步按实际时间步累计电荷：C^(n+1)=C^n+I_applied^n Δt。预期气体体积为V_expected=V0+eta RT C/(zFp)。实际气体体积为sum[(1−alpha_i)Vi]。电流不平衡为|I_electrode−I_top|/|I_electrode|，体积收支误差为(Vgas−Vexpected)/Vexpected。</code></pre>
+<p>独立制作阶段还按blockMesh实际单元几何重新计算体积积分，与C++原生积分比较。该检查检验字段读取、单元体积权重和全周换算。α有界、电荷守恒和气体体积守恒并不等同于界面形状或速度已经达到网格无关，应分别检查近接触线网格、毛细时间步、气体电导率和初始化方法。</p>
+<p>气体连通性采用alpha.water&lt;0.5、共享面相邻的单元识别，至少8个单元构成候选区域。选取气体体积最大的区域，检查是否与底面相连。电极气泡的质心升高不能替代该连接判据。当前30 ms计算用于附着生长，不提供脱落时刻或脱落半径。</p>
+<h2>15 三组对照的实际结果</h2>
+<p>反馈基准epsilon=1e-4的电流由0.119665028变为0.112670298 A，相对变化-5.845258%。冻结输入对照的末体积为5.789041446e-10 m³，反馈基准为5.659314011e-10 m³。由于冻结组持续使用初始电流，其累计输入电荷与反馈组不同。两组同时求解瞬时导电场，因此能够观察相同初始输入下取消入口反馈后的结果。</p>
+<figure><img loading="lazy" src="/assets/lessons/27/image5.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>冻结对照仍按瞬时相分数求解电势，但气体入口始终采用初始电流换算的流量。</p>
+<figure><img loading="lazy" src="/assets/lessons/27/image6.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<pre><code>Vexpected=V0+ηRT/(zFp)∫Iapplied dt；体积曲线由实际网格积分独立复核。
+正则化对照epsilon=1e-3的末电流为0.112684408 A。与epsilon=1e-4比较时，采用electricTime对齐并插值，计算(I_1e-3/I_1e-4−1)。该差异包含正则化改变导电场后进一步引起的界面响应，不能仅按某一固定形状上的电导率误差解释。</code></pre>
+<figure><img loading="lazy" src="/assets/lessons/27/image7.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>不同自适应时间步的电流先线性插值到相同electricTime，再计算差异。</p>
+<p>反馈基准全过程最大电流不平衡为2.629163e-10，最终体积收支误差为-5.016237e-10，独立网格积分与原生体积积分差异为8.057219e-14。三组均未检测到脱落。</p>
+<figure><img loading="lazy" src="/assets/lessons/27/image8.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>误差定义为|Vgas−Vexpected|/Vexpected。初期机器舍入误差低于10⁻¹⁶的值按10⁻¹⁶显示。</p>
+<h2>16 后续精度研究</h2>
+<p>先固定电学参数，使用几何体积分数初始化并加密近接触线网格，检查初始体积、界面曲率和电流分布。再固定空间网格，将时间步上限减半，评价显式反馈的时间滞后。比较电流时应统一electricTime，比较气体体积时采用time。</p>
+<p>扩展至电极动力学时，可用局部电流—过电势关系代替2 V定值边界，并保持电极电流积分与离散边界通量一致。扩展至直接界面传质时，需要另外求解溶解组分、相间分配、界面质量通量及相容体积源；不能仅将孔口输入改称界面传质。局部速度研究还应区分纯液相、纯气相与界面单元，避免把低密度气相局部速度当作气泡迁移速度。</p>
+<p>同温同压条件下，电导率比对照的最大电流差为0.012636%，末体积差为0.005630%。冻结电流对照的末体积较反馈组高2.29228%，累计注入体积高2.98540%。该结果表明当前参数下入口反馈的影响高于所比较正则化区间内的差异，仍需用网格与时间步对照评价离散误差。</p>
+<h2>17 计算结果与数据来源</h2>
+<p>下列图表由本讲独立算例的实际保存场、采样数据或原始日志生成。各图的计算条件与误差定义见前述案例分析，原始数值保存在本讲测试结果。</p>
+<figure><img loading="lazy" src="/assets/lessons/27/image9.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>红线为实际αwater=0.5轮廓；电势在该时间步开始时由相分数计算，具体electricTime见CSV。</p>
+<figure><img loading="lazy" src="/assets/lessons/27/image10.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>红线为实际αwater=0.5轮廓；电势在该时间步开始时由相分数计算，具体electricTime见CSV。</p>
+<figure><img loading="lazy" src="/assets/lessons/27/image11.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>红线为实际αwater=0.5轮廓；电势在该时间步开始时由相分数计算，具体electricTime见CSV。</p>
+<section class="exercise"><h2>课后练习</h2><p>用路线 A 扫描接触角（至少 3 档），将脱落半径与 Fritz 公式对比；并针对自己的学位论文课题写一份求解方案选型报告，含主选方案、备选方案与选择理由。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
+</div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="27">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=27">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/26/">← 上一讲<span>电极气泡的产气与生长</span></a><a href="/lessons/28/">下一讲 →<span>结课项目与定量验证</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>第 2 章　安装与环境激活 · FoamLab</title>
+  <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="reference" data-lesson="">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>第 2 章　安装与环境激活</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>第 2 章　安装与环境激活</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
+<p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h4>2.1 三条安装路线怎么选</h4>
+<div class="table-scroll"><table>
+<tr><th>路线</th><th>适合谁</th><th>代价</th></tr>
+<tr><td>deb 二进制包</td><td>只想用、不改源码</td><td>5 分钟装完，但装在 /usr/lib/openfoam 下，改源码需要 root</td></tr>
+<tr><td>源码编译</td><td>要读源码、写自己的求解器（推荐给做科研的）</td><td>首次编译 1–3 小时</td></tr>
+<tr><td>Docker / WSL2</td><td>主力系统是 Windows 或 macOS</td><td>多一层容器，图形界面（ParaView）配置略麻烦</td></tr>
+</table></div>
+<h4>2.2 路线一：deb 包安装（Ubuntu）</h4>
+<pre><code># ① 添加官方软件源（只需一次）
+curl -s https://dl.openfoam.com/add-debian-repo.sh | sudo bash
+
+# ② 安装 v2512
+sudo apt update
+sudo apt install openfoam2512-default
+
+# ③ 激活环境
+source /usr/lib/openfoam/openfoam2512/etc/bashrc
+foamVersion</code></pre>
+<p>为什么第 ③ 步不能省：OpenFOAM 不是一个程序，而是几百个可执行文件 + 几十个库 + 一大堆环境变量。etc/bashrc 这个脚本做的事就是把它们的路径塞进 PATH、LD_LIBRARY_PATH 和一系列 $FOAM_* 变量里。没 source 过，终端根本不知道 blockMesh 在哪儿。</p>
+<h4>2.3 路线二：源码编译（Ubuntu 26.04，装到家目录）</h4>
+<p>装到 ~/OpenFOAM 而不是 /usr/lib 的理由：改源码、加自己的求解器都不需要 sudo，多版本共存也干净。</p>
+<pre><code># ① 装编译依赖
+sudo apt update
+sudo apt install -y build-essential autoconf autotools-dev cmake gawk gnuplot \
+  flex libfl-dev libreadline-dev zlib1g-dev openmpi-bin libopenmpi-dev \
+  mpi-default-bin mpi-default-dev libgmp-dev libmpfr-dev libmpc-dev
+
+# ② 建目录并下载源码（OpenFOAM 本体 + ThirdParty 第三方库）
+mkdir -p ~/OpenFOAM &amp;&amp; cd ~/OpenFOAM
+wget https://dl.openfoam.com/source/v2512/OpenFOAM-v2512.tgz
+wget https://dl.openfoam.com/source/v2512/ThirdParty-v2512.tgz
+tar -xzf OpenFOAM-v2512.tgz
+tar -xzf ThirdParty-v2512.tgz
+
+# ③ 激活环境（编译前必须先 source，编译脚本靠环境变量找路径）
+source ~/OpenFOAM/OpenFOAM-v2512/etc/bashrc
+
+# ④ 编译前体检：检查 gcc、mpi、flex 等是否齐全
+foamSystemCheck
+
+# ⑤ 编译（-j 用满所有核心；-s 静默；-l 写日志，出错时好排查）
+cd $WM_PROJECT_DIR
+./Allwmake -j -s -l
+
+# ⑥ 编译后自检
+foamInstallationTest</code></pre>
+<p>关于 ThirdParty：里面是 scotch（并行分区）、CGAL、FFTW 等第三方库。ESI 版在 Ubuntu 上大多能直接用系统自带的这些库，所以 ThirdParty 常常只需要解压、不需要单独编译。若 foamSystemCheck 提示某个库缺失，再进 ThirdParty 目录跑 ./Allwmake。</p>
+<p>编译要多久：8 核虚拟机大约 1–2 小时。中途断了不要紧，./Allwmake 可以重复执行，已编译好的不会重来。</p>
+<h4>2.4 让 source 变得省事（同时支持多版本共存）</h4>
+<p>不要把 source .../etc/bashrc 直接写进 ~/.bashrc。原因：以后你多半会同时装 v2512 和别的版本，两个环境的变量会互相污染，出现”命令找得到但库版本对不上”这类极难排查的问题。</p>
+<p>正确做法是在 ~/.bashrc 末尾加别名，用哪个版本就敲哪个别名：</p>
+<pre><code># ~/.bashrc 末尾
+alias of2512=&#x27;source $HOME/OpenFOAM/OpenFOAM-v2512/etc/bashrc&#x27;
+alias of2506=&#x27;source $HOME/OpenFOAM/OpenFOAM-v2506/etc/bashrc&#x27;
+$ source ~/.bashrc     # 让别名立即生效
+$ of2512               # 从此每开一个终端，敲一次这个
+$ foamVersion</code></pre>
+<h4>2.5 路线三：Docker / WSL2（Windows 用户）</h4>
+<pre><code># WSL2：先在 PowerShell 里装 Ubuntu，之后一切按 2.2 / 2.3 操作
+wsl --install -d Ubuntu
+
+# Docker：官方镜像
+docker run -it --rm -v $HOME/OpenFOAM:/data opencfd/openfoam-default:2512</code></pre>
+<p>WSL2 里跑 ParaView 有两种方式：装 Windows 版 ParaView，然后在 Windows 里打开 WSL 路径（\\wsl$\Ubuntu\home\你的用户名\...）；或在 WSL 里装 Linux 版 ParaView（Windows 11 的 WSLg 已内置图形支持）。推荐前者，更流畅。</p>
+<h4>2.6 ParaView 怎么装</h4>
+<p>deb 包 openfoam2512-default 会带一个 ParaView。如果想用新版（例如 6.x），去 paraview.org 下官方二进制包解压到家目录，然后把它的 bin 加进 PATH：</p>
+<pre><code>echo &#x27;export PATH=$HOME/ParaView-6.1.1/bin:$PATH&#x27; &gt;&gt; ~/.bashrc</code></pre>
+<p>注意顺序问题：如果你既装了 OpenFOAM 自带的 ParaView 又装了官方包，paraFoam 命令会去调用 $ParaView_DIR 指向的那个。想强制用自己装的，直接用 paraview 打开算例里的 .foam 文件即可（见第 8 章）。</p>
+</div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

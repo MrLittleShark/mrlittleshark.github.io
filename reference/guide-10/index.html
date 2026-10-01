@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>第 10 章　编译与二次开发命令 · FoamLab</title>
+  <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="reference" data-lesson="">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>第 10 章　编译与二次开发命令</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>第 10 章　编译与二次开发命令</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
+<p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h4>10.1 wmake 系列</h4>
+<p>wmake 是 OpenFOAM 自己的编译系统（对 make 的封装），你自己写的求解器、边界条件、functionObject 都用它编译。</p>
+<div class="table-scroll"><table>
+<tr><th>命令</th><th>作用</th></tr>
+<tr><td>wmake</td><td>编译当前目录的程序或库</td></tr>
+<tr><td>wmake -j8</td><td>用 8 核并行编译</td></tr>
+<tr><td>wmake libso</td><td>编译成动态库（写边界条件/模型时用）</td></tr>
+<tr><td>wmake all</td><td>递归编译子目录</td></tr>
+<tr><td>wclean</td><td>清理当前目录的编译产物</td></tr>
+<tr><td>wclean all</td><td>递归清理</td></tr>
+<tr><td>wmakeLnInclude &lt;目录&gt;</td><td>生成 lnInclude 符号链接目录（头文件索引）</td></tr>
+<tr><td>wmakeFilesAndOptions</td><td>生成 Make/files 与 Make/options 模板</td></tr>
+<tr><td>wmakeCollect</td><td>批量编译加速（编译整个 OpenFOAM 时用）</td></tr>
+</table></div>
+<h4>10.2 一个自定义求解器的最小流程</h4>
+<pre><code># ① 到你的私有开发目录（不要污染安装目录！）
+$ mkdir -p $WM_PROJECT_USER_DIR/applications/solvers
+$ cd $WM_PROJECT_USER_DIR/applications/solvers
+
+# ② 复制官方求解器做起点
+$ cp -r $FOAM_SOLVERS/incompressible/icoFoam myIcoFoam
+$ cd myIcoFoam
+$ mv icoFoam.C myIcoFoam.C
+$ wclean                       # 清掉复制过来的旧编译产物
+
+# ③ 改 Make/files
+$ cat Make/files
+myIcoFoam.C
+EXE = $(FOAM_USER_APPBIN)/myIcoFoam      # ★ 指向 USER 目录，不是 FOAM_APPBIN
+
+# ④ 编译
+$ wmake
+$ which myIcoFoam
+/home/chen/OpenFOAM/chen-v2512/platforms/linux64GccDPInt32Opt/bin/myIcoFoam</code></pre>
+<p>为什么必须放在 $WM_PROJECT_USER_DIR：安装目录随时可能被升级覆盖，而且改动混在官方代码里以后无法分辨。$FOAM_USER_APPBIN 已经在 PATH 里，编译完直接就能用。</p>
+<p>Make/files 与 Make/options 是什么</p>
+<pre><code># Make/files —— 编译哪些源文件、产物叫什么、放哪
+myIcoFoam.C
+EXE = $(FOAM_USER_APPBIN)/myIcoFoam
+
+# Make/options —— 去哪找头文件（-I）、链接哪些库（-l）
+EXE_INC = \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+EXE_LIBS = \
+    -lfiniteVolume \
+    -lmeshTools</code></pre>
+<p>编译报 error: xxx.H: No such file 就是 EXE_INC 少了路径；报 undefined reference to ... 就是 EXE_LIBS 少了库。这两类报错的定位方法要记住，应结合完整错误信息进一步检查头文件、链接配置与版本匹配。</p>
+<h4>10.3 codeStream 与 codedFixedValue：不编译也能写代码</h4>
+<p>是什么：直接在字典里嵌 C++ 代码，OpenFOAM 运行时自动编译成库并加载。</p>
+<p>为什么重要：给一个抛物线入口速度、给一个随时间变化的热流，本来要写一个边界条件类 + 编译 + 链接；用 codedFixedValue 三行就完事。</p>
+<pre><code>// 0/U 里给一个抛物线入口
+inlet
+&#123;
+    type            codedFixedValue;
+    value           uniform (0 0 0);
+    name            parabolicInlet;          // 生成的类名，必须唯一
+    code
+    #&#123;
+        const fvPatch&amp; p = patch();
+        const vectorField&amp; c = p.Cf();       // 面心坐标
+        scalarField y = c.component(1);
+        operator==(vector(1,0,0)*1.5*(1.0 - sqr(y/0.05)));
+    #&#125;;
+&#125;
+// system/controlDict 里用 #codeStream 动态算一个值
+endTime  #codeStream
+&#123;
+    code #&#123; os &lt;&lt; 10.0*2; #&#125;;
+&#125;;</code></pre>
+<p>改了代码不生效？ 动态编译的产物缓存在算例的 dynamicCode/ 目录里。改完 code 块必须清缓存：</p>
+<pre><code>$ rm -rf dynamicCode
+# 或
+$ . $WM_PROJECT_DIR/bin/tools/CleanFunctions &amp;&amp; cleanDynamicCode</code></pre>
+<h4>10.4 自定义库的加载</h4>
+<p>不改求解器就用上自己的边界条件/模型：</p>
+<pre><code>// controlDict
+libs (&quot;libmyBCs.so&quot; &quot;libmyModels.so&quot;);</code></pre>
+<p>或命令行：</p>
+<pre><code>$ simpleFoam -libs &#x27;(&quot;libmyBCs.so&quot;)&#x27;</code></pre>
+<h4>10.5 骨架生成器</h4>
+<pre><code>$ foamNewApp myApp                 # 应用程序骨架（含 Make/files、Make/options）
+$ foamNewBC -f myFixedValue        # 边界条件骨架
+$ foamNewFunctionObject myProbe    # functionObject 骨架
+$ foamNewSource lib myClass        # 库源文件骨架</code></pre>
+<h4>10.6 读源码的路径速查</h4>
+<div class="table-scroll"><table>
+<tr><th>想看什么</th><th>去哪</th></tr>
+<tr><td>某求解器解了哪些方程</td><td>$FOAM_SOLVERS/&lt;类别&gt;/&lt;求解器&gt;/ 下的 UEqn.H、pEqn.H</td></tr>
+<tr><td>边界条件的实现</td><td>$FOAM_SRC/finiteVolume/fields/fvPatchFields/derived/</td></tr>
+<tr><td>湍流模型</td><td>$FOAM_SRC/TurbulenceModels/</td></tr>
+<tr><td>离散格式</td><td>$FOAM_SRC/finiteVolume/interpolation/surfaceInterpolation/limitedSchemes/</td></tr>
+<tr><td>functionObject</td><td>$FOAM_SRC/functionObjects/</td></tr>
+<tr><td>热物性模型</td><td>$FOAM_SRC/thermophysicalModels/</td></tr>
+</table></div>
+<pre><code>$ grep -rn &quot;class inletOutletFvPatchField&quot; $FOAM_SRC --include=*.H | head
+$ find $FOAM_SRC -name &quot;kOmegaSST*&quot;</code></pre>
+<h2>第三部分　文件与字典设置方法</h2>
+</div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

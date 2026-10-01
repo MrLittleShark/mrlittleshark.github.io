@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>格式误差实验 · FoamLab</title>
+  <meta name="description" content="一维纯对流（scalarTransportFoam）：不同对流格式的数值耗散与色散，与行波解析解对比；②二维拉普拉斯方程：单元类型与梯度格式对梯度精度的影响；③非正交方腔：非正交修正开/关的对照，以及配套的 fvSolution 设置；④高 Péclet 数对流—扩散：用溶解气体的真实扩散系数重复实验①，观察负浓度与过冲从何而来；⑤误差—耗时权衡曲线的做法。">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="lesson" data-lesson="16">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>格式误差实验</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">LESSON 16 / 28 · 数值方法与验证</div><h1>格式误差实验</h1><div class="article-meta"><span>建议学习 90 分钟</span><span>OpenFOAM v2512</span><a href="/downloads/lesson-16.docx" download>下载本讲讲义 ↓</a><a href="/downloads/lesson-16-cases.zip" download>下载配套算例 ↓</a></div><div class="prose">
+<section class="lesson-intro"><h2>本讲学习任务</h2><p>①一维纯对流（scalarTransportFoam）：不同对流格式的数值耗散与色散，与行波解析解对比；②二维拉普拉斯方程：单元类型与梯度格式对梯度精度的影响；③非正交方腔：非正交修正开/关的对照，以及配套的 fvSolution 设置；④高 Péclet 数对流—扩散：用溶解气体的真实扩散系数重复实验①，观察负浓度与过冲从何而来；⑤误差—耗时权衡曲线的做法。</p></section>
+<p class="source-note">配套算例来自已有课程。下载解压后阅读其中的 README 与运行脚本，并在已加载 v2512 环境的 Linux 终端执行。本站未重新运行这些算例；原讲义中的本机路径需改为自己的实际路径。</p>
+<p>配套算例位于原课程“16_格式误差实验”目录。文中相对路径以该讲目录或已注明的算例目录为准。</p>
+<pre><code>OpenCFD OpenFOAM v2512</code></pre>
+<h2>1 对照实验的控制条件</h2>
+<p>一维周期问题满足 ∂T/∂t+U∂T/∂x=0，U=1 m/s，T 无量纲，物理扩散为零。精确分布仅平移，形状和幅值不变。本讲以五种空间格式、三档 Courant 数比较相对精确解的偏差。</p>
+<pre><code>计算域长 1 m，x 方向划分 100 个均匀单元，Δx=0.01 m。左右边界为周期条件，其余方向采用 empty。空间格式为 upwind、linear、linearUpwind、limitedLinear 和 vanLeer，时间格式统一为隐式 Euler。每种格式设置 Co=0.2、0.5、0.8，共 15 组独立算例。</code></pre>
+<p>固定网格与速度时，三档 Co 对应 Δt=0.002、0.005、0.008 s。endTime 均设为 0.5 s，但末次保存时刻分别为 0.5、0.5、0.496 s。误差按各组实际时刻构造精确解，比较时应注明这一时刻差异。</p>
+<p>对照分为两类：固定 Co 比较空间格式，固定空间格式比较时间步。网格和初始分布保持一致。各组保留字典与日志，使误差表中的结果可追溯至实际输入，而非仅依据目录名称判断条件。</p>
+<h2>2 精确解 采样与误差定义</h2>
+<p>T₀(x)=exp(−((x−0.25)/0.06)²)，恒速精确解为 T₀(x−Ut)，坐标按 1 m 周期映射。t=0.5 s 时峰中心在 0.75 m。参考值在单元中心采样，离散最大值约 0.99308，保留初始峰形。</p>
+<pre><code>comparison.csv 的 x、initial、exact 和 numerical 分别为单元中心坐标、初值、精确解和数值解，误差按同一行计算。节点值或其他网格上的插值结果须先统一采样定义，才能与原数组比较。</code></pre>
+<p>均匀网格上，L1=Σ|ei|/N，L2=√(Σei²/N)，最大误差为 max|ei|。三者分别反映平均绝对偏差、对较大局部误差的响应及最严重偏离。非均匀网格应采用单元体积加权，避免细网格区因单元较多而获得过高统计权重。</p>
+<p>总量指标需要另外定义。本课程 JSON 中 mass_error 实际为数值场平均值减初始平均值，其单位与 T 一致，本例为无量纲。由于网格均匀、总体积固定，该指标与标量体积积分差相差固定总体积因子。它不是相对误差，报告时不得再附加百分号，也不能在不同总体积的模型间直接比较。</p>
+<p>例如四个等体积单元误差为零点一、负零点一、零点二、负零点二，带符号平均为零，而 L1 为零点一五。正负误差在积分中抵消，但局部偏差仍显著。对于浓度等非负变量，负误差还可能导致欠冲，这需要由场最小值单独检查。</p>
+<h2>3 空间格式与时间耗散</h2>
+<pre><code>upwind 以迎流单元值构造面值，稳定性通常较好，但产生数值扩散。本例隐式上风的主导等效扩散约为 UΔx(1+Co)/2。减小 Co 仅降低时间贡献，空间贡献仍使零物理扩散下的峰值衰减、分布展宽。
+linear 采用线性插值，linearUpwind 则在上游值上增加梯度修正，通常能更好保留光滑分布的幅值。但其高阶修正可能在陡峭区域引入局部振荡，表现为超过允许最大值或低于允许最小值。是否发生这种现象取决于空间和时间离散的组合，不能仅依据某一格式名称判断。
+limitedLinear 与 vanLeer 根据局部梯度关系限制修正，抑制过冲和欠冲。限制器在不同区域的作用不相同，平滑部分可以保留较多高阶信息，较陡区域则可能增加耗散。因此计算结果既要看总体范数，也要看局部极值和峰形。一个 L1 略小的结果，仍可能包含对所研究变量不允许的负值。</code></pre>
+<p>隐式 Euler 为一阶时间格式，其时间误差同样会平滑瞬态分布。在较大 Co 下，时间耗散可能掩盖空间格式的振荡；减小 Co 后，整体形状更接近精确解，但原先被平滑的欠冲可能更明显。这并不矛盾，因为总体误差范数和最小值衡量不同特性。时间步选择需同时满足精度及变量约束。</p>
+<p>相位误差还需从特征位置判断。峰值数值接近但峰中心偏移时，阈值到达时间或传播速度仍可能错误；峰位置正确但宽度过大，也会改变高浓度区域范围。因此图表应保留完整曲线，而不能只展示误差柱状图。</p>
+<p>高斯分布还可以用半高宽表征展宽。对初始函数，令函数值等于峰值的一半，可得离峰中心的距离为零点零六乘以根号下二的自然对数，因此理论半高全宽约为零点零九九九一米。计算数值曲线半高宽时，应先确定采用理论峰值的一半还是数值峰值的一半。前者同时反映幅值衰减和宽度变化，后者更接近描述数值峰的相对形状，两种定义不能混用。</p>
+<p>若数值最大值已经低于理论半高阈值，按理论峰值定义的宽度就不存在；这不是后处理读数失败，而是分布已衰减到所选阈值以下。此时可使用数值峰半高宽、二阶矩或完整误差范数评价形状，并注明定义。误差指标需要适应当前数据范围，不能为得到一个数值而任意改变阈值。</p>
+<p>此外，较短传播距离通常减少累计离散误差。本组第三档实际保存时刻略早，因此图表中的误差不是完全相同传播距离下的结果。后续重算可调整时间步、结束条件和输出安排，使各组恰好达到共同目标时刻；也可选取所有组均保存的时刻比较。数据对齐之后再讨论收敛阶，才能把时间采样差异与离散误差分开。</p>
+<h2>4 完整输入与运行方法</h2>
+<p>各目录 Allrun.sh 依次执行 blockMesh、checkMesh、scalarTransportFoam 和速度模后处理。主程序读取给定 U，仅求解 T。完整初始列表随目录保存，可独立运行。</p>
+<pre><code>source /usr/lib/openfoam/openfoam2512/etc/bashrc
+cd 代码/vanLeer_Co0.5
+./Allrun.sh
+关键修改位于 fvSchemes 的 div(phi,T) 以及 controlDict 的 deltaT。DT 为零，T 的 dimensions 为全零，Euler 设置在 ddtSchemes。本例 T 的线性求解器为 PBiCGStab，预条件器为 DILU，绝对容差为 10⁻¹²，relTol 为零，以控制代数迭代误差。
+ddtSchemes &#123; default Euler; &#125;
+divSchemes
+&#123;
+    default none;
+    div(phi,T) Gauss vanLeer;
+&#125;</code></pre>
+<p>保持相同初始分布时，不要在运行后将最后时刻覆盖到零目录再比较另一格式，否则改变了初值并减少了需要输运的尖锐程度。参数比较应从各目录给定的初场开始。改网格数量时，也要重新计算逐单元初值，原来一百个数不能直接用于其他数量或排序的单元。</p>
+<pre><code>comparison.csv 为课程测试后根据保存场生成的核查数据。若修改参数后只重新运行求解器，该表应重新生成或在 ParaView 中重新导出对应场，再计算精确解；不能继续引用修改前的比较表。图后注明结果来自哪次输入和哪个时刻，可以避免把旧数据用于新参数。</code></pre>
+<h2>5 十五组结果的比较</h2>
+<div class="table-scroll"><table>
+<tr><th>空间格式</th><th>Co=0.2 的 L1</th><th>Co=0.5 的 L1</th><th>Co=0.8 的 L1</th></tr>
+<tr><td>upwind</td><td>0.0723556</td><td>0.0801808</td><td>0.0862039</td></tr>
+<tr><td>linear</td><td>0.0250758</td><td>0.0446289</td><td>0.0582671</td></tr>
+<tr><td>linearUpwind</td><td>0.0248689</td><td>0.0449475</td><td>0.0586338</td></tr>
+<tr><td>limitedLinear</td><td>0.0258238</td><td>0.0449838</td><td>0.0585645</td></tr>
+<tr><td>vanLeer</td><td>0.0259822</td><td>0.0456480</td><td>0.0546689</td></tr>
+</table></div>
+<figure><img loading="lazy" src="/assets/lessons/16/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>固定 Co 为零点五时，一阶上风的 L1 明显大于其他四种格式，峰值约为 0.441323。其他四种的最大值约在零点六三至零点六五之间，仍明显低于精确采样峰值，说明空间格式改进后时间及剩余空间误差仍然存在。不能把某条曲线相对更接近精确解描述为已经没有数值扩散。</p>
+<figure><img loading="lazy" src="/assets/lessons/16/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>当前数据中，所有格式的 L1 均随 Co 从零点二增至零点八而增大。前两档时刻一致，可直接分析时间步影响；第三档计算时长略短，误差变化还包含这一差异。较高阶格式从零点五减至零点二时，L1 下降较明显；upwind 也改善，但仍保留较大的空间数值扩散。三档采用相同采样定义，但严格时间步对照还需把第三档输出时刻对齐。</p>
+<p>在 Co 为零点八时，vanLeer 的 L1 约为 0.0546689，小于其他高阶或限制格式；在 Co 为零点二时，linearUpwind 的 L1 约为 0.0248689，略小于 linear。排序随时间步改变，说明空间格式和时间离散共同决定结果。对于差异较小的几组，还应结合极值及误差位置分析，而非仅按表格最后一位排序。</p>
+<h2>6 欠冲与守恒的独立检查</h2>
+<p>Co 为零点二时，linear 的最小值约为 −0.00205108，linearUpwind 为 −0.00172506；二者的最大值分别约为 0.796235、0.782802。减小时间步改善了峰值及总体范数，却使负向振荡比 Co 为零点五时更明显。隐式时间耗散的减少，使空间高阶修正的局部振荡表现出来。</p>
+<figure><img loading="lazy" src="/assets/lessons/16/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<figure><img loading="lazy" src="/assets/lessons/16/image4.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<pre><code>vanLeer 在 Co 为零点二时最小值约为 1.10×10⁻²⁵，最大值约为 0.755563；limitedLinear 的最小值约为 2.33×10⁻¹⁴，最大值约为 0.753124。当前两种限制格式保持了非负结果，峰值低于线性类结果，体现了局部极值控制与幅值保持之间的差异。</code></pre>
+<p>全部十五组的平均值差绝对值约在 10⁻¹² 量级或更小，明显小于 L1 误差。该结果说明共用面通量保持了总体收支，而曲线形状仍因离散发生改变。守恒性是输运计算的一项必要检查，不能用来替代准确性或有界性判断。</p>
+<p>欠冲是否可接受取决于变量定义。对温度扰动，负值可能具有正常意义；对绝对浓度或体积分数，负值通常违反约束。本例 T 为无量纲测试标量，可用来显示算法特性，但应用到实际组分方程时，应根据非负要求重新选择和验证格式。</p>
+<h2>7 扩展实验与误差结论</h2>
+<p>若把初始高斯分布改成阶跃，界面处梯度更陡，高阶格式的振荡和限制器的作用通常更容易观察。扩展前应保持同样周期域、速度和终止时刻，并在新目录中保存完整初始场。误差表增加欠冲幅度、过冲幅度和阶跃位置，才能评价新的分布特性。</p>
+<p>计算空间收敛阶时，应建立至少三档网格，并使时间误差足够小。保持同一 Co 加密网格会同时减小时间步，所得总误差下降混合两种贡献。计算时间收敛阶则固定网格和空间格式，逐步减小 Δt，检查相邻结果或与精确解之间的误差变化。不同变量的范数和取样规则均应保持一致。</p>
+<p>当前有限三档 Co 并非严格的时间收敛阶实验，还存在固定空间误差。某格式的 L1 随时间步减小后趋于平台，可能意味着空间误差开始占主导；此时继续减小时间步收益有限，应改做空间网格对照。若极值仍出现振荡，则需要检查限制器和空间插值，而非只延长求解时间。</p>
+<p>结果说明应包括控制方程、初值公式、周期条件、实际网格、时间格式、Co、比较时刻和误差定义。结论直接对应当前数据：一阶上风耗散较大，时间步减小降低本组 L1，线性类格式出现欠冲，限制格式在当前测试中保持非负。把这些具体结果用于后续模型时，再按实际网格、方程和变量约束验证。</p>
+<h2>8 命令查询与结果复核</h2>
+<p>以下命令在指定算例目录执行。运行脚本生成网格、日志及结果后，再进行结果查询；需要修改设置时，先保留完整算例副本。</p>
+<h3>算例参数核对</h3>
+<p>执行目录为 代码/vanLeer_Co0.5。</p>
+<pre><code>pwd
+foamDictionary system/controlDict -entry deltaT -value
+foamDictionary system/fvSchemes -entry divSchemes
+head -n 5 comparison.csv</code></pre>
+<p>目录名标明格式和目标 Co，实际参数以字典为准，comparison.csv 包含保存场与精确平移解的对比。</p>
+<p>使用计算时间步 deltaT 求 Co=U*deltaT/dx，并核对目录名和字典设置。</p>
+<p>五种格式分别配置三档 Co，网格和初始场相同。Co=0.8 的结果保存于 0.496 s，跨 Co 比较时应先核对实际时刻；严格时间步对照需统一比较时刻。</p>
+<h3>极值 积分与格式误差</h3>
+<p>执行目录为 代码/vanLeer_Co0.5。</p>
+<pre><code>postProcess -func &#x27;fieldMinMax(T)&#x27; -latestTime
+foamDictionary 0/T -entry dimensions -value
+foamDictionary constant/transportProperties -entry DT
+fieldMinMax 输出保存场的极值，结合曲线读取峰值、峰宽及相位，并计算 L1 误差。</code></pre>
+<p>本例 T 无量纲、DT 为零，分布变化主要反映离散误差。</p>
+<p>限制器的数值表现受网格、时间离散及方程设置影响，应根据实际场评价有界性和误差。</p>
+<h2>9 误差来源分离与一致采样</h2>
+<p>数值结果同时受空间离散、时间离散和迭代误差影响。固定网格减小时间步，可以观察时间误差；固定足够小的时间步并细化网格，可以观察空间误差。保持 Co 不变时，Δt 随 Δx 改变，得到的是组合误差的变化，不能直接把观察到的阶数称为空间格式的理论阶数。若某一误差已被另外一种误差淹没，继续单项加密可能出现平台。</p>
+<pre><code>对于单元误差 e_i，体积加权 L1 为 ΣV_i|e_i|/ΣV_i，L2 为 [ΣV_i e_i²/ΣV_i]^(1/2)，最大误差为 max|e_i|。非均匀网格上直接按单元数平均，会使局部细网格区域获得过大的统计权重。计算误差还需明确字段表示单元中心采样还是单元平均，参考值必须采用相同定义。</code></pre>
+<p>本讲解析解为初始高斯函数的周期平移。实际输出时间存在差异：Co=0.8 保存至 0.496 s，其余两档保存至 0.5 s，因此每一组应使用自己的实际时刻建立参考解。指标 mass_error 在现有记录中为最终均值减初始均值；均匀网格下乘域总体积才能换算为积分差。它不是除以初始总量后的相对误差。</p>
+<h2>10 资料来源</h2>
+<pre><code>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 770–814 页。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</code></pre>
+<section class="exercise"><h2>课后练习</h2><p>用同一算例扫描 5 种对流格式 × 3 个 CFL 数，绘制误差—耗时散点图并给出选型建议。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
+</div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="16">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=16">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/15/">← 上一讲<span>残差与边界条件</span></a><a href="/lessons/17/">下一讲 →<span>静止气泡与寄生流</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

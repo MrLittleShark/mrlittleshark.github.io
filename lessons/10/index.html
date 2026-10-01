@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>snappyHexMesh 实战 · FoamLab</title>
+  <meta name="description" content="圆柱、混合弯管两个梯度算例，再加一个微柱阵列电极；②从 STL 到可用网格的脚本化流程（run_mesh.sh / Allrun）；③故意用一组会导致边界层覆盖率不足的参数，读日志自行定位并修好；④并行加网格：decomposePar → snappyHexMesh -parallel → reconstructParMesh；⑤surfaceCheck 与 STL 修补要点（微米级几何的单位陷阱）；⑥本方向的取舍：浓度边界层需要贴壁加密，但高纵横比的贴壁层会恶化接触线附近的曲率计算。">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="lesson" data-lesson="10">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>snappyHexMesh 实战</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">LESSON 10 / 28 · 网格生成与质量</div><h1>snappyHexMesh 实战</h1><div class="article-meta"><span>建议学习 90 分钟</span><span>OpenFOAM v2512</span><a href="/downloads/lesson-10.docx" download>下载本讲讲义 ↓</a><a href="/downloads/lesson-10-cases.zip" download>下载配套算例 ↓</a></div><div class="prose">
+<section class="lesson-intro"><h2>本讲学习任务</h2><p>①圆柱、混合弯管两个梯度算例，再加一个微柱阵列电极；②从 STL 到可用网格的脚本化流程（run_mesh.sh / Allrun）；③故意用一组会导致边界层覆盖率不足的参数，读日志自行定位并修好；④并行加网格：decomposePar → snappyHexMesh -parallel → reconstructParMesh；⑤surfaceCheck 与 STL 修补要点（微米级几何的单位陷阱）；⑥本方向的取舍：浓度边界层需要贴壁加密，但高纵横比的贴壁层会恶化接触线附近的曲率计算。</p></section>
+<p class="source-note">配套算例来自已有课程。下载解压后阅读其中的 README 与运行脚本，并在已加载 v2512 环境的 Linux 终端执行。本站未重新运行这些算例；原讲义中的本机路径需改为自己的实际路径。</p>
+<p>配套算例位于原课程“10_snappyHexMesh操作与验证”目录。文中相对路径以该讲目录或已注明的算例目录为准。</p>
+<pre><code>OpenCFD OpenFOAM v2512</code></pre>
+<p>本讲以圆柱凸起阵列的贴体网格和壁面层网格为主要案例。保留layers作为加层失败的诊断例，比较目标层数、实际覆盖率及质量阈值。原有失败结果见相关分析，成功加层结果与参数依据见本讲新增章节。</p>
+<h2>1 近壁网格与壁面层</h2>
+<p>壁面附近的速度、温度或浓度沿法向显著变化，壁面剪切与扩散通量的计算依赖该梯度。壁面层以较薄且方向有序的单元增加法向离散点，提高近壁变化的分辨率。</p>
+<p>壁面层首先改变网格几何，其对梯度和通量精度的影响需通过求解验证。本讲三组仅生成网格并检查质量，图像用于评价形状、层数和覆盖范围。controlDict 中的 application 条目不代表已经求解，执行内容以 Allrun.sh 为准。</p>
+<p>背景计算域的 x、z 范围均为 −0.002～0.002 m，y 范围为 0～0.004 m。各方向划分 16 个单元，共 4096 个，边长为 0.25 mm。posts.stl 的 x、z 范围均为 −1.1～1.1 mm，y 范围为 −0.2～1.5 mm，部分表面位于背景底面以下，需检查二者的交截关系。</p>
+<h2>2 从背景网格到贴体网格</h2>
+<pre><code>snappyHexMesh 依次处理细化裁切、表面贴合与壁面层。细化阶段依据表面及保留点确定流体区域，贴体阶段移动边界点，加层阶段再调整近壁网格并挤出单元。前一阶段的质量影响后续操作。</code></pre>
+<p>本例启用切割、贴合和加层三个阶段。表面细化等级为 1，相关区域边长约减半，不同等级间保留三层过渡单元。locationInMesh=(0.0018 0.0038 0.0018) 位于外部流体区，用于选择保留的连通区域。</p>
+<pre><code>castellatedMesh true;
+snap true;
+addLayers true;
+refinementSurfaces
+&#123;
+    posts
+    &#123;
+        level (1 1);
+        patchInfo &#123; type wall; &#125;
+    &#125;
+&#125;
+locationInMesh (0.0018 0.0038 0.0018);
+posts.stl 以 triSurfaceMesh 类型读入，几何对象命名为 posts，后续细化条目引用该名称。表面文件、对象名、最终边界和加层选择表达式应对应一致。预期表面未被选中时，应先修正名称，再调整层厚参数。</code></pre>
+<p>本例启用隐式特征识别，关闭显式特征贴合。顶点通过平滑、位移求解及松弛逐步接近表面，过大位移可能降低邻近单元质量。应分别检查凸起顶部、侧壁、底部交线和邻近单元，综合评价贴合程度。</p>
+<h2>3 层厚参数及其几何含义</h2>
+<p>层厚配置需同时明确层数、厚度比和长度基准。relativeSizes=true 时厚度相对局部网格定义，finalLayerThickness 表示最外层厚度。expansionRatio 控制层间增长，通常使外层厚于第一层。</p>
+<pre><code>relativeSizes true;
+layers
+&#123;
+    &quot;posts.*&quot; &#123; nSurfaceLayers 2; &#125;
+&#125;
+expansionRatio 1.2;
+finalLayerThickness 0.3;
+minThickness 0.05;</code></pre>
+<p>若第一层厚度为 h₁，相邻层比为 r，则第 k 层厚度为 hₖ=h₁r^(k−1)，总厚度为各层厚度之和。r 不等于一时，H=h₁(r^N−1)/(r−1)。已知最外层厚度 hN 时，先计算 h₁=hN/r^(N−1)，再求总厚度。两种输入定义不能直接互换，否则会把第一层或整体厚度估计错误。</p>
+<p>例如三层单元的第一层厚度为 0.02 mm，增长比为 1.2，则各层厚度分别为 0.020、0.024、0.0288 mm，总厚度为 0.0728 mm。若两侧壁面之间的间隙仅为 0.10 mm，按同样设置从两侧各生成一组层，总需求厚度为 0.1456 mm，超过可用空间。此时挤出可能被压缩、截断或取消，问题来自几何空间与厚度要求不相容。</p>
+<pre><code>minThickness 给出允许保留的最小厚度尺度，过薄的层会被舍弃。控制层厚与中轴距离比例的参数用于限制狭窄区的挤出，表面法向平滑则减少相邻挤出方向的剧烈变化。调整这些参数前，需要知道局部失败发生于尖角、凹角、薄缝还是平坦区域。不同几何位置对应的限制不同，一组参数不能仅按数值大小统一增加。</code></pre>
+<p>相对层厚还需结合表面附近实际网格尺寸解释。若仅按本例一级细化后的名义边长 0.125 mm 估算，基准最外层厚度为 0.0375 mm。目标为两层、增长比为一点二时，第一层约为 0.03125 mm，总厚度约为 0.06875 mm。</p>
+<p>减小最外层参数至零点一五后，对应名义最外层厚度为 0.01875 mm，第一层约为 0.015625 mm，总厚度约为 0.034375 mm。这些数值属于按输入推算的目标尺寸，实际结果仍需从层字段读取。</p>
+<p>目标层数改为三而最外层相对厚度保持不变时，最内层随层数增加而减薄，总厚度则改变。按同样名义尺寸计算，第一层约为 0.0260417 mm，三层总厚度约为 0.0947917 mm。因此“增加层数”同时影响近壁第一层和总体挤出厚度，并非仅在原网格外再附加一个厚度相同的单元。比较不同目标层数之前，应先完成这一几何换算，判断可用空间是否仍满足要求。</p>
+<p>对于壁面法向扩散，可用近壁单元中心与边界之间的差分估计梯度。若边界值为定值，第一单元中心距离减小后，相同场值差对应更大的梯度；这并不意味着通量一定增大，因为重新求解后单元值也会改变。比较网格影响时必须重求场，并使用各组真实中心到边界距离。仅将旧场的差值除以新的层厚，会混用不同网格和不同离散方程。</p>
+<h2>4 加层失败的保留诊断例</h2>
+<pre><code>layers 保留未成功生成壁面层的配置，用于分析失败原因。原试算调整厚度和层数后仍为 9066 个单元，表明挤出层在质量检查后被撤回。本讲采用 layers、posts_snap_reference 和 posts_layers_success 三组进行对照。
+在layers目录执行Allrun.sh后，读取log.snappyHexMesh中的Writing 0 faces inside added layer及Layer mesh信息。该日志表明生成了贴体网格，但没有保留壁面层。再比较成功例中的新增层单元、实际层数和覆盖率，定位差异来自哪些质量与厚度设置。</code></pre>
+<figure><img loading="lazy" src="/assets/lessons/10/image1.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<h2>5 绝对体积阈值与几何尺度</h2>
+<p>旧例 minVol=1e−13 m³ 高于部分毫米尺度薄层的正面锥体积，导致挤出撤回。成功例取 minVol=1e−18 m³、两层及最外层相对厚度 0.15，继续检查负体积。绝对质量阈值须与几何单位及最小尺寸匹配。</p>
+<p>常规checkMesh检查通过后，还需读取扩展几何检查。成功例存在凹单元，相关数量及位置见本讲后续分析；常规检查通过不能表述为所有几何项目均通过。网格用于具体流动求解之前，还需检查这些单元对目标梯度及求解稳定性的影响。</p>
+<h2>6 壁面层失败的定位方法</h2>
+<p>应先确认目标 patch 是否存在，再检查加层选择是否命中该 patch，最后分析挤出和质量拒绝原因。这一顺序对应“对象、操作、保留结果”三个具体问题。若连目标对象都没有选中，继续减小层厚缺乏依据；若对象已被选中但层在质量检查后删除，则需要分析局部网格及限制条目。</p>
+<p>本例 writeFlags 中包含 layerSets 和 layerFields，可输出实际层数、总体厚度以及实际厚度与目标厚度之比等信息。查看这些字段时，要确认其对应最终生成的网格，并结合表面位置分析。局部层数为零的位置需要与几何交线、法向变化和背景分辨率一一核对，单独增加迭代次数不能替代这一步。</p>
+<p>对于尖锐交线，相邻表面的挤出方向差异可能使单元挤压或交叉；对于狭窄区域，两侧层可能相互接近；对于粗背景网格，近壁单元缺少足够位移空间，表面贴合误差也可能较大。上述机制提供检查方向，当前日志中的零新增层本身并不足以唯一确定原因，应通过单项修改建立对应证据。</p>
+<p>进一步试验可先保留基准目录，在副本中确认目标 patch 的匹配，再只调整一个几何或层厚条件。每组记录目标层数、实际层数分布、覆盖面积、最小单元体积及非正交角。若修改后网格总数增加，仍需从层字段检查增加部分是否来自壁面层，而非表面细化。这样才能把参数变化与具体网格结果联系起来。</p>
+<h2>7 网格质量与流动分辨率</h2>
+<p>非正交角反映单元中心连线与公共面法向的偏离，偏斜度反映面中心相对于插值位置的偏移。这些几何偏差会影响扩散梯度和面值插值，并增加修正项或线性迭代的负担。实际网格的指标与背景网格不同，是表面贴合和局部细化产生几何变化的结果。</p>
+<p>壁面层单元的长宽比可能较大，但其长方向通常沿壁面、薄方向沿主要梯度。评价此类单元时，须同时考虑方向与求解变量的变化。对于明显法向梯度，均匀增加所有方向的单元可能耗费较多计算量；沿法向合理布置层数更有针对性。对于三维复杂分离流动，切向分辨率也必须满足要求，不能只细化第一层。</p>
+<p>本讲尚未给定壁面摩擦速度，因此不能由层厚直接确定 y⁺。应用到湍流问题时，需要根据目标壁面处理、运动黏度和摩擦速度估计第一单元中心距离，并在求解后用实际壁面量复核。层流传热或扩散问题则应比较温度梯度、浓度梯度或总通量随网格变化的结果。网格检查提供后续求解的几何条件，最终分辨率仍由所研究的场量及误差要求决定。</p>
+<p>对保留的失败例，完整表述应包括：背景网格、表面细化等级、启用阶段、目标加层设置、最终单元数、质量指标，以及尚未生成壁面层这一事实。这样的记录既能复现现有网格，也能明确下一步需要验证的设置。</p>
+<h2>8 命令查询与结果复核</h2>
+<p>以下命令在指定算例目录执行。运行脚本生成网格、日志及结果后，再进行结果查询；需要修改设置时，先保留完整算例副本。</p>
+<h3>壁面层参数与生成结果</h3>
+<p>执行目录为 代码/layers。</p>
+<pre><code>foamDictionary system/snappyHexMeshDict -entry addLayersControls
+tail -n 40 log.snappyHexMesh
+foamDictionary system/snappyHexMeshDict -entry meshQualityControls</code></pre>
+<p>先核对 relativeSizes，再确定 finalLayerThickness 等厚度参数的单位；expansionRatio 表示相邻层厚度比。</p>
+<pre><code>nSurfaceLayers 为目标层数，实际层数、覆盖率、厚度及质量应结合日志和截面检查。
+layers用于失败诊断，posts_snap_reference与posts_layers_success用于贴体和成功加层对照。比较目标层数、实际覆盖率及质量指标。</code></pre>
+<h3>模板查询与网格检查</h3>
+<p>执行目录为 代码/layers。</p>
+<pre><code>foamEtcFile -list
+foamEtcFile caseDicts/meshQualityDict
+checkMesh -allGeometry -allTopology &gt; log.quality.practice 2&gt;&amp;1
+foamEtcFile 按用户、站点和安装目录的搜索顺序定位文件，用于确定实际读取的模板。</code></pre>
+<p>加层失败时，检查局部几何、目标厚度、特征角及过渡设置，修改后重新检查网格。</p>
+<p>调整 minTetQuality 等质量阈值前，应确认失败单元的位置和几何原因；生成后再次核对质量指标及目标区域的分辨率。</p>
+<h2>9 圆柱凸起表面的壁面层网格</h2>
+<h2>10 网格分辨率与壁面梯度</h2>
+<p>圆柱凸起阵列包含柱侧曲面、柱顶边缘、柱脚与柱间通道。流体绕过凸起时，速度梯度和压力梯度会随位置变化。对于无滑移壁面，壁面速度为零，近壁单元的速度用于近似壁面法向导数。若第一单元中心距壁面过大，即使远离壁面的单元数量很多，壁面应力仍可能缺乏足够分辨率。因此，近壁网格设计应先说明需要计算的梯度和积分量，再确定层厚与层数。</p>
+<p>本节采用4 mm×4 mm×4 mm的背景域，底部圆柱凸起由posts.stl给出。圆柱半径0.3 mm，露出底面的高度1.5 mm。背景网格为16×16×16，单元边长0.25 mm；表面采用一级细化，对应局部边长约0.125 mm。几何与背景网格均使用米作为内部单位。surfaceCheck与checkMesh的包围盒是核对长度单位的直接依据。</p>
+<pre><code>posts_snap_reference和posts_layers_success使用相同的几何及细化设置。前者完成裁切和贴体，后者继续生成壁面层。这一对照用于区分表面贴合与法向加密的作用。两组均为纯网格案例，不求解速度、压力或能量方程；controlDict中的时间对象服务于网格程序，不表示已经计算了一段物理流动。</code></pre>
+<h2>11 层厚参数的含义与计算</h2>
+<p>设最靠近壁面的第一层厚度为h₁，相邻层厚增长率为r，目标层数为N，则第k层厚度hₖ=h₁r^(k−1)，总层厚H=h₁(1−rᴺ)/(1−r)。当r=1时，H=Nh₁。给定最外层厚度hN后，有h₁=hN/r^(N−1)。这些关系用于检查参数数量级，并不替代生成后的实际厚度测量。</p>
+<p>本例relativeSizes为true，finalLayerThickness=0.15表示最外一层厚度与层外未变形单元尺寸的比值。取局部尺寸125 μm，得到hN=18.75 μm。目标N=2、r=1.2时，h₁=15.625 μm，H=34.375 μm。</p>
+<p>将finalLayerThickness误认为总厚度，会使首层距离估计发生系统偏差。minThickness同样为相对值，控制局部允许生成的最小层厚条件。</p>
+<p>实际近壁单元并非处处等厚。柱顶转角处法向发生变化，柱脚附近还受到相邻边界约束，网格移动需同时满足面权重、体积比和质量限制。当局部条件不能满足要求时，层可能减薄、终止或完全撤回。0/nSurfaceLayers与0/thickness分别记录实际层数和总层厚，不能仅用字典中的目标值替代。</p>
+<h2>12 毫米尺度下的绝对质量阈值</h2>
+<p>旧例的关键问题在于minVol=1e−13。该参数定义面锥体积的绝对下限，单位m³。长度缩小十倍，面积缩小一百倍，体积缩小一千倍，因此绝对体积阈值必须结合实际几何尺寸判断。它与无量纲的非正交角、偏斜度或体积比具有不同的尺度性质。</p>
+<p>旧日志显示，薄层挤出后大量面锥体积小于阈值，随后挤出被撤回，最终没有新增层单元。只调整目标层数或减小层厚不能解决这一问题，减薄甚至可能使面锥体积更小。新例将minVol设为正值1e−18，并保留四面体质量、非正交、面权重和相邻体积比等限制。该设置仍排除负体积，没有使用负阈值绕过检查。</p>
+<pre><code>运行按blockMesh、surfaceCheck、snappyHexMesh -overwrite、checkMesh顺序进行。每条命令的日志单独保存。snappyHexMesh日志用于观察阶段和层生成过程，checkMesh日志用于检查最终网格。分析失败时，应从最先违反的质量条件定位，再解释层为何被撤回，而不应只查看最后的End。</code></pre>
+<h2>13 实际生成结果</h2>
+<p>不加层网格有9066个单元。成功例有10538个单元，新增1472个层单元。posts边界共有852个目标面，其中704面有两层、64面有一层、84面无层。按面数统计，覆盖率为768/852=90.14%，平均层数为1.7277。该覆盖率的分母是壁面数，并非面积。</p>
+<p>全目标壁面的总层厚均值为27.49 μm；仅在已覆盖面上计算时，均值为30.50 μm。已覆盖位置的总层厚约为6.20–34.37 μm。未生成层的位置会把全壁面均值降低，因此两种平均值必须分别说明。进一步研究还应采用面积加权统计，并报告层终止位置与关注流动区域之间的关系。</p>
+<p>配图使用生成网格的points和faces计算z=−0.8 mm截面交线，展示柱侧及柱顶附近的实际单元形状。全局图用于确定位置，局部放大图用于识别薄层。查看云图或层数直方图时，应同时保留几何位置，避免把全局平均值误认为每一处都达到同样的分辨率。</p>
+<h2>14 质量检查与后续判断</h2>
+<p>成功例最小单元体积8.33×10⁻¹⁴ m³，最大非正交角28.19°，最大偏斜度0.586，标准checkMesh通过。启用-allGeometry和-allTopology后，报告374个凹形多面体；不加层对照为278个。扩展检查未通过的这一项在完整日志和数值记录中保留。</p>
+<p>较厚层方案的凹形单元为432个，减薄后降至374个；显式特征边试算没有同时改善层覆盖和非凸问题，因此未作为最终配置。这里的比较说明参数调整存在相互影响：增加层覆盖、提高几何贴合度和减少非凸单元未必同步。正式流动分析应定位这些单元，判断其是否影响壁面梯度、局部通量和最终积分量，再通过网格与格式研究确认。</p>
+<p>本节训练以成功加层及其对照为主，旧0层输入作为绝对尺度错误的诊断材料。提交结果应包含参数推导、完整运行日志、实际层数分布、截面图和扩展质量检查。若将网格继续用于流动问题，应补充首层距离与所需梯度尺度的关系，并报告目标输出随网格改动的变化。</p>
+<h2>15 计算结果与数据来源</h2>
+<p>下列图表由本讲独立算例的实际保存场、采样数据或原始日志生成。各图的计算条件与误差定义见前述案例分析，原始数值保存在本讲测试结果。</p>
+<figure><img loading="lazy" src="/assets/lessons/10/image2.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>同一截面、同一比例。右图壁面附近出现薄层单元；灰色为柱体截面。</p>
+<figure><img loading="lazy" src="/assets/lessons/10/image3.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>面数覆盖率90.14%；2层704面、1层64面、0层84面。总层厚的全壁面均值27.49 μm。</p>
+<figure><img loading="lazy" src="/assets/lessons/10/image4.png" alt="本讲配套算例图"><figcaption>配套学生讲义中的算例图</figcaption></figure>
+<p>同一位置与相同比例。右图两层薄单元用于提高壁面法向分辨率。</p>
+<h2>16 资料来源</h2>
+<pre><code>基本方法参考 Wolf Dynamics《OpenFOAM Introductory Training》2021 修订版，PDF 文件第 435–514 页。命令语法以本机 OpenCFD OpenFOAM v2512 的帮助和配套教程为准。本讲字典片段、网格统计及数值结果取自课程对应算例，完整输入位于代码目录，原始日志与检查记录位于测试结果目录。</code></pre>
+<section class="exercise"><h2>课后练习</h2><p>对微柱阵列电极 STL 生成网格，要求最大非正交度 &lt;65、无负体积单元；若加贴壁层，覆盖率 &gt;85%，并写出你对贴壁层的取舍理由。</p><a class="button secondary" href="/assignments/">前往作业区 →</a></section>
+</div><div class="lesson-actions"><button class="button" id="complete-lesson" data-id="10">标记本讲已完成 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></button><a class="button secondary" href="/community/?lesson=10">对本讲提问</a></div><div class="lesson-pagination"><a href="/lessons/09/">← 上一讲<span>snappyHexMesh 原理</span></a><a href="/lessons/11/">下一讲 →<span>网格转换与边界分区</span></a></div></article><aside class="article-toc"><div>本讲目录</div><nav id="toc" aria-label="本讲目录"></nav><div class="toc-note">修改参数时应记录<br>依据、量纲与结果变化。</div></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

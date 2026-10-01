@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>第 14 章　system/fvSolution（线性求解器与算法控制） · FoamLab</title>
+  <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/assets/site.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="reference" data-lesson="">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item active" aria-current="page"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>第 14 章　system/fvSolution（线性求解器与算法控制）</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>第 14 章　system/fvSolution（线性求解器与算法控制）</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
+<p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><p>它管什么：每个方程用什么线性代数求解器、迭代到什么精度、外层算法（SIMPLE/PISO/PIMPLE）怎么循环、松弛因子多少。</p>
+<h4>14.1 solvers 子字典</h4>
+<pre><code>solvers
+&#123;
+    p
+    &#123;
+        solver          GAMG;              // 压力方程用多重网格
+        tolerance       1e-6;              // 绝对残差
+        relTol          0.01;              // 相对残差（本步残差降到初始的 1%）
+        smoother        GaussSeidel;
+        nCellsInCoarsestLevel 20;
+    &#125;
+
+    pFinal
+    &#123;
+        $p;                                // 继承 p 的所有设置
+        relTol          0;                 // 最后一次外迭代要求解到底
+    &#125;
+
+    &quot;(U|k|epsilon|omega)&quot;
+    &#123;
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-8;
+        relTol          0.1;
+    &#125;
+&#125;</code></pre>
+<p>线性求解器怎么选</p>
+<div class="table-scroll"><table>
+<tr><th>求解器</th><th>适用矩阵</th><th>场景</th></tr>
+<tr><td>GAMG</td><td>对称</td><td>压力方程首选，大网格上比 PCG 快数倍</td></tr>
+<tr><td>PCG</td><td>对称</td><td>压力，配 preconditioner DIC</td></tr>
+<tr><td>PBiCGStab</td><td>非对称</td><td>U、k、epsilon 等</td></tr>
+<tr><td>smoothSolver</td><td>通用</td><td>U 与湍流量，简单快速</td></tr>
+<tr><td>diagonal</td><td>对角阵</td><td>显式方程（如 rhoCentralFoam 里的密度）</td></tr>
+</table></div>
+<div class="table-scroll"><table>
+<tr><th>预处理/光顺器</th><th>用于</th></tr>
+<tr><td>DIC</td><td>对称矩阵（配 PCG）</td></tr>
+<tr><td>DILU</td><td>非对称矩阵（配 PBiCGStab）</td></tr>
+<tr><td>GaussSeidel / symGaussSeidel</td><td>GAMG、smoothSolver 的光顺器</td></tr>
+<tr><td>DICGaussSeidel</td><td>GAMG 用，收敛更快但每步更贵</td></tr>
+</table></div>
+<p>为什么压力方程要特殊对待：不可压 N-S 里压力方程是椭圆型的，信息瞬间传遍全场，是最难解也最耗时的一个（通常占总时间 60%–80%）。GAMG（几何-代数多重网格）通过在粗网格上快速消除长波误差来加速，因此成为标配。</p>
+<p>relTol 在瞬态里为什么设成 0.01 而不是 0：瞬态每个时间步都要解好几次，中间步骤解得太精确是浪费——反正下一次外迭代还会改。只有最后一次（pFinal）才要求解到底（relTol 0）。这个”中间松、最后紧”的策略能省下大量时间。</p>
+<h4>14.2 SIMPLE / PISO / PIMPLE 控制</h4>
+<p>稳态 SIMPLE</p>
+<pre><code>SIMPLE
+&#123;
+    nNonOrthogonalCorrectors 1;     // 非正交修正次数，按 checkMesh 结果定
+    consistent               yes;   // 用 SIMPLEC：可以把松弛因子放大，收敛更快
+    residualControl                 // 收敛判据：都低于阈值就提前结束
+    &#123;
+        p       1e-4;
+        U       1e-4;
+        &quot;(k|omega|epsilon)&quot; 1e-4;
+    &#125;
+&#125;</code></pre>
+<p>瞬态 PISO</p>
+<pre><code>PISO
+&#123;
+    nCorrectors              2;     // 压力修正次数
+    nNonOrthogonalCorrectors 1;
+    pRefCell                 0;     // 全封闭区域必须给参考压力
+    pRefValue                0;
+&#125;</code></pre>
+<p>瞬态 PIMPLE</p>
+<pre><code>PIMPLE
+&#123;
+    nOuterCorrectors         2;     // ★ =1 时退化为 PISO；&gt;1 才是真 PIMPLE
+    nCorrectors              2;
+    nNonOrthogonalCorrectors 1;
+    momentumPredictor        yes;   // 低速/多相有时关掉更稳
+    turbOnFinalIterOnly      yes;
+&#125;</code></pre>
+<p>PIMPLE 的意义：PISO 要求 Co &lt; 1；PIMPLE 在每个时间步内做多次外迭代（相当于把稳态 SIMPLE 嵌进每个时间步），因此可以用 Co ≫ 1 的大时间步。代价是每步更贵，所以 nOuterCorrectors 一般取 2–3，配合 Co ≈ 5–10 才划算。</p>
+<p>pRefCell / pRefValue 什么时候必须给：当边界条件里没有任何一处给定压力值（全是 zeroGradient，例如封闭腔体、全 wall 的算例）时，压力场只能定到相差一个常数，矩阵奇异。这两个参数的作用就是”指定参考单元的压力值”。忘了给，日志里会看到压力越漂越大或直接不收敛。</p>
+<h4>14.3 relaxationFactors（松弛因子）</h4>
+<pre><code>relaxationFactors
+&#123;
+    fields
+    &#123;
+        p               0.3;
+    &#125;
+    equations
+    &#123;
+        U               0.7;
+        &quot;(k|omega|epsilon)&quot; 0.7;
+    &#125;
+&#125;</code></pre>
+<p>为什么稳态需要松弛：SIMPLE 的每步更新如果全量采纳，会左右横跳发散。松弛因子 α 表示”只采纳 α 那么多”。经验值 p 用 0.3、其他用 0.7（两者之和约为 1 是经典配比）。</p>
+<p>收敛太慢怎么办：开 consistent yes（SIMPLEC），此时可以把 p 放到 0.7–0.9、U 放到 0.9，通常能省一半迭代步。发散怎么办：把所有因子减半（p 0.1、U 0.3），先算出一个不发散的解，再逐步放大。</p>
+<p>瞬态 PIMPLE 里通常只对非最终迭代松弛：</p>
+<pre><code>relaxationFactors
+&#123;
+    equations
+    &#123;
+        &quot;.*&quot;        1;         // 最终迭代不松弛，保证时间精度
+        &quot;U.*&quot;       0.9;
+    &#125;
+&#125;</code></pre>
+<h4>14.4 cache 与其他</h4>
+<pre><code>cache &#123; grad(U); &#125;        // 缓存梯度，省重复计算</code></pre>
+</div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>
