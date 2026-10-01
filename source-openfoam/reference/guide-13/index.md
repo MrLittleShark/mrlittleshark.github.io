@@ -1,20 +1,19 @@
 ---
 title: "第 13 章　system/fvSchemes（离散格式）"
-layout: "reference"
-description: "OpenFOAM v2512 命令、文件与配置参考"
-manual: 2
+layout: reference
+description: "OpenCFD v2512 system/fvSchemes（离散格式）；包含原理、示例与版本核对。"
 ---
 {% raw %}
-<p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><p>它管什么：每一项微分算子用什么数值格式离散。这是精度与稳定性的主要旋钮，也是初学者最容易被卡住的地方。</p>
-<h4>13.1 六个子字典</h4>
-<pre><code>ddtSchemes          { }   // 时间导数 ∂/∂t
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>它管什么：每一项微分算子用什么数值格式离散。这是精度与稳定性的主要旋钮，也是初学者最容易被卡住的地方。</p>
+<h2>13.1 六个子字典</h2>
+<pre><code class="language-openfoam">ddtSchemes          { }   // 时间导数 ∂/∂t
 gradSchemes         { }   // 梯度 ∇
 divSchemes          { }   // 对流项 ∇·( )   ← 最关键
 laplacianSchemes    { }   // 扩散项 ∇²
 interpolationSchemes{ }   // 单元中心 → 面 的插值
 snGradSchemes       { }   // 面法向梯度
 wallDist            { }   // 壁面距离算法（湍流模型需要）</code></pre>
-<h4>13.2 ddtSchemes</h4>
+<h2>13.2 ddtSchemes</h2>
 <div class="table-scroll"><table>
 <tr><th>写法</th><th>精度/性质</th><th>何时用</th></tr>
 <tr><td>steadyState</td><td>去掉时间项</td><td>稳态求解器必须用这个</td></tr>
@@ -23,9 +22,9 @@ wallDist            { }   // 壁面距离算法（湍流模型需要）</code></
 <tr><td>CrankNicolson 0.9</td><td>二阶，系数 0~1（0=Euler，1=纯 CN）</td><td>精度要求高时，一般取 0.9 保稳</td></tr>
 <tr><td>localEuler</td><td>伪时间步（局部时间步长加速收敛）</td><td>稳态加速</td></tr>
 </table></div>
-<pre><code>ddtSchemes { default backward; }</code></pre>
-<p>为什么 LES 不能用 Euler：一阶格式的数值耗散会把小尺度涡抹掉，你解出来的”湍流”其实是格式耗散造出来的假象。做 LES 一律 backward 或 CrankNicolson。</p>
-<h4>13.3 gradSchemes</h4>
+<pre><code class="language-openfoam">ddtSchemes { default backward; }</code></pre>
+<p>LES 需要控制时间与空间离散的数值耗散。一阶 Euler 时间格式并非语法上禁止，但通常需要更严格的时间步敏感性检查；backward 或合适的 CrankNicolson 配置也必须结合稳定性、网格分辨率和统计量验证。</p>
+<h2>13.3 gradSchemes</h2>
 <div class="table-scroll"><table>
 <tr><th>写法</th><th>说明</th></tr>
 <tr><td>Gauss linear</td><td>标准二阶，最常用</td></tr>
@@ -33,12 +32,12 @@ wallDist            { }   // 壁面距离算法（湍流模型需要）</code></
 <tr><td>cellLimited Gauss linear 1</td><td>限制梯度不产生新极值，1 = 完全限制</td></tr>
 <tr><td>cellLimited&lt;cubic&gt; 1.5 Gauss linear 1</td><td>更平滑的限制器</td></tr>
 </table></div>
-<pre><code>gradSchemes
+<pre><code class="language-plaintext">gradSchemes
 {
     default         Gauss linear;
     grad(U)         cellLimited Gauss linear 1;    // 网格差或有激波时加限制
 }</code></pre>
-<h4>13.4 divSchemes（对流项，最关键）</h4>
+<h2>13.4 divSchemes（对流项，最关键）</h2>
 <p>写法是 Gauss &lt;插值格式&gt;，Gauss 表示用高斯定理做体积分→面积分。真正起作用的是后面的插值格式：</p>
 <div class="table-scroll"><table>
 <tr><th>插值格式</th><th>阶数</th><th>有界性</th><th>评价</th></tr>
@@ -51,7 +50,7 @@ wallDist            { }   // 壁面距离算法（湍流模型需要）</code></
 <tr><td>LUST grad(U)</td><td>75% 线性 + 25% 迎风</td><td></td><td>LES 折中方案</td></tr>
 <tr><td>limitedLinear01 1</td><td>限制在 [0,1]</td><td></td><td>alpha、组分等有物理上下界的量</td></tr>
 </table></div>
-<pre><code>// 稳态 RANS 的典型配置
+<pre><code class="language-plaintext">// 稳态 RANS 的典型配置
 divSchemes
 {
     default         none;                          // ★ 强制每一项都显式指定
@@ -79,8 +78,8 @@ divSchemes
 }</code></pre>
 <p>在相应格式字典中使用 default none，可要求相关项显式指定离散格式。缺失项会在运行时报告。应先确认方程项、变量及适用格式，再补充配置，避免仅根据名称机械复制。</p>
 <p>bounded 前缀是什么：稳态计算中间过程质量并不严格守恒，bounded 会减去 \((\nabla \cdot \varphi )U\) 这一项来抵消不守恒带来的虚假源。稳态加、瞬态不加。</p>
-<h4>13.5 laplacianSchemes 与 snGradSchemes</h4>
-<pre><code>laplacianSchemes { default Gauss linear corrected; }
+<h2>13.5 laplacianSchemes 与 snGradSchemes</h2>
+<pre><code class="language-plaintext">laplacianSchemes { default Gauss linear corrected; }
 snGradSchemes    { default corrected; }</code></pre>
 <div class="table-scroll"><table>
 <tr><th>修正方式</th><th>适用非正交角</th></tr>
@@ -91,7 +90,7 @@ snGradSchemes    { default corrected; }</code></pre>
 <tr><td>uncorrected</td><td>不修正，最稳但有误差</td></tr>
 </table></div>
 <p>怎么选：跑一次 checkMesh 看最大非正交角，按上表挑。这就是 6.5 节强调 checkMesh 的原因之一——它的输出直接决定这里怎么填。</p>
-<h4>13.6 其余两项</h4>
-<pre><code>interpolationSchemes { default linear; }
+<h2>13.6 其余两项</h2>
+<pre><code class="language-plaintext">interpolationSchemes { default linear; }
 wallDist             { method meshWave; }</code></pre>
 {% endraw %}

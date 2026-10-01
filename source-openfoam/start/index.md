@@ -15,7 +15,7 @@ description: 检查 v2512 环境，复制并运行第一个方腔流动算例。
 ```bash
 # 适用于安装在此目录的 Ubuntu 软件包；其他安装方式请改成实际路径
 source /usr/lib/openfoam/openfoam2512/etc/bashrc
-foamVersion
+echo "$WM_PROJECT_VERSION"
 echo "$WM_PROJECT_DIR"
 echo "$FOAM_TUTORIALS"
 icoFoam -help
@@ -73,6 +73,10 @@ paraFoam -builtin
 3. 保存一张网格图、一张速度图，并解释顶盖与其他壁面的区别。
 4. 在副本中改变一个参数，重新计算并记录结果变化。
 
-这些步骤说明学习操作流程，本站建设过程中未在当前 Windows 环境重新运行该算例。结果判断应以自己的计算日志为准。
+本站已在 Ubuntu 虚拟机的 OpenFOAM v2512 环境中运行这一方腔示例：网格为 20 × 20 × 1，终止时刻为 0.5 s。下图来自该次计算。运行完成只说明程序正常推进；离散误差、网格依赖性和稳态程度仍需分别检查。
 
-<a class="button" href="/lessons/01/">进入第 01 讲 →</a> <a class="button secondary" href="/community/">遇到问题，去答疑区</a>
+![OpenFOAM v2512 方腔流动速度分布](/assets/science/cavity-velocity.png)
+
+计算日志、算例参数和结果范围见[方腔算例验证记录](/read/?slug=first-cavity-result)。
+
+<a class="button" href="/read/?slug=start-openfoam-v2512">进入系统课程 →</a> <a class="button secondary" href="/community/">讨论与答疑</a>

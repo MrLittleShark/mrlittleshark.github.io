@@ -1,12 +1,11 @@
 ---
 title: "08 时间控制与数值求解设置"
-layout: "reference"
-description: "OpenFOAM v2512 命令、文件与配置参考"
-manual: 1
+layout: reference
+description: "OpenCFD v2512 时间控制与数值求解设置；包含原理、示例与版本核对。"
 ---
 {% raw %}
-<p class="source-note">资料来源：OpenFOAM_v2512命令与配置参考手册（GPT整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h3>8.1 system/controlDict</h3>
-<pre><code>FoamFile
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>8.1 system/controlDict</h3>
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object controlDict;
@@ -48,13 +47,13 @@ functions {};</code></pre>
 <tr><td>adjustTimeStep、maxCo、maxDeltaT</td><td>自动时间步控制</td><td>仅在实现相应时间步控制的求解器中生效</td></tr>
 <tr><td>maxAlphaCo</td><td>VOF 相分数相关 Courant 限制</td><td>仅相关求解器使用</td></tr>
 <tr><td>maxDi</td><td>热扩散数控制</td><td>仅相关传热求解器使用</td></tr>
-<tr><td>libs</td><td>加载自定义或功能库</td><td>例如 (&quot;libMyBC.so&quot;)</td></tr>
+<tr><td>libs</td><td>加载自定义或功能库</td><td>例如 ("libMyBC.so")</td></tr>
 <tr><td>functions</td><td>运行时函数对象</td><td>见第 10 章</td></tr>
 </table></div>
 <p>Courant 数由局部速度、通量、单元尺寸和时间步共同决定。可压缩激波计算还需考虑声速约束，时间步上限应结合所用求解器和离散格式确定。</p>
 <h3>8.2 system/fvSchemes</h3>
 <p>下例给出不可压缩非稳态层流的离散设置。采用湍流模型或求解能量方程时，应补充相应方程的对流项。</p>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object fvSchemes;
@@ -85,7 +84,7 @@ wallDist { method meshWave; }</code></pre>
 </table></div>
 <p>湍流方程可采用 div(phi,k) Gauss upwind; 和 div(phi,omega) Gauss upwind;，字段名称随模型确定。VOF 求解器的 div(phi,alpha)、div(phirb,alpha) 等条目采用其配套教程的定义。rhoCentralFoam 还需设置 fluxScheme 及变量重构格式。</p>
 <h3>8.3 system/fvSolution</h3>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object fvSolution;
@@ -99,7 +98,7 @@ solvers
         relTol 0.05;
         smoother GaussSeidel;
     }
-    pFinal { $p; relTol 0; }
+    pFinal { &#36;p; relTol 0; }
     U
     {
         solver smoothSolver;
@@ -133,12 +132,12 @@ relaxationFactors
 <tr><td>cacheAgglomeration</td><td>缓存 GAMG 聚合</td><td>静态网格可复用聚合结果</td></tr>
 <tr><td>nCellsInCoarsestLevel</td><td>GAMG 最粗层目标单元数</td><td>结合并行分区和收敛情况调整</td></tr>
 <tr><td>pFinal、UFinal 等</td><td>最后一次校正的专用设置</td><td>是否使用由求解器控制</td></tr>
-<tr><td>正则字段名</td><td>共享线性求解配置</td><td>如 &quot;(U|k|omega)&quot;，采用引号包围正则表达式</td></tr>
+<tr><td>正则字段名</td><td>共享线性求解配置</td><td>如 "(U|k|omega)"，采用引号包围正则表达式</td></tr>
 <tr><td>relaxationFactors/fields</td><td>场松弛</td><td>如稳态 p 0.3</td></tr>
 <tr><td>relaxationFactors/equations</td><td>方程松弛</td><td>如稳态 U 0.7；较小因子降低更新幅度</td></tr>
 </table></div>
 <p>SIMPLE、PISO 和 PIMPLE 分别采用对应的算法子字典。SIMPLE 常用 nNonOrthogonalCorrectors、consistent、residualControl 和 pRefCell/pRefValue；PISO 通过 nCorrectors 控制校正次数；PIMPLE 另设 nOuterCorrectors 控制外迭代。压力方程需要参考值且求解器采用该机制时，设置 pRefCell 和 pRefValue。</p>
-<pre><code>// SIMPLE 片段：稳态算例
+<pre><code class="language-plaintext">// SIMPLE 片段：稳态算例
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
@@ -146,7 +145,7 @@ SIMPLE
     {
         p 1e-5;
         U 1e-6;
-        &quot;(k|omega)&quot; 1e-6;
+        "(k|omega)" 1e-6;
     }
 }
 relaxationFactors
@@ -156,7 +155,7 @@ relaxationFactors
 }</code></pre>
 <p>residualControl 的结构由算法接口确定，部分 PIMPLE 控制采用 tolerance/relTol 子字典。收敛判定应同时考察残差、质量守恒及力、流量、温度等目标量的稳定性。</p>
 <h3>8.4 system/decomposeParDict</h3>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object decomposeParDict;
@@ -164,7 +163,7 @@ relaxationFactors
 numberOfSubdomains 4;
 method scotch;</code></pre>
 <p>numberOfSubdomains 指定分区数，与求解阶段 mpirun -np 的进程数一致。scotch 采用图分割，simple 按坐标规则划分，hierarchical 按指定方向依次划分，manual 使用给定的处理器映射，multiLevel 组合多级分解方法。</p>
-<pre><code>// 用 simple 替换上面的 method 时，加入以下系数
+<pre><code class="language-plaintext">// 用 simple 替换上面的 method 时，加入以下系数
 method simple;
 simpleCoeffs
 {

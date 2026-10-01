@@ -27,6 +27,7 @@ jobs:
         if: github.ref_name == 'foamlab-source'
         run: |
           node tools/check-tex.cjs
+          node tools/check-rebuild.cjs
           npm run build
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

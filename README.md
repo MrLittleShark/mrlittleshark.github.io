@@ -1,14 +1,64 @@
-# FoamLab OpenFOAM v2512 学习站
+# FoamLab · OpenFOAM v2512 学习社区
 
-网站：<https://mrlittleshark.github.io/>
+网站：<https://mrlittleshark.github.io/>。本地工程：`E:\Hexo`。
 
-本地工程使用 Hexo 8.1.2，主题为 `themes/foam-lab`。课程内容面向 OpenCFD / openfoam.com 分支的 v2512。原博客文章已移出内容目录，并在 `.openfoam-backup/2026-10-01/` 保留备份。
+本站以 **OpenCFD OpenFOAM v2512** 为软件基准，使用 Hexo 8.1.2 和 `themes/foam-lab` 主题生成网站，部署到 GitHub Pages。Supabase 提供 GitHub 登录、内容管理、讨论、评论、附件和跨设备学习记录。课程、参考资料、实践分享与讨论分别组织，电极气泡专题暂不纳入当前内容。
 
-## 本地预览
+## 内容范围
 
-Windows 下双击 `启动学习网站.cmd`，然后打开 <http://localhost:4173>。关闭终端或按 Ctrl+C 停止预览。
+以下数量为本次重构的初始内容清单；后台增删后，线上目录以实际已发布记录为准。
 
-已安装 Node.js 20.19 或更高版本时，也可以在工程目录执行：
+| 内容 | 初始规模与范围 |
+| --- | --- |
+| 课程单元 | 46 个：29 个基础、网格、数值方法、模型与后处理单元，17 个 BasicOFProgramming 编程单元 |
+| 命令目录 | 443 条，区分核心求解器、核心工具、官方脚本、shell 函数、构建辅助与 Linux 配套命令 |
+| 配置参考 | 111 项配置字典、场文件、函数对象与编译配置，附 281 份完整的 v2512 官方教程文件 |
+| 主题参考 | 37 个重新审校的参考章节，保留通用内容并修正版本差异 |
+| 扩展工具 | ParaView、Gmsh、SALOME、PyVista、PyFoam、FreeCAD 等 6 篇使用说明 |
+| 分类推荐 | 15 项，分官方文档、教程与课程、源码与开发、几何网格、可视化与数据、学术社区 |
+| 实践与分享 | 公开作业、资料包、作者日志、文章投稿、站内讨论与评论 |
+
+443 条目录不等于 443 个已安装的 OpenFOAM 可执行程序。固定版本源码的核心范围为 `applications/solvers` 中的 108 个求解器和 `applications/utilities` 中的 170 个工具，共 278 个目标。其中 273 个在本机 v2512 环境显示了 `-help-full`，另 5 个未安装。`applications/tools` 下另列的 `foamCalc`、`foamExprParserInfo` 也未安装。脚本与 shell 入口单独标注依据，不把源码存在、帮助可执行和物理算例验证混为一谈。
+
+课程参考 Wolf 培训资料并重新组织。Wolf 原培训基于 OpenFOAM Foundation 9；本站运行和配置依据为 OpenCFD v2512，两者不是可直接互换的版本。命令与字典示例固定到官方 `OpenFOAM-v2512` 标签。核验范围见 [VERIFICATION.md](VERIFICATION.md)。
+
+## 日常内容管理
+
+打开 [管理平台](https://mrlittleshark.github.io/admin/)，使用已分配角色的 GitHub 账号登录。日常管理无需额外提供 GitHub 仓库访问令牌，也无需重新部署 Hexo。
+
+| 角色 | 主要权限 |
+| --- | --- |
+| 管理员 | 全站内容、文件、成员角色、站点设置、社区管理与永久删除 |
+| 内容编辑 | 建立、编辑、发布、归档与恢复内容，维护附件及编辑历史 |
+| 社区版主 | 主题和评论的隐藏、恢复、置顶、关闭与处理 |
+| 普通会员 | 提问、回答、评论、个人学习记录，以及自己的文章和日志草稿 |
+| 禁止发言账号 | 公开阅读；停止社区写入与投稿 |
+
+权限由数据库角色和行级访问控制执行，认证写入要求真实 GitHub 身份关联，修改个人资料或伪造身份元数据不能改变角色。站内管理的内容类型包括课程单元、课程集合、分享文章、作者日志、下载资料、资源推荐、扩展工具、专题模块、公告、作业、命令与配置。普通会员在 [作者工作台](https://mrlittleshark.github.io/studio/)保存文章或日志草稿，编辑审核后发布。
+
+内容正文地址为 `/read/?slug=地址标识`。`track` 决定分类，`series` 组织连续课程或专栏，`sort_order` 数值越小越靠前。课程的首章、上一章、下一章和末章导航，只读取同一 `series` 中已发布的课程单元；同权重时按 `slug` 排序。更改标题或排序无需手工修改翻页链接。
+
+内容保存支持修订历史与并发冲突检查；回收站恢复为草稿，永久删除需要管理员权限。文件上传到公开 `foamlab-resources` 存储桶，常规文件上限 50 MB。内容归档与删除附件是两个动作，删除文件前应检查其引用。
+
+完整操作说明见 [维护手册](source-openfoam/maintenance/index.md)及[线上维护入口](https://mrlittleshark.github.io/maintenance/)。
+
+## 讨论、评论与作业
+
+[讨论中心](https://mrlittleshark.github.io/community/)允许匿名阅读；提问、回答和评论需要 GitHub 登录。新版站内讨论存储在 Supabase。GitHub Issues 保留为公开作业提交入口，提交链接可以粘贴到作业评论区。两处内容不会自动互相同步。
+
+管理员或版主可置顶、关闭、隐藏和恢复主题及回复。文章评论可逐篇开关，站点设置可暂停新建讨论。普通用户每小时最多新建 5 个主题、发布 40 条回答或评论。关闭站内主题后停止新增回复；作业中写出的截止日期不会自动限制外部 GitHub Issues 的提交。
+
+GitHub OAuth 由 Supabase Auth 处理。个人资料与新版课程进度使用数据库权限隔离并跨设备同步；旧版 28 讲完成记录保留在原表，不自动转换成新课程进度。公开社区显示名称与私有学习资料分别处理。
+
+## 分类推荐与支持入口
+
+[资源推荐](https://mrlittleshark.github.io/recommendations/)使用 `recommendation` 类型。编辑可维护标题、分类、正文、外部入口和版本核对信息；分类来自 `track`，统一系列可填“资源推荐”。第三方工具的版本兼容性与社区经验应分别注明，不能把推荐条目写成未经验证的运行承诺。
+
+[支持入口](https://mrlittleshark.github.io/support/)的启用状态、用途说明、微信与支付宝图片由管理员在“站点与导航”中维护。**本次未上传真实收款码，入口保持停用。** 可上传不超过 5 MB 的 PNG、JPEG 或 WebP 图片，核对预览与收款对象后保存并启用。关闭入口不会删除已上传的公开图片。
+
+## 本地预览与 Hexo 发布
+
+已安装 Node.js 20.19 或更新版本时，在工程目录运行：
 
 ```powershell
 npm ci
@@ -16,90 +66,69 @@ npm run build
 npm run preview
 ```
 
-本次环境已更新本地依赖。若终端没有 npm，可用已有的 Node.js 直接执行：
+打开 <http://localhost:4173>。Windows 也可双击 `启动学习网站.cmd`。预览读取所配置的内容服务；本地预览不等于一套独立的测试数据库，使用真实账号保存内容会影响所连接的服务。
+
+修改外观、脚本、静态下载或参考源页面后，双击 `发布学习网站.cmd`，或执行：
 
 ```powershell
-node node_modules/hexo/bin/hexo generate
-node tools/serve.mjs
+npm run deploy
 ```
 
-## 使用 Hexo 发布
+`git-safe` 发布器将源码同步到 `foamlab-source` 分支；`.github/workflows/foamlab-pages.yml` 在 GitHub Actions 中安装锁定依赖、校验 TeX、构建 Hexo 并发布 Pages。Pages 设置使用 **GitHub Actions**。工作流兼容历史 `main` 静态分支；日常维护主稿为 `foamlab-source`，构建目录为 `public-openfoam`。
 
-双击 `发布学习网站.cmd`，或执行：
+发布前会检查远端源码变更。同步工作副本为 `.source_foamlab`，基线为 `.openfoam-work/source-sync.json`。发生冲突时比较并合并文件，再使用以下命令标记对应文件已处理；不要删除基线或强制推送以绕过冲突。
 
 ```powershell
-node node_modules/hexo/bin/hexo generate
-node node_modules/hexo/bin/hexo deploy
+python tools/source-sync.py resolve source-openfoam/maintenance/index.md
 ```
 
-`_config.yml` 配置 `git-safe` 扩展和 `foamlab-source` 源文件分支。发布程序先同步远程网页修改，执行 Hexo 构建，再推送源文件；GitHub Actions 重新校验并部署网站。GitHub Pages 设置使用 **GitHub Actions**。不执行强制推送。
+此命令只适用于已经人工合并的实际冲突路径。发布结果以 [GitHub Actions](https://github.com/MrLittleShark/mrlittleshark.github.io/actions)及线上页面复核为准；本轮最终部署检查尚待补记。
 
-专用源文件工作副本为 `.source_foamlab`，同步基线为 `.openfoam-work/source-sync.json`。网页和本地同时修改同一文件时会停止并列出冲突，不会自动覆盖。合并冲突时可对照本地文件和 `.source_foamlab` 中的远程文件；保存合并结果后，执行 `python tools/source-sync.py resolve source-openfoam/lessons/01/index.md`（替换为实际冲突路径）标记该文件已人工合并，再发布。不要删除基线来绕过冲突。仅需采用远程版本时，先备份本地修改，再将工作副本对应文件复制到本地同一路径，重新发布。
-
-发布使用当前用户已有的 Git 凭据，令牌不写入源代码。构建产物为 `public-openfoam`。原 `.deploy_foamlab` 保留静态部署历史，不作为日常内容主稿。
-
-## 管理平台、作业与公告
-
-管理入口：https://mrlittleshark.github.io/admin/ 。公开课堂页面只保留学生使用的查看、提交与答疑功能。
-
-1. 使用 **MrLittleShark** GitHub 账号点击管理授权，首次授权接受公开仓库访问权限。
-2. 在“发布作业 / 公告”编辑内容，可选 28 讲练习模板，核对后发布。
-3. 在“已发布记录”修改或关闭记录。学生在对应提交的评论区接收反馈。
-4. 在“课程内容维护”选择页面、载入当前版本、修改并保存，随后在“发布状态与维护”确认构建成功。
-
-管理服务 `supabase/functions/foamlab-admin/index.ts` 向 Supabase 核验会话，向 GitHub 核验真实账号 ID、关联身份和公开仓库权限。仅仓库所有者账号 ID `112299157` 有管理权限。普通个人资料不能改变权限。修改管理服务后需要另行部署该 Edge Function；Hexo 发布仅更新网站前端与内容。
-
-课堂记录保存在公开 GitHub Issues，标题前缀为 `[作业发布]`、`[作业提交]`、`[公告]`、`[提问]`。作业与公告只展示配置的可信教师记录。关闭作业不等于禁止 GitHub 上的逾期提交；截止日期和评分由教师管理。学生提交、附件上传与答疑需要 GitHub 账号。
-
-完整操作说明见 [网站维护手册](source-openfoam/maintenance/index.md)，线上入口 https://mrlittleshark.github.io/maintenance/ 。
-
-## 个人中心与认证
-
-个人中心使用 Supabase Auth 的 GitHub OAuth，资料与学习进度存储于启用行级访问控制的数据库。认证尚未配置时，页面明确显示服务未启用，不提供模拟登录。配置步骤见 [认证服务配置](supabase/SETUP.md)，数据库结构与策略见 `supabase/schema.sql`。
-
-当前项目 `foamlab-openfoam-learning` 已完成数据库配置，GitHub 提供商已启用。已在实际线上页面验证登录跳转及 PKCE 回调地址，数据库隔离测试通过。首次个人 GitHub 授权由账号本人完成；自动化检查不代替个人授权。个人中心提供资料编辑、常用入口选择、进度同步，以及“我的作业提交”和“我的提问”入口。
-
-## 内容维护
+## 内容主稿与目录
 
 | 位置 | 用途 |
 | --- | --- |
-| `source-openfoam/lessons/01` 至 `28` | 在线课程正文 |
-| `source-openfoam/start` | 初学者快速开始 |
-| `source-openfoam/bubble` | 电极气泡专题 |
-| `source-openfoam/reference` | 37 个参考手册章节 |
-| `source-openfoam/_data/learning.json` | 学习路径与目录数据 |
-| `scripts/search-content.js` | 从当前正文自动生成全文搜索索引 |
-| `source-openfoam/assets/commands.json` | 242 条命令记录 |
-| `source-openfoam/assets/dictionaries.json` | 53 项配置文件、关键字和关联命令 |
-| `source-openfoam/dictionaries` | 配置文件独立说明页 |
-| `source-openfoam/account` | 个人中心入口 |
-| `source-openfoam/downloads` | 原始参考文档、学生讲义和算例包 |
-| `themes/foam-lab/source/assets` | 样式、搜索和课堂交互 |
-| `.github/ISSUE_TEMPLATE` | GitHub 原生提问、提交与发布表单 |
+| Supabase `foamlab_content` | 已发布课程、文章、资料、推荐及参考覆盖正文的日常主稿 |
+| `tools/content/*content.json` | 可审查的初始内容数据；不自动读取后台后续修改 |
+| `tools/content/build-core.py` | 基础课程、数值方法及工具说明生成器 |
+| `tools/content/build-programming-content.py` | 17 个编程单元生成器 |
+| `tools/build-reference-library.py` | 命令、配置页及官方示例清单生成器 |
+| `tools/revise-legacy-reference.py` | 37 个主题参考章节的审校生成器 |
+| `tools/content/build-recommendations.py` | 15 个资源推荐条目生成器 |
+| `source-openfoam/assets/commands.json`、`dictionaries.json` | 命令与配置搜索目录 |
+| `source-openfoam/commands`、`dictionaries`、`reference` | 可直接访问的静态参考初始版本 |
+| `source-openfoam/assets/examples/v2512` | 完整教程配置及来源校验清单所对应文件 |
+| `source-openfoam/downloads` | 静态资料、编程包与运行证据 |
+| `source-openfoam/maintenance`、`design` | 维护手册及字体界面规范 |
+| `themes/foam-lab/layout`、`themes/foam-lab/source/assets` | 模板、样式、浏览器交互及本地依赖 |
+| `supabase/migrations`、`supabase/tests` | 数据库结构、权限变更与隔离测试 |
 
-`tools/build-content.py` 从所提供的四份 Word 资料和本地 28 讲学生版讲义重新导入内容。它会覆盖生成的课程、参考页面和索引；修改课程内容前应明确以 Word 还是网站源文件为维护主稿。脚本中的原始资料路径可按需要调整。
+静态参考页面会读取其关联 CMS 正文；后台归档后页面显示归档状态，但历史 HTML 或缓存不一定立即消失。需要彻底移除时，另行删除对应静态源文件并重新发布。
 
-算例包来自已有课程的“代码”目录，排除常规结果时间目录、日志和编译产物，保留原始目录结构。解压后先查看 README 与运行脚本。课程资料中的环境路径需改为学习者自己的路径；本站构建验证不代表算例已在当前环境重新计算。
+生成器会重写本地生成文件，运行前应保存人工修改。旧 `tools/build-content.py` 对应最初的 Word 与 28 讲导入流程，**不应作为新版内容重建入口**。内容 JSON、源文件和数据库是不同存储层，改动不会自动双向同步。
 
-## 验证
+`tools/prepare-cms-seed.py` 仅生成导入 SQL，默认跳过已经存在的 `slug`。它不直接连接或修改数据库。维护时优先使用管理平台；需要批量迁移时先导出备份、审查 SQL，并在受控环境执行。Hexo 发布不部署数据库迁移、认证设置、存储策略或历史 Edge Function。
+
+## 数学、代码与界面
+
+正文公式使用 TeX，推荐 `\(...\)` 与 `\[...\]`。静态页面在构建时渲染，CMS 正文在浏览器中处理；编辑时先预览，排除语法错误。代码块标明 `bash`、`openfoam`、`cpp`、`python`、`makefile` 等语言，保留可复制的原文。图片应区分教学示意、资料原图、生成式封面与真实计算图。
+
+界面使用蓝色体系并支持亮色、暗色、跟随系统。中文正文、标题和代码使用不同字体层级；Noto 字体子集及许可证随站点托管，新增罕见字由系统字体回退。具体字号、行距、对比度和响应式规则见 [字体与界面设计规范](source-openfoam/design/index.md)，线上入口为 `/design/`。封面为 CFD 主题生成式插图，不表示真实计算结果。
+
+## 检查与备份
+
+本轮使用的主要检查入口如下；浏览器脚本依赖 Playwright 和本地预览，部分路径为当前 Windows 环境配置。
 
 ```powershell
-python tools/check-site.py
-node tools/check-browser.cjs
+node tools/check-tex.cjs
+node tools/check-rebuild.cjs
+python tools/check-reference-integrity.py
+npm run build
+python tools/check-generated.py
+node tools/check-cms-ui.cjs
+node tools/check-refinements.cjs
 ```
 
-浏览器检查需先启动本地预览，并有 Playwright 与 Edge 可用；`check-browser.cjs` 中的 Playwright 路径对应本次 Windows 环境，可按实际安装位置修改。检查涵盖本地链接、文档与压缩包、全文搜索、命令筛选、学习进度、教师记录过滤、提交跳转、API 故障状态与手机布局。课堂写入通过隔离的浏览器测试数据验证，不向真实仓库发布测试作业或提问。
+`check-cms-ui.cjs` 使用隔离请求数据，不向公开社区发布测试内容。历史 `check-admin.cjs` 等脚本针对早期管理流程，不能代替新版 CMS 与数据库权限验证。最终联机检查、部署提交与运行结果记录在 [VERIFICATION.md](VERIFICATION.md)。
 
-官方版本资料：<https://www.openfoam.com/news/main-news/openfoam-v2512>。前端采用响应式布局、语义化 HTML、原生对话框和渐进增强，参考 Tailwind 的移动端布局与 Radix 的键盘可访问性设计原则；运行时无需外部字体或前端 CDN。
-
-## TeX、代码与主题
-
-公式使用 TeX 定界符，推荐 `\(...\)` 和 `\[...\]`；也支持 `$...$` 和 `$$...$$`。`lib/presentation.cjs` 在 Hexo 构建时使用本地 KaTeX 渲染。不能解析的公式会中止发布。导入的原始科学公式由 `tools/tex_content.py` 转换；执行代码不参与转换。
-
-围栏代码块标注 `bash`、`openfoam`、`cpp`、`python` 等语言。已有 HTML 代码块自动识别语言，页面提供语法高亮、行数、复制与自动换行。公式、代码及样式资源在本站托管。
-
-顶栏按钮依次切换亮色、暗色、跟随系统；选择保存在当前浏览器，首次加载跟随系统。外观样式在 `themes/foam-lab/source/assets/presentation.css`，逻辑在 `appearance.js`。
-
-首页官方图片原文件与来源说明位于 `source-openfoam/assets/official`。不代表 OpenFOAM 官方认可本站内容。
-
-新增检查：`node tools/check-tex.cjs`、`node tools/check-admin.cjs`、`node tools/check-presentation.cjs`。管理员写入检查使用隔离数据；不向真实课堂发送测试内容。
+管理平台“导出与维护”可导出当前可访问的内容和站点设置；导出包含附件地址，**不包含附件本体、认证用户、私有资料或完整数据库备份**。同时保存附件、源码 Git 历史和数据库迁移记录；完整数据库与身份备份在 Supabase 侧管理。公开配置只允许使用 publishable key，OAuth Secret 和服务端密钥不得写入前端、仓库或资料附件。

@@ -1,5 +1,5 @@
 ---
-title: "提问与答疑"
-layout: "workspace"
-section: "community"
+title: 讨论中心
+layout: forum
+section: community
 ---

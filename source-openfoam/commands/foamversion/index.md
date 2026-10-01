@@ -1,0 +1,10 @@
+---
+title: "foamVersion"
+layout: reference
+description: "v2512 源码提供的环境函数，可查询或切换版本；部分打包环境或非交互 shell 未加载该函数时，直接检查 WM_PROJECT_VERSION。"
+---
+{% raw %}
+<div class="source-note">v2512 环境中的函数或别名；非独立可执行程序。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>v2512 源码提供的环境函数，可查询或切换版本；部分打包环境或非交互 shell 未加载该函数时，直接检查 WM_PROJECT_VERSION。</p><h2>使用入口</h2><pre><code class="language-bash">printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
+# foamVersion 是环境函数，先确认当前 shell 是否加载
+type foamVersion</code></pre><h2>使用条件与核对</h2><p>显示当前 OpenFOAM 环境版本。 示例中的算例名、路径与主机名须按实际环境替换。</p><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/config.sh/aliases">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
+{% endraw %}

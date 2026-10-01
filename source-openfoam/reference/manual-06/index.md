@@ -1,11 +1,10 @@
 ---
 title: "06 常见文件与字典语法"
-layout: "reference"
-description: "OpenFOAM v2512 命令、文件与配置参考"
-manual: 1
+layout: reference
+description: "OpenCFD v2512 常见文件与字典语法；包含原理、示例与版本核对。"
 ---
 {% raw %}
-<p class="source-note">资料来源：OpenFOAM_v2512命令与配置参考手册（GPT整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><p>配置示例依据 v2512 源码、etc/caseDicts 和 tutorials 编写，参见 S2、S3。独立文件包含 FoamFile 文件头；配置片段应嵌入指定的父字典。几何尺寸、物性和数值参数按具体算例确定。</p>
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>配置示例依据 v2512 源码、etc/caseDicts 和 tutorials 编写，参见 S2、S3。独立文件包含 FoamFile 文件头；配置片段应嵌入指定的父字典。几何尺寸、物性和数值参数按具体算例确定。</p>
 <h3>6.1 目录结构与文件用途</h3>
 <div class="table-scroll"><table>
 <tr><th>路径</th><th>主要作用</th><th>使用阶段</th></tr>
@@ -24,7 +23,7 @@ manual: 1
 </table></div>
 <h3>6.2 文件头与字典语法</h3>
 <p>字典采用“关键字 值;”的形式定义条目，以花括号组织子字典、圆括号定义列表、方括号表示量纲。单行和多行注释分别使用 // 和 /* ... */。文件名、关键字及模型名称区分大小写。</p>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0;
     format ascii;
@@ -37,7 +36,7 @@ manual: 1
 <tr><td>format</td><td>存储方式</td><td>ascii 可读；binary 更紧凑</td></tr>
 <tr><td>class</td><td>数据类型</td><td>dictionary、volScalarField、volVectorField 等</td></tr>
 <tr><td>object</td><td>对象名</td><td>通常与文件名一致</td></tr>
-<tr><td>location</td><td>可选存储位置说明</td><td>如 &quot;0&quot; 或 &quot;system&quot;，用于描述存储位置</td></tr>
+<tr><td>location</td><td>可选存储位置说明</td><td>如 "0" 或 "system"，用于描述存储位置</td></tr>
 <tr><td>dimensions</td><td>七个 SI 基本量纲指数</td><td>顺序为质量、长度、时间、温度、物质的量、电流、发光强度</td></tr>
 <tr><td>uniform 与 nonuniform</td><td>统一赋值或按对象逐项赋值</td><td>非均匀列表数量须与网格对象数量匹配</td></tr>
 <tr><td>true/false、on/off、yes/no</td><td>常见开关表示</td><td>同一文件采用一致的开关写法</td></tr>
@@ -46,20 +45,20 @@ manual: 1
 <h3>6.3 引用和预处理关键字</h3>
 <div class="table-scroll"><table>
 <tr><th>关键字</th><th>作用</th><th>示例</th></tr>
-<tr><td>$名称</td><td>引用当前或可见作用域中的字典条目</td><td>pFinal { $p; relTol 0; }</td></tr>
-<tr><td>${名称}</td><td>限定变量名称范围，支持环境变量展开</td><td>#include &quot;${FOAM_CASE}/system/commonSettings&quot;</td></tr>
+<tr><td>$名称</td><td>引用当前或可见作用域中的字典条目</td><td>pFinal { &#36;p; relTol 0; }</td></tr>
+<tr><td>&#36;{名称}</td><td>限定变量名称范围，支持环境变量展开</td><td>#include "&#36;{FOAM_CASE}/system/commonSettings"</td></tr>
 <tr><td>$../名称</td><td>访问父字典作用域</td><td>a $../referenceValue;</td></tr>
 <tr><td>$!名称</td><td>从顶层字典查找</td><td>a $!referenceValue;</td></tr>
-<tr><td>#include</td><td>读取指定文件</td><td>#include &quot;commonSettings&quot;</td></tr>
-<tr><td>#includeIfPresent</td><td>仅在文件存在时包含</td><td>#includeIfPresent &quot;localOverrides&quot;</td></tr>
-<tr><td>#includeEtc</td><td>从 OpenFOAM 配置搜索路径引入文件</td><td>#includeEtc &quot;caseDicts/meshQualityDict&quot;</td></tr>
-<tr><td>#includeFunc</td><td>加入预配置函数对象</td><td>#includeFunc residuals</td></tr>
+<tr><td>#include</td><td>读取指定文件</td><td>#include "commonSettings"</td></tr>
+<tr><td>#includeIfPresent</td><td>仅在文件存在时包含</td><td>#includeIfPresent "localOverrides"</td></tr>
+<tr><td>#includeEtc</td><td>从 OpenFOAM 配置搜索路径引入文件</td><td>#includeEtc "caseDicts/meshQualityDict"</td></tr>
+<tr><td>#includeFunc</td><td>加入预配置函数对象</td><td>#includeFunc solverInfo</td></tr>
 <tr><td>#inputMode</td><td>控制重复键合并方式</td><td>#inputMode merge</td></tr>
-<tr><td>#remove</td><td>删除已有条目，支持正则表达式</td><td>#remove &quot;obsolete.*&quot;</td></tr>
-<tr><td>#calc</td><td>由动态编译表达式生成值</td><td>length 2; halfLength #calc &quot;$length/2.0&quot;;</td></tr>
-<tr><td>#eval</td><td>采用表达式求值</td><td>a #eval &quot;sqrt(2.0)&quot;;</td></tr>
+<tr><td>#remove</td><td>删除已有条目，支持正则表达式</td><td>#remove "obsolete.*"</td></tr>
+<tr><td>#calc</td><td>由动态编译表达式生成值</td><td>length 2; halfLength #calc "&#36;length/2.0";</td></tr>
+<tr><td>#eval</td><td>采用表达式求值</td><td>a #eval "sqrt(2.0)";</td></tr>
 <tr><td>#codeStream</td><td>编译执行 C++ 并写回字典内容</td><td>见第 9.13 节</td></tr>
 </table></div>
-<p>OpenFOAM 字典引用与 Bash 变量展开分别由各自的解析器处理。使用 shell 生成含 $p 的字典时，采用带引号的 here-document 定界符，如 &lt;&lt;&#x27;EOF&#x27;，可保留引用原文。</p>
-<p>foamDictionary system/fvSolution -expand 可查看展开后的配置。#calc 和 #codeStream 会编译并执行代码，使用时需具备相应编译环境。</p>
+<p>OpenFOAM 字典引用与 Bash 变量展开分别由各自的解析器处理。使用 shell 生成含 &#36;p 的字典时，采用带引号的 here-document 定界符，如 &lt;&lt;'EOF'，可保留引用原文。</p>
+<p>foamDictionary system/fvSolution -expand 可查看展开后的配置。#calc 和 #codeStream 会编译并执行代码，使用时需具备相应编译环境。</p><h2>v2512 的残差记录接口</h2><p>使用 <code>type solverInfo</code>，并加载 <code>utilityFunctionObjects</code>。<code>#includeFunc solverInfo</code> 的官方模板默认选择 p 和 U；如需其他字段，应复制模板并修改 fields。此功能读取求解过程中的 solverPerformance 数据，事后只读取已写出的 U、p 不能重建历史残差。</p><p><a href="/dictionaries/functions-solverinfo/">完整配置、字段解释与三个 v2512 示例</a></p>
 {% endraw %}

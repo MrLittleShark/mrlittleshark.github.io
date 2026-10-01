@@ -1,14 +1,13 @@
 ---
 title: "07 网格生成与前处理配置"
-layout: "reference"
-description: "OpenFOAM v2512 命令、文件与配置参考"
-manual: 1
+layout: reference
+description: "OpenCFD v2512 网格生成与前处理配置；包含原理、示例与版本核对。"
 ---
 {% raw %}
-<p class="source-note">资料来源：OpenFOAM_v2512命令与配置参考手册（GPT整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h3>7.1 system/blockMeshDict</h3>
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>7.1 system/blockMeshDict</h3>
 <p>blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。</p>
 <p>下例建立长 1 m、宽 0.1 m、厚 0.01 m 的二维通道。厚度方向设置一层单元，两侧边界设为 empty。</p>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object blockMeshDict;
@@ -70,7 +69,7 @@ mergePatchPairs ();</code></pre>
 <tr><td>maxLocalCells、maxGlobalCells</td><td>局部及全局细化控制限额</td><td>根据可用内存设置单元数量上限</td></tr>
 <tr><td>minRefinementCells</td><td>停止继续细化的候选单元阈值</td><td>设为 0 时继续处理剩余细化单元，计算量相应增加</td></tr>
 <tr><td>nCellsBetweenLevels</td><td>相邻细化级别间的过渡层数</td><td>例如 3</td></tr>
-<tr><td>features</td><td>显式特征文件和细化等级</td><td>({ file &quot;body.eMesh&quot;; level 2; })</td></tr>
+<tr><td>features</td><td>显式特征文件和细化等级</td><td>({ file "body.eMesh"; level 2; })</td></tr>
 <tr><td>refinementSurfaces</td><td>表面的最小最大细化等级</td><td>body { level (2 3); patchInfo { type wall; } }</td></tr>
 <tr><td>resolveFeatureAngle</td><td>区分尖锐表面特征的角度</td><td>示例为 30，按表面几何特征确定</td></tr>
 <tr><td>refinementRegions</td><td>体积或距离带细化</td><td>mode inside、outside 或 distance；levels 定义等级</td></tr>
@@ -78,7 +77,7 @@ mergePatchPairs ();</code></pre>
 <tr><td>allowFreeStandingZoneFaces</td><td>是否允许独立区域面</td><td>与 zone 生成方式匹配</td></tr>
 <tr><td>snapControls</td><td>贴体松弛和迭代</td><td>nSmoothPatch、tolerance、nSolveIter、nRelaxIter</td></tr>
 <tr><td>显式特征贴合</td><td>explicitFeatureSnap 与 nFeatureSnapIter</td><td>与 features 中的 eMesh 配合</td></tr>
-<tr><td>layers</td><td>各 patch 的层数</td><td>&quot;body.*&quot; { nSurfaceLayers 3; }</td></tr>
+<tr><td>layers</td><td>各 patch 的层数</td><td>"body.*" { nSurfaceLayers 3; }</td></tr>
 <tr><td>relativeSizes</td><td>层厚是否相对外层网格尺寸</td><td>true 相对尺寸；false 绝对长度</td></tr>
 <tr><td>expansionRatio</td><td>层间厚度增长比</td><td>例如 1.2</td></tr>
 <tr><td>finalLayerThickness、firstLayerThickness、thickness</td><td>不同的层厚约束</td><td>按层厚参数关系选取相容组合</td></tr>
@@ -89,7 +88,7 @@ mergePatchPairs ();</code></pre>
 <tr><td>meshQualityControls</td><td>质量约束</td><td>通常包含系统 meshQualityDict</td></tr>
 <tr><td>mergeTolerance</td><td>点合并相对容差</td><td>常用 1e-6，以几何包围盒尺度为基准</td></tr>
 </table></div>
-<pre><code>// 片段：放入对应的 snappyHexMeshDict
+<pre><code class="language-openfoam">// 片段：放入对应的 snappyHexMeshDict
 geometry
 {
     body.stl { type triSurfaceMesh; name body; }
@@ -106,7 +105,7 @@ castellatedMeshControls
     maxGlobalCells 3000000;
     minRefinementCells 0;
     nCellsBetweenLevels 3;
-    features ({ file &quot;body.eMesh&quot;; level 2; });
+    features ({ file "body.eMesh"; level 2; });
     refinementSurfaces
     {
         body { level (2 3); patchInfo { type wall; } }
@@ -130,7 +129,7 @@ snapControls
 }</code></pre>
 <p>locationInMesh 中的 (2 0 0) 表示待保留流体区域内的一点，该点须位于背景网格范围内及物体外部。网格生成前应消除 STL 自相交，统一长度单位，并检查背景网格。</p>
 <p>边界层生成配置如下。snapControls 和质量控制参数保留模板中的完整设置。将 addLayers 设为 false，可单独检查切割细化和表面贴合结果。</p>
-<pre><code>castellatedMesh true;
+<pre><code class="language-openfoam">castellatedMesh true;
 snap true;
 addLayers true;
 addLayersControls
@@ -154,11 +153,11 @@ addLayersControls
 }
 meshQualityControls
 {
-    #includeEtc &quot;caseDicts/meshQualityDict&quot;
+    #includeEtc "caseDicts/meshQualityDict"
 }
 mergeTolerance 1e-6;</code></pre>
 <h3>7.3 system/surfaceFeatureExtractDict</h3>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object surfaceFeatureExtractDict;
@@ -171,7 +170,7 @@ body.stl
 }</code></pre>
 <p>输入表面 body.stl 存放于 constant/triSurface。includedAngle 按特征提取器的包含角定义取值，其定义与 resolveFeatureAngle 不同。writeObj 控制可视化文件输出。运行 surfaceFeatureExtract 后，将生成的 eMesh 文件名用于后续特征线配置。</p>
 <h3>7.4 system/meshQualityDict</h3>
-<p>运行 foamGetDict meshQualityDict 获取模板，或通过 #includeEtc &quot;caseDicts/meshQualityDict&quot; 引入。下表列出常用质量指标及示例阈值，阈值应结合网格尺度和求解要求确定。</p>
+<p>运行 foamGetDict meshQualityDict 获取模板，或通过 #includeEtc "caseDicts/meshQualityDict" 引入。下表列出常用质量指标及示例阈值，阈值应结合网格尺度和求解要求确定。</p>
 <div class="table-scroll"><table>
 <tr><th>参数</th><th>含义</th><th>示例值</th></tr>
 <tr><td>maxNonOrtho</td><td>最大非正交角</td><td>65</td></tr>
@@ -189,7 +188,7 @@ body.stl
 </table></div>
 <h3>7.5 system/setFieldsDict</h3>
 <p>setFields 首先按 defaultFieldValues 设置全域初值，再依次执行 regions 中的区域赋值。区域重叠时，后续赋值覆盖先前结果。目标场文件须预先建立，并设置相应的 class 和 dimensions。</p>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object setFieldsDict;
@@ -210,7 +209,7 @@ regions
 <p>boxToCell 按单元位置选取长方体区域；sphereToCell 通过 centre 和 radius 定义球形区域；cylinderToCell 通过 p1、p2 和 radius 定义圆柱区域。边界面可采用 boxToFace 等选择器。</p>
 <p>赋值后检查 alpha.water 的极值与空间分布，边界条件在场文件中另行设置。需采用数学表达式赋值时，使用 setExprFields。</p>
 <h3>7.6 system/setExprFieldsDict</h3>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object setExprFieldsDict;
@@ -220,12 +219,12 @@ expressions
     setTemperature
     {
         field T;
-        expression &quot;300 + 10*pos().x()&quot;;
+        expression "300 + 10*pos().x()";
     }
 );</code></pre>
 <p>下例在已有温度场 T 上设置随坐标变化的温度，运行 setExprFields 后生效。fieldMask 限定赋值区域，create 和 dimensions 用于新建场。表达式语法可通过 foamExprParserInfo 查询。边界表达式使用 setExprBoundaryFieldsDict，其结构按边界场接口配置。</p>
 <h3>7.7 system/topoSetDict</h3>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object topoSetDict;
@@ -256,7 +255,7 @@ actions
 <tr><td>sourceInfo</td><td>选择源参数子字典</td><td>多数选择源可将参数直接写入动作字典；名称冲突时采用 sourceInfo</td></tr>
 </table></div>
 <h3>7.8 system/createPatchDict</h3>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object createPatchDict;
@@ -274,7 +273,7 @@ patches
 <p>constructFrom patches 从已有边界选面；constructFrom set 从指定 faceSet 选面。pointSync 控制耦合点同步。执行 createPatch -overwrite 后，将 0/U、0/p 等场文件中的边界条目与新建 walls 对应。</p>
 <h3>7.9 system/createBafflesDict</h3>
 <p>createBaffles 将内部面转换为成对边界面。internalFacesOnly 控制选面范围，baffles 定义各挡板的 type、zoneName 和 patches。下例采用预先建立的 interfaceZone 面区域。</p>
-<pre><code>internalFacesOnly true;
+<pre><code class="language-openfoam">internalFacesOnly true;
 baffles
 {
     interface
@@ -290,7 +289,7 @@ baffles
 }</code></pre>
 <p>运行 createBaffles -overwrite 生成挡板边界。两侧的传热和流动耦合由场边界条件及物理模型确定。</p>
 <h3>7.10 system/refineMeshDict</h3>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object refineMeshDict;
@@ -309,9 +308,9 @@ writeMesh false;</code></pre>
 <p>set 指定待细化的单元集合，directions 指定细化方向。二维网格仅沿面内方向细化，厚度方向保持 empty 边界要求的单层结构。运行 refineMesh -overwrite 后，检查场、区域和边界与新网格的对应关系。</p>
 <h3>7.11 system/extrudeMeshDict</h3>
 <p>constructFrom 指定挤出来源，sourceCase 和 sourcePatches 指定源算例及边界，exposedPatchName 定义新暴露边界。extrudeModel 选择挤出模型，nLayers 和 expansionRatio 控制层数及层厚比，mergeFaces 和 mergeTol 控制合并。linearNormal 通过 linearNormalCoeffs/thickness 设置总厚度；其他模型采用各自的系数字典。</p>
-<pre><code>// 片段：沿已有 patch 外法向挤出
+<pre><code class="language-plaintext">// 片段：沿已有 patch 外法向挤出
 constructFrom patch;
-sourceCase &quot;.&quot;;
+sourceCase ".";
 sourcePatches (front);
 exposedPatchName back;
 extrudeModel linearNormal;
@@ -322,7 +321,7 @@ mergeFaces false;
 mergeTol 0;</code></pre>
 <h3>7.12 system/mapFieldsDict</h3>
 <p>mapFieldsDict 用于源算例与目标算例边界不一致时的场映射。patchMap 中每组名称依次为目标边界和源边界。</p>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object mapFieldsDict;
@@ -335,7 +334,7 @@ patchMap
 cuttingPatches (newCutBoundary);</code></pre>
 <p>在目标算例中执行 mapFields ../sourceCase -sourceTime latestTime。cuttingPatches 指定切穿源计算域的目标边界，其数值由源域内部插值得到。-consistent 适用于边界拓扑匹配的算例。映射体积分数等守恒量后，应检查有界性及积分守恒。</p>
 <h3>7.13 system/changeDictionaryDict</h3>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object changeDictionaryDict;

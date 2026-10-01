@@ -1,0 +1,599 @@
+{
+  "solverTitles": {
+    "dnsFoam": "各向同性湍流盒中的直接数值模拟",
+    "acousticFoam": "声压波动方程",
+    "laplacianFoam": "标量扩散方程",
+    "overLaplacianDyMFoam": "重叠动网格上的标量扩散",
+    "potentialFoam": "势流与初始通量场",
+    "overPotentialFoam": "重叠网格势流初始化",
+    "scalarTransportFoam": "给定速度场中的被动标量输运",
+    "PDRFoam": "基于阻力模型的预混燃烧",
+    "XiFoam": "基于 b–Xi 模型的预混燃烧",
+    "XiDyMFoam": "动网格预混燃烧",
+    "XiEngineFoam": "内燃机中的 b–Xi 燃烧模型",
+    "chemFoam": "单单元化学反应积分",
+    "coldEngineFoam": "内燃机冷态流动",
+    "fireFoam": "火灾、扩散火焰与热解耦合",
+    "reactingFoam": "化学反应与燃烧流动",
+    "rhoReactingBuoyantFoam": "含浮力处理的密度基反应流",
+    "rhoReactingFoam": "采用密度基热物性的反应流",
+    "rhoCentralFoam": "中心迎风格式的可压缩流动",
+    "rhoPimpleAdiabaticFoam": "低马赫数气动声学中的弱可压缩流动",
+    "rhoPimpleFoam": "瞬态可压缩流动与 PIMPLE",
+    "overRhoPimpleDyMFoam": "重叠动网格可压缩瞬态流动",
+    "rhoSimpleFoam": "稳态可压缩湍流",
+    "overRhoSimpleFoam": "重叠网格稳态可压缩流动",
+    "rhoPorousSimpleFoam": "含多孔阻力的稳态可压缩流动",
+    "sonicFoam": "跨声速与超声速气体流动",
+    "sonicDyMFoam": "动网格跨声速与超声速气体流动",
+    "sonicLiquidFoam": "可压缩液体的跨声速流动",
+    "dsmcFoam": "多组分稀薄气体的 DSMC 模拟",
+    "mdEquilibrationFoam": "分子动力学系统的预平衡",
+    "mdFoam": "流体分子动力学",
+    "electrostaticFoam": "静电场",
+    "magneticFoam": "永磁体产生的磁场",
+    "mhdFoam": "导电流体的不可压缩磁流体力学",
+    "financialFoam": "Black–Scholes 金融定价方程",
+    "liquidFilmFoam": "有限面积液膜流动",
+    "sphereSurfactantFoam": "球面上的被动标量输运",
+    "surfactantFoam": "有限面积被动标量输运",
+    "buoyantBoussinesqPimpleFoam": "Boussinesq 近似的瞬态浮力流动",
+    "buoyantBoussinesqSimpleFoam": "Boussinesq 近似的稳态浮力流动",
+    "buoyantPimpleFoam": "含热物性变化的瞬态浮力流动",
+    "overBuoyantPimpleDyMFoam": "重叠动网格上的瞬态浮力流动",
+    "buoyantSimpleFoam": "稳态浮力传热与辐射",
+    "chtMultiRegionFoam": "流体与固体的多区域瞬态共轭传热",
+    "chtMultiRegionSimpleFoam": "流体与固体的多区域稳态共轭传热",
+    "chtMultiRegionTwoPhaseEulerFoam": "两流体与固体区域的共轭传热",
+    "solidFoam": "固体区域中的热传导",
+    "thermoFoam": "冻结流场上的能量输运",
+    "adjointOptimisationFoam": "伴随优化循环与设计变量更新",
+    "adjointShapeOptimizationFoam": "不可压缩流动的伴随形状优化",
+    "boundaryFoam": "用于入口条件的一维湍流边界层",
+    "icoFoam": "PISO 不可压缩牛顿流体层流",
+    "nonNewtonianIcoFoam": "不可压缩非牛顿流体瞬态层流",
+    "pimpleFoam": "PIMPLE 不可压缩瞬态流动",
+    "SRFPimpleFoam": "单旋转参考系中的瞬态流动",
+    "overPimpleDyMFoam": "重叠动网格上的不可压缩瞬态流动",
+    "pisoFoam": "PISO 不可压缩瞬态湍流",
+    "shallowWaterFoam": "含旋转效应的无黏浅水方程",
+    "simpleFoam": "SIMPLE 不可压缩稳态流动",
+    "SRFSimpleFoam": "单旋转参考系中的稳态流动",
+    "overSimpleFoam": "重叠网格上的不可压缩稳态流动",
+    "porousSimpleFoam": "多孔介质中的不可压缩稳态流动",
+    "MPPICDyMFoam": "动网格上的 MPPIC 颗粒流",
+    "DPMDyMFoam": "动网格上的稠密颗粒耦合输运",
+    "MPPICFoam": "MPPIC 颗粒碰撞与连续相耦合",
+    "DPMFoam": "考虑颗粒体积分数的颗粒耦合输运",
+    "coalChemistryFoam": "煤与石灰石颗粒反应流",
+    "icoUncoupledKinematicParcelFoam": "预计算不可压缩流场中的被动颗粒",
+    "icoUncoupledKinematicParcelDyMFoam": "动网格与预计算流场中的被动颗粒",
+    "kinematicParcelFoam": "不可压缩流动与运动学颗粒云",
+    "reactingParcelFoam": "可压缩流动与多相反应颗粒云",
+    "reactingHeterogenousParcelFoam": "异相反应颗粒与连续相耦合",
+    "simpleReactingParcelFoam": "稳态可压缩反应颗粒流",
+    "simpleCoalParcelFoam": "稳态可压缩煤颗粒流",
+    "sprayFoam": "瞬态可压缩喷雾",
+    "engineFoam": "内燃机中的瞬态喷雾流动",
+    "simpleSprayFoam": "稳态可压缩喷雾",
+    "sprayDyMFoam": "动网格上的瞬态喷雾",
+    "uncoupledKinematicParcelFoam": "预计算流场中的被动颗粒云",
+    "uncoupledKinematicParcelDyMFoam": "动网格预计算流场中的被动颗粒云",
+    "MPPICInterFoam": "VOF 两相流与 MPPIC 颗粒云",
+    "cavitatingFoam": "均相平衡模型的空化流动",
+    "cavitatingDyMFoam": "动网格均相平衡空化流动",
+    "compressibleInterFoam": "两种可压缩非等温流体的 VOF 输运",
+    "compressibleInterDyMFoam": "动网格上的可压缩非等温 VOF 输运",
+    "compressibleInterFilmFoam": "可压缩 VOF 流动与液膜耦合",
+    "compressibleInterIsoFoam": "可压缩两相流的 isoAdvector 输运",
+    "overCompressibleInterDyMFoam": "重叠动网格上的可压缩 VOF 输运",
+    "compressibleMultiphaseInterFoam": "多种可压缩非等温流体的界面输运",
+    "driftFluxFoam": "漂移通量混合物模型",
+    "icoReactingMultiphaseInterFoam": "含相变的多种不可压缩流体界面输运",
+    "interCondensatingEvaporatingFoam": "液体与蒸气的蒸发凝结界面输运",
+    "interFoam": "两种不可压缩等温流体的 VOF 输运",
+    "interMixingFoam": "三流体中可混合与不可混合相的输运",
+    "overInterDyMFoam": "重叠动网格上的不可压缩 VOF 输运",
+    "interIsoFoam": "不可压缩两相流的 isoAdvector 输运",
+    "interPhaseChangeFoam": "含空化等相变的不可压缩两相 VOF 输运",
+    "interPhaseChangeDyMFoam": "动网格两相 VOF 相变流动",
+    "overInterPhaseChangeDyMFoam": "重叠动网格两相 VOF 相变流动",
+    "multiphaseEulerFoam": "含传热的多相 Euler–Euler 模型",
+    "multiphaseInterFoam": "多种不可压缩流体的界面输运",
+    "potentialFreeSurfaceFoam": "以波高场近似单相自由表面",
+    "potentialFreeSurfaceDyMFoam": "动网格单相自由表面近似",
+    "reactingMultiphaseEulerFoam": "可反应的多流体 Euler–Euler 模型",
+    "reactingTwoPhaseEulerFoam": "可反应的两流体 Euler–Euler 模型",
+    "twoLiquidMixingFoam": "两种不可压缩流体的混合",
+    "twoPhaseEulerFoam": "含分散相与传热的两流体模型",
+    "solidDisplacementFoam": "线弹性固体位移",
+    "solidEquilibriumDisplacementFoam": "固体平衡位移"
+  },
+  "configNotes": {
+    "adjointRASProperties": [
+      "物理模型",
+      "伴随湍流模型的选择及其线性化控制。它描述目标函数对湍流闭合量的敏感性，不能替代正问题的 turbulenceProperties。先验证正问题收敛，再比较伴随灵敏度与有限差分结果。",
+      "adjointOptimisationFoam"
+    ],
+    "optimisationDict": [
+      "数值方法",
+      "定义伴随优化的目标函数、设计变量、优化器与更新策略。一个优化迭代通常包含正问题、伴随问题和设计更新；减少单次残差并不等同于目标函数改善。结合算例的 Allrun 与目标函数输出理解优化循环。",
+      "adjointOptimisationFoam"
+    ],
+    "combustionProperties": [
+      "物理模型",
+      "选择燃烧闭合模型及其系数，例如有限速率化学与湍流混合时间尺度的耦合。与 chemistryProperties、thermophysicalProperties 和组分初始场一起使用；燃烧模型名称必须在当前求解器所加载的库中注册。",
+      "reactingFoam"
+    ],
+    "chemistryProperties": [
+      "物理模型",
+      "控制化学反应开关、化学 ODE 求解方法和化学时间步。流动时间步与内部化学积分时间步不同，刚性反应机制通常要求独立的误差控制。先用 chemFoam 单单元算例检查点火延迟与组分守恒。",
+      "chemFoam"
+    ],
+    "phaseProperties": [
+      "物理模型",
+      "描述相系统、各相模型以及相间动量、热量和质量交换。Euler–Euler 与 VOF 求解器对该文件的结构要求不同；相名需与 alpha、热物性和湍流场的后缀一致。示例应按相系统整体移植。",
+      "reactingTwoPhaseEulerFoam"
+    ],
+    "reactingCloud1Properties": [
+      "物理模型",
+      "配置名为 reactingCloud1 的反应颗粒云，包括注入、颗粒物性、传热、挥发或表面反应与边界碰撞。文件名前缀是颗粒云实例名，不是固定的物理模型名称。对照 constant 中的材料数据与求解器读取的云名称。",
+      "reactingParcelFoam"
+    ],
+    "meshDict": [
+      "网格",
+      "cfMesh 教程中的网格控制字典，描述表面文件、尺寸与局部细化等。该文件来自核心仓库所携带的 cfMesh 教程；运行依赖独立 cfMesh 模块，不应当用 snappyHexMesh 直接读取。",
+      "cartesianMesh"
+    ],
+    "boundaryRadiationProperties": [
+      "物理模型",
+      "按边界配置辐射发射率、吸收率或透射率的模型。体介质的 radiationProperties 与壁面的辐射属性承担不同职责；不透明灰壁、半透明壁面和与相邻区域耦合的壁面需要不同处理。",
+      "buoyantSimpleFoam"
+    ],
+    "kinematicCloudProperties": [
+      "物理模型",
+      "运动学颗粒云的离散相控制文件，包含载体耦合、积分格式、注入方式、阻力与碰撞等子模型。每个 parcel 可代表多个真实颗粒，检查质量流率时必须同时检查 parcel 数与代表颗粒数。",
+      "kinematicParcelFoam"
+    ],
+    "waveProperties": [
+      "物理模型",
+      "定义造波或吸波边界使用的波浪模型、周期、波高、水深和方向。这里的波速、周期与波长必须满足所选波理论的色散关系；以静水、线性小振幅波和反射率评估逐级验证。",
+      "interFoam"
+    ],
+    "surfaceFilmProperties": [
+      "物理模型",
+      "壁面液膜区域的模型与耦合参数，包括液膜热物性、相变、颗粒与壁面相互作用等。液膜网格、区域名称和主流场之间的映射必须配套，不能仅复制单个字典完成耦合。",
+      "reactingParcelFoam"
+    ],
+    "extrudeToRegionMeshDict": [
+      "网格",
+      "从已有网格的面或面区挤出独立区域，用于薄壁或液膜等区域耦合。指定源面、挤出模型、层数和区域名称，完成后应分别检查主网格与新区域网格。",
+      "extrudeToRegionMesh"
+    ],
+    "caseProperties": [
+      "计算控制",
+      "createZeroDirectory 使用的算例描述文件，指定初始值、边界类别、模板选项与区域。工具根据求解器、湍流模型和模板生成 0/ 场；它不是求解器每一步读取的时间控制字典。多区域时每个区域可有独立的 caseProperties。",
+      "createZeroDirectory"
+    ],
+    "collapseDict": [
+      "网格",
+      "网格边或面塌缩操作的控制参数。此类操作会改变拓扑并可能损失几何特征，应在算例副本上执行，并比较操作前后的单元数、非正交性和边界完整性。",
+      "collapseEdges"
+    ],
+    "parcelInjectionProperties": [
+      "物理模型",
+      "颗粒注入位置与物性分布的配置或数据。根据调用的注入模型，它可能提供粒径、速度、温度等条目；必须与 cloudProperties 中所选注入模型的读取格式一致。",
+      "reactingParcelFoam"
+    ],
+    "PDRblockMeshDict": [
+      "网格",
+      "PDRblockMesh 的结构化网格输入，适用于 PDR 工作流。它不是 blockMeshDict 的别名，网格坐标和分块格式应按专用工具及配套教程解释。",
+      "PDRblockMesh"
+    ],
+    "porosityProperties": [
+      "物理模型",
+      "部分专用求解器或教程中的多孔介质属性。多孔阻力所作用的区域、阻力系数与坐标系必须匹配；常规流动求解器的 explicitPorositySource 配置通常位于 fvOptions，因此应先检查实际读取位置。",
+      "porousSimpleFoam"
+    ],
+    "foamyHexMeshDict": [
+      "网格",
+      "foamyHexMesh 的体网格、尺寸控制与网格优化参数。这个网格生成器与 snappyHexMesh 采用不同构造过程，并依赖相应构建支持；示例只证明 v2512 源码包含配置，不表示当前安装已编译该程序。",
+      "foamyHexMesh"
+    ],
+    "thermodynamicProperties": [
+      "物理模型",
+      "特定教程中的热力学材料数据或附加参数。与常见的 thermophysicalProperties 名称相近，但不是通用替代名称；查看文件头 object、调用脚本和模型源码来确定读取方式。",
+      "foamDictionary"
+    ],
+    "dsmcProperties": [
+      "物理模型",
+      "DSMC 模拟的分子物种、碰撞和壁面相互作用模型。DSMC 的统计粒子数、单元尺寸和时间步需与平均自由程、碰撞时间及统计误差一起评估；它不是连续介质湍流模型。",
+      "dsmcFoam"
+    ],
+    "dsmcInitialiseDict": [
+      "初始化",
+      "设置 DSMC 初始粒子分布、物种数密度、温度和宏观速度。初始化后的总质量与统计粒子数由物种参数及每个模拟粒子所代表的真实分子数共同决定。",
+      "dsmcInitialise"
+    ],
+    "particleTrackProperties": [
+      "后处理",
+      "粒子轨迹重建或轨迹输出的控制。核对云名称、采样时间、轨迹截断与采样频率；输出稀疏不一定代表颗粒消失，也可能由写出间隔造成。",
+      "particleTracks"
+    ],
+    "motionProperties": [
+      "物理模型",
+      "多相溃坝教程保留的专用文件，示例只含 movingFvMesh staticFvMesh。它不是当前通用 dynamicMeshDict 的替代名称；源码存在该文件并不能证明所选求解器会读取此旧式条目，使用前应追踪 Allrun 和网格创建代码。",
+      "foamDictionary"
+    ],
+    "PDRProperties": [
+      "物理模型",
+      "PDR 燃烧或障碍物模型的物性与模型控制参数。PDR 将未解析障碍物对流动与火焰的影响表示为模型项，必须保持障碍物预处理、阻力数据和求解器模型一致。",
+      "PDRFoam"
+    ],
+    "sampleDict": [
+      "后处理",
+      "采样点、线或面的配置。v2512 常通过 controlDict 中的 sets/surfaces 函数对象采样；独立文件是否被读取，取决于 postProcess -dict 或 #include 的调用方式。比较时应保持插值格式、坐标及采样时刻一致。",
+      "postProcess"
+    ],
+    "moleculeProperties": [
+      "物理模型",
+      "分子动力学系统的分子种类与分子属性。需要与势函数、约束、温度初始化和边界处理共同配置；分子尺度参数不能直接套用宏观流体黏度。",
+      "mdFoam"
+    ],
+    "mdEquilibrationDict": [
+      "初始化",
+      "分子动力学预平衡阶段的控制参数。先通过温度、压力、总能量和结构统计量判断平衡，再开展目标物理过程，不能把一段短预热时间等同于已平衡。",
+      "mdEquilibrationFoam"
+    ],
+    "mdInitialiseDict": [
+      "初始化",
+      "分子初始排布、种类及速度分布的设置。过近的初始分子距离会引入极大排斥力，初始温度也依赖速度分配方式；初始化后先进行受控预平衡。",
+      "mdInitialise"
+    ],
+    "potentialDict": [
+      "物理模型",
+      "分子动力学势函数配置，定义粒子间相互作用、截断距离等。截断与平滑方式会影响能量守恒和压力估计，应与采用的分子模型文献和教程配套。",
+      "mdFoam"
+    ],
+    "viewFactorsDict": [
+      "物理模型",
+      "辐射视角因子预处理的配置，用于表面间辐射交换。视角因子矩阵与表面分区、遮挡和面方向相关；应检查非负性、封闭腔体的行和以及互易性。",
+      "viewFactorsGen"
+    ],
+    "particleTrackDict": [
+      "后处理",
+      "粒子跟踪工具的轨迹筛选与输出控制。它与 particleTrackProperties 在不同教程中服务于不同调用链，实际字典名称应由工具帮助中的 -dict 选项或 Allrun 确认。",
+      "particleTracks"
+    ],
+    "sprayCloudProperties": [
+      "物理模型",
+      "喷雾颗粒云的注入、雾化、破碎、碰撞、蒸发和传热子模型配置。喷嘴流量、喷射锥角、粒径分布与 parcel 数需要分别检查；提高 parcel 数主要改善统计分辨率。",
+      "sprayFoam"
+    ],
+    "extrude2DMeshDict": [
+      "网格",
+      "extrude2DMesh 将二维网格转为具有厚度或角度的三维网格。重点检查挤出方向、层数、前后边界类型与 wedge/empty 假设是否一致。",
+      "extrude2DMesh"
+    ],
+    "foamyQuadMeshDict": [
+      "网格",
+      "foamyQuadMesh 的二维四边形网格构造与优化配置。使用前应确认安装包含该工具及依赖；输出需检查边界贴合、非正交性与单元质量。",
+      "foamyQuadMesh"
+    ],
+    "PDRsetFieldsDict": [
+      "初始化",
+      "PDR 专用预处理工具的输入，用于把障碍物几何等信息转换为模型所需场。与常规 setFieldsDict 的几何区域赋值方式不同，需按完整 PDR 教程执行。",
+      "PDRsetFields"
+    ],
+    "setExprBoundaryFieldsDict": [
+      "初始化",
+      "通过表达式为边界场赋值。表达式中坐标、时间、场名及量纲需要与解析器上下文一致；它修改场值，并不自动把边界条件替换为随时间重复求值的 coded 边界。",
+      "setExprBoundaryFields"
+    ],
+    "mirrorMeshDict": [
+      "网格",
+      "关于指定平面镜像网格。镜像平面的位置与法向决定几何对应关系，操作后应检查接合面、重复边界和场文件中的 patch 列表。",
+      "mirrorMesh"
+    ],
+    "phaseChangeProperties": [
+      "物理模型",
+      "interCondensatingEvaporatingFoam 的凝结与蒸发模型配置。phaseChangeTwoPhaseModel 选择模型，constantCoeffs 中 coeffC 与 coeffE 分别控制凝结与蒸发模型系数。它与等温空化求解器在 transportProperties 中选择的相变模型不是同一套接口。",
+      "interCondensatingEvaporatingFoam"
+    ],
+    "mechanicalProperties": [
+      "物理模型",
+      "固体力学中的密度、弹性模量与泊松比等材料参数。平面应力和平面应变代表不同约束；检查位移场量纲、载荷方向及刚体运动约束。",
+      "solidDisplacementFoam"
+    ],
+    "thermalProperties": [
+      "物理模型",
+      "专用固体或热弹性求解器的热物性与热应力开关。热膨胀系数、参考温度和导热参数需与机械参数一致；与 thermoType 热物性体系不可按名称直接互换。",
+      "solidDisplacementFoam"
+    ],
+    "boxTurbDict": [
+      "初始化",
+      "各向同性湍流盒初始速度的谱参数。能量谱形状、波数和目标湍流强度控制初始统计特征；初始化后应检查散度与实际能谱。",
+      "boxTurb"
+    ],
+    "PDRMeshDict": [
+      "网格",
+      "PDR 网格处理工作流中的专用配置。按对应教程的 Allrun 确定读取程序及前处理次序，不把该文件当作通用 blockMeshDict。",
+      "PDRMesh"
+    ],
+    "physicalProperties": [
+      "物理模型",
+      "v2512 的 electrostaticFoam/chargedWire 教程使用此文件定义 epsilon0 和电荷输运参数 k。不能据此认为所有 v2512 流动求解器都改读 physicalProperties；应按具体应用核对物性读取链。",
+      "electrostaticFoam"
+    ],
+    "financialProperties": [
+      "物理模型",
+      "Black–Scholes 模型的利率、波动率等金融参数。这个教学求解器说明有限体积框架可以解非流体 PDE；坐标与时间的含义不同于 CFD 算例。",
+      "financialFoam"
+    ],
+    "foamDataToFluentDict": [
+      "后处理",
+      "将 OpenFOAM 场数据导出为 Fluent 数据格式时的字段映射。网格、区域编号和场类型必须一致；转换不等于求解模型与边界条件的一一迁移。",
+      "foamDataToFluent"
+    ],
+    "RASProperties": [
+      "物理模型",
+      "v2512 源码中保留的特定教程文件名。常规湍流配置以 turbulenceProperties 的 simulationType 与 RAS 子字典为主；先检查本例的引用位置，不把旧式文件名推广为当前统一规范。",
+      "foamDictionary"
+    ],
+    "postProcessingDict": [
+      "后处理",
+      "教程组织后处理配置所用的独立字典。它通常由 #include 或脚本指定，不是所有求解器自动读取的固定文件。核对 functions 的插入层级与输出路径。",
+      "postProcess"
+    ],
+    "createBoxTurbDict": [
+      "初始化",
+      "特定湍流盒教程用于生成初始谱场的配置。将文件名与调用脚本一起阅读，并通过最终速度能谱和散度检查初始化是否达到目标。",
+      "boxTurb"
+    ],
+    "postChannelDict": [
+      "后处理",
+      "通道流统计后处理配置，用于定义壁面法向分层与剖面提取。统计结果应明确时间平均区间、空间平均方向及摩擦速度的定义。",
+      "postChannel"
+    ],
+    "gravitationalProperties": [
+      "物理模型",
+      "shallowWaterFoam 浅水教程中的重力与旋转参数。g 给出重力向量，rotating 控制旋转效应，Omega 给出旋转角速度向量。常规浮力或 VOF 流动通常使用 constant/g，这两种文件结构不可直接互换。",
+      "shallowWaterFoam"
+    ],
+    "coalCloud1Properties": [
+      "物理模型",
+      "名为 coalCloud1 的煤颗粒云配置，关联干燥、挥发、焦炭反应、辐射与传热模型。煤的组分定义、热值和颗粒注入质量需要一致。",
+      "coalChemistryFoam"
+    ],
+    "limestoneCloud1Properties": [
+      "物理模型",
+      "名为 limestoneCloud1 的石灰石颗粒云配置，用于对应反应颗粒教程。该名称是云实例，组分和反应模型应与该求解器所构建的云类型匹配。",
+      "coalChemistryFoam"
+    ],
+    "regionFaIBMProperties": [
+      "物理模型",
+      "风挡颗粒/液膜教程中的有限面积区域运动表面配置。示例以 IBM1、IBM2 分别指定 surface、旋转原点、轴及随时间变化的 omega，并通过 scale 与 level 设置相应函数参数。表面 OBJ 文件及区域模型必须配套。",
+      "kinematicParcelFoam"
+    ],
+    "probesDict": [
+      "后处理",
+      "教程中单独保存的探针采样配置。探针坐标应位于目标计算区域，离散写出频率应能解析关注的时间尺度；先确认该文件如何被 functions 引用。",
+      "postProcess"
+    ],
+    "faceSetDict": [
+      "网格",
+      "教程中面集合生成或筛选使用的配置。现代通用选择工作流通常使用 topoSetDict；此文件的读入方式须以配套 Allrun 和工具参数为准。",
+      "topoSet"
+    ],
+    "stitchMeshDict": [
+      "网格",
+      "stitchMesh 的网格边界拼接配置，连接指定 patch 对。拼接会改变边界与拓扑；先确认两侧几何匹配方式，再执行 checkMesh 并核对所有场的边界条目。",
+      "stitchMesh"
+    ],
+    "interfacialProperties": [
+      "物理模型",
+      "multiphaseEulerFoam/mixerVessel2D 教程保留的相间阻力与换热配置，示例包含 SchillerNaumann、RanzMarshall、相间混合选择与小相分数控制。其文件组织属于具体教程，不是所有多相求解器通用的界面配置入口。",
+      "multiphaseEulerFoam"
+    ],
+    "setTurbulenceFieldsDict": [
+      "初始化",
+      "使用经验关系初始化速度和湍流模型场。uRef 指定参考速度，initialiseU/initialiseK/initialiseEpsilon 等开关选择要更新的场，kappa、Cmu 和 dPlusRef 参与近壁经验关系。它不是随机湍流脉动生成器。",
+      "setTurbulenceFields"
+    ]
+  },
+  "keyNotes": {
+    "FoamFile": "文件头说明格式、数据类别和对象名；object 应对应文件所代表的数据，location 主要提供位置说明。",
+    "dimensions": "七个指数依次表示质量、长度、时间、温度、物质量、电流、发光强度。量纲错误常在矩阵组装或赋值时暴露。",
+    "internalField": "初始内部场，可使用 uniform 或 nonuniform。uniform 不表示求解过程始终空间均匀。",
+    "boundaryField": "按网格 patch 名称设置边界条件；名称必须与 polyMesh/boundary 一致，类型还受网格边界类型约束。",
+    "simulationType": "选择 laminar、RAS 或 LES 等闭合层次；改动后需同时核对模型所需的初始场、物性和壁面条件。",
+    "RAS": "雷诺平均模型子字典，通常包含 RASModel、turbulence 和 printCoeffs。模型名称区分大小写。",
+    "LES": "大涡模拟模型与滤波宽度配置。网格、数值耗散和时间步共同决定可解析尺度。",
+    "thermoType": "热物性包的组合选择，包括能量变量、状态方程、输运与热容模型。只有已编译的兼容组合可以运行时选择。",
+    "mixture": "混合物或单组分材料参数，可能包含分子量、比热、黏度和状态方程参数；具体结构取决于 thermoType。",
+    "chemistryType": "化学求解器、方法或化学热物性组合选择，决定后续化学系数的读取方式。",
+    "chemistry": "化学反应积分开关。关闭它并不自动移除所有组分输运方程。",
+    "odeCoeffs": "化学 ODE 积分器及误差控制，适用于选择 ODE 方法的配置。",
+    "initialChemicalTimeStep": "首次化学积分采用的时间步估计；后续步长由所选化学积分器调整。",
+    "combustionModel": "燃烧闭合模型名称，决定化学反应与湍流混合的耦合方式。",
+    "radiationModel": "辐射传输模型名称，例如 P1、fvDOM 或 viewFactor；不同模型需要不同附加文件。",
+    "radiation": "辐射计算开关，需与模型、壁面辐射条件及能量方程配合。",
+    "absorptionEmissionModel": "介质吸收和发射系数模型；光学厚度取决于系数与几何长度。",
+    "scatterModel": "辐射散射模型，不能用吸收系数代替散射效应。",
+    "sootModel": "烟炱模型选择，可能影响介质辐射吸收。",
+    "phases": "相名称列表；这些名称会影响相分数、速度、热物性等字段或字典的命名。",
+    "type": "运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。",
+    "solution": "颗粒云的求解控制，包含稳态/瞬态、载体耦合、源项与时间积分等。",
+    "constantProperties": "单个颗粒或材料的基本属性，例如密度、温度和热容；具体键由云类型决定。",
+    "subModels": "颗粒云注入、力、传热、碰撞和相变等子模型集合。",
+    "cloudFunctions": "颗粒云附加监测或后处理功能。",
+    "injectionModels": "注入时间、位置、流量与粒径分布等设置；需要同时满足总注入质量与统计分辨率要求。",
+    "particleForces": "作用于颗粒的力模型列表，例如阻力和重力，实际可选模型由云类型决定。",
+    "patchInteractionModel": "颗粒与边界接触时的反弹、粘附或逸出处理。",
+    "surfaceFilmModel": "表面液膜模型选择，需与液膜区域和主流体耦合条件配套。",
+    "dynamicFvMesh": "运行时网格类型；它决定运动、拓扑变化或重叠插值等处理的入口。",
+    "motionSolver": "网格运动方程或刚体运动求解器，相关系数存放在对应的模型子字典。",
+    "motionSolverLibs": "加载运动求解器所在的动态库。使用当前教程提供的库名并核对安装。",
+    "numberOfSubdomains": "并行分区数，通常须与 MPI 进程数一致。",
+    "method": "所采用的分区、插值或模型方法；含义由该字典的读取程序决定。",
+    "application": "供运行脚本查询的求解器名称；直接在终端执行程序时，以执行的命令为准。",
+    "functions": "函数对象实例集合，可以记录残差、采样、积分或计算派生量。",
+    "libs": "额外加载的共享库。函数对象或自定义边界未注册时，应检查库名与编译版本。",
+    "fields": "目标场列表。场名、数据类型和计算时刻必须满足相应函数对象的要求。",
+    "interpolationScheme": "把离散场插值到采样位置的方式；不同插值可能影响局部峰值。",
+    "writeControl": "输出触发方式，其值决定 writeInterval 表示步数、物理时间或时钟时间。",
+    "writeInterval": "输出间隔，需要结合 writeControl 理解单位与触发时刻。",
+    "executeControl": "函数对象执行触发方式，与写出频率可以不同。",
+    "regions": "几何选择区域或多区域列表；在不同字典中结构不同，不能只复制键名。",
+    "actions": "topoSet 操作序列，每项说明目标集合、集合类型、操作和选择源。",
+    "defaultFieldValues": "在局部区域赋值之前设置的默认场值。",
+    "fieldValues": "指定选择区域内要设置的场及其数值。",
+    "surfaceFile": "网格生成使用的表面几何文件路径；单位与表面闭合性需在前处理中检查。",
+    "maxCellSize": "cfMesh 的基准或最大单元尺寸，长度单位随几何坐标单位确定。",
+    "minCellSize": "允许的最小单元尺寸，过小可能显著增加单元数与内存需求。",
+    "boundaryCellSize": "cfMesh 边界附近的尺寸控制，与局部细化及边界层设置共同作用。",
+    "localRefinement": "按几何区域或表面名称指定局部尺寸控制。",
+    "boundaryLayers": "cfMesh 边界层生成控制，与 snappyHexMesh 的 addLayersControls 结构不同。",
+    "patches": "参与该操作的边界列表，必须对应网格中的实际 patch 名称。",
+    "patchPairs": "成对参与映射、拼接或连接的边界集合。",
+    "nLayers": "挤出或边界层生成的层数；同时检查层厚与总厚度。",
+    "expansionRatio": "相邻挤出层的厚度增长比例。",
+    "extrudeModel": "挤出几何模型，例如平移、旋转或法向挤出；各模型需要不同系数。",
+    "constructFrom": "指定挤出源来自已有网格、表面或其他受支持的输入。",
+    "sourceCase": "提供源网格或场的算例位置。相对路径以执行时工作目录为准。",
+    "sourcePatches": "作为挤出源的边界名称列表。",
+    "region": "目标网格区域名称；多区域场与网格路径中应保持一致。",
+    "rho": "密度或密度场引用；是否为量纲标量、常量或场名由模型定义。",
+    "nu": "运动黏度，SI 单位为平方米每秒；它与动力黏度相差一个密度因子。",
+    "mu": "通常表示动力黏度，也可能在特定模型中表示其他系数；必须结合量纲和源码语境确认。",
+    "E": "线弹性材料的杨氏模量，通常以压力为单位。",
+    "planeStress": "二维固体模型是否采用平面应力假设；薄板与长结构截面的约束不同。",
+    "thermalStress": "是否考虑温度变化引起的热应力。",
+    "T": "温度值或温度场引用，通常采用热力学温度 K。",
+    "Cp": "定压比热容，单位通常为焦耳每千克每开尔文。",
+    "kappa": "热导率或模型特定参数，需结合量纲确认；不要与湍动能 k 混淆。",
+    "pSat": "饱和蒸气压，须与压力场的基准与量纲一致。",
+    "sigma": "常见为表面张力系数，但在电磁模型中可表示电导率；以模型与量纲为准。",
+    "active": "是否启用当前模型实例或操作。",
+    "selectionMode": "模型源项的空间选择方式，例如 all、cellZone 或 cellSet。",
+    "cellZone": "源项、运动或材料区域所引用的单元区名称。",
+    "origin": "局部坐标系、旋转或几何操作的参考原点。",
+    "axis": "旋转轴或方向向量；需明确是否要求单位向量。",
+    "omega": "角速度参数或湍流比耗散率场名，二者物理意义与量纲不同。",
+    "waveModel": "采用的波浪理论或造波模型，决定色散关系和所需波参数。",
+    "waveHeight": "波高，通常表示波峰至波谷的垂直距离，不等于振幅。",
+    "wavePeriod": "波浪周期，需要与水深及所选色散关系相容。",
+    "waveAngle": "波浪传播方向角，其单位与参考方向由模型定义。"
+  },
+  "configKeyNotes": {
+    "caseProperties": {
+      "initialConditions": "生成初始场时使用的变量和值，常写作 p uniform 100000 或 U uniform (0 0 0)。",
+      "boundaryConditions": "以逻辑边界组组织模板；每组再通过 patches 对应实际网格边界。",
+      "category": "边界模板类别，例如 wall 或 inlet，影响可选择的模板类型。",
+      "options": "热传递、流动等边界模板选项；由所用模板库定义。",
+      "values": "传给模板的字段或数值，示例通过 $/initialConditions 引用根字典中的默认值。"
+    },
+    "physicalProperties": {
+      "epsilon0": "真空介电常数，用于 electrostaticFoam 静电 Poisson 方程。",
+      "k": "此处是电荷输运相关系数，不是湍动能场，也不是热导率；应结合 electrostaticFoam 方程及量纲理解。"
+    },
+    "gravitationalProperties": {
+      "g": "含显式量纲的重力加速度向量，垂向方向由其符号与坐标共同确定。",
+      "rotating": "是否在浅水方程中考虑旋转效应。",
+      "Omega": "旋转角速度向量，量纲为时间的负一次方；并非湍流比耗散率 omega。"
+    },
+    "motionProperties": {
+      "movingFvMesh": "示例保留的旧式网格类型关键字。不要与 current dynamicFvMesh 名称混用；须检查实际求解器读取情况。"
+    },
+    "regionFaIBMProperties": {
+      "surface": "运动表面的几何路径，<constant> 在 OpenFOAM 文件查找机制中展开。",
+      "solidBodyMotionFunction": "刚体运动函数，这些示例使用 rotatingMotion。",
+      "frequency": "sine 函数的频率参数；与所定义函数的时间变量配合。",
+      "amplitude": "sine 函数的振幅。",
+      "t0": "时间函数参考起点，改变相位。",
+      "scale": "此处属于对应区域对象的标量 Function1 设置，应按所用区域模型解释。"
+    },
+    "setTurbulenceFieldsDict": {
+      "uRef": "经验初始化所用的参考速度。",
+      "initialiseU": "是否初始化速度场。",
+      "initialiseEpsilon": "是否初始化湍动能耗散率。",
+      "initialiseK": "是否初始化湍动能场。",
+      "initialiseOmega": "是否初始化比耗散率场。",
+      "initialiseR": "是否初始化雷诺应力张量场。",
+      "writeF": "是否输出初始化使用的辅助 f 场。",
+      "kappa": "此处是近壁经验关系中的 von Karman 常数，示例为 0.41。",
+      "Cmu": "湍流经验关系中的模型常数，示例为 0.09。",
+      "dPlusRef": "近壁无量纲距离的参考参数，具体使用方式见 setTurbulenceFields 源码。"
+    },
+    "phaseChangeProperties": {
+      "phaseChangeTwoPhaseModel": "相变模型名称，本页凝结教程选择 constant。",
+      "constantCoeffs": "与 constant 模型对应的系数字典。",
+      "coeffC": "凝结方向的模型系数，含义由该相变模型实现确定。",
+      "coeffE": "蒸发方向的模型系数，不能假定与 coeffC 总应相等。"
+    },
+    "particleTrackDict": {
+      "cloud": "要导出的轨迹云名称；示例为 reactingCloud1Tracks，应与已有 lagrangian 数据一致。"
+    },
+    "particleTrackProperties": {
+      "cloud": "输入颗粒云名称。",
+      "sampleFrequency": "轨迹取样频率；改变它会影响每条输出轨迹的稠密程度。",
+      "maxPositions": "单条轨迹保留位置数量的上限，较大的值增加内存或输出需求。"
+    },
+    "postChannelDict": {
+      "patches": "开始按网格层聚合数据的种子壁面，例如 bottomWall。",
+      "component": "层推进的坐标方向，示例为 y。",
+      "symmetric": "是否按对称通道将两半区域的对称或反对称分量合并。"
+    },
+    "PDRMeshDict": {
+      "blockedFaces": "faceSet 与封闭挡板 patch 的映射。",
+      "coupledFaces": "耦合挡板的面集合及相关壁面/周期边界配置。",
+      "wallPatch": "用于挡板壁面的 patch 名称。",
+      "cyclicMasterPatch": "周期耦合主边界名称。",
+      "blockedCells": "需要从网格中移除的单元集合。",
+      "defaultPatch": "新暴露且没有明确指定去向的面归入此边界。"
+    },
+    "faceSetDict": {
+      "name": "要创建或修改的面集合名称。",
+      "action": "集合操作，例如 new、add、subtract 或 subset。",
+      "topoSetSources": "面选择源列表，示例利用 labelToFace 按面编号选择。",
+      "value": "此处由 #include 读取外部面编号列表。"
+    },
+    "financialProperties": {
+      "volatility": "标的资产价格波动率参数；其时间单位必须与方程中的时间定义相容。",
+      "interestRate": "模型采用的利率参数。"
+    },
+    "boundaryRadiationProperties": {
+      "emissivity": "发射率或发射率模型输入；应与辐射模型和壁面物理条件一致。",
+      "absorptivity": "吸收率或其模型输入。",
+      "transmissivity": "透射率或其模型输入；不透明与半透明边界不能混用。"
+    },
+    "waveProperties": {
+      "waterDepth": "静水深度，用于波理论和边界速度计算。",
+      "waveHeight": "波峰到波谷的高度，一般为振幅的两倍。",
+      "wavePeriod": "波浪周期。",
+      "rampTime": "造波信号逐渐增长到目标幅值的时间，用于减小启动瞬态。"
+    },
+    "sprayCloudProperties": {
+      "atomizationModel": "雾化子模型，处理喷嘴出口附近的液体破碎起始过程。",
+      "breakupModel": "后续液滴破碎模型，与初始雾化模型有不同职责。",
+      "collisionModel": "液滴碰撞/聚合模型。"
+    },
+    "kinematicCloudProperties": {
+      "coupled": "是否向连续相反馈颗粒源项。",
+      "transient": "选择瞬态或稳态颗粒云控制方式，必须与求解器匹配。",
+      "calcFrequency": "云更新调用频率；含义按该 solution 控制的读取方式确定。"
+    },
+    "mechanicalProperties": {
+      "rho": "固体密度，示例可以通过 uniform/value 子字典指定。",
+      "E": "杨氏模量，压力单位。",
+      "nu": "此文件中 nu 表示泊松比，不是流体运动黏度。",
+      "planeStress": "平面应力开关；关闭时的二维约束应结合求解器与几何解释。"
+    },
+    "thermalProperties": {
+      "C": "固体比热容，可通过 uniform/value 方式指定。",
+      "k": "固体热导率，此处不是湍动能。",
+      "alpha": "固体线膨胀系数，此处不是多相流体积分数。",
+      "thermalStress": "是否启用温度变化引起的热应力。"
+    }
+  }
+}

@@ -1,59 +1,58 @@
 ---
 title: "第 8 章　后处理命令与 functionObject"
-layout: "reference"
-description: "OpenFOAM v2512 命令、文件与配置参考"
-manual: 2
+layout: reference
+description: "OpenCFD v2512 后处理命令与 functionObject；包含原理、示例与版本核对。"
 ---
 {% raw %}
-<p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><p>后处理有两条路：算完再处理（postProcess 等命令）和边算边处理（controlDict 里的 functionObject）。能用后者就用后者——因为很多量（比如受力时程、探针时间序列）需要每个时间步的数据，而你不可能把每个时间步的整场都写到硬盘上。</p>
-<h4>8.1 postProcess —— 通用后处理命令</h4>
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>后处理有两条路：算完再处理（postProcess 等命令）和边算边处理（controlDict 里的 functionObject）。能用后者就用后者——因为很多量（比如受力时程、探针时间序列）需要每个时间步的数据，而你不可能把每个时间步的整场都写到硬盘上。</p>
+<h2>8.1 postProcess —— 通用后处理命令</h2>
 <p>用法</p>
-<pre><code>postProcess -func &lt;功能名&gt; [-time &lt;范围&gt;] [-latestTime] [-fields &#x27;(U p)&#x27;] [-noZero] [-parallel]
-postProcess -funcs &#x27;(func1 func2)&#x27;
-postProcess -list                    # 列出所有可用功能</code></pre>
+<pre><code class="language-bash">postProcess -func &lt;功能名&gt; [-time &lt;范围&gt;] [-latestTime] [-fields '(U p)'] [-noZero] [-parallel]
+postProcess -funcs '(func1 func2)'
+postProcess -list                    # 列出预配置函数对象入口</code></pre>
 <p>示例</p>
-<pre><code># ① 看有哪些功能可用
-$ postProcess -list
+<pre><code class="language-bash"># ① 看有哪些功能可用
+postProcess -list
 
 # ② 计算速度大小，写成新场 mag(U)
-$ postProcess -func &quot;mag(U)&quot;
+postProcess -func "mag(U)"
 
 # ③ 计算 Q 判据（涡识别），只处理最后一个时刻
-$ postProcess -func Q -latestTime
+postProcess -func Q -latestTime
 
 # ④ 计算涡量
-$ postProcess -func vorticity -time &#x27;1:10&#x27;
+postProcess -func vorticity -time '1:10'
 
 # ⑤ 沿一条线取样（需要 system/singleGraph 配置文件）
-$ postProcess -func singleGraph -latestTime
+postProcess -func singleGraph -latestTime
 
 # ⑥ 求某个边界上的面积分（不用改 controlDict）
-$ postProcess -func &quot;patchAverage(patch=outlet, field=p)&quot; -latestTime
+postProcess -func "patchAverage(name=outlet, field=p)" -latestTime
 
 # ⑦ 依赖湍流模型的量必须用求解器 + -postProcess
-$ simpleFoam -postProcess -func yPlus -latestTime</code></pre>
-<p>常用 -func 名字：mag(U)、magSqr(U)、grad(p)、div(phi)、Q、vorticity、Lambda2、CourantNo、yPlus、wallShearStress、turbulenceFields(R)、enstrophy、flowType、components(U)、writeCellCentres、writeCellVolumes、streamlines、surfaces、sets、probes、forces、forceCoeffs、fieldAverage、residuals、solverInfo。</p>
-<h4>8.2 #includeFunc —— 一行开启一个后处理功能</h4>
+simpleFoam -postProcess -func yPlus -latestTime</code></pre>
+<p>函数对象类型与预配置模板名称需要区分。先用 postProcess -list 查询预配置入口；mag、grad、Q、probes、forces 等功能还需要各自的字段和参数。fieldAverage 等类型通常应在 functions 中显式配置。线性求解器历史使用 solverInfo，并在求解时记录。</p>
+<h2>8.2 #includeFunc —— 一行开启一个后处理功能</h2>
 <p>在 controlDict 的 functions 里，官方模板可以一行引入：</p>
-<pre><code>functions
+<pre><code class="language-openfoam">functions
 {
-    #includeFunc  residuals(p,U)
+    #includeFunc solverInfo
     #includeFunc  yPlus
     #includeFunc  Q
     #includeFunc  mag(U)
     #includeFunc  probes
-    #includeFunc  patchAverage(patch=outlet, field=p)
+    #includeFunc  patchAverage(name=outlet,fields=(p))
     #includeFunc  flowRatePatch(name=outlet)
     #includeFunc  singleGraph
 }</code></pre>
-<p>为什么这么方便：这些名字对应 $FOAM_ETC/caseDicts/postProcessing/ 下的模板文件，#includeFunc 就是把模板内容读进来。想改参数时，用 foamGet 把模板拷到 system/ 再改，本地文件优先级更高。</p>
-<pre><code>$ ls $FOAM_ETC/caseDicts/postProcessing/*        # 看看有哪些现成模板</code></pre>
-<h4>8.3 常用 functionObject 的写法</h4>
+<p>预配置函数来自 etc/caseDicts/postProcessing；#includeFunc 按模板或本地文件展开配置。使用 foamGetDict 复制所需模板后，应明确场名、边界名称和执行/输出频率。postProcess -list 列出预配置入口，不等于所有已编译函数对象类型的全集。</p>
+<pre><code class="language-plaintext">ls &#36;FOAM_ETC/caseDicts/postProcessing/*        # 看看有哪些现成模板</code></pre>
+<h2>8.3 常用 functionObject 的写法</h2>
 <p>写在 system/controlDict 的 functions {} 里（也可以单独放文件再 #include）。所有 functionObject 都有这几个公共关键字：</p>
 <div class="table-scroll"><table>
 <tr><th>关键字</th><th>含义</th></tr>
 <tr><td>type</td><td>功能类型</td></tr>
-<tr><td>libs</td><td>需要加载的库，如 (&quot;libfieldFunctionObjects.so&quot;)</td></tr>
+<tr><td>libs</td><td>需要加载的库，如 ("libfieldFunctionObjects.so")</td></tr>
 <tr><td>writeControl</td><td>timeStep / runTime / writeTime / onEnd</td></tr>
 <tr><td>writeInterval</td><td>间隔</td></tr>
 <tr><td>executeControl / executeInterval</td><td>计算频率（可以算得勤、写得少）</td></tr>
@@ -61,10 +60,10 @@ $ simpleFoam -postProcess -func yPlus -latestTime</code></pre>
 <tr><td>timeStart / timeEnd</td><td>只在某段时间内工作（如统计平均只从流动充分发展后开始）</td></tr>
 </table></div>
 <p>① 探针：监测某几个点的时间序列</p>
-<pre><code>probes
+<pre><code class="language-openfoam">probes
 {
     type            probes;
-    libs            (&quot;libsampling.so&quot;);
+    libs            ("libsampling.so");
     writeControl    timeStep;
     writeInterval   1;
     fields          (p U);
@@ -72,10 +71,10 @@ $ simpleFoam -postProcess -func yPlus -latestTime</code></pre>
 }</code></pre>
 <p>输出在 postProcessing/probes/0/p。用途：看涡脱落频率、判断是否进入统计定常。</p>
 <p>② 力与力系数：算阻力升力</p>
-<pre><code>forceCoeffs
+<pre><code class="language-openfoam">forceCoeffs
 {
     type            forceCoeffs;
-    libs            (&quot;libforces.so&quot;);
+    libs            ("libforces.so");
     writeControl    timeStep;
     writeInterval   1;
     patches         (cylinder);       // 作用在哪个边界上
@@ -89,12 +88,12 @@ $ simpleFoam -postProcess -func yPlus -latestTime</code></pre>
     lRef            0.1;              // 参考长度
     Aref            0.001;            // 参考面积
 }</code></pre>
-<p>输出在 postProcessing/forceCoeffs/0/coefficient.dat。注意：不可压求解器里 p 的单位是 \(m^{2}/s^{2}\)（已除以密度），所以必须给 rhoInf，否则力小了 \(\rho\) 倍——这是最常见的错误之一。</p>
+<p>forceCoeffs 的输出目录由函数对象实例名和起始时刻决定。使用运动学压力的不可压缩求解器时，应按 forces/forceCoeffs 的接口配置密度引用（常见为 rho rhoInf 与 rhoInf 数值）；如果使用热力学压力或可压缩密度场，则应采用相应处理。还应检查参考面积、参考长度、来流速度与力矩中心。</p>
 <p>③ 场平均：LES/URANS 的统计量</p>
-<pre><code>fieldAverage
+<pre><code class="language-openfoam">fieldAverage
 {
     type            fieldAverage;
-    libs            (&quot;libfieldFunctionObjects.so&quot;);
+    libs            ("libfieldFunctionObjects.so");
     timeStart       5;                // ★ 等流动充分发展后再开始统计
     writeControl    writeTime;
     fields
@@ -105,10 +104,10 @@ $ simpleFoam -postProcess -func yPlus -latestTime</code></pre>
 }</code></pre>
 <p>得到 UMean、UPrime2Mean（雷诺应力）等。timeStart 不设对，统计里会混入初始瞬态，结果没法用。</p>
 <p>④ 沿线取样（画剖面图）</p>
-<pre><code>singleGraph
+<pre><code class="language-openfoam">singleGraph
 {
     type            sets;
-    libs            (&quot;libsampling.so&quot;);
+    libs            ("libsampling.so");
     writeControl    writeTime;
     setFormat       raw;              // csv / raw / gnuplot
     interpolationScheme cellPoint;
@@ -127,10 +126,10 @@ $ simpleFoam -postProcess -func yPlus -latestTime</code></pre>
 }</code></pre>
 <p>输出在 postProcessing/singleGraph/&lt;时间&gt;/line1_U_p.xy，可直接用 gnuplot/Python 画。</p>
 <p>⑤ 切面取样（导出面数据给 ParaView 或做面积分）</p>
-<pre><code>surfaces
+<pre><code class="language-openfoam">surfaces
 {
     type            surfaces;
-    libs            (&quot;libsampling.so&quot;);
+    libs            ("libsampling.so");
     writeControl    writeTime;
     surfaceFormat   vtk;
     fields          (p U);
@@ -154,10 +153,10 @@ $ simpleFoam -postProcess -func yPlus -latestTime</code></pre>
 }</code></pre>
 <p>在求解或后处理阶段直接输出所需截面，可减少保存的场数据量。实际节省程度取决于网格规模、输出变量和时间采样频率；仍应保存满足后续验证需要的数据。</p>
 <p>⑥ 积分与极值</p>
-<pre><code>outletFlux
+<pre><code class="language-openfoam">outletFlux
 {
     type            surfaceFieldValue;
-    libs            (&quot;libfieldFunctionObjects.so&quot;);
+    libs            ("libfieldFunctionObjects.so");
     regionType      patch;
     name            outlet;
     operation       sum;             // sum/areaAverage/areaIntegrate/min/max/CoV
@@ -167,7 +166,7 @@ $ simpleFoam -postProcess -func yPlus -latestTime</code></pre>
 volAvgT
 {
     type            volFieldValue;
-    libs            (&quot;libfieldFunctionObjects.so&quot;);
+    libs            ("libfieldFunctionObjects.so");
     regionType      all;             // 或 cellZone + name
     operation       volAverage;
     fields          (T);
@@ -175,33 +174,33 @@ volAvgT
 }</code></pre>
 <p>用途：检查质量守恒（进出口 phi 之和应接近 0）、监测平均温度等全局量随时间的变化。</p>
 <p>⑦ 残差与求解器信息</p>
-<pre><code>#includeFunc residuals(p,U,k,epsilon)</code></pre>
+<pre><code class="language-openfoam">#includeFunc solverInfo</code></pre>
 <p>或</p>
-<pre><code>solverInfo
+<pre><code class="language-openfoam">solverInfo
 {
     type            solverInfo;
-    libs            (&quot;libutilityFunctionObjects.so&quot;);
+    libs            ("libutilityFunctionObjects.so");
     fields          (U p);
-    writeResidualFields yes;         // 把残差也写成场，可在 ParaView 里看&quot;哪儿不收敛&quot;
+    writeResidualFields yes;         // 把残差也写成场，可在 ParaView 里看"哪儿不收敛"
 }</code></pre>
-<p>writeResidualFields 很值得开：残差高的区域往往就是网格差或边界条件不合理的区域，一眼定位问题在哪。</p>
-<h4>8.4 foamToVTK / foamToEnsight —— 导出到别的软件</h4>
-<pre><code>$ foamToVTK                                   # 全部时刻导出成 VTK
-$ foamToVTK -latestTime -fields &#x27;(U p)&#x27;       # 只导最后一个时刻的两个场
-$ foamToVTK -ascii                            # 文本格式，可以直接用编辑器看
-$ foamToVTK -cellSet c0                       # 只导出某个 cellSet
-$ foamToVTK -no-boundary                      # 不导边界数据
-$ foamToEnsight -latestTime                   # 导 EnSight 格式</code></pre>
+<p>writeResidualFields 可以输出初始残差的空间分布，辅助定位离散误差或局部迭代困难，同时会增加输出量。高残差区域也可能来自启动瞬态或物理源项，需要结合网格、边界和方程分析。</p>
+<h2>8.4 foamToVTK / foamToEnsight —— 导出到别的软件</h2>
+<pre><code class="language-bash">foamToVTK                                   # 全部时刻导出成 VTK
+foamToVTK -latestTime -fields '(U p)'       # 只导最后一个时刻的两个场
+foamToVTK -ascii                            # 文本格式，可以直接用编辑器看
+foamToVTK -cellSet c0                       # 只导出某个 cellSet
+foamToVTK -no-boundary                      # 不导边界数据
+foamToEnsight -latestTime                   # 导 EnSight 格式</code></pre>
 <p>什么时候需要：给合作者（用 Tecplot/EnSight）传数据，或者自己用 Python（pyvista/vtk）做定制分析时。日常用 ParaView 直接读算例目录即可，不需要转换。</p>
-<h4>8.5 ParaView：paraFoam 与 .foam 文件</h4>
+<h2>8.5 ParaView：paraFoam 与 .foam 文件</h2>
 <p>两种打开方式</p>
-<pre><code>$ paraFoam                     # 方式一：自动生成临时文件并启动 ParaView
-$ paraFoam -touch              # 只生成 &lt;算例名&gt;.foam 文件，不启动
-$ touch case.foam &amp;&amp; paraview case.foam &amp;   # 方式二：手动（推荐，兼容自装的 ParaView）
-$ paraFoam -block              # 打开 blockMeshDict 定义的块结构（调试 blockMesh 用）
-$ paraFoam -region solid       # 打开指定区域
-$ paraFoam -case ../run1</code></pre>
-<p>推荐方式二的原因：paraFoam 会去调用与 OpenFOAM 配套的那个 ParaView。如果你自己装了新版 ParaView，用 .foam 文件的方式可以随便挑版本，也方便远程拷回本地打开。</p>
+<pre><code class="language-bash">paraFoam                     # 方式一：自动生成临时文件并启动 ParaView
+paraFoam -vtk -touch              # 只生成 .foam 标记文件，不启动 ParaView
+touch case.foam &amp;&amp; paraview case.foam &amp;   # 方式二：手动（推荐，兼容自装的 ParaView）
+paraFoam -block              # 打开 blockMeshDict 定义的块结构（调试 blockMesh 用）
+paraFoam -region solid       # 打开指定区域
+paraFoam -case ../run1</code></pre>
+<p>v2512 的 paraFoam 最终调用 PATH 中的 paraview。-vtk（与 -builtin 等价）使用 ParaView 内置 OpenFOAM 读取器；-block 需要匹配的 blockReader 插件。可以用 command -v paraview 核对实际程序，使用 .foam 标记文件并不能保证所有版本都支持全部场与网格功能。</p>
 <p>并行结果怎么看：不需要先 reconstructPar。在 ParaView 里打开 .foam 后，属性面板里把 Case Type 从 Reconstructed Case 改成 Decomposed Case 即可直接读 processor* 目录。省时间也省硬盘。</p>
 <p>六个必会操作</p>
 <div class="table-scroll"><table>
@@ -215,10 +214,10 @@ $ paraFoam -case ../run1</code></pre>
 </table></div>
 <p>使用 ParaView 过滤器前，应检查输入数组是单元数据还是点数据。对需要点数据的操作，可根据过滤器要求使用 Cell Data to Point Data，或检查 OpenFOAM 读取器的相关转换选项。转换会引入插值，分析结果时应明确其数据位置。</p>
 <p>导出动画：View → Animation，或者 File → Save Animation 存成 png 序列，再用</p>
-<pre><code>$ foamCreateVideo -dir images -image seq -out movie      # 需要 ffmpeg
+<pre><code class="language-bash">foamCreateVideo -dir images -image seq -out movie      # 需要 ffmpeg
 # 或者直接：
-$ ffmpeg -r 25 -i images/seq.%04d.png -pix_fmt yuv420p movie.mp4</code></pre>
-<h4>8.6 其他后处理小工具</h4>
+ffmpeg -r 25 -i images/seq.%04d.png -pix_fmt yuv420p movie.mp4</code></pre>
+<h2>8.6 其他后处理小工具</h2>
 <div class="table-scroll"><table>
 <tr><th>命令</th><th>作用</th></tr>
 <tr><td>reconstructPar</td><td>合并并行结果（见第 9 章）</td></tr>
@@ -228,5 +227,5 @@ $ ffmpeg -r 25 -i images/seq.%04d.png -pix_fmt yuv420p movie.mp4</code></pre>
 <tr><td>postProcess -func writeCellCentres</td><td>输出单元中心坐标场，做自定义分析时常用</td></tr>
 <tr><td>particleTracks</td><td>拉格朗日颗粒轨迹重建</td></tr>
 <tr><td>noise</td><td>声压级/频谱分析（气动噪声）</td></tr>
-</table></div>
+</table></div><h2>v2512 的残差记录接口</h2><p>使用 <code>type solverInfo</code>，并加载 <code>utilityFunctionObjects</code>。<code>#includeFunc solverInfo</code> 的官方模板默认选择 p 和 U；如需其他字段，应复制模板并修改 fields。此功能读取求解过程中的 solverPerformance 数据，事后只读取已写出的 U、p 不能重建历史残差。</p><p><a href="/dictionaries/functions-solverinfo/">完整配置、字段解释与三个 v2512 示例</a></p>
 {% endraw %}

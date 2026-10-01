@@ -29,7 +29,7 @@ def digest(file):
     if not file.is_file():return None
     data=file.read_bytes()
     # Git on Windows may convert text checkout line endings; they are not content edits.
-    if file.suffix.lower() in ('.md','.js','.cjs','.mjs','.ts','.py','.yml','.yaml','.json','.css','.ejs','.txt','.ps1','.cmd','.html','.svg') or file.name=='.gitignore':data=data.replace(b'\r\n',b'\n')
+    if file.suffix.lower() in ('.md','.js','.cjs','.mjs','.ts','.py','.yml','.yaml','.json','.css','.ejs','.txt','.ps1','.cmd','.html','.svg','.sql','.toml','.jsonc') or file.name=='.gitignore':data=data.replace(b'\r\n',b'\n')
     return hashlib.sha256(data).hexdigest()
 
 def inventory():

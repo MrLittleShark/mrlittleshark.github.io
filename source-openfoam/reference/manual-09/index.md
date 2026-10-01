@@ -1,13 +1,12 @@
 ---
 title: "09 场文件与物理模型配置"
-layout: "reference"
-description: "OpenFOAM v2512 命令、文件与配置参考"
-manual: 1
+layout: reference
+description: "OpenCFD v2512 场文件与物理模型配置；包含原理、示例与版本核对。"
 ---
 {% raw %}
-<p class="source-note">资料来源：OpenFOAM_v2512命令与配置参考手册（GPT整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h3>9.1 速度场与压力场</h3>
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>9.1 速度场与压力场</h3>
 <p>下例给出与第 7 章二维通道网格对应的速度和压力场。内部初始速度等于入口速度，壁面采用无滑移条件，出口速度采用零梯度条件。</p>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class volVectorField; object U;
@@ -82,7 +81,7 @@ boundaryField
 <p>近壁处理方式应与网格设计一致。采用壁面函数或直接解析近壁区域时，分别据其要求确定第一层网格厚度及目标 y+。</p>
 <h3>9.5 constant/transportProperties</h3>
 <p>不可压缩牛顿流体的配置如下。求解器可直接读取 nu，也可通过 transportModel 创建输运模型，相应条目采用该求解器的配置结构。</p>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object transportProperties;
@@ -91,14 +90,14 @@ transportModel Newtonian;
 nu [0 2 -1 0 0 0 0] 1e-6;</code></pre>
 <p>nu 为运动黏度，mu 为动力黏度，两者满足 \(\mu = \rho*\nu\)。powerLaw、BirdCarreau 等非牛顿模型采用各自的系数字典，参数定义见对应模型源码和教程。</p>
 <p>不可压缩 VOF 的两相物性配置如下。</p>
-<pre><code>phases (water air);
+<pre><code class="language-plaintext">phases (water air);
 water { transportModel Newtonian; nu 1e-6; rho 1000; }
 air   { transportModel Newtonian; nu 1.5e-5; rho 1.2; }
 sigma 0.072;</code></pre>
 <p>rho 表示相密度，sigma 表示表面张力系数。示例数值为常温条件下的近似示例。可压缩多相模型通常分别设置各相热物性。</p>
 <h3>9.6 constant/turbulenceProperties</h3>
 <p>v2512 常见流体求解器通过 turbulenceProperties 配置湍流，RASModel 和 LESModel 分别指定 RAS 与 LES 模型。Foundation 分支采用的 momentumTransport 属于另一套配置接口。</p>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object turbulenceProperties;
@@ -114,7 +113,7 @@ RAS
 <p>LES 配置还需确定滤波宽度、近壁处理、入口脉动和时间分辨率，并与网格及边界条件配合。</p>
 <h3>9.7 constant/thermophysicalProperties</h3>
 <p>下例采用单相理想气体、常热容和常输运系数，能量变量为显焓。热物性类型和能量形式应与求解器接口对应。</p>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object thermophysicalProperties;
@@ -151,7 +150,7 @@ mixture
 </table></div>
 <p>rhoCentralFoam 等采用相应的热物性基类和能量变量。使用显内能的求解器应配置 sensibleInternalEnergy，并保留配套教程中的热物性组合。</p>
 <h3>9.8 重力与压力参考值</h3>
-<pre><code>// constant/g 完整示例
+<pre><code class="language-openfoam">// constant/g 完整示例
 FoamFile
 {
     version 2.0; format ascii;
@@ -162,7 +161,7 @@ value (0 -9.81 0);</code></pre>
 <p>g 定义重力矢量，其方向与几何坐标系对应。hRef 定义静水压参考高度，通常采用 uniformDimensionedScalarField 和长度量纲；pRef 按求解器接口设置。fvSolution 中的 pRefCell/pRefValue 用于压力方程参考值，作用不同。</p>
 <h3>9.9 constant/fvOptions</h3>
 <p>fvOptions 用于配置源项和约束，文件位置由求解器的读取路径确定，常见于 constant 或 system。下例在指定 cellZone 内施加速度方程源项，采用 sources 条目。</p>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object fvOptions;
@@ -182,7 +181,7 @@ drive
 <p>半隐式源项写为 Su + Sp*字段，括号内依次给出显式项和隐式系数。specific 按单位体积定义，absolute 按所选体积的总量定义。源项量纲取决于控制方程；速度、动量以及以 h、e 或 T 为变量的能量方程应分别确定量纲和密度因子。</p>
 <p>selectionMode 指定作用范围，可选 all、cellZone、cellSet 等；timeStart 和 duration 指定作用时间。常用类型包括 scalarSemiImplicitSource、vectorSemiImplicitSource、meanVelocityForce、explicitPorositySource、scalarFixedValueConstraint、limitTemperature 和 codedSource，其参数按对应模型设置。</p>
 <h3>9.10 constant/MRFProperties 与 SRFProperties</h3>
-<pre><code>FoamFile
+<pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
     class dictionary; object MRFProperties;
@@ -200,8 +199,8 @@ rotorZone
 <p>SRFProperties 配置单参考系模型，常用 SRFModel rpm 和 rpmCoeffs/rpm，以 rpm 表示转速。使用两种模型时应分别采用对应的角速度单位。</p>
 <h3>9.11 constant/dynamicMeshDict</h3>
 <p>下例采用位移拉普拉斯方法平滑网格运动，并通过 0/pointDisplacement 指定位移。求解器需支持该运动模型。</p>
-<pre><code>dynamicFvMesh dynamicMotionSolverFvMesh;
-motionSolverLibs (&quot;libfvMotionSolvers.so&quot;);
+<pre><code class="language-openfoam">dynamicFvMesh dynamicMotionSolverFvMesh;
+motionSolverLibs ("libfvMotionSolvers.so");
 solver displacementLaplacian;
 displacementLaplacianCoeffs
 {
@@ -219,7 +218,7 @@ displacementLaplacianCoeffs
 </table></div>
 <p>先运行 moveDynamicMesh 检查网格运动，重点检查运动过程中质量最差的时刻，再进行流场求解。运动和拓扑变化类型应处于求解器的支持范围内。</p>
 <h3>9.12 多区域传热及专用模型配置</h3>
-<pre><code>// constant/regionProperties 片段
+<pre><code class="language-plaintext">// constant/regionProperties 片段
 regions
 (
     fluid (air)
@@ -243,10 +242,10 @@ regions
 <tr><td>system/finite-area/faMeshDefinition</td><td>有限面积网格生成</td><td>polyMeshPatches、boundary、面选取和边界命名</td></tr>
 <tr><td>system/optimisationDict</td><td>伴随优化</td><td>优化类型、设计变量、目标函数、约束和更新算法</td></tr>
 </table></div>
-<p>专用模型的配置项随物种机理、粒子模型、燃烧模型和优化算法变化。可通过 find &quot;$FOAM_TUTORIALS&quot; -name 文件名 查找对应求解器算例，并据模型源码确定条目层级及参数。</p>
+<p>专用模型的配置项随物种机理、粒子模型、燃烧模型和优化算法变化。可通过 find "&#36;FOAM_TUTORIALS" -name 文件名 查找对应求解器算例，并据模型源码确定条目层级及参数。</p>
 <h3>9.13 运行时编译与字典扩展</h3>
 <p>下例在温度场 T 的 inlet 边界中定义随时间变化的温度。codedFixedValue 在运行时编译代码，需配置编译器和动态库搜索路径。</p>
-<pre><code>inlet
+<pre><code class="language-cpp">inlet
 {
     type codedFixedValue;
     value uniform 300;
@@ -259,16 +258,16 @@ regions
 }</code></pre>
 <p>name 指定生成的类型名称，code 定义边界值计算过程；codeInclude、codeOptions、codeLibs 和 localCode 分别补充头文件、编译选项、链接库和局部代码。#codeStream 属于字典函数，通过 C++ 输出流生成字典内容。</p>
 <h3>9.14 Make/files 与 Make/options</h3>
-<pre><code># Make/files
+<pre><code class="language-makefile"># Make/files
 myScalarFoam.C
 
-EXE = $(FOAM_USER_APPBIN)/myScalarFoam
+EXE = &#36;(FOAM_USER_APPBIN)/myScalarFoam
 EXE_INC = \
-    -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude
+    -I&#36;(LIB_SRC)/finiteVolume/lnInclude \
+    -I&#36;(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
     -lfiniteVolume \
     -lmeshTools</code></pre>
-<p>在源码目录运行 wmake 编译应用。编译共享库时，在 Make/files 中设置 <code>LIB = $(FOAM_USER_LIBBIN)/libMyModel</code>，在 Make/options 中设置 LIB_LIBS，并运行 wmake libso。Make 变量采用 $(FOAM_USER_APPBIN) 形式，Bash 变量采用 ${FOAM_USER_APPBIN} 形式。</p>
+<p>在源码目录运行 wmake 编译应用。编译共享库时，在 Make/files 中设置 <code>LIB = &#36;(FOAM_USER_LIBBIN)/libMyModel</code>，在 Make/options 中设置 LIB_LIBS，并运行 wmake libso。Make 变量采用 &#36;(FOAM_USER_APPBIN) 形式，Bash 变量采用 &#36;{FOAM_USER_APPBIN} 形式。</p>
 {% endraw %}

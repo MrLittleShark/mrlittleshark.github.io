@@ -1,30 +1,29 @@
 ---
 title: "第 21 章　常见报错速查"
-layout: "reference"
-description: "OpenFOAM v2512 命令、文件与配置参考"
-manual: 2
+layout: reference
+description: "OpenCFD v2512 常见报错速查；包含原理、示例与版本核对。"
 ---
 {% raw %}
-<p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><p>先学会读 OpenFOAM 的报错。它的格式是固定的：</p>
-<pre><code>--&gt; FOAM FATAL ERROR: (openfoam-2512)
-cannot find file &quot;/home/chen/run/cavity/0/U&quot;
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>先学会读 OpenFOAM 的报错。它的格式是固定的：</p>
+<pre><code class="language-plaintext">--&gt; FOAM FATAL ERROR: (openfoam-2512)
+cannot find file "/home/chen/run/cavity/0/U"
 
     From ... in file db/regIOobject/regIOobjectRead.C at line 132.
 FOAM exiting</code></pre>
 <p>错误日志通常包含错误类型、具体说明以及相关文件或源码位置。FATAL IO ERROR 通常与文件读取或字典解析有关；FATAL ERROR 的原因范围更广。应保留完整错误上下文，依据具体说明定位，不能仅凭错误类别确定原因。</p>
-<h4>21.1 环境与文件类</h4>
+<h2>21.1 环境与文件类</h2>
 <div class="table-scroll"><table>
 <tr><th>症状</th><th>原因</th><th>处理</th></tr>
 <tr><td>blockMesh: command not found</td><td>没 source 环境</td><td>of2512（或 source .../etc/bashrc），再 foamVersion 确认</td></tr>
-<tr><td>cannot find file &quot;.../0/U&quot;</td><td>缺场文件，或 0/ 被 Allclean 删了</td><td>cp -r 0.orig 0</td></tr>
-<tr><td>keyword xxx is undefined in dictionary</td><td>字典里缺关键字</td><td>报错会给出字典路径，去补；不确定填什么就去 $FOAM_TUTORIALS 找同类算例抄</td></tr>
-<tr><td>Cannot find patchField entry for &lt;名字&gt;</td><td>0/ 里某个场漏了某个 patch</td><td>在该场的 boundaryField 里补上；或加 &quot;.*&quot; { type zeroGradient; } 兜底</td></tr>
+<tr><td>cannot find file ".../0/U"</td><td>缺场文件，或 0/ 被 Allclean 删了</td><td>cp -r 0.orig 0</td></tr>
+<tr><td>keyword xxx is undefined in dictionary</td><td>字典里缺关键字</td><td>报错会给出字典路径，去补；不确定填什么就去 &#36;FOAM_TUTORIALS 找同类算例抄</td></tr>
+<tr><td>Cannot find patchField entry for &lt;名字&gt;</td><td>0/ 里某个场漏了某个 patch</td><td>在该场的 boundaryField 里补上；或加 ".*" { type zeroGradient; } 兜底</td></tr>
 <tr><td>ill defined primitiveEntry starting at ...</td><td>语法错：漏分号、括号不配对、有中文全角符号</td><td>从报错行往上找；从 PDF 复制的内容尤其要检查全角字符</td></tr>
 <tr><td>incompatible dimensions for operation</td><td>量纲不匹配</td><td>检查 dimensions。最常见：不可压求解器里把 p 写成了 Pa 的量纲</td></tr>
 <tr><td>Unknown patchField type xxx</td><td>边界条件名拼错，或该类型需要额外的库</td><td>foamHelp boundary -field U 看正确名字；或在 controlDict 里 libs 加载对应库</td></tr>
 <tr><td>object of type ... not found</td><td>object 名与文件名不一致</td><td>改文件头里的 object</td></tr>
 </table></div>
-<h4>21.2 网格类</h4>
+<h2>21.2 网格类</h2>
 <div class="table-scroll"><table>
 <tr><th>症状</th><th>原因</th><th>处理</th></tr>
 <tr><td>Block ... has negative volume</td><td>blockMeshDict 顶点顺序错</td><td>按 15.2 的规则重排；用 paraFoam -block 看</td></tr>
@@ -34,9 +33,9 @@ FOAM exiting</code></pre>
 <tr><td>加层几乎全失败（layer ratio &lt; 0.5）</td><td>几何尖角、层太厚、质量阈值太严</td><td>减 nSurfaceLayers、减 finalLayerThickness、minTetQuality 放宽到 -1e30</td></tr>
 <tr><td>结果里壁面函数没起作用</td><td>patch 类型是 patch 而不是 wall</td><td>改 constant/polyMesh/boundary 里的 type，或用 createPatch</td></tr>
 </table></div>
-<h4>21.3 计算发散类（最常见）</h4>
+<h2>21.3 计算发散类（最常见）</h2>
 <p>典型现象</p>
-<pre><code>Courant Number mean: 1.2e+15 max: 3.4e+18
+<pre><code class="language-plaintext">Courant Number mean: 1.2e+15 max: 3.4e+18
 bounding k, min: -1.2e+03 max: 5.6e+05 average: 12.3
 #0  Foam::error::printStack(...)
 Floating point exception</code></pre>
@@ -59,7 +58,7 @@ Floating point exception</code></pre>
 <tr><td>GAMG 求解器不收敛 / singular matrix</td><td>压力无基准</td><td>给 pRefCell/pRefValue（全封闭算例必需）</td></tr>
 <tr><td>Maximum number of iterations exceeded</td><td>线性求解器达到上限</td><td>放宽 tolerance 或换求解器；也可能是矩阵已经坏了，先查上面几条</td></tr>
 </table></div>
-<h4>21.4 并行类</h4>
+<h2>21.4 并行类</h2>
 <div class="table-scroll"><table>
 <tr><th>症状</th><th>原因</th><th>处理</th></tr>
 <tr><td>结果错乱、日志重复 8 遍</td><td>漏了 -parallel</td><td>mpirun -np 8 solver -parallel</td></tr>
@@ -68,16 +67,16 @@ Floating point exception</code></pre>
 <tr><td>并行比串行还慢</td><td>每核网格太少</td><td>减核数，保证每核 \(\ge  5\) 万单元</td></tr>
 <tr><td>大规模并行写文件极慢</td><td>小文件太多</td><td>加 -fileHandler collated</td></tr>
 </table></div>
-<h4>21.5 编译类</h4>
+<h2>21.5 编译类</h2>
 <div class="table-scroll"><table>
 <tr><th>症状</th><th>原因</th><th>处理</th></tr>
-<tr><td>xxx.H: No such file or directory</td><td>Make/options 里 EXE_INC 缺路径</td><td>加对应的 -I$(LIB_SRC)/.../lnInclude</td></tr>
+<tr><td>xxx.H: No such file or directory</td><td>Make/options 里 EXE_INC 缺路径</td><td>加对应的 -I&#36;(LIB_SRC)/.../lnInclude</td></tr>
 <tr><td>undefined reference to ...</td><td>EXE_LIBS 缺库</td><td>加对应的 -lxxx</td></tr>
-<tr><td>编译成功但 command not found</td><td>装到了 $FOAM_USER_APPBIN 但环境没刷新，或 Make/files 里 EXE 路径写错</td><td>wmake 后看输出路径；which 命令名</td></tr>
+<tr><td>编译成功但 command not found</td><td>装到了 &#36;FOAM_USER_APPBIN 但环境没刷新，或 Make/files 里 EXE 路径写错</td><td>wmake 后看输出路径；which 命令名</td></tr>
 <tr><td>改了 codedFixedValue 不生效</td><td>dynamicCode/ 缓存</td><td>rm -rf dynamicCode</td></tr>
-<tr><td>error: &#x27;xxx&#x27; was not declared</td><td>版本 API 变了</td><td>去 $FOAM_SRC 找同名新接口</td></tr>
+<tr><td>error: 'xxx' was not declared</td><td>版本 API 变了</td><td>去 &#36;FOAM_SRC 找同名新接口</td></tr>
 </table></div>
-<h4>21.6 无运行报错情况下的结果偏差</h4>
+<h2>21.6 无运行报错情况下的结果偏差</h2>
 <p>这类问题没有报错信息，只能靠检查清单：</p>
 <p>单位：STL 是毫米吗？transformPoints -scale 做了吗？</p>
 <p>patch 类型：壁面是 wall 不是 patch 吗？</p>

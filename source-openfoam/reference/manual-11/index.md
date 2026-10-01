@@ -1,46 +1,45 @@
 ---
 title: "11 环境变量与编译工具"
-layout: "reference"
-description: "OpenFOAM v2512 命令、文件与配置参考"
-manual: 1
+layout: reference
+description: "OpenCFD v2512 环境变量与编译工具；包含原理、示例与版本核对。"
 ---
 {% raw %}
-<p class="source-note">资料来源：OpenFOAM_v2512命令与配置参考手册（GPT整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h3>11.1 环境加载与检查</h3>
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>11.1 环境加载与检查</h3>
 <p>以下命令在 Linux 或 WSL 的 Bash 环境中执行。加载路径按实际安装位置设置，环境配置见 etc/bashrc、etc/config.sh/settings 和 aliases，编译配置见 wmake。</p>
-<pre><code>source /实际安装路径/OpenFOAM-v2512/etc/bashrc
-foamVersion
-echo &quot;$WM_PROJECT_VERSION&quot;
-echo &quot;$WM_PROJECT_DIR&quot;
+<pre><code class="language-bash">source /实际安装路径/OpenFOAM-v2512/etc/bashrc
+printf '%s\n' "&#36;WM_PROJECT_VERSION"  # 版本变量不依赖交互式别名
+echo "&#36;WM_PROJECT_VERSION"
+echo "&#36;WM_PROJECT_DIR"
 type foam tut sol foamVersion
 command -v blockMesh
 blockMesh -help</code></pre>
-<p>source 在当前 shell 中加载环境；通过 bash 启动的脚本仅设置子进程环境。将正确的 source 命令写入 ~/.bashrc，可在新终端中自动加载。非交互脚本通常采用 cd &quot;$FOAM_TUTORIALS&quot; 等路径命令，避免依赖未展开的别名。</p>
+<p>source 在当前 shell 中加载环境；通过 bash 启动的脚本仅设置子进程环境。将正确的 source 命令写入 ~/.bashrc，可在新终端中自动加载。非交互脚本通常采用 cd "&#36;FOAM_TUTORIALS" 等路径命令，避免依赖未展开的别名。</p>
 <h3>11.2 FOAM 系列变量</h3>
-<p>使用 printf &#x27;%s\n&#x27; &quot;$变量名&quot; 查询变量值。下表按默认源码安装环境说明路径关系，软件包安装的目录前缀以实际环境为准。</p>
+<p>使用 printf '%s\n' "$变量名" 查询变量值。下表按默认源码安装环境说明路径关系，软件包安装的目录前缀以实际环境为准。</p>
 <div class="table-scroll"><table>
 <tr><th>变量</th><th>含义</th><th>用法示例</th></tr>
-<tr><td>FOAM_API</td><td>数值 API 版本，本手册为 2512</td><td>echo &quot;$FOAM_API&quot;</td></tr>
-<tr><td>FOAM_TUTORIALS</td><td>官方教程根目录</td><td>find &quot;$FOAM_TUTORIALS&quot; -name controlDict</td></tr>
-<tr><td>FOAM_RUN</td><td>用户算例工作目录</td><td>mkdir -p &quot;$FOAM_RUN&quot;</td></tr>
-<tr><td>FOAM_SRC</td><td>源码库目录</td><td>cd &quot;$FOAM_SRC/finiteVolume&quot;</td></tr>
-<tr><td>FOAM_APP</td><td>应用源码目录</td><td>ls &quot;$FOAM_APP&quot;</td></tr>
-<tr><td>FOAM_SOLVERS</td><td>求解器源码目录</td><td>find &quot;$FOAM_SOLVERS&quot; -name &#x27;*.C&#x27;</td></tr>
-<tr><td>FOAM_UTILITIES</td><td>工具源码目录</td><td>ls &quot;$FOAM_UTILITIES/mesh&quot;</td></tr>
-<tr><td>FOAM_ETC</td><td>安装配置目录</td><td>ls &quot;$FOAM_ETC/caseDicts&quot;</td></tr>
-<tr><td>FOAM_APPBIN</td><td>当前构建的官方可执行程序目录</td><td>ls &quot;$FOAM_APPBIN&quot;</td></tr>
-<tr><td>FOAM_LIBBIN</td><td>当前构建的官方共享库目录</td><td>ls &quot;$FOAM_LIBBIN&quot;</td></tr>
-<tr><td>FOAM_USER_APPBIN</td><td>用户编译应用输出目录</td><td>ls &quot;$FOAM_USER_APPBIN&quot;</td></tr>
-<tr><td>FOAM_USER_LIBBIN</td><td>用户编译共享库输出目录</td><td>ls &quot;$FOAM_USER_LIBBIN&quot;</td></tr>
-<tr><td>FOAM_SITE_APPBIN、FOAM_SITE_LIBBIN</td><td>站点构建输出目录</td><td>echo &quot;$FOAM_SITE_LIBBIN&quot;</td></tr>
-<tr><td>FOAM_MPI、FOAM_MPI_LIBBIN</td><td>MPI 配置及相应库目录</td><td>echo &quot;$FOAM_MPI&quot;</td></tr>
-<tr><td>FOAM_CONFIG_ETC</td><td>可定制的配置查找位置</td><td>echo &quot;$FOAM_CONFIG_ETC&quot;；foamEtcFile -list</td></tr>
-<tr><td>FOAM_SETTINGS</td><td>当前环境加载设置记录</td><td>echo &quot;$FOAM_SETTINGS&quot;</td></tr>
+<tr><td>FOAM_API</td><td>数值 API 版本，本手册为 2512</td><td>echo "&#36;FOAM_API"</td></tr>
+<tr><td>FOAM_TUTORIALS</td><td>官方教程根目录</td><td>find "&#36;FOAM_TUTORIALS" -name controlDict</td></tr>
+<tr><td>FOAM_RUN</td><td>用户算例工作目录</td><td>mkdir -p "&#36;FOAM_RUN"</td></tr>
+<tr><td>FOAM_SRC</td><td>源码库目录</td><td>cd "&#36;FOAM_SRC/finiteVolume"</td></tr>
+<tr><td>FOAM_APP</td><td>应用源码目录</td><td>ls "&#36;FOAM_APP"</td></tr>
+<tr><td>FOAM_SOLVERS</td><td>求解器源码目录</td><td>find "&#36;FOAM_SOLVERS" -name '*.C'</td></tr>
+<tr><td>FOAM_UTILITIES</td><td>工具源码目录</td><td>ls "&#36;FOAM_UTILITIES/mesh"</td></tr>
+<tr><td>FOAM_ETC</td><td>安装配置目录</td><td>ls "&#36;FOAM_ETC/caseDicts"</td></tr>
+<tr><td>FOAM_APPBIN</td><td>当前构建的官方可执行程序目录</td><td>ls "&#36;FOAM_APPBIN"</td></tr>
+<tr><td>FOAM_LIBBIN</td><td>当前构建的官方共享库目录</td><td>ls "&#36;FOAM_LIBBIN"</td></tr>
+<tr><td>FOAM_USER_APPBIN</td><td>用户编译应用输出目录</td><td>ls "&#36;FOAM_USER_APPBIN"</td></tr>
+<tr><td>FOAM_USER_LIBBIN</td><td>用户编译共享库输出目录</td><td>ls "&#36;FOAM_USER_LIBBIN"</td></tr>
+<tr><td>FOAM_SITE_APPBIN、FOAM_SITE_LIBBIN</td><td>站点构建输出目录</td><td>echo "&#36;FOAM_SITE_LIBBIN"</td></tr>
+<tr><td>FOAM_MPI、FOAM_MPI_LIBBIN</td><td>MPI 配置及相应库目录</td><td>echo "&#36;FOAM_MPI"</td></tr>
+<tr><td>FOAM_CONFIG_ETC</td><td>可定制的配置查找位置</td><td>echo "&#36;FOAM_CONFIG_ETC"；foamEtcFile -list</td></tr>
+<tr><td>FOAM_SETTINGS</td><td>当前环境加载设置记录</td><td>echo "&#36;FOAM_SETTINGS"</td></tr>
 <tr><td>FOAM_FILEHANDLER</td><td>默认 IO 文件处理器</td><td><code>export FOAM_FILEHANDLER=collated</code></td></tr>
 <tr><td>FOAM_SIGFPE</td><td>是否捕获浮点异常</td><td><code>export FOAM_SIGFPE=true</code></td></tr>
 <tr><td>FOAM_SETNAN</td><td>将部分新分配内存初始化为 NaN，辅助排错</td><td><code>export FOAM_SETNAN=true</code></td></tr>
 <tr><td>FOAM_ABORT</td><td>发生错误时调用 abort</td><td><code>export FOAM_ABORT=1</code>，用于调试</td></tr>
-<tr><td>FOAM_JOB_DIR</td><td>启用作业记录时的目录</td><td>echo &quot;$FOAM_JOB_DIR&quot;；未配置时可能为空</td></tr>
-<tr><td>FOAM_CASE</td><td>当前应用运行中的算例绝对路径</td><td>字典中 #include &quot;${FOAM_CASE}/system/common&quot;</td></tr>
+<tr><td>FOAM_JOB_DIR</td><td>启用作业记录时的目录</td><td>echo "&#36;FOAM_JOB_DIR"；未配置时可能为空</td></tr>
+<tr><td>FOAM_CASE</td><td>当前应用运行中的算例绝对路径</td><td>字典中 #include "&#36;{FOAM_CASE}/system/common"</td></tr>
 <tr><td>FOAM_CASENAME</td><td>当前应用运行中的算例名称</td><td>用于该进程的环境或字典展开</td></tr>
 </table></div>
 <p>FOAM_CASE 和 FOAM_CASENAME 由 OpenFOAM 应用在运行进程中设置，可供该进程内的字典展开使用。教程目录变量为 FOAM_TUTORIALS。</p>
@@ -49,11 +48,11 @@ blockMesh -help</code></pre>
 <tr><th>变量</th><th>含义</th><th>示例与说明</th></tr>
 <tr><td>WM_PROJECT</td><td>项目名</td><td>通常 OpenFOAM</td></tr>
 <tr><td>WM_PROJECT_VERSION</td><td>带 v 的版本字符串</td><td>v2512</td></tr>
-<tr><td>WM_PROJECT_DIR</td><td>安装或源码根目录</td><td>cd &quot;$WM_PROJECT_DIR&quot;</td></tr>
-<tr><td>WM_PROJECT_USER_DIR</td><td>用户开发根目录</td><td>mkdir -p &quot;$WM_PROJECT_USER_DIR/applications&quot;</td></tr>
+<tr><td>WM_PROJECT_DIR</td><td>安装或源码根目录</td><td>cd "&#36;WM_PROJECT_DIR"</td></tr>
+<tr><td>WM_PROJECT_USER_DIR</td><td>用户开发根目录</td><td>mkdir -p "&#36;WM_PROJECT_USER_DIR/applications"</td></tr>
 <tr><td>WM_PROJECT_SITE</td><td>站点配置和扩展目录</td><td>未配置站点时可为空</td></tr>
 <tr><td>WM_THIRD_PARTY_DIR</td><td>第三方依赖源码目录</td><td>用于源码构建，软件包安装按实际提供情况确定</td></tr>
-<tr><td>WM_DIR</td><td>wmake 所在目录</td><td>ls &quot;$WM_DIR&quot;</td></tr>
+<tr><td>WM_DIR</td><td>wmake 所在目录</td><td>ls "&#36;WM_DIR"</td></tr>
 <tr><td>WM_ARCH</td><td>平台架构标识</td><td>例如 linux64，由环境检测</td></tr>
 <tr><td>WM_ARCH_OPTION</td><td>32 或 64 位平台配置</td><td>与硬件和构建一致</td></tr>
 <tr><td>WM_COMPILER_TYPE</td><td>编译器来源</td><td>如 system</td></tr>
@@ -67,7 +66,7 @@ blockMesh -help</code></pre>
 <tr><td>WM_NCOMPPROCS</td><td>编译并发数</td><td><code>export WM_NCOMPPROCS=4</code>，设置编译并发数</td></tr>
 <tr><td>MPI_ARCH_PATH</td><td>MPI 安装前缀</td><td>用于核对编译和运行阶段的 MPI 路径</td></tr>
 <tr><td>PATH</td><td>可执行文件搜索路径</td><td>command -v simpleFoam 查询实际程序路径</td></tr>
-<tr><td>LD_LIBRARY_PATH</td><td>Linux 共享库搜索路径</td><td>echo &quot;$LD_LIBRARY_PATH&quot; 查询库搜索路径</td></tr>
+<tr><td>LD_LIBRARY_PATH</td><td>Linux 共享库搜索路径</td><td>echo "&#36;LD_LIBRARY_PATH" 查询库搜索路径</td></tr>
 </table></div>
 <p>旧版变量 WM_PROJECT_INST_DIR 在当前环境中可未定义。精度和整数位宽切换后，需使用对应配置编译的可执行程序及库。用户应用、第三方库和 OpenFOAM 核心应保持 ABI 兼容。</p>
 <h3>11.4 目录别名</h3>
@@ -81,7 +80,7 @@ blockMesh -help</code></pre>
 <tr><td>sol</td><td>进入 applications/solvers</td><td>sol；cd incompressible/icoFoam</td></tr>
 <tr><td>util</td><td>进入 applications/utilities</td><td>util；cd mesh/generation/blockMesh</td></tr>
 <tr><td>tut</td><td>进入 FOAM_TUTORIALS</td><td>tut；cd incompressible/icoFoam/cavity/cavity</td></tr>
-<tr><td>run</td><td>进入 FOAM_RUN</td><td>mkdir -p &quot;$FOAM_RUN&quot;；run</td></tr>
+<tr><td>run</td><td>进入 FOAM_RUN</td><td>mkdir -p "&#36;FOAM_RUN"；run</td></tr>
 <tr><td>ufoam</td><td>进入用户开发根目录</td><td>ufoam；pwd</td></tr>
 <tr><td>uapp</td><td>进入用户 applications 目录</td><td>建立用户 applications 目录后执行 uapp</td></tr>
 <tr><td>usol</td><td>进入用户 applications/solvers</td><td>建立用户 applications/solvers 目录后执行 usol</td></tr>
@@ -117,10 +116,10 @@ blockMesh -help</code></pre>
 <tr><td>restore0Dir</td><td>从 0.orig 恢复初始场</td><td>restore0Dir，重建初始场目录</td></tr>
 <tr><td>cleanCase</td><td>清理计算结果和工作文件</td><td>加载 CleanFunctions 后执行 cleanCase</td></tr>
 </table></div>
-<pre><code>. &quot;$WM_PROJECT_DIR/bin/tools/RunFunctions&quot;
+<pre><code class="language-plaintext">. "&#36;WM_PROJECT_DIR/bin/tools/RunFunctions"
 getApplication
 runApplication blockMesh
 runApplication checkMesh
-runApplication &quot;$(getApplication)&quot;</code></pre>
-<p>RunFunctions 和 CleanFunctions 为 shell 函数库，使用前通过 source 加载。runApplication 检测到已有日志时会跳过执行；重新计算时可采用其覆盖选项，或移除对应日志后运行。</p>
+runApplication "&#36;(getApplication)"</code></pre>
+<p>RunFunctions 和 CleanFunctions 为 shell 函数库，使用前通过 source 加载。runApplication 检测到已有日志时会跳过执行；重新计算时可采用其覆盖选项，或移除对应日志后运行。</p><h2>环境函数与安装程序的区别</h2><p><code>foamVersion</code>、<code>tut</code>、<code>run</code> 等可由环境脚本定义为函数或别名，并非所有打包环境和非交互式 shell 都加载它们。<code>type foamVersion</code> 用于诊断当前 shell；查询版本可直接输出 <code>WM_PROJECT_VERSION</code>，查找实际程序用 <code>command -v blockMesh</code>。</p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/config.sh/aliases">v2512 的函数与别名定义</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamExec">foamExec 的位置和环境激活实现</a></p>
 {% endraw %}

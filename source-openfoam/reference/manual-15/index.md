@@ -1,11 +1,10 @@
 ---
 title: "15 参考资料"
-layout: "reference"
-description: "OpenFOAM v2512 命令、文件与配置参考"
-manual: 1
+layout: reference
+description: "OpenCFD v2512 参考资料；包含原理、示例与版本核对。"
 ---
 {% raw %}
-<p class="source-note">资料来源：OpenFOAM_v2512命令与配置参考手册（GPT整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><p>S1  OpenCFD. OpenFOAM v2512 发布说明及版本记录. 2025 年 12 月发布，2026 年 9 月 4 日访问。</p>
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>S1  OpenCFD. OpenFOAM v2512 发布说明及版本记录. 2025 年 12 月发布，2026 年 9 月 4 日访问。</p>
 <p>https://www.openfoam.com/news/main-news/openfoam-v2512</p>
 <p>https://www.openfoam.com/download/release-history</p>
 <p>S2  OpenCFD. OpenFOAM-v2512 源码发行包。MD5：8a1abe3864851902bb77809efa94ba3e。命令定义见 applications 下的 Make/files、bin 及 etc/config.sh/aliases。非测试应用包括 108 个求解器、171 个工具和 1 个 macOS 辅助程序。</p>

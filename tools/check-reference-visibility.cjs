@@ -1,0 +1,12 @@
+const {chromium}=require('C:/Users/shark/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..');
+(async()=>{const browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));let mode='published';
+const commands=JSON.parse(fs.readFileSync(path.join(root,'source-openfoam/assets/commands.json'),'utf8'));
+const dicts=JSON.parse(fs.readFileSync(path.join(root,'source-openfoam/assets/dictionaries.json'),'utf8'));
+await page.route('**/rest/v1/foamlab_content?*',route=>{const u=new URL(route.request().url());if(u.searchParams.get('kind')!=='eq.reference')return route.continue();if(mode==='offline')return route.abort();return route.fulfill({json:[{title:'公开条目已修订',summary:'在线修订后的说明',metadata:{canonical_path:(mode==='dictionary'?dicts:commands)[0].url}}]});});
+await page.goto('http://localhost:4173/commands/',{waitUntil:'networkidle'});await page.waitForFunction(()=>document.querySelectorAll('.command-card').length===1);assert((await page.locator('.command-card').innerText()).includes('在线修订后的说明'));await page.locator('#command-query').fill('公开条目已修订');assert.equal(await page.locator('.command-card').count(),1);
+mode='dictionary';await page.goto('http://localhost:4173/dictionaries/',{waitUntil:'networkidle'});await page.waitForFunction(()=>document.querySelectorAll('.dictionary-card').length===1);assert((await page.locator('.dictionary-card').innerText()).includes('在线修订后的说明'));
+mode='offline';await page.goto('http://localhost:4173/commands/',{waitUntil:'networkidle'});assert.equal(await page.locator('.command-card').count(),commands.length);
+await page.route('**/rest/v1/rpc/foamlab_search_content',route=>route.fulfill({json:[]}));await page.locator('[data-open-search]').click();await page.locator('#global-search').fill('blockMesh');await page.waitForFunction(()=>document.querySelector('#search-results').textContent.includes('没有找到'));assert.equal(await page.locator('#search-results a').count(),0);
+assert.deepEqual(errors,[]);const report={checks:4,errors,externalWrites:0,publishedVisibility:true,offlineFallback:true};fs.writeFileSync(path.join(root,'.openfoam-work/replan/reference-visibility-check.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));await browser.close();})().catch(e=>{console.error(e);process.exit(1);});
