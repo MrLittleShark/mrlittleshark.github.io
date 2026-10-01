@@ -25,7 +25,12 @@ def git(*args,cwd=CHECKOUT):
     if p.returncode:raise RuntimeError('git '+args[0]+' failed: '+p.stderr.strip())
     return p.stdout.strip()
 
-def digest(file):return hashlib.sha256(file.read_bytes()).hexdigest() if file.is_file() else None
+def digest(file):
+    if not file.is_file():return None
+    data=file.read_bytes()
+    # Git on Windows may convert text checkout line endings; they are not content edits.
+    if file.suffix.lower() in ('.md','.js','.cjs','.mjs','.ts','.py','.yml','.yaml','.json','.css','.ejs','.txt','.ps1','.cmd','.html','.svg') or file.name=='.gitignore':data=data.replace(b'\r\n',b'\n')
+    return hashlib.sha256(data).hexdigest()
 
 def inventory():
     files={}
@@ -65,6 +70,10 @@ def pull():
     changes=[];conflicts=[]
     for name in sorted(set(base)|set(remote)):
         previous=base.get(name);new=remote.get(name);local=digest(safe(ROOT,name))
+        # Upgrade the initial byte-level baseline without treating CRLF as an edit.
+        for candidate in (safe(ROOT,name),safe(CHECKOUT,name)):
+            if candidate.is_file() and previous==hashlib.sha256(candidate.read_bytes()).hexdigest():
+                previous=digest(candidate);break
         if new==previous:continue
         if local not in (previous,new):conflicts.append(name)
         else:changes.append((name,new))
@@ -97,6 +106,11 @@ def push():
 
 if __name__=='__main__':
     try:
-        if len(sys.argv)!=2 or sys.argv[1] not in ('pull','push'):raise RuntimeError('Usage: python tools/source-sync.py pull|push')
-        pull() if sys.argv[1]=='pull' else push()
+        if len(sys.argv)==3 and sys.argv[1]=='resolve':
+            name=sys.argv[2].replace('\\','/');safe(ROOT,name)
+            setup();remote=remote_files();base=json.loads(STATE.read_text(encoding='utf-8')) if STATE.exists() else {}
+            if name not in remote:raise RuntimeError('File is not present in the remote source branch')
+            base[name]=remote[name];save_state(base);print('Recorded manually merged file: '+name+'. Local content was retained.')
+        elif len(sys.argv)==2 and sys.argv[1] in ('pull','push'):pull() if sys.argv[1]=='pull' else push()
+        else:raise RuntimeError('Usage: python tools/source-sync.py pull|push|resolve relative-file-path')
     except Exception as e:print(str(e),file=sys.stderr);sys.exit(1)

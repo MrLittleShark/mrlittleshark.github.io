@@ -34,7 +34,7 @@ node node_modules/hexo/bin/hexo deploy
 
 `_config.yml` 配置 `git-safe` 扩展和 `foamlab-source` 源文件分支。发布程序先同步远程网页修改，执行 Hexo 构建，再推送源文件；GitHub Actions 重新校验并部署网站。GitHub Pages 设置使用 **GitHub Actions**。不执行强制推送。
 
-专用源文件工作副本为 `.source_foamlab`，同步基线为 `.openfoam-work/source-sync.json`。网页和本地同时修改同一文件时会停止并列出冲突，不会自动覆盖。合并冲突时可对照本地文件和 `.source_foamlab` 中的远程文件；保存合并结果后先将该文件的原远程内容作为同步基线，再发布。不要删除基线来绕过冲突。仅需采用远程版本时，先备份本地修改，再将工作副本对应文件复制到本地同一路径，重新发布。
+专用源文件工作副本为 `.source_foamlab`，同步基线为 `.openfoam-work/source-sync.json`。网页和本地同时修改同一文件时会停止并列出冲突，不会自动覆盖。合并冲突时可对照本地文件和 `.source_foamlab` 中的远程文件；保存合并结果后，执行 `python tools/source-sync.py resolve source-openfoam/lessons/01/index.md`（替换为实际冲突路径）标记该文件已人工合并，再发布。不要删除基线来绕过冲突。仅需采用远程版本时，先备份本地修改，再将工作副本对应文件复制到本地同一路径，重新发布。
 
 发布使用当前用户已有的 Git 凭据，令牌不写入源代码。构建产物为 `public-openfoam`。原 `.deploy_foamlab` 保留静态部署历史，不作为日常内容主稿。
 
