@@ -65,7 +65,8 @@ async function fixture(browser,role='anon',options={}){
 }
 async function ready(page,path,selector){await page.goto(ORIGIN+path);await page.locator(selector).first().waitFor({state:'visible'});}
 async function waitFor(page,predicate){await page.waitForFunction(predicate);}
-(async()=>{
+module.exports={fixture,ready,content,ORIGIN,ROOT,OUT,ADMIN,MEMBER};
+if(require.main===module)(async()=>{
  const browser=await chromium.launch({channel:'msedge',headless:true});
  try{
   const admin=await fixture(browser,'admin');const p=admin.page;

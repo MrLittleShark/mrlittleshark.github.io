@@ -82,7 +82,7 @@ npm run deploy
 python tools/source-sync.py resolve source-openfoam/maintenance/index.md
 ```
 
-此命令只适用于已经人工合并的实际冲突路径。发布结果以 [GitHub Actions](https://github.com/MrLittleShark/mrlittleshark.github.io/actions)及线上页面复核为准；本轮最终部署检查尚待补记。
+此命令只适用于已经人工合并的实际冲突路径。发布结果以 [GitHub Actions](https://github.com/MrLittleShark/mrlittleshark.github.io/actions)及线上页面复核为准；每次发布的实际结果记录在 `VERIFICATION.md`。
 
 ## 内容主稿与目录
 
@@ -110,6 +110,14 @@ python tools/source-sync.py resolve source-openfoam/maintenance/index.md
 `tools/prepare-cms-seed.py` 仅生成导入 SQL，默认跳过已经存在的 `slug`。它不直接连接或修改数据库。维护时优先使用管理平台；需要批量迁移时先导出备份、审查 SQL，并在受控环境执行。Hexo 发布不部署数据库迁移、认证设置、存储策略或历史 Edge Function。
 
 ## 数学、代码与界面
+
+课程目录卡片和正文开头均提供配套案例下载。后台编辑课程时，在“专题与配套案例”中上传 ZIP、填写使用说明和核验范围，并关联湍流、多相流、网格划分、动网格专题。四个专题入口为 `/topics/`，专题介绍使用 `module` 内容记录，元数据 `topic_key` 保持稳定。
+
+基础课程案例包位于 `source-openfoam/downloads/courses/`，编程课程使用现有逐课 ZIP。包中保留输入文件、来源与许可；实际运行过的新增案例另附日志和解析比较数据。下载元数据记录文件大小与 SHA-256，替换包后需同步更新元数据。
+
+Wolf 图源索引为 `tools/content/wolf-figures.json`，图片位于 `source-openfoam/assets/wolf/`。`wolf_media.py` 统一生成署名与出处，`integrate-wolf-figures.py` 将插图放入相应课程。点击正文插图可放大并保留图注。
+
+批量重建课程内容时，先备份当前 JSON 与数据库导出，再运行基础生成器和既有标题修订，然后依次执行 `refine-core-courses.py`、`refine-programming-courses.py`、`build-topic-content.py`、`integrate-wolf-figures.py`。两个 refine 脚本应读取未经本轮润色的基线；请先查阅各自参数和本地依赖，不要直接对已编辑主稿运行整套生成器。后处理更新本地数据，不会自动覆盖数据库内容。日常维护以后台编辑为主。
 
 正文公式使用 TeX，推荐 `\(...\)` 与 `\[...\]`。静态页面在构建时渲染，CMS 正文在浏览器中处理；编辑时先预览，排除语法错误。代码块标明 `bash`、`openfoam`、`cpp`、`python`、`makefile` 等语言，保留可复制的原文。图片应区分教学示意、资料原图、生成式封面与真实计算图。
 

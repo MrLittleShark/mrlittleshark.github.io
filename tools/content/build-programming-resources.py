@@ -99,12 +99,12 @@ add('resource-basic-programming','BasicOFProgramming：17 个编程实验与可�
 [下载清单与 SHA-256](/downloads/programming/manifest.json) · [核验与迁移记录](/downloads/programming/VERIFICATION.md)
 ''',download='/downloads/programming/manifest.json')
 
-add('resource-of-material-migration','OF_material：v2512 迁移范围与验证分级','把语法检查、网格检查、启动检查和长时间模拟区分开，准确理解已有迁移报告的证据。',r'''
+add('resource-of-material-migration','OF_material：v2512 算例与验证范围','按字典解析、网格生成、求解启动与长时间计算区分验证范围，准确理解已有报告的证据。',r'''
 ![从输入到计算的验证链](/assets/diagrams/programming-10.svg)
 
-`OF_material` 是已做 v2512 适配的课程代码与算例集合。使用它可以减少从 Foundation 9 直接复制旧字典带来的接口差异，但仍应针对具体求解器和物理模型检查设置。一个目录的报告不应扩展解释成整个资料库均已完成相同级别的验证。
+`OF_material` 是面向 v2512 的课程代码与算例集合。使用前应确认具体求解器、物理模型、输入字典与运行环境。各报告覆盖的目录和测试步骤不同，某个算例的检查结果不能代表整个资料库均已完成相同级别的验证。
 
-## 2026-09-04 总迁移报告实际记录了什么
+## 2026-09-04 报告记录的验证范围
 
 | 层级 | 报告中的证据 | 能说明什么 |
 | --- | --- | --- |
@@ -117,9 +117,9 @@ add('resource-of-material-migration','OF_material：v2512 迁移范围与验证�
 
 报告明确指出没有开展长生产时长计算。它覆盖列出的 `101postprocessing`、`advanced_physics`、`advanced_postprocessing`、`advanced_SHM` 和 `101SHM_basic` 等迁移目标，另有 `101programming` 与 `101OF_extended` 的独立说明。
 
-## 主要版本差异
+## v2512 配置与运行检查
 
-迁移涉及 `fvModels/fvConstraints` 与 `fvOptions` 的分支差异、湍流配置、函数对象与采样关键字、特征提取工具、网格字典以及无图形环境绘图。不能把所有 `momentumTransport` 机械替换成 `turbulenceProperties`，应先查所选 v2512 求解器实际读取的模型接口。
+先确认所选 v2512 求解器读取的物性与湍流模型配置，再检查 `fvOptions`、函数对象、采样关键字、特征提取、网格字典及无图形环境绘图。不同求解器可能读取不同的模型接口，应以实际源码、官方教程和运行日志核对文件名及必需条目。
 
 程序编译成功和算例读取成功是不同证据。尤其对于自定义边界条件，应进一步检查运行时类型注册、构造、并行映射和重启写出。
 

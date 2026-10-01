@@ -7,7 +7,7 @@ def add(slug,kind,title,summary,body,track='站点与实践',order=0,**extra):
  rows.append(dict(slug=slug,kind=kind,title=title,summary=summary,body=body,track=track,series='FoamLab',author_name='FoamLab',status='published',sort_order=order,comments_enabled=True,cover_url='/assets/science/cavity-velocity.png',metadata=extra))
 add('sources-and-validation','resource','资料来源、版本与核验说明','区分官方源码、Wolf 培训材料、适配示例和本站计算结果；说明每一种验证记录可以支持的结论。',r'''## 本站的软件基准
 
-本站使用 **OpenCFD OpenFOAM v2512**。OpenFOAM Foundation 9 与 v2512 来自不同发行分支，版本数字不能直接比较大小。教程迁移必须检查应用名称、库接口、字典格式和模型实现。
+本站使用 **OpenCFD OpenFOAM v2512**。课程命令、配置说明、程序接口与算例操作均围绕 v2512 组织。引用的培训讲义用于说明原理与方法，实际使用时以本站配置、对应官方教程和运行日志为依据。
 
 ![从资料到可复现结果](/assets/science/cavity-mesh.png)
 
@@ -18,12 +18,12 @@ add('sources-and-validation','resource','资料来源、版本与核验说明','
 | 资料 | 本站用途 | 使用边界 |
 | --- | --- | --- |
 | [OpenCFD v2512 发布与源码](https://www.openfoam.com/news/main-news/openfoam-v2512) | 软件版本、命令目标、配置实例与源码路径 | 固定 v2512 tag；不把第三方扩展混入核心安装承诺 |
-| [Wolf Dynamics OpenFOAM 培训](https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit) | 教学顺序、有限体积方法、算例与编程思路 | 原培训主要基于 Foundation 9，本站重写并核对 v2512 |
+| [Wolf Dynamics OpenFOAM 培训](https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit) | 教学顺序、有限体积方法、算例与编程思路 | 概念及配图引用保留来源；操作与配置按 v2512 编写 |
 | BasicOFProgramming 本地资料 | 17 个 C++ / OpenFOAM 编程单元 | 逐例检查，兼容修订仅作用于本站下载副本 |
 | OF_material 本地资料 | v2512 配置与算例资源 | 迁移报告的短时运行不能代替长期计算验证 |
 | 本站示意图与真实计算图 | 解释网格、算法、接口与结果 | 各图明确说明示意、资料图或实际计算 |
 
-Wolf 基础培训页面及基础幻灯片标注 CC BY-SA 4.0。本站提供重新组织的中文说明，并保留来源；源码示例遵守其原许可证。高级资料中的版权声明不同，不将所有本地 PDF 无差别重新公开分发。BasicOFProgramming 下载包包含原许可证与迁移说明。
+Wolf 基础讲义内声明 CC BY-SA 4.0。本站提供重新组织的中文说明，并保留来源；源码示例遵守其原许可证。高级资料中的版权声明不同，不将所有本地 PDF 无差别重新公开分发。BasicOFProgramming 下载包包含原许可证与迁移说明。
 
 ## 命令清单如何建立
 
@@ -56,7 +56,7 @@ icoFoam > log.icoFoam 2>&1
 3. **原资料图：**保留资料归属，不将其描述为本站新运行的结果。
 4. **封面：**AI 生成的 CFD 主题插图，用于视觉识别，不代表经过验证的流场。
 
-如果发现分支差异或示例错误，欢迎在评论区或讨论中心附上版本、最小复现和实际日志。''',verification='资料归属、核心源码清单和本站方腔运行记录已核对；不同证据的适用范围分别说明。')
+如果发现配置问题或示例错误，欢迎在评论区或讨论中心附上版本、最小复现和实际日志。''',verification='资料归属、核心源码清单和本站方腔运行记录已核对；不同证据的适用范围分别说明。')
 add('release-2026-10-rebuild','announcement','学习站重构：课程、参考与社区统一入口','新版课程采用稳定内容编号，管理平台支持课程、资料、文章、评论与讨论的独立维护。',r'''## 本次调整
 
 - 重新组织环境、网格、数值方法、模型与后处理课程，编程专题采用 17 个分步实例。

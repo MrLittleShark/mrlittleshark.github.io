@@ -4,7 +4,7 @@
     "kind": "lesson",
     "title": "01 · OpenFOAM v2512 软件组成与环境配置",
     "summary": "介绍求解器、工具程序、C++ 库与算例的关系，检查发行分支、环境变量和实际运行版本。",
-    "body": "OpenFOAM 是用于连续介质计算的一组程序、库和工具。以不可压缩流动为例，求解器读取速度、压力、网格和算法设置，组装离散方程并推进计算；`blockMesh`、`checkMesh` 等工具完成求解前后的独立工作。学习时应始终同时回答：**物理问题是什么、哪个程序读取哪些文件、结果如何检查**。\n\n![问题、算例、程序和结果之间的关系](/assets/diagrams/core-architecture.svg)\n\n### 本站版本边界\n\n本站主线是 **OpenCFD OpenFOAM v2512**。Wolf Dynamics 培训采用的 Foundation 9 有助于理解有限体积、网格和算例结构，但版本号不是同一条发布序列。旧教程中的文件名、边界条件参数、库名和求解器调用方法需要逐项核对，不能仅把文件头的 `Version` 改成 v2512。\n\n安装文件来自 [v2512 官方下载目录](https://dl.openfoam.com/source/v2512/)，安装路线以 [OpenCFD Linux 安装说明](https://www.openfoam.com/download/openfoam-installation-on-linux) 为准。Windows 初学者可使用已有 VMware Ubuntu 或 WSL2 Ubuntu；本课程的 Shell 命令在 Linux 终端运行。WSL/虚拟机是运行环境，不是另一个 OpenFOAM 分支。\n\n若已配置 OpenCFD 软件源，可先检查包是否存在，再安装固定版本：\n\n```bash\napt-cache policy openfoam2512-default\n# 仅当上一步存在可安装的 Candidate 时执行：\nsudo apt install openfoam2512-default\n```\n\n不同分发方式的环境脚本位置可能不同。本网站实际验证的 Ubuntu 包路径如下：\n\n```bash\nsource /usr/lib/openfoam/openfoam2512/etc/bashrc\necho \"$WM_PROJECT_VERSION\"\necho \"$WM_PROJECT_DIR\"\ncommand -v blockMesh\nblockMesh -help\n```\n\n应看到 v2512 对应的环境、可执行文件路径及帮助信息。程序启动横幅还给出构建标识；本站方腔图使用 `build_bd2b6720-20260127`。只检查文件夹名称不足以确认真正执行的二进制版本。\n\n### 从软件安装到第一个可用环境\n\n先在当前终端加载环境并运行帮助，再考虑把 `source` 命令加入个人 `~/.bashrc`。同时安装多个版本时，只在一个新终端中加载一个版本。混用 PATH 与动态库路径可能导致程序存在却无法加载库、参数表不一致或编译链接失败。\n\n**完成标志：**保存上述四项输出，说明 v2512 属于哪个发行分支，并指出自己使用的是 VMware、WSL2、原生 Linux 还是容器。此时还没有证明任何具体物理算例已经正确。",
+    "body": "学习 OpenFOAM，可以先把一个计算过程拆成四件事：描述物理问题，准备输入文件，运行计算程序，检查输出是否合理。OpenFOAM 提供完成这些任务的求解器、网格与后处理工具，以及供开发者使用的 C++ 库。它并非一个必须从图形界面操作的单一程序。本课先建立可识别、可检查的运行环境；下一课再把环境与一个具体算例连接起来。\n\n![问题、算例、程序和结果之间的关系](/assets/diagrams/core-architecture.svg)\n\n### 先确认运行环境\n\n这里统一学习 OpenCFD OpenFOAM v2512。先确认正在使用的程序，再阅读它自带的帮助和教程：帮助说明命令如何调用，完整算例说明文件如何配合，源码则用于核对程序实际读取了什么。遇到陌生条目时，沿这条线追踪，会比根据文件名猜测其功能更可靠。\n\n本站使用 **OpenCFD OpenFOAM v2512**。Wolf Dynamics 培训用于参考有限体积原理、网格概念与算例教学思路；本课程的命令、字典和运行步骤按 v2512 官方教程与源码核对。读者可以沿统一版本完成从输入到结果检查的练习。\n\n安装文件来自 [v2512 官方下载目录](https://dl.openfoam.com/source/v2512/)，安装路线以 [OpenCFD Linux 安装说明](https://www.openfoam.com/download/openfoam-installation-on-linux) 为准。Windows 初学者可使用已有 VMware Ubuntu 或 WSL2 Ubuntu；本课程的 Shell 命令在 Linux 终端运行。WSL/虚拟机是运行环境，不是另一个 OpenFOAM 分支。\n\n若已配置 OpenCFD 软件源，可先检查包是否存在，再安装固定版本：\n\n```bash\napt-cache policy openfoam2512-default\n# 仅当上一步存在可安装的 Candidate 时执行：\nsudo apt install openfoam2512-default\n```\n\n不同分发方式的环境脚本位置可能不同。本网站实际验证的 Ubuntu 包路径如下：\n\n```bash\nsource /usr/lib/openfoam/openfoam2512/etc/bashrc\necho \"$WM_PROJECT_VERSION\"\necho \"$WM_PROJECT_DIR\"\ncommand -v blockMesh\nblockMesh -help\n```\n\n应看到 v2512 对应的环境、可执行文件路径及帮助信息。程序启动横幅还给出构建标识；本站方腔图使用 `build_bd2b6720-20260127`。只检查文件夹名称不足以确认真正执行的二进制版本。\n\n### 从软件安装到第一个可用环境\n\n可以把环境脚本理解为向当前终端说明“程序和库在哪里”。它不会替你生成网格，也不会改变一个案例的物理模型。检查时按顺序看：版本变量是否正确、项目根目录是否存在、command -v 指向哪一个程序、程序自己的帮助与横幅是否一致。四项相互印证，才能排除终端仍在调用另一套安装的情况。\n\n先在当前终端加载环境并运行帮助，再考虑把 `source` 命令加入个人 `~/.bashrc`。同时安装多个版本时，只在一个新终端中加载一个版本。混用 PATH 与动态库路径可能导致程序存在却无法加载库、参数表不一致或编译链接失败。\n\n**完成标志：**保存上述四项输出，说明 v2512 属于哪个发行分支，并指出自己使用的是 VMware、WSL2、原生 Linux 还是容器。此时还没有证明任何具体物理算例已经正确。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。本课只定位并阅读 system/controlDict 中的 application，确认它需要 icoFoam；暂不修改物理参数。先把软件环境检查记录保存下来。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "起步与算例",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 1,
@@ -12,12 +12,25 @@
     "cover_url": "/assets/diagrams/core-architecture.svg",
     "owner": "FoamLab",
     "metadata": {
-      "source": "OpenCFD v2512 发布与安装文档；Wolf Dynamics 基础培训（Foundation 9），概念与教学顺序参考；示例接口按 OpenCFD v2512 核对",
+      "source": "OpenCFD v2512 发布与安装文档；Wolf Dynamics 基础培训，概念与教学顺序参考；示例接口按 OpenCFD v2512 核对",
       "verification": "依据 OpenCFD v2512 官方教程与源码核对；扩展练习未逐项运行",
       "prerequisite": "无",
       "duration": "40 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。本课只定位并阅读 system/controlDict 中的 application，确认它需要 icoFoam；暂不修改物理参数。先把软件环境检查记录保存下来。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -25,7 +38,7 @@
     "kind": "lesson",
     "title": "02 · 终端、环境变量与源码目录",
     "summary": "学习可靠地复制算例、记录日志和追踪命令来源，避免把安装目录当作工作目录。",
-    "body": "终端中的“当前目录”决定程序默认读取哪个算例。`blockMesh` 无参数时会在当前算例读取字典；在其他位置运行时，可使用帮助中列出的 `-case` 选项。路径错误常表现为找不到 `controlDict`，不是求解器安装损坏。\n\n![OpenFOAM 工具链与文件之间的关系](/assets/diagrams/core-architecture.svg)\n\n```bash\npwd\nprintf 'version=%s\\nroot=%s\\ntutorials=%s\\n' \\\n  \"$WM_PROJECT_VERSION\" \"$WM_PROJECT_DIR\" \"$FOAM_TUTORIALS\"\nmkdir -p \"$HOME/OpenFOAM/learning-v2512\"\ncd \"$HOME/OpenFOAM/learning-v2512\"\ncp -r \"$FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity\" cavity-first\ncd cavity-first\nls\n```\n\n`cp -r` 复制的是整个目录。以后修改 `cavity-first`，安装自带的教程仍可作为对照。路径中的变量放在双引号内，可以保留包含空格的完整路径。\n\n### 将命令输出变成可检查的记录\n\n```bash\nblockMesh > log.blockMesh 2>&1\ntail -n 20 log.blockMesh\ncheckMesh > log.checkMesh 2>&1\n```\n\n`>` 保存标准输出，`2>&1` 将错误输出保存到同一日志。若需要一边显示一边保存，可用 `tee`；在自动化脚本中同时设置 `set -o pipefail`，使前面的求解器失败不会被 `tee` 的成功退出掩盖。**日志文件存在只说明重定向发生，不能替代退出码和日志内容检查。**\n\n### 命令、源码和库的位置\n\n| 目录或变量 | 用途 | 适合回答的问题 |\n| --- | --- | --- |\n| `$WM_PROJECT_DIR/applications/solvers` | 求解器源码 | 方程在哪里组装？ |\n| `$WM_PROJECT_DIR/applications/utilities` | 工具源码 | 参数到底怎样解析？ |\n| `$WM_PROJECT_DIR/src` | 可复用 C++ 库 | 某边界条件有哪些系数？ |\n| `$FOAM_TUTORIALS` | 随版本提供的算例 | 哪个完整案例使用这一功能？ |\n| `$WM_PROJECT_DIR/etc` | 环境与模板配置 | 当前环境怎样建立？ |\n| `$FOAM_USER_APPBIN` | 用户编译的程序 | 新求解器安装到哪里？ |\n\n```bash\ncommand -v icoFoam\nls \"$WM_PROJECT_DIR/applications/solvers/incompressible/icoFoam\"\nicoFoam -help-full\n```\n\n完成一个追踪练习：找出 `icoFoam.C`、`createFields.H`、一个官方 `cavity` 算例和真实可执行文件。把四个路径写在同一份记录中。这比记住大量终端命令更有助于定位问题。",
+    "body": "接下来把“终端能找到程序”推进到“程序能找到正确输入”。OpenFOAM 的许多工具默认把当前目录当作算例目录，因此同一条 blockMesh 命令，在不同目录运行会读取不同文件。遇到找不到 controlDict 的错误，先检查工作目录和 -case 选项，再检查软件安装。这样可以把路径问题与模型问题分开。\n\n![OpenFOAM 工具链与文件之间的关系](/assets/diagrams/core-architecture.svg)\n\n```bash\npwd\nprintf 'version=%s\\nroot=%s\\ntutorials=%s\\n' \\\n  \"$WM_PROJECT_VERSION\" \"$WM_PROJECT_DIR\" \"$FOAM_TUTORIALS\"\nmkdir -p \"$HOME/OpenFOAM/learning-v2512\"\ncd \"$HOME/OpenFOAM/learning-v2512\"\ncp -r \"$FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity\" cavity-first\ncd cavity-first\nls\n```\n\n`cp -r` 复制的是整个目录。以后修改 `cavity-first`，安装自带的教程仍可作为对照。路径中的变量放在双引号内，可以保留包含空格的完整路径。\n\n### 将命令输出变成可检查的记录\n\n先用 pwd 回答“我在哪里”，再用 ls 回答“这里有没有 0、constant、system”。复制后应进入新副本，而不是仍停在它的父目录。本课的 cavity-first 是你可以修改的工作副本；官方目录则作为原始输入对照。若重复练习，请选新的目录名，避免把新文件混进已经有计算结果的旧目录。\n\n```bash\nblockMesh > log.blockMesh 2>&1\ntail -n 20 log.blockMesh\ncheckMesh > log.checkMesh 2>&1\n```\n\n`>` 保存标准输出，`2>&1` 将错误输出保存到同一日志。若需要一边显示一边保存，可用 `tee`；在自动化脚本中同时设置 `set -o pipefail`，使前面的求解器失败不会被 `tee` 的成功退出掩盖。**日志文件存在只说明重定向发生，不能替代退出码和日志内容检查。**\n\n### 命令、源码和库的位置\n\n日志阅读也有顺序：开头确认程序、版本和案例路径，中间寻找最早的异常，结尾检查是否正常结束。重定向后屏幕没有文字并不表示程序未运行；反过来，有一个 log 文件也不表示运行成功。先建立这一习惯，后面处理网格、边界和求解失败时才有可追踪的证据。\n\n| 目录或变量 | 用途 | 适合回答的问题 |\n| --- | --- | --- |\n| `$WM_PROJECT_DIR/applications/solvers` | 求解器源码 | 方程在哪里组装？ |\n| `$WM_PROJECT_DIR/applications/utilities` | 工具源码 | 参数到底怎样解析？ |\n| `$WM_PROJECT_DIR/src` | 可复用 C++ 库 | 某边界条件有哪些系数？ |\n| `$FOAM_TUTORIALS` | 随版本提供的算例 | 哪个完整案例使用这一功能？ |\n| `$WM_PROJECT_DIR/etc` | 环境与模板配置 | 当前环境怎样建立？ |\n| `$FOAM_USER_APPBIN` | 用户编译的程序 | 新求解器安装到哪里？ |\n\n```bash\ncommand -v icoFoam\nls \"$WM_PROJECT_DIR/applications/solvers/incompressible/icoFoam\"\nicoFoam -help-full\n```\n\n完成一个追踪练习：找出 `icoFoam.C`、`createFields.H`、一个官方 `cavity` 算例和真实可执行文件。把四个路径写在同一份记录中。这比记住大量终端命令更有助于定位问题。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。复制该目录为 cavity-first。重点操作 system/controlDict、system/blockMeshDict 与新生成的 log.blockMesh；不要修改软件安装目录。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "起步与算例",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 2,
@@ -38,7 +51,20 @@
       "prerequisite": "start-openfoam-v2512",
       "duration": "45 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。复制该目录为 cavity-first。重点操作 system/controlDict、system/blockMeshDict 与新生成的 log.blockMesh；不要修改软件安装目录。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -46,7 +72,7 @@
     "kind": "lesson",
     "title": "03 · 算例结构、字典语法与量纲",
     "summary": "说明 0、constant、system 的职责，以及 FoamFile、列表、宏替换与量纲指数的读取方法。",
-    "body": "一个完整算例不需要某种特殊工程文件。OpenFOAM 通过目录约定和文本字典组织输入。**读取路径由实际程序及模型决定**，所以不能认为每个求解器都必须具有同一套 `*Properties` 文件。\n\n![算例的三个输入层](/assets/diagrams/core-case-tree.svg)\n\n以 `icoFoam/cavity` 为例：`0/U` 与 `0/p` 给出初始场和边界条件；`constant/transportProperties` 给出运动黏度；`system` 中的三个主要字典分别控制运行、离散格式和方程求解。`blockMesh` 运行后生成 `constant/polyMesh`，其中的 `points`、`faces`、`owner`、`neighbour`、`boundary` 描述网格。\n\n下面是速度文件中的关键片段，并非整个文件：\n\n```foam\nFoamFile\n{\n    format      ascii;\n    class       volVectorField;\n    object      U;\n}\ndimensions      [0 1 -1 0 0 0 0];\ninternalField   uniform (0 0 0);\n```\n\n`class` 表示文件存储的场类型；`object` 应与读取对象相符。分号结束一个普通条目，花括号围成子字典，圆括号用于列表或向量，方括号用于量纲指数。`//` 与 `/* ... */` 分别表示行注释和块注释。\n\n![七个基本量纲的排列](/assets/diagrams/core-dimensions.svg)\n\n量纲依次为质量、长度、时间、温度、物质的量、电流和发光强度。速度的量纲是 $LT^{-1}$，运动黏度为 $L^2T^{-1}$。`icoFoam` 中的 `p` 是以密度归一化的压力，量纲为 $L^2T^{-2}$；它不能直接当作 Pa 读出。\n\n```bash\nfoamDictionary 0/U -entry dimensions -value\nfoamDictionary constant/transportProperties -entry nu -value\nfoamDictionary system/controlDict -entry application -value\n```\n\n读字典时不要把宏替换误认为普通字符串。例如 `pFinal` 子字典里的 `$p;` 会复用 `p` 的设置，随后写出的 `relTol 0;` 覆盖对应条目。`#include` 引入的文件也是输入的一部分；发布算例时应一起保存。\n\n**检查练习：**说明 `U`、运动学 `p`、`nu` 的量纲；指出哪个文件决定网格、哪个文件决定线性求解器。故意删掉一个分号只能在算例副本中做，记录报错指出的文件和行号后恢复。",
+    "body": "一个算例可以看作三组互相配合的输入：0 目录描述起始场及其边界，constant 描述不随常规时间步改变的网格与模型信息，system 描述怎样计算和写出结果。先理解这些职责，再逐个阅读字典，比背诵文件名更有效。实际需要哪些文件由求解器决定，不能要求所有求解器都使用同一套 Properties 文件。\n\n![算例的三个输入层](/assets/diagrams/core-case-tree.svg)\n\n以 `icoFoam/cavity` 为例：`0/U` 与 `0/p` 给出初始场和边界条件；`constant/transportProperties` 给出运动黏度；`system` 中的三个主要字典分别控制运行、离散格式和方程求解。`blockMesh` 运行后生成 `constant/polyMesh`，其中的 `points`、`faces`、`owner`、`neighbour`、`boundary` 描述网格。\n\n下面是速度文件中的关键片段，并非整个文件：\n\n```foam\nFoamFile\n{\n    format      ascii;\n    class       volVectorField;\n    object      U;\n}\ndimensions      [0 1 -1 0 0 0 0];\ninternalField   uniform (0 0 0);\n```\n\n`class` 表示文件存储的场类型；`object` 应与读取对象相符。分号结束一个普通条目，花括号围成子字典，圆括号用于列表或向量，方括号用于量纲指数。`//` 与 `/* ... */` 分别表示行注释和块注释。\n\n读一份新字典时，可以先找“对象是什么、数值是什么、作用在哪些边界”三条线。以 U 为例，volVectorField 表明每个体单元存的是一个三分量向量，uniform (0 0 0) 表明所有单元初值相同；它不负责指定壁面运动。壁面的约束写在后面的 boundaryField 中，下一课会把这两部分放在一起检查。\n\n![七个基本量纲的排列](/assets/diagrams/core-dimensions.svg)\n\n量纲依次为质量、长度、时间、温度、物质的量、电流和发光强度。速度的量纲是 $LT^{-1}$，运动黏度为 $L^2T^{-1}$。`icoFoam` 中的 `p` 是以密度归一化的压力，量纲为 $L^2T^{-2}$；它不能直接当作 Pa 读出。\n\n量纲检查是物理检查的一部分。两个数字都写成 0.01，可能分别表示长度、黏度或时间，不能只比较数值大小。对于本课的不可压缩压力，若已知且假设密度恒定，压力差可以按密度换算成物理压力差；任意选定的参考压力常数则不能直接拿去和绝对压力测量比较。\n\n```bash\nfoamDictionary 0/U -entry dimensions -value\nfoamDictionary constant/transportProperties -entry nu -value\nfoamDictionary system/controlDict -entry application -value\n```\n\n读字典时不要把宏替换误认为普通字符串。例如 `pFinal` 子字典里的 `$p;` 会复用 `p` 的设置，随后写出的 `relTol 0;` 覆盖对应条目。`#include` 引入的文件也是输入的一部分；发布算例时应一起保存。\n\n**检查练习：**说明 `U`、运动学 `p`、`nu` 的量纲；指出哪个文件决定网格、哪个文件决定线性求解器。故意删掉一个分号只能在算例副本中做，记录报错指出的文件和行号后恢复。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。依次阅读 0/U、0/p、constant/transportProperties 和 system 下的四个主要字典。用 foamDictionary 读取条目，再和原文核对语法与量纲。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "起步与算例",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 3,
@@ -59,7 +85,20 @@
       "prerequisite": "terminal-and-source-map",
       "duration": "55 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。依次阅读 0/U、0/p、constant/transportProperties 和 system 下的四个主要字典。用 foamDictionary 读取条目，再和原文核对语法与量纲。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -67,7 +106,7 @@
     "kind": "lesson",
     "title": "04 · 顶盖驱动方腔：计算流程与结果分析",
     "summary": "使用官方方腔完成网格生成、检查与求解，分析 Reynolds 数、二维 empty 边界和速度场，并说明验证范围。",
-    "body": "顶盖驱动方腔没有入口和出口。上壁向右运动，通过黏性剪切给内部流体输入动量，其余三面固定。这个算例适合学习完整工作流，因为几何、材料参数和边界条件容易追踪。\n\n![顶盖驱动方腔的边界和参数](/assets/diagrams/core-cavity.svg)\n\n官方 v2512 基础方腔使用 $L=0.1\\,\\mathrm{m}$、$U_\\mathrm{lid}=1\\,\\mathrm{m/s}$、$\\nu=0.01\\,\\mathrm{m^2/s}$，因此\n\n\\[\nRe=\\frac{U_\\mathrm{lid}L}{\\nu}=10.\n\\]\n\n这里的基础算例**不是**常见文献中 $Re=100$、$1000$ 的方腔设置。比较基准数据之前，必须先匹配几何、雷诺数、边界定义与采样位置。\n\n在已加载 v2512 环境的 Linux 终端运行：\n\n```bash\nmkdir -p \"$HOME/OpenFOAM/learning-v2512\"\ncd \"$HOME/OpenFOAM/learning-v2512\"\ncp -r \"$FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity\" cavity-run\ncd cavity-run\nblockMesh > log.blockMesh 2>&1\ncheckMesh > log.checkMesh 2>&1\nicoFoam > log.icoFoam 2>&1\ntouch cavity.foam\n```\n\n依次查看每一步日志。先确认网格确有 $20\\times20\\times1=400$ 个单元、几何尺度正确、二维方向按 `empty` 处理，再检查求解器是否推进到 `endTime`。若前一步失败，停止并修复输入；不要继续执行后续命令来掩盖错误。\n\n![官方方腔速度场：本站 v2512 实际计算结果](/assets/science/cavity-velocity.png)\n\n图为本站在 OpenCFD v2512 `build_bd2b6720-20260127` 上运行官方 `icoFoam` 方腔得到的速度大小图，网格 $20\\times20\\times1$，显示 $t=0.5\\,\\mathrm{s}$。它展示首次计算与后处理已贯通；单张图不能证明时间收敛、网格独立或与实验一致。\n\n### 看图时要回答的问题\n\n顶盖附近速度较大是否与边界值一致？固定壁面的速度是否趋于零？主回流的方向是否与顶盖运动一致？颜色表示速度大小还是某个分量？“看起来平滑”可能来自点插值，不代表网格足够精细。\n\n保存三份日志、原始字典和一个带色标的结果图。再把顶盖速度改为 $0.5\\,\\mathrm{m/s}$，在新副本中计算，并先预测雷诺数如何变化。扩展算例需要自己运行并记录，不可沿用原图作为新结果。\n\n原始输入可对照 [v2512 官方 cavity](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity)。",
+    "body": "现在用一个尺寸和边界都容易说明的问题串起完整流程。方形腔体没有入口和出口：上壁向右运动，通过黏性剪切带动内部流体，其余壁面保持静止。我们关心的第一个结果不是“生成一张漂亮的图”，而是网格、边界与计算出的速度场是否描述了同一个物理问题。\n\n![顶盖驱动方腔的边界和参数](/assets/diagrams/core-cavity.svg)\n\n官方 v2512 基础方腔使用 $L=0.1\\,\\mathrm{m}$、$U_\\mathrm{lid}=1\\,\\mathrm{m/s}$、$\\nu=0.01\\,\\mathrm{m^2/s}$，因此\n\n\\[\nRe=\\frac{U_\\mathrm{lid}L}{\\nu}=10.\n\\]\n\n这里的基础算例**不是**常见文献中 $Re=100$、$1000$ 的方腔设置。比较基准数据之前，必须先匹配几何、雷诺数、边界定义与采样位置。\n\n这个雷诺数告诉我们，本课研究的是黏性影响很明显的流动。顶盖向右带动上部流体，流体受到封闭壁面限制后回流，形成主环流；这给看图提供了方向上的预期。预测只是一项合理性检查，并不预先决定涡心位置或速度剖面，那些量仍需从计算中提取和验证。\n\n在已加载 v2512 环境的 Linux 终端运行：\n\n```bash\nmkdir -p \"$HOME/OpenFOAM/learning-v2512\"\ncd \"$HOME/OpenFOAM/learning-v2512\"\ncp -r \"$FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity\" cavity-run\ncd cavity-run\nblockMesh > log.blockMesh 2>&1\ncheckMesh > log.checkMesh 2>&1\nicoFoam > log.icoFoam 2>&1\ntouch cavity.foam\n```\n\n依次查看每一步日志。先确认网格确有 $20\\times20\\times1=400$ 个单元、几何尺度正确、二维方向按 `empty` 处理，再检查求解器是否推进到 `endTime`。若前一步失败，停止并修复输入；不要继续执行后续命令来掩盖错误。\n\n![官方方腔速度场：本站 v2512 实际计算结果](/assets/science/cavity-velocity.png)\n\n图为本站在 OpenCFD v2512 `build_bd2b6720-20260127` 上运行官方 `icoFoam` 方腔得到的速度大小图，网格 $20\\times20\\times1$，显示 $t=0.5\\,\\mathrm{s}$。它展示首次计算与后处理已贯通；单张图不能证明时间收敛、网格独立或与实验一致。\n\n### 看图时要回答的问题\n\n先分清数据与显示方式。速度大小是一个非负标量，速度的水平和竖直分量则可以为负；把颜色变量从 U 的大小换成 U 的 x 分量，物理问题没有改变，但颜色含义变了。建议先显示网格边线，再查看速度大小，最后沿两条中心线提取分量。这样可以避免把绘图插值造成的平滑当成真实分辨率。\n\n顶盖附近速度较大是否与边界值一致？固定壁面的速度是否趋于零？主回流的方向是否与顶盖运动一致？颜色表示速度大小还是某个分量？“看起来平滑”可能来自点插值，不代表网格足够精细。\n\n保存三份日志、原始字典和一个带色标的结果图。再把顶盖速度改为 $0.5\\,\\mathrm{m/s}$，在新副本中计算，并先预测雷诺数如何变化。扩展算例需要自己运行并记录，不可沿用原图作为新结果。\n\n原始输入可对照 [v2512 官方 cavity](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity)。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。直接使用 0/U、0/p 与原始 system 字典运行基础方腔。20×20×1、Re=10、t=0.5 s 对应本站既有计算图；顶盖速度减半的副本需要重新计算。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "起步与算例",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 4,
@@ -80,7 +119,20 @@
       "prerequisite": "case-structure-dimensions",
       "duration": "65 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。直接使用 0/U、0/p 与原始 system 字典运行基础方腔。20×20×1、Re=10、t=0.5 s 对应本站既有计算图；顶盖速度减半的副本需要重新计算。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -88,7 +140,7 @@
     "kind": "lesson",
     "title": "05 · 场文件、初始条件与边界条件的配合",
     "summary": "区分内部初值和边界约束，解释 fixedValue、zeroGradient、noSlip 与 empty 的物理含义。",
-    "body": "初始条件规定起始时刻域内的状态，边界条件规定计算域边界上的约束。将 `internalField` 设置为零，并不意味着之后所有位置都保持零；移动顶盖持续驱动内部速度变化。\n\n![方腔速度边界示意](/assets/diagrams/core-cavity.svg)\n\n官方 `0/U` 的边界部分是：\n\n```foam\nboundaryField\n{\n    movingWall\n    {\n        type    fixedValue;\n        value   uniform (1 0 0);\n    }\n    fixedWalls\n    {\n        type    noSlip;\n    }\n    frontAndBack\n    {\n        type    empty;\n    }\n}\n```\n\n`movingWall` 等名称必须对应 `constant/polyMesh/boundary` 中的 patch 名称。网格 patch 的类型与场边界类型处于不同层次：网格上 `wall` 表示几何边界类别，速度场上 `noSlip` 表示物理约束。\n\n对于标量 $\\phi$，`fixedValue` 约束 $\\phi=\\phi_b$；`zeroGradient` 约束 $\\partial\\phi/\\partial n=0$。后者不是“数值等于零”。二维方腔的前后面必须在网格及各场中采用一致的 `empty` 设置，并且网格在该方向满足二维要求。\n\n### 为什么压力不能随意全部设为零\n\n不可压缩求解器主要通过压力梯度作用于速度。封闭腔体在全部压力边界采用梯度约束时，压力存在任意加常数的不唯一性，通常通过 `pRefCell` 与 `pRefValue` 确定参考。把每面压力都设置为任意固定值，会改变数学问题。\n\n```foam\nPISO\n{\n    nCorrectors 2;\n    nNonOrthogonalCorrectors 0;\n    pRefCell 0;\n    pRefValue 0;\n}\n```\n\n这里是 `fvSolution` 片段，不应放进 `0/p`。练习时为每个 patch 制作“网格类型、U 条件、p 条件、物理解释”四列表。再解释为什么入口速度已指定时，通常不能同时任意指定入口质量流量和所有压力条件。",
+    "body": "初始条件回答“计算刚开始时，域内是什么状态”，边界条件回答“计算过程中，边界怎样约束流体”。方腔的内部速度从零开始，顶盖持续向内部传递动量，所以零初值不会把整个流场永久固定为零。阅读场文件时，应先看 internalField，再逐个对照 boundaryField；两部分共同定义问题。\n\n![方腔速度边界示意](/assets/diagrams/core-cavity.svg)\n\n官方 `0/U` 的边界部分是：\n\n```foam\nboundaryField\n{\n    movingWall\n    {\n        type    fixedValue;\n        value   uniform (1 0 0);\n    }\n    fixedWalls\n    {\n        type    noSlip;\n    }\n    frontAndBack\n    {\n        type    empty;\n    }\n}\n```\n\n`movingWall` 等名称必须对应 `constant/polyMesh/boundary` 中的 patch 名称。网格 patch 的类型与场边界类型处于不同层次：网格上 `wall` 表示几何边界类别，速度场上 `noSlip` 表示物理约束。\n\n这里的 movingWall 是边界名称，不是启动动网格的命令。基础方腔的网格形状保持不变，只给顶盖流体一个切向速度，等价于理想化的移动带壁面。若你需要几何本身变形或转动，还要用相应动网格模型；不能仅通过改 patch 名称实现。另一个常见错误是改了网格 patch 名，却没有同步更新 U 和 p 的同名边界。\n\n对于标量 $\\phi$，`fixedValue` 约束 $\\phi=\\phi_b$；`zeroGradient` 约束 $\\partial\\phi/\\partial n=0$。后者不是“数值等于零”。二维方腔的前后面必须在网格及各场中采用一致的 `empty` 设置，并且网格在该方向满足二维要求。\n\n### 为什么压力不能随意全部设为零\n\n先做一个简单区分：给某面 fixedValue 0，约束的是该面变量的数值；给 zeroGradient，约束的是沿法向的变化率。这两件事通常不等价。对于封闭不可压缩方腔，应让压力承担满足连续性的任务，而不是为了看起来“约束完整”就把所有边界压力都钉死。随后再处理压力整体常数的不唯一性。\n\n不可压缩求解器主要通过压力梯度作用于速度。封闭腔体在全部压力边界采用梯度约束时，压力存在任意加常数的不唯一性，通常通过 `pRefCell` 与 `pRefValue` 确定参考。把每面压力都设置为任意固定值，会改变数学问题。\n\n```foam\nPISO\n{\n    nCorrectors 2;\n    nNonOrthogonalCorrectors 0;\n    pRefCell 0;\n    pRefValue 0;\n}\n```\n\n这里是 `fvSolution` 片段，不应放进 `0/p`。练习时为每个 patch 制作“网格类型、U 条件、p 条件、物理解释”四列表。再解释为什么入口速度已指定时，通常不能同时任意指定入口质量流量和所有压力条件。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。对照 0/U、0/p、system/blockMeshDict 与 system/fvSolution。生成网格后再检查 constant/polyMesh/boundary，完成每个 patch 的物理条件对照表。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "起步与算例",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 5,
@@ -101,7 +153,20 @@
       "prerequisite": "first-cavity-result",
       "duration": "55 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。对照 0/U、0/p、system/blockMeshDict 与 system/fvSolution。生成网格后再检查 constant/polyMesh/boundary，完成每个 patch 的物理条件对照表。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -109,7 +174,7 @@
     "kind": "lesson",
     "title": "06 · 时间控制、结果写出与续算",
     "summary": "解释 controlDict 的时间参数、writeInterval 的含义与 latestTime 续算条件，检查重启所需的完整状态。",
-    "body": "求解器推进的时间和硬盘中保存的时间目录不是同一个概念。计算可以每 $0.005\\,\\mathrm{s}$ 更新一次，但每 20 步才写出一个场。采样输出频率过低会遗漏瞬态特征；过高则增加存储和 I/O 成本。\n\n![时间步与结果写出时刻](/assets/diagrams/core-time.svg)\n\n基础方腔的主要设置如下，位于 `system/controlDict`：\n\n```foam\napplication     icoFoam;\nstartFrom       startTime;\nstartTime       0;\nstopAt          endTime;\nendTime         0.5;\ndeltaT          0.005;\nwriteControl    timeStep;\nwriteInterval   20;\npurgeWrite      0;\nwriteFormat     ascii;\nwritePrecision  6;\nrunTimeModifiable true;\n```\n\n当 `writeControl timeStep` 时，`writeInterval` 是步数；改成基于运行物理时间的控制方式后，含义随之改变。不要只改一个数字而忽略控制模式。`purgeWrite 0` 保留输出；非零会使旧时间目录按规定清理，所以保留策略需要在长计算前确定。\n\n### 续算需要保留完整状态\n\n基础方腔可将以下条目改为：\n\n```foam\nstartFrom latestTime;\nendTime   1.0;\n```\n\n求解器会从已有的最新有效时间目录读场，再继续到新的结束时间。`startTime` 在该模式下不负责选择起点。多相、动网格、拉格朗日粒子等问题还可能需要更多状态；不能只复制 `U`、`p` 就假定可准确重启。\n\n运行中修改文件是否生效还取决于求解器和模型是否重新读取该条目。`runTimeModifiable true` 不意味着任意拓扑、模型或物性变更均可安全热加载。结构性变更应在算例副本中停止并重启。\n\n**练习：**在方腔副本计算到 $0.5\\,\\mathrm{s}$，随后续算到 $1\\,\\mathrm{s}$；从日志核实新进程的初始时间。同时用另一份算例一次计算到同一时间，比较相同位置的数据。考虑 ASCII 输出精度与重启状态造成的差别。",
+    "body": "一次瞬态计算有两套“时钟”：求解器每步更新的物理时间，以及结果文件实际写到磁盘的时刻。把这两者分清，才能解释为什么日志显示完成了很多步，目录中却只有少数结果。本课用方腔学习输出频率和续算；它们影响数据是否够用，也影响以后能否从中间状态继续计算。\n\n求解器推进的时间和硬盘中保存的时间目录不是同一个概念。计算可以每 $0.005\\,\\mathrm{s}$ 更新一次，但每 20 步才写出一个场。采样输出频率过低会遗漏瞬态特征；过高则增加存储和 I/O 成本。\n\n![时间步与结果写出时刻](/assets/diagrams/core-time.svg)\n\n基础方腔的主要设置如下，位于 `system/controlDict`：\n\n```foam\napplication     icoFoam;\nstartFrom       startTime;\nstartTime       0;\nstopAt          endTime;\nendTime         0.5;\ndeltaT          0.005;\nwriteControl    timeStep;\nwriteInterval   20;\npurgeWrite      0;\nwriteFormat     ascii;\nwritePrecision  6;\nrunTimeModifiable true;\n```\n\n当 `writeControl timeStep` 时，`writeInterval` 是步数；改成基于运行物理时间的控制方式后，含义随之改变。不要只改一个数字而忽略控制模式。`purgeWrite 0` 保留输出；非零会使旧时间目录按规定清理，所以保留策略需要在长计算前确定。\n\n把当前数值代入就容易检查：每步 0.005 s、每 20 步写一次，两个常规输出时刻相隔 0.1 s。若将 deltaT 减半而保持 writeInterval 不变，输出间隔也会减半。比较两次瞬态结果时，应该对齐物理时间；比较文件夹序号或第几个文件，可能比较到不同的流动状态。\n\n### 续算需要保留完整状态\n\n续算前先列出已有时间目录，并查看最新目录中需要的场是否齐全。把 endTime 从 0.5 改成 1.0，只指定了新的终点；startFrom latestTime 才要求从已有最新状态读入。应在新日志开头确认实际起点，避免把从零重新计算误认为续算，或把一份旧算例残留的更晚时间误当成本次起点。\n\n基础方腔可将以下条目改为：\n\n```foam\nstartFrom latestTime;\nendTime   1.0;\n```\n\n求解器会从已有的最新有效时间目录读场，再继续到新的结束时间。`startTime` 在该模式下不负责选择起点。多相、动网格、拉格朗日粒子等问题还可能需要更多状态；不能只复制 `U`、`p` 就假定可准确重启。\n\n运行中修改文件是否生效还取决于求解器和模型是否重新读取该条目。`runTimeModifiable true` 不意味着任意拓扑、模型或物性变更均可安全热加载。结构性变更应在算例副本中停止并重启。\n\n**练习：**在方腔副本计算到 $0.5\\,\\mathrm{s}$，随后续算到 $1\\,\\mathrm{s}$；从日志核实新进程的初始时间。同时用另一份算例一次计算到同一时间，比较相同位置的数据。考虑 ASCII 输出精度与重启状态造成的差别。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。修改 system/controlDict，保留首次计算写出的时间目录。用两个独立副本对比一次算到 1 s 和从 0.5 s 续算，检查相同物理时刻的字段。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "起步与算例",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 6,
@@ -122,7 +187,20 @@
       "prerequisite": "fields-and-boundaries",
       "duration": "55 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。修改 system/controlDict，保留首次计算写出的时间目录。用两个独立副本对比一次算到 1 s 和从 0.5 s 续算，检查相同物理时刻的字段。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -130,12 +208,12 @@
     "kind": "lesson",
     "title": "07 · blockMesh 结构网格生成与尺度检查",
     "summary": "解释 blockMeshDict 的顶点、块连接、单元数、分级与边界面定义，并以官方方腔检查几何尺度。",
-    "body": "`blockMesh` 从少量六面体块生成结构化网格。字典中的顶点定义几何，`blocks` 定义连接与分辨率，`boundary` 将外边界面分配给 patch。每部分都应能与手绘几何对应。\n\n![六面体顶点编号示意](/assets/diagrams/core-block-vertices.svg)\n\n下面是官方方腔 `blockMeshDict` 的几何与块定义片段：\n\n```foam\nscale 0.1;\nvertices\n(\n    (0 0 0)   (1 0 0)   (1 1 0)   (0 1 0)\n    (0 0 0.1) (1 0 0.1) (1 1 0.1) (0 1 0.1)\n);\nblocks\n(\n    hex (0 1 2 3 4 5 6 7) (20 20 1) simpleGrading (1 1 1)\n);\nedges ();\n```\n\n乘以 `scale` 后，域为 $0.1\\times0.1\\times0.01\\,\\mathrm{m}$。网格数为 $20\\times20\\times1$；`simpleGrading (1 1 1)` 表示三个局部方向均匀分布。非单位 expansion ratio 表示该局部方向末端与起始端的单元尺寸比，方向取决于块顶点顺序，不能凭屏幕上的左右判断。\n\n官方移动顶盖面写为：\n\n```foam\nmovingWall\n{\n    type wall;\n    faces ((3 7 6 2));\n}\n```\n\n这是 `boundary (...)` 内的片段。一个外表面不应被重复分配给两个 patch，内部共享面也不应误放到外边界。前后两面采用 `empty`，与所有场中的二维边界定义保持一致。\n\n```bash\nblockMesh > log.blockMesh 2>&1\ncheckMesh -allGeometry -allTopology > log.checkMesh 2>&1\n```\n\n![方腔实际网格与速度场](/assets/science/cavity-mesh.png)\n\n图中为本站 v2512 方腔实际 $20\\times20\\times1$ 网格。练习时另建 $40\\times40\\times1$ 网格，检查单元数应为 1600，且物理域尺寸不变。改变单元数与改变几何尺度是两种不同实验；不要在网格研究中同时修改两者。\n\n参考：[v2512 官方 blockMeshDict](https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity/system/blockMeshDict)。",
+    "body": "生成网格前，先在纸上画出一个六面体，并给八个顶点编号。blockMesh 读取的就是几何顶点、顶点之间的连接、各方向单元数和边界面归属。只要这些定义能与你的草图一一对应，字典就不再是一串难以解释的坐标。本课先生成均匀方腔网格，再做保持几何不变的细化。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-mesh-smooth-transition.png\" alt=\"网格尺寸的突变与平滑过渡\" loading=\"lazy\"><figcaption><strong>网格尺寸的突变与平滑过渡。</strong>左侧单元尺寸在局部突然变化，右侧使用较平滑的间距过渡。图用于比较邻近单元尺度变化；可接受的增长率还取决于所求物理过程与离散方法，不将原讲义的经验数值当作统一阈值。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 19 页（合并讲义 PDF 第 341 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n下面是官方方腔 `blockMeshDict` 的几何与块定义片段：\n\n```foam\nscale 0.1;\nvertices\n(\n    (0 0 0)   (1 0 0)   (1 1 0)   (0 1 0)\n    (0 0 0.1) (1 0 0.1) (1 1 0.1) (0 1 0.1)\n);\nblocks\n(\n    hex (0 1 2 3 4 5 6 7) (20 20 1) simpleGrading (1 1 1)\n);\nedges ();\n```\n\n乘以 `scale` 后，域为 $0.1\\times0.1\\times0.01\\,\\mathrm{m}$。网格数为 $20\\times20\\times1$；`simpleGrading (1 1 1)` 表示三个局部方向均匀分布。非单位 expansion ratio 表示该局部方向末端与起始端的单元尺寸比，方向取决于块顶点顺序，不能凭屏幕上的左右判断。\n\n块的局部方向由 hex 后面的编号确定。例如，第一方向的细化数属于这一块的第一局部边，不一定始终是全局 x 方向。初学时保持 simpleGrading 为 1，先确认顶点顺序、尺度和边界；再单独改变一个方向的 grading，并用网格边线观察较小单元实际出现在何处。这样能把连接错误和加密方向错误分开。\n\n官方移动顶盖面写为：\n\n```foam\nmovingWall\n{\n    type wall;\n    faces ((3 7 6 2));\n}\n```\n\n这是 `boundary (...)` 内的片段。一个外表面不应被重复分配给两个 patch，内部共享面也不应误放到外边界。前后两面采用 `empty`，与所有场中的二维边界定义保持一致。\n\n面上的四个编号描述一个有方向的面。若漏掉顶点、重复顶点或反转了块的有效朝向，问题可能在网格生成阶段就出现。生成后先看包围盒和 400 个单元是否符合预期，再看顶盖 patch 是否位于真正的上表面。只有这些基础检查通过，讨论分辨率是否足够才有意义。\n\n```bash\nblockMesh > log.blockMesh 2>&1\ncheckMesh -allGeometry -allTopology > log.checkMesh 2>&1\n```\n\n![方腔实际网格与速度场](/assets/science/cavity-mesh.png)\n\n图中为本站 v2512 方腔实际 $20\\times20\\times1$ 网格。练习时另建 $40\\times40\\times1$ 网格，检查单元数应为 1600，且物理域尺寸不变。改变单元数与改变几何尺度是两种不同实验；不要在网格研究中同时修改两者。\n\n参考：[v2512 官方 blockMeshDict](https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity/system/blockMeshDict)。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。主要编辑 system/blockMeshDict；40×40×1 练习请从基础 cavity 另建副本。外层 Allrun 的 cavityFine 还涉及映射和时间设置，不要混用为纯网格细化。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "几何与网格",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 7,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-block-vertices.svg",
+    "cover_url": "/assets/wolf/wolf-mesh-smooth-transition.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "v2512 cavity/system/blockMeshDict；Wolf supplement1_blockmesh",
@@ -143,7 +221,25 @@
       "prerequisite": "case-structure-dimensions",
       "duration": "75 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。主要编辑 system/blockMeshDict；40×40×1 练习请从基础 cavity 另建副本。外层 Allrun 的 cavityFine 还涉及映射和时间设置，不要混用为纯网格细化。"
+        }
+      ],
+      "topics": [
+        "meshing"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-mesh-smooth-transition"
+      ]
     }
   },
   {
@@ -151,20 +247,40 @@
     "kind": "lesson",
     "title": "08 · checkMesh 网格质量检查与异常定位",
     "summary": "分析非正交、偏斜、负体积和边界连通性，结合日志与异常单元位置评估网格问题。",
-    "body": "网格质量不是一个单独分数。网格既需要拓扑有效，又需要几何形状适合所用离散。`checkMesh` 的检查通过表示满足相应检查条件，不等于任何方程、格式和雷诺数都能准确稳定求解。\n\n![正交与非正交网格的几何差别](/assets/diagrams/core-mesh-quality.svg)\n\n相邻单元中心连线与公共面法向不平行，产生非正交性；面中心与用于插值的中心连线交点偏离，涉及偏斜。两者都会影响面值与法向梯度重建。它们可能同时存在，但不是同一个指标。\n\n```bash\ncheckMesh -help-full\ncheckMesh -allGeometry -allTopology > log.checkMesh 2>&1\n```\n\n优先阅读：域包围盒、网格维数、单元数与单元类型、面朝向、体积、非正交与偏斜统计、失败检查及其位置。发现负体积、面连接错误、非封闭域等问题时，应先修复几何或网格拓扑，不能通过放宽线性残差阈值解决。\n\n还要检查日志末尾是否写着 `Failed ... mesh checks`。本网站的混合单元编程演示实际出现过“命令退出状态为 0，但完整质量检查仍有失败项”的情况，因此仅用 Shell 的 `set -e` 不能把所有网格质量问题拦截下来。程序执行完成、网格检查通过和数值精度满足要求是三个不同结论。\n\n### 为什么只看最大值不够\n\n少量坏单元如果恰好位于壁面剪切层、激波、界面或狭窄间隙，可能直接支配目标量。相同最大非正交角的两张网格，其误差分布也可能完全不同。需要把相关单元集合导入可视化工具，对照局部流动结构。\n\n在非正交网格上，扩散项常需要对应的法向梯度修正。以下是教学对比片段，不能不经检查直接替换所有算例：\n\n```foam\nlaplacianSchemes\n{\n    default Gauss linear corrected;\n}\nsnGradSchemes\n{\n    default corrected;\n}\n```\n\n`corrected` 引入非正交修正，不会把坏网格自动变成好网格。过大的修正还会影响稳定性，应结合网格改进和必要的限制策略分析。\n\n**数值实验：**参考 Wolf `nonorthoCavity` 的正交、轻度非正交与 Kershaw 网格思想，在同一物理问题上比较质量统计、中心线速度及计算代价。OF9 源案例须迁移后再运行。验收报告至少说明最差单元位于何处，以及对哪个结果量有影响。",
+    "body": "有了网格，还需要回答两个不同问题：这些单元是否组成合法计算域，它们的几何形状是否适合准确离散。checkMesh 会从多个角度给出信息，并没有一个能代表所有问题的“质量总分”。本课先用正交方腔建立对照，再学习怎样根据异常位置判断哪些结果可能受到影响。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-mesh-nonorthogonality.png\" alt=\"非正交角的几何定义\" loading=\"lazy\"><figcaption><strong>非正交角的几何定义。</strong>单元中心连线 d 与公共面的面积法向 S 不平行时，需要检查非正交误差及相应的离散修正。图中的 P、N 是相邻单元中心，f 是公共面中心；夹角不是网格能否使用的唯一判据。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 16 页（合并讲义 PDF 第 338 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n相邻单元中心连线与公共面法向不平行，产生非正交性；面中心与用于插值的中心连线交点偏离，涉及偏斜。两者都会影响面值与法向梯度重建。它们可能同时存在，但不是同一个指标。\n\n可以用两个动作区分它们：先看相邻单元中心的连线有没有对准公共面的法向，再看插值位置与真实面中心有没有偏离。前者解释非正交修正为什么出现，后者解释即使角度不大，面值插值仍可能不准确。示意图帮助理解几何关系，日志提供数值，局部网格图则把这些数值对应回具体位置。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-mesh-skewness.png\" alt=\"面心偏斜与非正交性的区别\" loading=\"lazy\"><figcaption><strong>面心偏斜与非正交性的区别。</strong>单元中心连线与公共面相交于 fi，而实际面心位于 f；两点的偏移反映面心偏斜。对照上一幅非正交图，注意角度偏差和面心位置偏差是两个不同的几何问题。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 17 页（合并讲义 PDF 第 339 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n```bash\ncheckMesh -help-full\ncheckMesh -allGeometry -allTopology > log.checkMesh 2>&1\n```\n\n优先阅读：域包围盒、网格维数、单元数与单元类型、面朝向、体积、非正交与偏斜统计、失败检查及其位置。发现负体积、面连接错误、非封闭域等问题时，应先修复几何或网格拓扑，不能通过放宽线性残差阈值解决。\n\n还要检查日志末尾是否写着 `Failed ... mesh checks`。本网站的混合单元编程演示实际出现过“命令退出状态为 0，但完整质量检查仍有失败项”的情况，因此仅用 Shell 的 `set -e` 不能把所有网格质量问题拦截下来。程序执行完成、网格检查通过和数值精度满足要求是三个不同结论。\n\n### 为什么只看最大值不够\n\n例如，同样少量的扭曲单元，位于远离物体的均匀来流区，和位于预测壁面剪切的第一层，可能对阻力造成不同影响。先定位失败单元，再问附近有什么强梯度、这里是否参与目标量积分。正交方腔可以作为“本应简单”的参照：若它出现负体积或意外三维单元，优先检查你对顶点与边界的修改。\n\n少量坏单元如果恰好位于壁面剪切层、激波、界面或狭窄间隙，可能直接支配目标量。相同最大非正交角的两张网格，其误差分布也可能完全不同。需要把相关单元集合导入可视化工具，对照局部流动结构。\n\n在非正交网格上，扩散项常需要对应的法向梯度修正。以下是教学对比片段，不能不经检查直接替换所有算例：\n\n```foam\nlaplacianSchemes\n{\n    default Gauss linear corrected;\n}\nsnGradSchemes\n{\n    default corrected;\n}\n```\n\n`corrected` 引入非正交修正，不会把坏网格自动变成好网格。过大的修正还会影响稳定性，应结合网格改进和必要的限制策略分析。\n\n**数值实验：**参考 Wolf `nonorthoCavity` 的正交、轻度非正交与 Kershaw 网格思想，在同一物理问题上比较质量统计、中心线速度及计算代价。使用 v2512 输入建立独立网格副本，改变网格几何时保持物理条件与比较位置一致。验收报告至少说明最差单元位于何处，以及对哪个结果量有影响。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-diffusion-orthogonal-comparison.png\" alt=\"正交与非正交网格中的扩散通量\" loading=\"lazy\"><figcaption><strong>正交与非正交网格中的扩散通量。</strong>左侧中心连线与面积法向一致，右侧存在非正交夹角。图板把公共面法向导数与中心差分联系起来，说明非正交部分为何需要额外处理。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module6.pdf 第 29 页（合并讲义 PDF 第 647 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。用原始 system/blockMeshDict 生成质量基线，保留 log.checkMesh。对照自己的网格副本逐项比较，说明非正交或偏斜变化出现在哪些位置，以及影响哪些观测量。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "几何与网格",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 8,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-mesh-quality.svg",
+    "cover_url": "/assets/wolf/wolf-mesh-nonorthogonality.png",
     "owner": "FoamLab",
     "metadata": {
-      "source": "v2512 checkMesh；Wolf module3、101FVM/nonorthoCavity（概念参考，OF9 算例须适配）",
+      "source": "v2512 checkMesh；Wolf module3、101FVM/nonorthoCavity（网格质量概念参考）",
       "verification": "依据 OpenCFD v2512 官方教程与源码核对；扩展练习未逐项运行",
       "prerequisite": "blockmesh-first-principles",
       "duration": "65 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。用原始 system/blockMeshDict 生成质量基线，保留 log.checkMesh。对照自己的网格副本逐项比较，说明非正交或偏斜变化出现在哪些位置，以及影响哪些观测量。"
+        }
+      ],
+      "topics": [
+        "meshing"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-mesh-nonorthogonality",
+        "wolf-mesh-skewness",
+        "wolf-diffusion-orthogonal-comparison"
+      ]
     }
   },
   {
@@ -172,12 +288,12 @@
     "kind": "lesson",
     "title": "09 · CAD、STL、单位与封闭流体域",
     "summary": "在网格生成之前检查尺度、法向、开口和区域名称；解释为什么显示正常的模型仍可能无法划分体网格。",
-    "body": "CAD 实体、表面三角网格和体网格是三个不同对象。STEP 可以表达连续曲面与拓扑关系；STL 是三角面集合，通常没有可靠的物理单位与边界语义；OpenFOAM 求解需要的是填充流体域的体单元。\n\n![连续 CAD 与离散表面表示](/assets/diagrams/core-cad-tessellation.svg)\n\n对一根内径 $10\\,\\mathrm{mm}$ 的管道，导出的几何坐标可能是 10，也可能是 0.01。若把前者按米解释，几何尺度将放大 1000 倍。相同速度和运动黏度下，雷诺数也随尺度放大 1000 倍。这不是后处理显示单位能修复的问题。\n\n```bash\nsurfaceCheck constant/triSurface/pipe.stl\nsurfaceTransformPoints -help\n```\n\n在帮助确认语法后，可在保留原文件的前提下生成以米为单位的副本：\n\n```bash\nsurfaceTransformPoints -write-scale '(0.001 0.001 0.001)' \\\n  pipe-mm.stl pipe-m.stl\nsurfaceCheck pipe-m.stl\n```\n\n实际输入和输出文件名要与自己的目录对应。检查包围盒、边界边、重复面、退化三角形及表面区域数量。内流问题要明确入口、出口和壁面组成哪个封闭域；外流问题则还需要背景计算域。一个有意保留的入口开口，与意外裂缝，不应使用同一种修补逻辑。\n\n### 几何精度应服务于计算目标\n\n把 CAD 三角化得极细并不自动提高 CFD 精度。三角面弦高误差应小于所需几何分辨率，但过多小面会增加存储、求交及特征提取成本。保留控制分离、压降或换热的重要细节，去除明显小于模型尺度且不影响目标量的装饰结构，并记录简化依据。\n\n完成一次尺度审计：记录 CAD 原始单位、导出设置、STL 包围盒与 OpenFOAM 网格包围盒。再说明你的 `locationInMesh` 为什么位于应保留的流体区域，而不是固体内部或表面上。",
+    "body": "从 CAD 到计算网格，中间至少经过一次表达方式变化：CAD 用曲面与拓扑描述物体，STL 或 OBJ 用离散面表示表面，而求解器需要的是填满流体区域的体网格。表面看起来完整，不代表单位正确，也不代表已经有了可求解的流体域。本课把几何尺度、封闭性和计算域选择放在网格生成之前处理。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-snappy-background.png\" alt=\"表面几何与背景六面体网格\" loading=\"lazy\"><figcaption><strong>表面几何与背景六面体网格。</strong>原讲义的背景网格覆盖目标表面和周围流体空间。图中网格尚未完成贴体；后续应按照特征、曲率和所需分辨率逐步细分，并指定保留的流体区域。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 74 页（合并讲义 PDF 第 396 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n对一根内径 $10\\,\\mathrm{mm}$ 的管道，导出的几何坐标可能是 10，也可能是 0.01。若把前者按米解释，几何尺度将放大 1000 倍。相同速度和运动黏度下，雷诺数也随尺度放大 1000 倍。这不是后处理显示单位能修复的问题。\n\n```bash\nsurfaceCheck constant/triSurface/pipe.stl\nsurfaceTransformPoints -help\n```\n\n在帮助确认语法后，可在保留原文件的前提下生成以米为单位的副本：\n\n```bash\nsurfaceTransformPoints -write-scale '(0.001 0.001 0.001)' \\\n  pipe-mm.stl pipe-m.stl\nsurfaceCheck pipe-m.stl\n```\n\n实际输入和输出文件名要与自己的目录对应。检查包围盒、边界边、重复面、退化三角形及表面区域数量。内流问题要明确入口、出口和壁面组成哪个封闭域；外流问题则还需要背景计算域。一个有意保留的入口开口，与意外裂缝，不应使用同一种修补逻辑。\n\n下载包采用 motorBike.obj.gz 作为实际可读取表面，课文中的 pipe-mm.stl 则用于解释毫米到米的换算。不要对 motorBike 也机械执行 0.001 缩放；应先检查它本来的包围盒，并与 system/blockMeshDict 的背景域比较。物体应以预期尺度位于背景域内，入口、出口和外边界则通常来自背景网格，而不是物体表面。\n\n### 几何精度应服务于计算目标\n\n判断一个细节是否保留，先说明它会通过什么机制影响结果。例如，控制分离的尖角可能必须保留，而远离关注区、尺寸极小的装饰倒角未必值得极端细化。简化不是为了让网格“看起来规则”，而是基于问题尺度降低无关复杂度；简化后仍要重新检查封闭性、区域名称和预期流体连通关系。\n\n把 CAD 三角化得极细并不自动提高 CFD 精度。三角面弦高误差应小于所需几何分辨率，但过多小面会增加存储、求交及特征提取成本。保留控制分离、压降或换热的重要细节，去除明显小于模型尺度且不影响目标量的装饰结构，并记录简化依据。\n\n完成一次尺度审计：记录 CAD 原始单位、导出设置、STL 包围盒与 OpenFOAM 网格包围盒。再说明你的 `locationInMesh` 为什么位于应保留的流体区域，而不是固体内部或表面上。\n\n### 对应案例与练习文件\n\n- [网格划分与 RANS案例包](/downloads/courses/v2512-meshing-rans.zip)：包内 `tutorials/incompressible/simpleFoam/motorBike`。表面文件在包内 tutorials/resources/geometry/motorBike.obj.gz；Allrun 会复制到本例 constant/triSurface。结合 system/blockMeshDict 与 system/snappyHexMeshDict 检查包围盒和流体区域。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "几何与网格",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 9,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-cad-tessellation.svg",
+    "cover_url": "/assets/wolf/wolf-snappy-background.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "v2512 surfaceCheck、surfaceTransformPoints；Wolf module2 CAD 与 module3",
@@ -185,7 +301,25 @@
       "prerequisite": "checkmesh-and-quality",
       "duration": "55 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "网格划分与 RANS案例包",
+          "url": "/downloads/courses/v2512-meshing-rans.zip",
+          "size_bytes": 3784678,
+          "sha256": "68b34bdf42765cedf0c47b769943a120e87c2e6965948d8402abac21a399a3e0",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-meshing-rans/tutorials/incompressible/simpleFoam/motorBike。表面文件在包内 tutorials/resources/geometry/motorBike.obj.gz；Allrun 会复制到本例 constant/triSurface。结合 system/blockMeshDict 与 system/snappyHexMeshDict 检查包围盒和流体区域。"
+        }
+      ],
+      "topics": [
+        "meshing"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-snappy-background"
+      ]
     }
   },
   {
@@ -193,12 +327,12 @@
     "kind": "lesson",
     "title": "10 · snappyHexMesh 分阶段网格生成与检查",
     "summary": "分别说明背景网格、局部细化、表面贴合与边界层生成，检查各阶段的几何匹配和网格质量。",
-    "body": "`snappyHexMesh` 在背景体网格上细化并裁剪单元，再移动点使网格贴近表面，最后尝试增加近壁层。把所有功能一次打开，容易不知道失败发生在哪个阶段。\n\n![snappyHexMesh 的三个阶段示意](/assets/diagrams/core-snappy-stages.svg)\n\n以下是 `snappyHexMeshDict` 的结构示意，省略的控制项必须从相近的 v2512 完整官方算例补齐，不能作为独立可运行字典：\n\n```foam\ncastellatedMesh true;\nsnap            true;\naddLayers       false;\n\ngeometry\n{\n    body.stl\n    {\n        type triSurfaceMesh;\n        name body;\n    }\n}\n// 后续还需 castellatedMeshControls、snapControls、\n// addLayersControls、meshQualityControls 等完整子字典。\n```\n\n基础流程为：\n\n```bash\nblockMesh > log.blockMesh 2>&1\nsurfaceFeatureExtract > log.surfaceFeatureExtract 2>&1\nsnappyHexMesh -overwrite > log.snappyHexMesh 2>&1\ncheckMesh -allGeometry -allTopology > log.checkMesh 2>&1\n```\n\n`surfaceFeatureExtract` 需要对应的 `surfaceFeatureExtractDict`。某些案例使用特征捕捉的其他配置方式，不能无条件套用这一步。`-overwrite` 会更新当前网格，应在独立工作副本运行。\n\n### 每一阶段检查一个明确问题\n\n首先只生成 castellated 网格，确认保留的是目标流体区域，局部细化覆盖尾迹、缝隙或曲率变化处。其次启用 snap，比较几何贴合与网格质量；背景网格太粗时，增加迭代次数不能代替必要分辨率。最后增加 layers，观察目标壁面覆盖率、层数和厚度，尤其检查凹角与狭窄间隙。\n\n近壁层总厚度、首层厚度和增长率相互关联。以等比增长为例，$n$ 层、首层厚度 $h_1$、增长率 $r\\ne1$ 时，总厚度为\n\n\\[\nH=h_1\\frac{r^n-1}{r-1}.\n\\]\n\n字典是否使用相对厚度，要看 `relativeSizes` 设置；不能把以背景单元尺寸为基准的数值直接当成米。验收时保存三个阶段的网格截面、单元数、质量统计和层覆盖情况。\n\n可查阅 [v2512 注释版 snappyHexMeshDict](https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/caseDicts/annotated/snappyHexMeshDict)，并使用本站配置索引按条目检索。",
+    "body": "复杂表面网格可以分成三个逐步检查的阶段：先用背景网格分辨物体与局部特征，再让边界贴合几何，最后增加近壁层。snappyHexMesh 将这些阶段组织在同一工具中，但这不意味着应一次打开所有功能。每一步保留网格和日志，才能判断问题来自域选择、贴合还是层网格。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-snappy-workflow.png\" alt=\"snappyHexMesh 的几何与背景网格输入\" loading=\"lazy\"><figcaption><strong>snappyHexMesh 的几何与背景网格输入。</strong>背景体网格与几何表面共同输入 snappyHexMesh。此图说明输入关系；局部加密、贴体和边界层生成还需分别配置并检查，不能由一张表面模型直接推出合格的计算网格。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 71 页（合并讲义 PDF 第 393 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n以下是 `snappyHexMeshDict` 的结构示意，省略的控制项必须从相近的 v2512 完整官方算例补齐，不能作为独立可运行字典：\n\n```foam\ncastellatedMesh true;\nsnap            true;\naddLayers       false;\n\ngeometry\n{\n    body.stl\n    {\n        type triSurfaceMesh;\n        name body;\n    }\n}\n// 后续还需 castellatedMeshControls、snapControls、\n// addLayersControls、meshQualityControls 等完整子字典。\n```\n\n基础流程为：\n\n```bash\nblockMesh > log.blockMesh 2>&1\nsurfaceFeatureExtract > log.surfaceFeatureExtract 2>&1\nsnappyHexMesh -overwrite > log.snappyHexMesh 2>&1\ncheckMesh -allGeometry -allTopology > log.checkMesh 2>&1\n```\n\n`surfaceFeatureExtract` 需要对应的 `surfaceFeatureExtractDict`。某些案例使用特征捕捉的其他配置方式，不能无条件套用这一步。`-overwrite` 会更新当前网格，应在独立工作副本运行。\n\nmotorBike 下载例给出了可用的完整字典和几何。先阅读它的 Allrun，理解为何复制表面、提取特征、分区、网格生成、恢复初值要按该顺序进行；再在独立副本中研究阶段开关。上面四条命令概括的是串行网格生成与检查，不包含完整求解准备。motorBike 的原始脚本采用并行流程，还需按 Allrun 完成几何复制、特征提取和分区，并在求解前恢复初始场；不要把缺少 0 场误当作 snappyHexMesh 本身无法生成网格的原因。\n\n### 每一阶段检查一个明确问题\n\n第一阶段尤其要核实 locationInMesh：它给算法一个应保留区域的内部点，不是物体中心坐标的固定写法。点若位于固体内、表面上或错误的连通区域，后续即使得到大量单元，也可能保留了错误的计算域。第二、第三阶段再分别检查表面贴合和壁面层，避免把物理域选择错误误诊为迭代次数不足。\n\n首先只生成 castellated 网格，确认保留的是目标流体区域，局部细化覆盖尾迹、缝隙或曲率变化处。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-snappy-refinement-level.png\" alt=\"加密等级与单元尺度\" loading=\"lazy\"><figcaption><strong>加密等级与单元尺度。</strong>图板给出基本网格逐级细分的关系。每增加一级，示意中的边长减半；二维截面上的四分不能直接当成三维单元数量，三维六面体细分对应不同的总单元增长率。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 72 页（合并讲义 PDF 第 394 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-snappy-surface-refinement.png\" alt=\"几何表面附近的局部网格加密\" loading=\"lazy\"><figcaption><strong>几何表面附近的局部网格加密。</strong>表面附近单元经过细分，远离几何的区域保留较粗尺度。右侧框与箭头是原讲义的体积加密区域提示；它帮助区分按表面和按空间区域控制分辨率。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 76 页（合并讲义 PDF 第 398 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n其次启用 snap，比较几何贴合与网格质量；背景网格太粗时，增加迭代次数不能代替必要分辨率。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-snappy-surface-snapping.png\" alt=\"网格顶点向几何表面贴合\" loading=\"lazy\"><figcaption><strong>网格顶点向几何表面贴合。</strong>完成局部细分和区域选择后，边界网格向目标表面贴合。观察几何尖角和曲率变化处的单元形状，再结合网格检查定位非正交或高偏斜区域。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 79 页（合并讲义 PDF 第 401 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n最后增加 layers，观察目标壁面覆盖率、层数和厚度，尤其检查凹角与狭窄间隙。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-snappy-layer-stage.png\" alt=\"贴体网格中的边界层生成阶段\" loading=\"lazy\"><figcaption><strong>贴体网格中的边界层生成阶段。</strong>原讲义在完成表面贴合后展示层网格阶段。层的覆盖率、厚度和局部塌缩应分别检查；图片中的阶段关系不意味着任意参数都能生成完整的壁面层。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 80 页（合并讲义 PDF 第 402 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n近壁层总厚度、首层厚度和增长率相互关联。以等比增长为例，$n$ 层、首层厚度 $h_1$、增长率 $r\\ne1$ 时，总厚度为\n\n\\[\nH=h_1\\frac{r^n-1}{r-1}.\n\\]\n\n字典是否使用相对厚度，要看 `relativeSizes` 设置；不能把以背景单元尺寸为基准的数值直接当成米。验收时保存三个阶段的网格截面、单元数、质量统计和层覆盖情况。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-snappy-relative-layer-size.png\" alt=\"相对与绝对层厚设置的网格对比\" loading=\"lazy\"><figcaption><strong>相对与绝对层厚设置的网格对比。</strong>左右图给出 relativeSizes 设置不同的边界层网格及原参数。比较时先明确厚度参数相对于局部网格尺度还是采用长度单位，再检查最终层厚；原图参数仅用于说明这一算例。 图用于解释层厚设置；v2512 参数的读取、默认值及层厚组合须对照其 snappyHexMeshDict 与帮助。<br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 139 页（合并讲义 PDF 第 461 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n总层数写成某个值，并不保证每个壁面位置都生成了同样多的层。层添加可能因间隙、曲率或质量限制而局部停止，所以应在关键壁面显示截面并统计覆盖。若目标是壁面剪切或换热，首层中心距和实际层覆盖比一个全域总单元数更能解释结果差异。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-snappy-layer-coverage.png\" alt=\"边界层厚度、层数与覆盖范围\" loading=\"lazy\"><figcaption><strong>边界层厚度、层数与覆盖范围。</strong>上排显示原算例的层厚和层数，下排显示壁面层覆盖区域。应将颜色分布与实际网格截面一起检查，区分未生成层、层数变化和厚度变化。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 148 页（合并讲义 PDF 第 470 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n可查阅 [v2512 注释版 snappyHexMeshDict](https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/caseDicts/annotated/snappyHexMeshDict)，并使用本站配置索引按条目检索。\n\n### 对应案例与练习文件\n\n- [网格划分与 RANS案例包](/downloads/courses/v2512-meshing-rans.zip)：包内 `tutorials/incompressible/simpleFoam/motorBike`。从 system/snappyHexMeshDict、surfaceFeatureExtractDict、meshQualityDict 和完整 Allrun 开始。官方几何与 0.orig/include 全部包含；运行需要 MPI，默认六分区。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "几何与网格",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 10,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-snappy-stages.svg",
+    "cover_url": "/assets/wolf/wolf-snappy-workflow.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "v2512 etc/caseDicts/annotated/snappyHexMeshDict；Wolf module3 与 OF_material/advanced_SHM",
@@ -206,7 +340,32 @@
       "prerequisite": "surface-geometry-preparation",
       "duration": "90 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "网格划分与 RANS案例包",
+          "url": "/downloads/courses/v2512-meshing-rans.zip",
+          "size_bytes": 3784678,
+          "sha256": "68b34bdf42765cedf0c47b769943a120e87c2e6965948d8402abac21a399a3e0",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-meshing-rans/tutorials/incompressible/simpleFoam/motorBike。从 system/snappyHexMeshDict、surfaceFeatureExtractDict、meshQualityDict 和完整 Allrun 开始。官方几何与 0.orig/include 全部包含；运行需要 MPI，默认六分区。"
+        }
+      ],
+      "topics": [
+        "meshing",
+        "turbulence"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-snappy-workflow",
+        "wolf-snappy-refinement-level",
+        "wolf-snappy-surface-refinement",
+        "wolf-snappy-surface-snapping",
+        "wolf-snappy-layer-stage",
+        "wolf-snappy-relative-layer-size",
+        "wolf-snappy-layer-coverage"
+      ]
     }
   },
   {
@@ -214,12 +373,12 @@
     "kind": "lesson",
     "title": "11 · 有限体积方法：从守恒积分到离散方程",
     "summary": "理解单元、面、通量和源项的关系，追踪 div(phi,U) 与 laplacian(nu,U) 的物理含义。",
-    "body": "有限体积方法从控制体积上的守恒关系出发。对于密度 $\\rho$、被输运量 $\\phi$、扩散系数 $\\Gamma$ 和体积源项 $S$，常见形式为\n\n\\[\n\\frac{\\partial(\\rho\\phi)}{\\partial t}\n+\\nabla\\cdot(\\rho\\mathbf{u}\\phi)\n=\\nabla\\cdot(\\Gamma\\nabla\\phi)+S.\n\\]\n\n把方程在单元 $V_P$ 内积分，再利用散度定理，把散度项变成单元各面的通量求和。于是一个空间连续问题变成“单元内储存变化 = 通过面的净输运 + 体积源”。\n\n![有限体积的控制体积与面通量](/assets/diagrams/core-finite-volume.svg)\n\n### 内部面为什么特别重要\n\n相邻两个单元共享同一内部面。一侧流出的通量，应以相反符号进入另一侧。因此全域求和时，内部面通量相消，剩下外边界通量和源项。这是守恒离散的核心，不是把每个点上的微分公式分别近似后自动得到的性质。\n\n以不可压缩体积通量 $F_f=\\mathbf{u}_f\\cdot\\mathbf{S}_f$ 为例，对流项近似为\n\n\\[\n\\int_{V_P}\\nabla\\cdot(\\mathbf{u}\\phi)\\,dV\n\\approx\\sum_f F_f\\phi_f.\n\\]\n\nOpenFOAM 不可压缩求解器里常见的 `phi` 是面体积通量对象，其名字恰好与教科书通用标量符号相同，二者含义应通过上下文区分。可压缩情形中对应通量可能含密度，量纲必须检查。\n\n```foam\ndivSchemes\n{\n    default none;\n    div(phi,U) Gauss linear;\n}\nlaplacianSchemes\n{\n    default Gauss linear orthogonal;\n}\n```\n\n这里 `Gauss` 表示通过面求和实现相应空间算子；`linear` 关联面插值；`orthogonal` 适用于对应的法向梯度假设。不能把这一组正交方腔设置不加分析地复制到任意非正交工业网格。\n\n最终每个单元贡献一个离散方程，可写为\n\n\\[\na_P\\phi_P+\\sum_N a_N\\phi_N=b_P.\n\\]\n\n`fvSchemes` 决定如何构造系数，`fvSolution` 决定如何解组装后的代数系统。练习时在三单元一维网格上标出每个面的方向，写出中间单元的收支式，再验证左右内部面在全域求和中消失。",
+    "body": "前几课用字典告诉程序“怎样算”，这一课解释程序为何会形成一组代数方程。有限体积方法不从单个数学点开始，而是对每个小体积建立收支：内部储存了多少，边界流进流出多少，有没有源项。把每个单元的收支连接起来，就得到整个计算域的离散问题。\n\n有限体积方法从控制体积上的守恒关系出发。对于密度 $\\rho$、被输运量 $\\phi$、扩散系数 $\\Gamma$ 和体积源项 $S$，常见形式为\n\n\\[\n\\frac{\\partial(\\rho\\phi)}{\\partial t}\n+\\nabla\\cdot(\\rho\\mathbf{u}\\phi)\n=\\nabla\\cdot(\\Gamma\\nabla\\phi)+S.\n\\]\n\n把方程在单元 $V_P$ 内积分，再利用散度定理，把散度项变成单元各面的通量求和。于是一个空间连续问题变成“单元内储存变化 = 通过面的净输运 + 体积源”。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-fvm-convective-face-flux.png\" alt=\"从体积分到离散面通量\" loading=\"lazy\"><figcaption><strong>从体积分到离散面通量。</strong>通过 Gauss 定理将对流项体积分转为封闭表面上的通量，再在各网格面上求和。下方多面体标出单元中心、边界面及面积法向，说明有限体积法的局部守恒结构。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module6.pdf 第 11 页（合并讲义 PDF 第 629 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n### 内部面为什么特别重要\n\n以两个相邻单元为例，同一份流体穿过公共面，对左侧是流出，对右侧就是流入。如果两边使用互不一致的数值通量，全域求和时会凭空出现增量或损失。因此，理解“内部面通量以相反符号进入两边方程”，比先记某个矩阵求解器名字更接近守恒方法的核心。\n\n相邻两个单元共享同一内部面。一侧流出的通量，应以相反符号进入另一侧。因此全域求和时，内部面通量相消，剩下外边界通量和源项。这是守恒离散的核心，不是把每个点上的微分公式分别近似后自动得到的性质。\n\n以不可压缩体积通量 $F_f=\\mathbf{u}_f\\cdot\\mathbf{S}_f$ 为例，对流项近似为\n\n\\[\n\\int_{V_P}\\nabla\\cdot(\\mathbf{u}\\phi)\\,dV\n\\approx\\sum_f F_f\\phi_f.\n\\]\n\nOpenFOAM 不可压缩求解器里常见的 `phi` 是面体积通量对象，其名字恰好与教科书通用标量符号相同，二者含义应通过上下文区分。可压缩情形中对应通量可能含密度，量纲必须检查。\n\n```foam\ndivSchemes\n{\n    default none;\n    div(phi,U) Gauss linear;\n}\nlaplacianSchemes\n{\n    default Gauss linear orthogonal;\n}\n```\n\n这里 `Gauss` 表示通过面求和实现相应空间算子；`linear` 关联面插值；`orthogonal` 适用于对应的法向梯度假设。不能把这一组正交方腔设置不加分析地复制到任意非正交工业网格。\n\n最终每个单元贡献一个离散方程，可写为\n\n\\[\na_P\\phi_P+\\sum_N a_N\\phi_N=b_P.\n\\]\n\n`fvSchemes` 决定如何构造系数，`fvSolution` 决定如何解组装后的代数系统。练习时在三单元一维网格上标出每个面的方向，写出中间单元的收支式，再验证左右内部面在全域求和中消失。\n\n本课的下载练习把流动耦合暂时去掉：一维标量案例给定速度，只求被输运量 T；一维扩散案例则只保留扩散与边界温度。这样可以把数值结果中的变化对应到某个算子。待这两种收支都能解释后，再回到方腔，把速度、压力与面通量的相互作用加入理解框架。\n\n### 对应案例与练习文件\n\n- [标量输运与扩散案例包](/downloads/courses/v2512-scalar-diffusion.zip)：包内 `exercises/one-dimensional-advection`。阅读 0/T、0/U 和 system/fvSchemes，识别被输运量与面通量；相邻 one-dimensional-diffusion 目录用于去掉对流后的收支对照。\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。对照 system/fvSchemes 中的 div(phi,U) 与 laplacianSchemes，说明完整方腔相比单一标量方程多了哪些未知量。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "数值方法",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 11,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-finite-volume.svg",
+    "cover_url": "/assets/wolf/wolf-fvm-convective-face-flux.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "Wolf module6 FVM；v2512 finiteVolume 算子与 cavity/fvSchemes",
@@ -227,7 +386,32 @@
       "prerequisite": "case-structure-dimensions",
       "duration": "70 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "标量输运与扩散案例包",
+          "url": "/downloads/courses/v2512-scalar-diffusion.zip",
+          "size_bytes": 328196,
+          "sha256": "99969ba25792909a48f4519ff585ab90e9592b970d29b361b5ba4ef14b610930",
+          "kind": "case",
+          "verification": "两个 FoamLab 一维案例已在 v2512 完成 blockMesh、完整 checkMesh 和指定终点求解，包内含日志与解析比较；官方 pitzDaily/flange 本轮未运行。",
+          "description": "解压后进入 v2512-scalar-diffusion/exercises/one-dimensional-advection。阅读 0/T、0/U 和 system/fvSchemes，识别被输运量与面通量；相邻 one-dimensional-diffusion 目录用于去掉对流后的收支对照。"
+        },
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。对照 system/fvSchemes 中的 div(phi,U) 与 laplacianSchemes，说明完整方腔相比单一标量方程多了哪些未知量。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-fvm-convective-face-flux"
+      ]
     }
   },
   {
@@ -235,12 +419,12 @@
     "kind": "lesson",
     "title": "12 · 对流格式：迎风、中心插值与有界性",
     "summary": "以被输运的方波为例，分析数值扩散、过冲与局部梯度，并设计一次受控格式比较。",
-    "body": "一个无扩散的标量波随均匀速度移动时，解析解只平移而不改变形状。如果计算结果越来越平缓，说明存在数值扩散；如果出现高于初始最大值或低于最小值的新极值，则需要分析离散振荡或有界性。\n\n![对流格式产生数值扩散或过冲的示意](/assets/diagrams/core-convection.svg)\n\n对于一维常速 $u>0$，迎风近似用上游单元值构造面输运。在光滑区域做 Taylor 展开，其空间截断误差包含一个与 $u\\Delta x$ 成比例的扩散项。完整数值扩散还与时间离散有关，不能只凭空间格式名称给出普适数值。\n\n中心插值在光滑、规则网格上通常具有较高空间精度，但强对流和不连续剖面会暴露无界振荡问题。限制器在高阶重建和有界性之间调整，不意味着在所有区域保持同一个形式上的高阶精度。\n\n### 从方腔设置开始识别语法\n\n下面三行是分别用于对比的选择，不应同时使用相同键：\n\n```foam\n// 方案 A：稳健但耗散较强\ndiv(phi,U) Gauss upwind;\n\n// 方案 B：正交基础方腔中的线性插值\ndiv(phi,U) Gauss linear;\n\n// 方案 C：速度梯度用于线性迎风重建\ndiv(phi,U) Gauss linearUpwind grad(U);\n```\n\n方案 C 依赖 `grad(U)` 的梯度计算设置。格式键必须与求解器实际离散的项相符；没有某个输运方程时，添加对应键并不会凭空生成该方程。\n\n### 设计一个有意义的比较\n\n参考 Wolf `pureConvection_profiles` 的高斯、阶跃和方波思想，固定速度、网格、边界与 Courant 数，只改变对流格式。在相同物理时刻，比较峰值、总积分、剖面形状以及\n\n\\[\nE_1=\\frac{\\sum_i V_i\\lvert\\phi_i-\\phi_i^{\\mathrm{ref}}\\rvert}{\\sum_i V_i}.\n\\]\n\n平滑高斯与方波应分别测试：一个格式在光滑解上的收敛阶，不能替代其处理间断的表现。旧 Foundation 9 演示求解器应先按 v2512 编程课程迁移和编译；本页不声称该旧程序可直接运行。\n\n**验收：**提交同一坐标轴上的三条剖面，列出极值、积分误差、时间步与单元数。解释你选择的格式对当前问题为什么合适，而不是简单写“二阶比一阶好”。",
+    "body": "判断对流格式，先选一个能明确知道答案的测试：让一团标量随均匀速度移动，保持没有物理扩散和源项。理想结果应保持原来的形状并向前平移。数值结果如果变宽、峰值降低，或出现不该有的负值与新极值，就可以据此分析格式，而不必从复杂流场中猜测原因。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-advection-scheme-comparison.png\" alt=\"对流格式的扩散与振荡对比\" loading=\"lazy\"><figcaption><strong>对流格式的扩散与振荡对比。</strong>原讲义用斜向阶跃输运比较迎风、中心、线性迎风与 TVD 限制格式。观察界面变宽与过冲是不同误差表现；本图是给定算例下的定性比较，不构成对所有流动的格式排名。 图中将 linearUpwind 标记为 Bounded，但该格式本身不保证严格有界；应检查负值与新极值，不能只依据图内标签判断。各结果的网格、时间格式和 Courant 数需要一起比较。<br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module6.pdf 第 22 页（合并讲义 PDF 第 640 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n对于一维常速 $u>0$，迎风近似用上游单元值构造面输运。在光滑区域做 Taylor 展开，其空间截断误差包含一个与 $u\\Delta x$ 成比例的扩散项。完整数值扩散还与时间离散有关，不能只凭空间格式名称给出普适数值。\n\n中心插值在光滑、规则网格上通常具有较高空间精度，但强对流和不连续剖面会暴露无界振荡问题。限制器在高阶重建和有界性之间调整，不意味着在所有区域保持同一个形式上的高阶精度。\n\n### 从方腔设置开始识别语法\n\n同一个“迎风”思想可以用于不同变量，但字典键必须对准具体方程。方腔解速度，所以这里先展示 div(phi,U)；下载的一维被动标量案例解 T，对应条目是 div(phi,T)。要比较标量对流格式，应修改后者；修改一个求解器没有读取的键，计算结果不变并不能说明格式完全等价。\n\n下面三行是分别用于对比的选择，不应同时使用相同键：\n\n```foam\n// 方案 A：稳健但耗散较强\ndiv(phi,U) Gauss upwind;\n\n// 方案 B：正交基础方腔中的线性插值\ndiv(phi,U) Gauss linear;\n\n// 方案 C：速度梯度用于线性迎风重建\ndiv(phi,U) Gauss linearUpwind grad(U);\n```\n\n方案 C 依赖 `grad(U)` 的梯度计算设置。格式键必须与求解器实际离散的项相符；没有某个输运方程时，添加对应键并不会凭空生成该方程。\n\n### 设计一个有意义的比较\n\n配套一维案例给出了紧支撑的余弦平方脉冲：初始中心在 0.25 m，流速为 1 m/s，计算至 0.2 s 时解析中心在 0.45 m。脉冲尚未碰到出口，且 DT 为零，因此更容易把形状变化归因于数值处理。基线采用 Euler 与 upwind；在副本中只改变 div(phi,T)，保持网格和时间步不变，再运行 compare.py 比较同一时刻的剖面。\n\n本轮已在 v2512 实际运行该基线至 0.2 s：峰值约为 0.776896 K，线积分约为 0.100000 K·m，与解析平移的平均绝对误差约为 0.0287741 K。这里 T 表示被动温差。峰值下降而积分保持，说明不能仅用守恒判断形状误差；Euler 与 upwind 的联合数值扩散使脉冲展宽。包内 verification 提供日志和 comparison.csv；这是一组基线结果，并非所有格式的优劣结论。\n\n参考 Wolf `pureConvection_profiles` 的高斯、阶跃和方波思想，固定速度、网格、边界与 Courant 数，只改变对流格式。在相同物理时刻，比较峰值、总积分、剖面形状以及\n\n\\[\nE_1=\\frac{\\sum_i V_i\\lvert\\phi_i-\\phi_i^{\\mathrm{ref}}\\rvert}{\\sum_i V_i}.\n\\]\n\n平滑高斯与方波应分别测试：一个格式在光滑解上的收敛阶，不能替代其处理间断的表现。本课下载包提供使用 v2512 scalarTransportFoam 的最小平移案例，可先用它建立比较方法，再扩展到高斯与方波初值。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-advection-profile-errors.png\" alt=\"一维输运中的格式误差曲线\" loading=\"lazy\"><figcaption><strong>一维输运中的格式误差曲线。</strong>图中相同的阶跃输入被不同空间格式输运，比较对象同时包含耗散、过冲与波形保持。坐标、精确解曲线和各方法图例均保留；图示条件为原讲义给出的 100 个单元、Euler 时间推进和 CFL 0.1。 这是原讲义在其给定初值、网格和 Courant 数下的比较，条件与本站余弦平方脉冲案例不同。可参考比较方法，不应直接逐点对照两者数值或据此给出普适排名。<br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module6.pdf 第 157 页（合并讲义 PDF 第 775 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n**验收：**提交同一坐标轴上的三条剖面，列出极值、积分误差、时间步与单元数。解释你选择的格式对当前问题为什么合适，而不是简单写“二阶比一阶好”。\n\n下载包还保留了官方 scalarTransportFoam/pitzDaily，供你把方法移到更复杂的速度场。它的 DT 非零，包含真实扩散，所以不能把全部平滑都归因于迎风格式。先用最小案例区分物理扩散与数值扩散，再分析工程几何，比较会更有解释力。\n\n### 对应案例与练习文件\n\n- [标量输运与扩散案例包](/downloads/courses/v2512-scalar-diffusion.zip)：包内 `exercises/one-dimensional-advection`。运行 Allrun 后查看 comparison.csv；修改 system/fvSchemes 的 div(phi,T)，比较 upwind、linear 与 limitedLinear。compare.py 的坐标与参考对应原始参数，改网格或时刻时也要同步调整。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "数值方法",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 12,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-convection.svg",
+    "cover_url": "/assets/wolf/wolf-advection-scheme-comparison.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "Wolf module6 数值实验；v2512 src/finiteVolume/finiteVolume/divSchemes",
@@ -248,7 +432,24 @@
       "prerequisite": "finite-volume-conservation",
       "duration": "75 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "标量输运与扩散案例包",
+          "url": "/downloads/courses/v2512-scalar-diffusion.zip",
+          "size_bytes": 328196,
+          "sha256": "99969ba25792909a48f4519ff585ab90e9592b970d29b361b5ba4ef14b610930",
+          "kind": "case",
+          "verification": "两个 FoamLab 一维案例已在 v2512 完成 blockMesh、完整 checkMesh 和指定终点求解，包内含日志与解析比较；官方 pitzDaily/flange 本轮未运行。",
+          "description": "解压后进入 v2512-scalar-diffusion/exercises/one-dimensional-advection。运行 Allrun 后查看 comparison.csv；修改 system/fvSchemes 的 div(phi,T)，比较 upwind、linear 与 limitedLinear。compare.py 的坐标与参考对应原始参数，改网格或时刻时也要同步调整。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-advection-scheme-comparison",
+        "wolf-advection-profile-errors"
+      ]
     }
   },
   {
@@ -256,12 +457,12 @@
     "kind": "lesson",
     "title": "13 · 扩散项、梯度重建与界面通量",
     "summary": "用一维导热的线性解建立检查基准，再理解非正交修正与材料交界处的连续热流。",
-    "body": "对无源、常导热系数的一维稳态导热问题，控制方程为 $d^2T/dx^2=0$。两端温度给定时，解析解是直线：\n\n\\[\nT(x)=T_0+(T_L-T_0)\\frac{x}{L},\\qquad\nq''=-k\\frac{T_L-T_0}{L}.\n\\]\n\n取 $T_0=400\\,\\mathrm{K}$、$T_L=300\\,\\mathrm{K}$、$L=0.1\\,\\mathrm{m}$、$k=10\\,\\mathrm{W/(m\\,K)}$，热流密度沿正 $x$ 方向为 $10000\\,\\mathrm{W/m^2}$。正负号来自 Fourier 定律，而不是色标高低。\n\n![一维导热的解析温度分布](/assets/diagrams/core-diffusion.svg)\n\n### 两种误差应分开处理\n\n单元中心值需要插值到面上，梯度还需要投影到面法向。正交网格中中心连线与面法向一致，表达较简单；非正交网格需要附加修正。字典中的 `gradSchemes`、`laplacianSchemes` 与 `snGradSchemes` 分别控制相关算子的不同环节。\n\n```foam\ngradSchemes\n{\n    default Gauss linear;\n}\nlaplacianSchemes\n{\n    default Gauss linear corrected;\n}\nsnGradSchemes\n{\n    default corrected;\n}\n```\n\n这是非正交教学设置片段。不能因为单次计算稳定就认为修正误差可忽略；应同时检查网格与网格细化趋势。\n\n### 材料交界不能只比较温度图是否平滑\n\n两种材料串联时，稳态热流取决于总热阻\n\n\\[\nq''=\\frac{T_0-T_L}{L_1/k_1+L_2/k_2}.\n\\]\n\n温度在两种材料内部各自线性，斜率通常不同。若无接触热阻，界面温度连续、热流连续；导热系数跳变时，用简单算术平均代替合适的面导热处理可能导致错误通量。\n\n练习分两步：先在均匀网格检验常系数线性解，再处理两材料并检查界面两侧热流。`laplacianFoam` 的温度扩散示例使用的扩散参数与完整能量方程中的导热系数不是同一个量，应根据方程中是否已除以 $\\rho c_p$ 检查单位。",
+    "body": "扩散项描述由空间梯度驱动的输运。最容易核对的例子是一根均匀材料杆：两端温度固定、内部没有热源时，稳态温度应沿长度线性变化。先用这个答案明确的案例检查离散与边界，再增加非正交网格或材料交界；否则很难判断误差来自哪一环。\n\n对无源、常导热系数的一维稳态导热问题，控制方程为 $d^2T/dx^2=0$。两端温度给定时，解析解是直线：\n\n\\[\nT(x)=T_0+(T_L-T_0)\\frac{x}{L},\\qquad\nq''=-k\\frac{T_L-T_0}{L}.\n\\]\n\n取 $T_0=400\\,\\mathrm{K}$、$T_L=300\\,\\mathrm{K}$、$L=0.1\\,\\mathrm{m}$、$k=10\\,\\mathrm{W/(m\\,K)}$，热流密度沿正 $x$ 方向为 $10000\\,\\mathrm{W/m^2}$。正负号来自 Fourier 定律，而不是色标高低。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-diffusion-nonorthogonal-correction.png\" alt=\"扩散通量的非正交分解\" loading=\"lazy\"><figcaption><strong>扩散通量的非正交分解。</strong>面积向量被分解为与单元中心连线相关的分量和修正分量。图中的分解用于解释修正项的几何来源；实际离散选择和限制方式应对照 v2512 的 laplacian 与 snGrad 设置。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module6.pdf 第 30 页（合并讲义 PDF 第 648 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n### 两种误差应分开处理\n\n先看我们需要什么：求热流必须知道面上的温度梯度，而未知温度通常存储在单元中心。从中心到面，要进行插值；从三维梯度到穿过面的通量，要取法向分量。网格几何不理想时，这两步都会引入误差。因此不能只改一个 laplacianSchemes 条目，而完全忽略梯度重建和面法向修正。\n\n单元中心值需要插值到面上，梯度还需要投影到面法向。正交网格中中心连线与面法向一致，表达较简单；非正交网格需要附加修正。字典中的 `gradSchemes`、`laplacianSchemes` 与 `snGradSchemes` 分别控制相关算子的不同环节。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-mesh-nonorthogonality.png\" alt=\"非正交角的几何定义\" loading=\"lazy\"><figcaption><strong>非正交角的几何定义。</strong>单元中心连线 d 与公共面的面积法向 S 不平行时，需要检查非正交误差及相应的离散修正。图中的 P、N 是相邻单元中心，f 是公共面中心；夹角不是网格能否使用的唯一判据。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 16 页（合并讲义 PDF 第 338 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n```foam\ngradSchemes\n{\n    default Gauss linear;\n}\nlaplacianSchemes\n{\n    default Gauss linear corrected;\n}\nsnGradSchemes\n{\n    default corrected;\n}\n```\n\n这是非正交教学设置片段。不能因为单次计算稳定就认为修正误差可忽略；应同时检查网格与网格细化趋势。\n\n### 材料交界不能只比较温度图是否平滑\n\n本轮已用 v2512 完成该 40 单元稳态案例：blockMesh 与完整 checkMesh 通过，PCG+DIC 求解正常结束；在输出精度 12 位的 ASCII 数据上，40 个单元中心温度与解析直线的比较误差为零。这个结果只覆盖均匀正交、常系数和固定端温设置，不说明一般扩散问题没有离散误差。日志、输入哈希与 comparison.csv 已放入包内 verification。\n\n下载的一维最小案例采用 steadyState 时间格式，目的是直接求线性稳态解；输出目录名 1 在这里不是已经真实演化了 1 s。先将 comparison.csv 中的单元中心温度与解析直线对照，检查两端边界和斜率，再用给定导热系数计算热流方向。包内这份最小输入只有一种材料；下面两材料问题是后续扩展，不能把单材料的通过结果作为界面处理已经验证的证据。\n\n两种材料串联时，稳态热流取决于总热阻\n\n\\[\nq''=\\frac{T_0-T_L}{L_1/k_1+L_2/k_2}.\n\\]\n\n温度在两种材料内部各自线性，斜率通常不同。若无接触热阻，界面温度连续、热流连续；导热系数跳变时，用简单算术平均代替合适的面导热处理可能导致错误通量。\n\n练习分两步：先在均匀网格检验常系数线性解，再处理两材料并检查界面两侧热流。`laplacianFoam` 的温度扩散示例使用的扩散参数与完整能量方程中的导热系数不是同一个量，应根据方程中是否已除以 $\\rho c_p$ 检查单位。\n\n### 对应案例与练习文件\n\n- [标量输运与扩散案例包](/downloads/courses/v2512-scalar-diffusion.zip)：包内 `exercises/one-dimensional-diffusion`。40 个单元、左 400 K、右 300 K、长度 0.1 m。运行 Allrun 并读取 comparison.csv，逐点对照线性解；官方 flange 示例另在 tutorials/basic/laplacianFoam/flange。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "数值方法",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 13,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-diffusion.svg",
+    "cover_url": "/assets/wolf/wolf-diffusion-nonorthogonal-correction.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "Wolf module6、101FVM/laplace；v2512 laplacianFoam 与 finiteVolume 梯度算子",
@@ -269,7 +470,26 @@
       "prerequisite": "finite-volume-conservation",
       "duration": "70 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "标量输运与扩散案例包",
+          "url": "/downloads/courses/v2512-scalar-diffusion.zip",
+          "size_bytes": 328196,
+          "sha256": "99969ba25792909a48f4519ff585ab90e9592b970d29b361b5ba4ef14b610930",
+          "kind": "case",
+          "verification": "两个 FoamLab 一维案例已在 v2512 完成 blockMesh、完整 checkMesh 和指定终点求解，包内含日志与解析比较；官方 pitzDaily/flange 本轮未运行。",
+          "description": "解压后进入 v2512-scalar-diffusion/exercises/one-dimensional-diffusion。40 个单元、左 400 K、右 300 K、长度 0.1 m。运行 Allrun 并读取 comparison.csv，逐点对照线性解；官方 flange 示例另在 tutorials/basic/laplacianFoam/flange。"
+        }
+      ],
+      "topics": [
+        "meshing"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-diffusion-nonorthogonal-correction",
+        "wolf-mesh-nonorthogonality"
+      ]
     }
   },
   {
@@ -277,7 +497,7 @@
     "kind": "lesson",
     "title": "14 · 时间离散、Courant 数与瞬态分辨率",
     "summary": "区分稳定性和时间精度，以固定空间网格的时间步研究检验真实瞬态。",
-    "body": "Courant 数将一个时间步内的信息输运距离与网格尺度联系起来。一维均匀网格上的直观定义是\n\n\\[\nCo=\\frac{|u|\\Delta t}{\\Delta x}.\n\\]\n\n一般有限体积网格常通过每个单元面通量的绝对值和构造相应度量。平均 Co 很小并不保证局部最大 Co 很小，特别是在小单元、窄缝和高速区。\n\n![Courant 数的几何意义](/assets/diagrams/core-courant.svg)\n\n对方腔 $\\Delta x=0.005\\,\\mathrm{m}$，取速度尺度 $1\\,\\mathrm{m/s}$ 和 $\\Delta t=0.005\\,\\mathrm{s}$，简单尺度估计给出 $Co\\sim1$。求解器日志中的实际统计基于网格和面通量，不必与这个手算估计完全相同。\n\n```foam\nddtSchemes\n{\n    default Euler;\n}\n```\n\nOpenFOAM 的 `Euler` 表示其对应的一阶隐式时间离散，不能与所有教科书里的显式 Forward Euler 混为一谈。`backward` 使用多时间层的后向差分形式；`CrankNicolson` 的具体偏心参数和历史层处理应查 v2512 实现与教程。\n\n### 隐式不等于可以任意放大时间步\n\n隐式处理可以改变稳定性约束，但时间精度仍受分辨率限制。若涡脱落周期只有几个时间步，平均速度看起来合理也不能证明振动频率、相位和峰值正确。多相界面与声学问题还可能有额外的时间尺度。\n\n对支持自动步长的求解器，可在相应算例使用类似设置：\n\n```foam\nadjustTimeStep yes;\nmaxCo          0.5;\nmaxDeltaT      0.001;\n```\n\n这不是所有求解器的通用开关。是否读取这些条目，应查求解器源码、完整教程及运行日志；给不支持它们的程序加字典键不会自动启用控制。\n\n**时间步研究：**固定网格、物性和格式，分别使用 $\\Delta t$、$\\Delta t/2$、$\\Delta t/4$，在相同物理时间采样。比较峰值、周期、均值与计算量。若同时细化网格，应将它作为另一组实验，否则无法区分空间误差和时间误差。",
+    "body": "选择时间步前，可以先问：在这一步内，流动信息大约走过多少个单元？Courant 数把速度、单元尺度和时间步联系起来，帮助识别那些变化太快而未被充分分辨的位置。它是一项局部数值尺度检查，不是所有物理过程精度的通用证明。\n\n\\[\nCo=\\frac{|u|\\Delta t}{\\Delta x}.\n\\]\n\n一般有限体积网格常通过每个单元面通量的绝对值和构造相应度量。平均 Co 很小并不保证局部最大 Co 很小，特别是在小单元、窄缝和高速区。\n\n![Courant 数的几何意义](/assets/diagrams/core-courant.svg)\n\n对方腔 $\\Delta x=0.005\\,\\mathrm{m}$，取速度尺度 $1\\,\\mathrm{m/s}$ 和 $\\Delta t=0.005\\,\\mathrm{s}$，简单尺度估计给出 $Co\\sim1$。求解器日志中的实际统计基于网格和面通量，不必与这个手算估计完全相同。\n\n```foam\nddtSchemes\n{\n    default Euler;\n}\n```\n\nOpenFOAM 的 `Euler` 表示其对应的一阶隐式时间离散，不能与所有教科书里的显式 Forward Euler 混为一谈。`backward` 使用多时间层的后向差分形式；`CrankNicolson` 的具体偏心参数和历史层处理应查 v2512 实现与教程。\n\n时间离散回答的是“怎样由已有时刻估计新的状态”。时间步回答的是“相邻状态隔多远”。把一阶方法换成高阶方法，并不能补回从未解析到的快速变化；同样，减小步长也不会修复一个错误的边界或物理模型。比较方法时，应把时间格式和时间步分别记录，避免把两个因素同时改变。\n\n### 隐式不等于可以任意放大时间步\n\n以一个周期过程为例，若一个周期只保留四个计算状态，即使算法不发散，也很难准确确定峰值位置和相位。方腔启动过程没有必须预先给定的涡脱落周期，但仍可比较相同物理时刻的探针速度和中心线剖面。若改变步长后这些量还明显变化，就不能仅凭日志中 Co 不大而结束时间分辨率研究。\n\n隐式处理可以改变稳定性约束，但时间精度仍受分辨率限制。若涡脱落周期只有几个时间步，平均速度看起来合理也不能证明振动频率、相位和峰值正确。多相界面与声学问题还可能有额外的时间尺度。\n\n对支持自动步长的求解器，可在相应算例使用类似设置：\n\n```foam\nadjustTimeStep yes;\nmaxCo          0.5;\nmaxDeltaT      0.001;\n```\n\n这不是所有求解器的通用开关。是否读取这些条目，应查求解器源码、完整教程及运行日志；给不支持它们的程序加字典键不会自动启用控制。\n\n**时间步研究：**固定网格、物性和格式，分别使用 $\\Delta t$、$\\Delta t/2$、$\\Delta t/4$，在相同物理时间采样。比较峰值、周期、均值与计算量。若同时细化网格，应将它作为另一组实验，否则无法区分空间误差和时间误差。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。分别修改 system/controlDict 的 deltaT，在 system/fvSchemes 中记录 ddtSchemes。输出比较时对齐真实物理时间；icoFoam 不应被假定自动读取所有步长控制键。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "数值方法",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 14,
@@ -290,7 +510,20 @@
       "prerequisite": "advection-schemes-boundedness",
       "duration": "65 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。分别修改 system/controlDict 的 deltaT，在 system/fvSchemes 中记录 ddtSchemes。输出比较时对齐真实物理时间；icoFoam 不应被假定自动读取所有步长控制键。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -298,12 +531,12 @@
     "kind": "lesson",
     "title": "15 · SIMPLE、PISO 与 PIMPLE 的工作过程",
     "summary": "理解压力方程为何出现、速度与通量为何需要校正，避免将迭代次数当作物理精度保证。",
-    "body": "不可压缩流动同时满足动量方程和 $\\nabla\\cdot\\mathbf{u}=0$。直接用旧压力解动量方程，得到的预测速度一般不自动满足连续性；压力校正的作用，是使修正后的面通量满足离散质量守恒。\n\n![压力—速度耦合的校正循环](/assets/diagrams/core-coupling.svg)\n\nSIMPLE 常用于稳态迭代；PISO 在一个时间步内进行压力与速度校正；PIMPLE 将时间步内的外层耦合迭代与压力校正结合。具体控制项和方程重组装位置仍由对应求解器决定。\n\n官方基础 `icoFoam` 方腔使用：\n\n```foam\nPISO\n{\n    nCorrectors 2;\n    nNonOrthogonalCorrectors 0;\n    pRefCell 0;\n    pRefValue 0;\n}\n```\n\n`nCorrectors` 控制该算法中的压力校正；`nNonOrthogonalCorrectors` 对应非正交压力修正循环。正交网格上写零不代表忽略连续性，而是无需额外非正交校正。\n\n对于使用 PIMPLE 的具体求解器，常见结构片段为：\n\n```foam\nPIMPLE\n{\n    nOuterCorrectors 2;\n    nCorrectors 2;\n    nNonOrthogonalCorrectors 0;\n    momentumPredictor yes;\n}\n```\n\n这段用于理解层次，不能直接替换 `icoFoam` 的 `PISO` 来把程序变成 PIMPLE 求解器。算法在 C++ 实现中，字典只提供它读取的参数。\n\n### 怎样判断校正是否足够\n\n检查每步连续性误差、目标量对校正次数的敏感性，以及时间步收敛性。增加外循环可能降低同一时间步的耦合误差，但也增加代价；它不能修复错误边界、极差网格或不适合的物理模型。\n\n稳态求解器中“时间”经常作为迭代计数使用，不能把该目录值直接解释成真实物理秒数。若流动本身具有持续非定常结构，残差不降可能是在提示稳态假设不合适，而不只是需要更小松弛因子。\n\n### 改字典不能增加求解器没有实现的方程\n\nv2512 的 `simpleFoam` 以稳态动量方程配合 SIMPLE 迭代；`pimpleFoam` 包含瞬态项并使用 PIMPLE 控制。二者通过 `createFvOptions.H` 建立源项管理，并在动量方程中调用 `fvOptions(U)`、约束与修正接口。基础 `icoFoam` 没有这套调用：仅在方腔中添加 `constant/fvOptions`，不会自动给它增加源项物理。应选择支持该源项的完整 v2512 求解器或显式修改程序。\n\n同样，Foundation 教程的 `fvModels/fvConstraints` 不能靠改文件名就变成 OpenCFD 的 `fvOptions`。需要同时检查字典层次、C++ 基类与方程中的调用位置，详见[动量源迁移实例](/read/?slug=programming-12)。\n\n练习：画出你正在使用的求解器的三层关系——时间推进、外循环、压力校正。记录每层哪个设置负责控制，并用日志证明程序实际执行了你预期的循环。",
+    "body": "速度决定质量怎样穿过单元面，压力又通过梯度影响速度。计算时若只更新其中一项，两者通常还不协调。SIMPLE、PISO 与 PIMPLE 的目的都是组织这种耦合，使离散动量关系和连续性逐步一致；它们的区别主要体现在什么时候重组方程、做多少层校正以及是否推进真实时间。\n\n不可压缩流动同时满足动量方程和 $\\nabla\\cdot\\mathbf{u}=0$。直接用旧压力解动量方程，得到的预测速度一般不自动满足连续性；压力校正的作用，是使修正后的面通量满足离散质量守恒。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-simple-pressure-coupling.png\" alt=\"SIMPLE 压力—速度迭代流程\" loading=\"lazy\"><figcaption><strong>SIMPLE 压力—速度迭代流程。</strong>流程图连接动量预测、压力校正、通量更新和速度修正，并标明稳态外迭代。图左为原课程代码片段，仅用于关联算法步骤；v2512 的实际文件组织应以对应求解器源码为准。 图用于说明动量预测与压力校正的关系，其中 fvm::ddt(U) 是示意中的瞬态项；v2512 simpleFoam 的稳态 UEqn.H 不包含物理时间导数，迭代目录不代表物理时间推进。<br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module6.pdf 第 90 页（合并讲义 PDF 第 708 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\nSIMPLE 常用于稳态迭代；PISO 在一个时间步内进行压力与速度校正；PIMPLE 将时间步内的外层耦合迭代与压力校正结合。具体控制项和方程重组装位置仍由对应求解器决定。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-piso-pressure-coupling.png\" alt=\"PISO 时间步与压力校正循环\" loading=\"lazy\"><figcaption><strong>PISO 时间步与压力校正循环。</strong>图中区分时间推进、动量预测、压力校正与非正交修正。阅读时先确认哪些循环发生在同一个时间步内，再对照当前求解器的校正次数和残差输出。 图用于解释循环嵌套；v2512 各求解器的具体调用顺序应分别核对。<br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module6.pdf 第 93 页（合并讲义 PDF 第 711 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n官方基础 `icoFoam` 方腔使用：\n\n```foam\nPISO\n{\n    nCorrectors 2;\n    nNonOrthogonalCorrectors 0;\n    pRefCell 0;\n    pRefValue 0;\n}\n```\n\n`nCorrectors` 控制该算法中的压力校正；`nNonOrthogonalCorrectors` 对应非正交压力修正循环。正交网格上写零不代表忽略连续性，而是无需额外非正交校正。\n\n可以沿日志读一次时间步：先找到时间标记，再找速度求解与后续压力求解记录。压力出现多次，不意味着生成了多个独立压力场，而是在同一步里做校正。增加 nCorrectors 主要改变耦合工作量；是否值得增加，要看连续性、目标量与耗时的变化，而不是以日志行数更多作为精度提高的证据。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-pimple-pressure-coupling.png\" alt=\"PIMPLE 外校正与 PISO 内校正\" loading=\"lazy\"><figcaption><strong>PIMPLE 外校正与 PISO 内校正。</strong>PIMPLE 图板将外校正循环与压力内校正放在同一时间步中。应结合时间步长、非线性耦合和收敛检查理解循环用途，不能用增加迭代次数代替时间精度检验。 图用于解释校正循环；具体循环条件、模型更新位置及关键字以 v2512 对应实现为准。<br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module6.pdf 第 96 页（合并讲义 PDF 第 714 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n对于使用 PIMPLE 的具体求解器，常见结构片段为：\n\n```foam\nPIMPLE\n{\n    nOuterCorrectors 2;\n    nCorrectors 2;\n    nNonOrthogonalCorrectors 0;\n    momentumPredictor yes;\n}\n```\n\n这段用于理解层次，不能直接替换 `icoFoam` 的 `PISO` 来把程序变成 PIMPLE 求解器。算法在 C++ 实现中，字典只提供它读取的参数。\n\n### 怎样判断校正是否足够\n\n用两个完整官方案例建立对照最直接：方腔 controlDict 选择 icoFoam，fvSolution 中读取 PISO；pitzDaily 选择 simpleFoam，读取 SIMPLE。先确认求解器实际支持的算法，再改对应子字典。上面的 PIMPLE 片段用于解释外层与内层的关系；若要实际运行它，应选择 pimpleFoam 的完整输入，而不是把方腔字典的标题换个名字。\n\n检查每步连续性误差、目标量对校正次数的敏感性，以及时间步收敛性。增加外循环可能降低同一时间步的耦合误差，但也增加代价；它不能修复错误边界、极差网格或不适合的物理模型。\n\n稳态求解器中“时间”经常作为迭代计数使用，不能把该目录值直接解释成真实物理秒数。若流动本身具有持续非定常结构，残差不降可能是在提示稳态假设不合适，而不只是需要更小松弛因子。\n\n### 改字典不能增加求解器没有实现的方程\n\nv2512 的 `simpleFoam` 以稳态动量方程配合 SIMPLE 迭代；`pimpleFoam` 包含瞬态项并使用 PIMPLE 控制。二者通过 `createFvOptions.H` 建立源项管理，并在动量方程中调用 `fvOptions(U)`、约束与修正接口。基础 `icoFoam` 没有这套调用：仅在方腔中添加 `constant/fvOptions`，不会自动给它增加源项物理。应选择支持该源项的完整 v2512 求解器或显式修改程序。\n\n在 v2512 中配置 `fvOptions` 时，需要同时检查字典层次、源项作用的场和方程中的调用位置。可继续阅读[动量源实现实例](/read/?slug=programming-12)，将字典条目与实际代码联系起来。\n\n练习：画出你正在使用的求解器的三层关系——时间推进、外循环、压力校正。记录每层哪个设置负责控制，并用日志证明程序实际执行了你预期的循环。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。阅读 system/fvSolution 的 PISO，结合 log.icoFoam 标出每步的速度、压力校正。\n\n- [网格划分与 RANS案例包](/downloads/courses/v2512-meshing-rans.zip)：包内 `tutorials/incompressible/simpleFoam/pitzDaily`。对照 system/controlDict 与 system/fvSolution 中的稳态 SIMPLE 设置。目录中的迭代标记不能直接解释为瞬态流动秒数。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "数值方法",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 15,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-coupling.svg",
+    "cover_url": "/assets/wolf/wolf-simple-pressure-coupling.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "Wolf module6 pressure-velocity coupling；v2512 icoFoam、pimpleFoam 与 solutionControl",
@@ -311,7 +544,36 @@
       "prerequisite": "time-discretisation-courant",
       "duration": "75 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。阅读 system/fvSolution 的 PISO，结合 log.icoFoam 标出每步的速度、压力校正。"
+        },
+        {
+          "label": "网格划分与 RANS案例包",
+          "url": "/downloads/courses/v2512-meshing-rans.zip",
+          "size_bytes": 3784678,
+          "sha256": "68b34bdf42765cedf0c47b769943a120e87c2e6965948d8402abac21a399a3e0",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-meshing-rans/tutorials/incompressible/simpleFoam/pitzDaily。对照 system/controlDict 与 system/fvSolution 中的稳态 SIMPLE 设置。目录中的迭代标记不能直接解释为瞬态流动秒数。"
+        }
+      ],
+      "topics": [
+        "turbulence"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-simple-pressure-coupling",
+        "wolf-piso-pressure-coupling",
+        "wolf-pimple-pressure-coupling"
+      ]
     }
   },
   {
@@ -319,7 +581,7 @@
     "kind": "lesson",
     "title": "16 · 线性求解器、残差与收敛判据",
     "summary": "解释 tolerance、relTol、pFinal 和初始、最终残差，区分代数求解误差、非线性迭代误差与离散误差。",
-    "body": "离散后得到 $A\\mathbf{x}=\\mathbf{b}$。给定当前近似解，代数残差为 $\\mathbf{r}=\\mathbf{b}-A\\mathbf{x}$。求解器打印的残差通常经过归一化，不能将数值 $10^{-6}$ 直接解释为速度误差 $10^{-6}\\,\\mathrm{m/s}$。\n\n![残差与物理监测量可能不同步](/assets/diagrams/core-residual.svg)\n\n官方方腔压力设置为：\n\n```foam\nsolvers\n{\n    p\n    {\n        solver PCG;\n        preconditioner DIC;\n        tolerance 1e-06;\n        relTol 0.05;\n    }\n    pFinal\n    {\n        $p;\n        relTol 0;\n    }\n    U\n    {\n        solver smoothSolver;\n        smoother symGaussSeidel;\n        tolerance 1e-05;\n        relTol 0;\n    }\n}\n```\n\n`tolerance` 是对应归一化残差的绝对停止阈值；`relTol` 相对于该次线性求解的初始残差。满足停止条件之一时可结束，另有最大迭代数等控制。`relTol 0` 通常用于禁用相对阈值提前退出。`pFinal` 仅在程序选择最终求解设置时使用，不是一个新的压力场。\n\n### 选择算法要先看矩阵性质\n\nPCG 面向适用的对称正定系统；加入不同物理、边界或耦合后，不应只因一个压力案例可用就套到任意方程。对流项可能形成非对称矩阵，应选择支持相应性质的求解方法。GAMG 利用多层次消除不同尺度误差，但其性能也与网格、并行分区、平滑器及粗网格配置有关。\n\n线性残差低只说明当前线性系统解得较充分。外迭代系数仍可能变化，连续性可能尚未满足，网格误差也可能很大。因此至少保留三类证据：残差历史；质量或其他守恒收支；压降、力或平均温度等目标量的历史。\n\n### 在运行时保存解算信息\n\nv2512 主线使用 `solverInfo` 函数对象保存字段的解算信息，可将以下子对象合并到 `controlDict/functions`：\n\n```foam\nsolverHistory\n{\n    type solverInfo;\n    libs (utilityFunctionObjects);\n    fields (p U);\n    executeControl timeStep;\n    executeInterval 1;\n    writeResidualFields false;\n}\n```\n\n它读取求解过程中产生的信息。v2512 的 `solverInfo` 在 `execute()` 中更新并记录解算信息，`write()` 本身不执行额外操作，因此这里用 `executeControl` 和 `executeInterval` 明确控制记录频率；不要把通用的 `writeInterval` 自动解释为每个函数对象的采样间隔。计算结束后，仅凭最终 `U`、`p` 场无法重建完整历史残差；因此监测应在计算前配置，或者从保留的原始求解日志分析。不应沿用其他分支或旧资料中未经核对的 `type residuals`。\n\n本站已在独立 v2512 方腔副本中执行前三个时间步，确认生成 `postProcessing/solverHistory/0/solverInfo.dat`，其中包含时间、求解器、初始与最终残差、迭代数等列；相同测试也验证了本课程的 `probes` 配置。这项短测确认接口与文件输出，不代表算例已到稳态。\n\n**诊断练习：**在相同算例副本中收紧压力容差一个数量级，比较目标量与总运行时间。若目标量几乎不变而耗时显著增加，说明该指标下代数误差可能已小于其他误差；若变化明显，继续检查耦合与守恒，不能立刻宣称细网格结果正确。",
+    "body": "一次流场计算通常包含许多次线性方程组求解。日志里的 Initial residual 和 Final residual 描述的是其中一次代数求解前后的残差，不直接给出整幅流场距离真实物理解还有多远。先分清“这次方程组解得怎样”和“整个模拟是否可信”，再选择容差与监测量。\n\n离散后得到 $A\\mathbf{x}=\\mathbf{b}$。给定当前近似解，代数残差为 $\\mathbf{r}=\\mathbf{b}-A\\mathbf{x}$。求解器打印的残差通常经过归一化，不能将数值 $10^{-6}$ 直接解释为速度误差 $10^{-6}\\,\\mathrm{m/s}$。\n\n![残差与物理监测量可能不同步](/assets/diagrams/core-residual.svg)\n\n官方方腔压力设置为：\n\n```foam\nsolvers\n{\n    p\n    {\n        solver PCG;\n        preconditioner DIC;\n        tolerance 1e-06;\n        relTol 0.05;\n    }\n    pFinal\n    {\n        $p;\n        relTol 0;\n    }\n    U\n    {\n        solver smoothSolver;\n        smoother symGaussSeidel;\n        tolerance 1e-05;\n        relTol 0;\n    }\n}\n```\n\n`tolerance` 是对应归一化残差的绝对停止阈值；`relTol` 相对于该次线性求解的初始残差。满足停止条件之一时可结束，另有最大迭代数等控制。`relTol 0` 通常用于禁用相对阈值提前退出。`pFinal` 仅在程序选择最终求解设置时使用，不是一个新的压力场。\n\n例如，某次压力求解的初始残差若为 0.01，relTol 为 0.05，则相对条件对应降到 0.0005；它与 tolerance=0.000001 是不同的停止门槛。普通校正可能先满足相对条件，而最终校正使用 relTol 0 后继续追求绝对条件。这个例子解释配置含义，并不表示这些数值能普遍保证某个速度误差。\n\n### 选择算法要先看矩阵性质\n\nPCG 面向适用的对称正定系统；加入不同物理、边界或耦合后，不应只因一个压力案例可用就套到任意方程。对流项可能形成非对称矩阵，应选择支持相应性质的求解方法。GAMG 利用多层次消除不同尺度误差，但其性能也与网格、并行分区、平滑器及粗网格配置有关。\n\n线性残差低只说明当前线性系统解得较充分。外迭代系数仍可能变化，连续性可能尚未满足，网格误差也可能很大。因此至少保留三类证据：残差历史；质量或其他守恒收支；压降、力或平均温度等目标量的历史。\n\n### 在运行时保存解算信息\n\n先决定以后要画什么，再启动计算。如果要观察求解过程的残差与迭代数，需要运行时监测或完整日志；如果只留下最终一个时间目录，就只留下了那个状态的场数据。两种数据回答的问题不同。将 solverInfo 与一个物理探针同时记录，可以观察残差降低时，真正关心的速度或压差是否也趋于稳定。\n\nv2512 主线使用 `solverInfo` 函数对象保存字段的解算信息，可将以下子对象合并到 `controlDict/functions`：\n\n```foam\nsolverHistory\n{\n    type solverInfo;\n    libs (utilityFunctionObjects);\n    fields (p U);\n    executeControl timeStep;\n    executeInterval 1;\n    writeResidualFields false;\n}\n```\n\n它读取求解过程中产生的信息。v2512 的 `solverInfo` 在 `execute()` 中更新并记录解算信息，`write()` 本身不执行额外操作，因此这里用 `executeControl` 和 `executeInterval` 明确控制记录频率；不要把通用的 `writeInterval` 自动解释为每个函数对象的采样间隔。计算结束后，仅凭最终 `U`、`p` 场无法重建完整历史残差；因此监测应在计算前配置，或者从保留的原始求解日志分析。本课程使用已核对的 `solverInfo` 配置保存运行过程信息。\n\n本站已在独立 v2512 方腔副本中执行前三个时间步，确认生成 `postProcessing/solverHistory/0/solverInfo.dat`，其中包含时间、求解器、初始与最终残差、迭代数等列；相同测试也验证了本课程的 `probes` 配置。这项短测确认接口与文件输出，不代表算例已到稳态。\n\n**诊断练习：**在相同算例副本中收紧压力容差一个数量级，比较目标量与总运行时间。若目标量几乎不变而耗时显著增加，说明该指标下代数误差可能已小于其他误差；若变化明显，继续检查耦合与守恒，不能立刻宣称细网格结果正确。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。修改 system/fvSolution 的 p/pFinal 容差，并把课文 solverHistory 合并进 system/controlDict 的 functions。保存 solverInfo.dat、完整日志与目标量，不能从最终场补出历史残差。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "数值方法",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 16,
@@ -332,7 +594,20 @@
       "prerequisite": "simple-piso-pimple",
       "duration": "75 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。修改 system/fvSolution 的 p/pFinal 容差，并把课文 solverHistory 合并进 system/controlDict 的 functions。保存 solverInfo.dat、完整日志与目标量，不能从最终场补出历史残差。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -340,7 +615,7 @@
     "kind": "lesson",
     "title": "17 · 松弛、稳定性与发散诊断",
     "summary": "从受控迭代更新理解松弛作用，建立按输入、网格、时间步、离散与算法排序的排错流程。",
-    "body": "迭代求解非线性问题时，一次更新过大可能导致系数与解相互放大。场松弛的直观形式为\n\n\\[\n\\phi^{k+1}=\\phi^k+\\alpha\\bigl(\\phi^{*}-\\phi^k\\bigr),\n\\qquad 0<\\alpha\\le1.\n\\]\n\n$\\phi^*$ 是本次计算得到的候选更新。较小的 $\\alpha$ 减少单次变化，通常提高迭代稳定性，但也可能拖慢收敛。方程松弛通过修改代数系统实现，不应与场松弛当作完全相同的操作。\n\n![残差和目标量要联合观察](/assets/diagrams/core-residual.svg)\n\n常见稳态算例片段如下，具体场名依求解器与模型而定：\n\n```foam\nrelaxationFactors\n{\n    fields\n    {\n        p 0.3;\n    }\n    equations\n    {\n        U 0.7;\n        \"(k|omega)\" 0.7;\n    }\n}\n```\n\n这组数字只是教学起点，不是任何问题的推荐最优值。正则键必须匹配真实场名。实际求解器还要在相应位置调用松弛，字典才能发挥作用。\n\n### 发散时先寻找第一个异常\n\n按照因果关系检查：几何单位与物性量纲是否正确；入口流量与出口/压力约束是否矛盾；网格是否有负体积或关键区域坏单元；起始条件是否造成极端梯度；局部 Courant 数或源项时间尺度是否过大；对流与扩散格式是否适合；最后再调整线性容差、耦合次数和松弛。\n\n`Floating point exception` 通常只是最后的失败表现。更有价值的是失败前第一个不合理的温度、密度、湍流变量、连续性误差或 Courant 数。保留完整日志比只截最后五行更有效。\n\n建立一个最小变更实验：复制算例、一次只改变一个设置，记录“原值、新值、假设、观测结果”。不要同时换网格、换湍流模型和换全部离散格式，再把成功归因于其中某一项。\n\n**验收：**提交一份真实或受控故障的诊断表，说明最先出现的异常是什么、为什么它比最终报错更接近根因，以及你用什么独立结果确认修复有效。",
+    "body": "面对发散，最容易做的事是把所有松弛因子调小，但这常常没有回答问题为什么发生。松弛控制的是迭代更新幅度：它可以帮助某些非线性迭代平稳推进，却不能纠正几何单位、相互矛盾的边界或错误物性。本课把松弛放在诊断流程中理解，而不是把一组系数当成通用修复方案。\n\n\\[\n\\phi^{k+1}=\\phi^k+\\alpha\\bigl(\\phi^{*}-\\phi^k\\bigr),\n\\qquad 0<\\alpha\\le1.\n\\]\n\n$\\phi^*$ 是本次计算得到的候选更新。较小的 $\\alpha$ 减少单次变化，通常提高迭代稳定性，但也可能拖慢收敛。方程松弛通过修改代数系统实现，不应与场松弛当作完全相同的操作。\n\n![残差和目标量要联合观察](/assets/diagrams/core-residual.svg)\n\n常见稳态算例片段如下，具体场名依求解器与模型而定：\n\n```foam\nrelaxationFactors\n{\n    fields\n    {\n        p 0.3;\n    }\n    equations\n    {\n        U 0.7;\n        \"(k|omega)\" 0.7;\n    }\n}\n```\n\n这组数字只是教学起点，不是任何问题的推荐最优值。正则键必须匹配真实场名。实际求解器还要在相应位置调用松弛，字典才能发挥作用。\n\n本课下载的 pitzDaily 默认采用 kEpsilon，而示意正则键包含 k 和 omega。若你在这个例子里研究湍流方程松弛，应按原始 fvSolution 的 k、epsilon 等真实字段设置，不能期待 omega 的系数影响一个并不存在的方程。先查模型与场名，再读日志确认迭代变化，这比只看字典保存成功更可靠。\n\n### 发散时先寻找第一个异常\n\n把日志按时间顺序保留，寻找变化开始的那一步：是网格生成就失败，初始密度已不合理，还是某个局部 Co 先急剧升高？最终的浮点异常可能只是后续运算遇到非法值。为一个怀疑建立检验，例如只改时间步、只修一个边界或只替换异常网格，并观察最早的异常是否消失。一次改很多参数会破坏这条因果线索。\n\n按照因果关系检查：几何单位与物性量纲是否正确；入口流量与出口/压力约束是否矛盾；网格是否有负体积或关键区域坏单元；起始条件是否造成极端梯度；局部 Courant 数或源项时间尺度是否过大；对流与扩散格式是否适合；最后再调整线性容差、耦合次数和松弛。\n\n`Floating point exception` 通常只是最后的失败表现。更有价值的是失败前第一个不合理的温度、密度、湍流变量、连续性误差或 Courant 数。保留完整日志比只截最后五行更有效。\n\n建立一个最小变更实验：复制算例、一次只改变一个设置，记录“原值、新值、假设、观测结果”。不要同时换网格、换湍流模型和换全部离散格式，再把成功归因于其中某一项。\n\n**验收：**提交一份真实或受控故障的诊断表，说明最先出现的异常是什么、为什么它比最终报错更接近根因，以及你用什么独立结果确认修复有效。\n\n### 对应案例与练习文件\n\n- [网格划分与 RANS案例包](/downloads/courses/v2512-meshing-rans.zip)：包内 `tutorials/incompressible/simpleFoam/pitzDaily`。使用完整稳态 RANS 算例研究 system/fvSolution 中已有的 relaxationFactors。记录默认模型的真实场名，逐次只改一个设置；方腔仅作为前面日志阅读流程的参照。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "数值方法",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 17,
@@ -353,7 +628,22 @@
       "prerequisite": "linear-solvers-residuals",
       "duration": "60 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "网格划分与 RANS案例包",
+          "url": "/downloads/courses/v2512-meshing-rans.zip",
+          "size_bytes": 3784678,
+          "sha256": "68b34bdf42765cedf0c47b769943a120e87c2e6965948d8402abac21a399a3e0",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-meshing-rans/tutorials/incompressible/simpleFoam/pitzDaily。使用完整稳态 RANS 算例研究 system/fvSolution 中已有的 relaxationFactors。记录默认模型的真实场名，逐次只改一个设置；方腔仅作为前面日志阅读流程的参照。"
+        }
+      ],
+      "topics": [
+        "turbulence"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -361,7 +651,7 @@
     "kind": "lesson",
     "title": "18 · 网格与时间步细化及误差分析",
     "summary": "建立目标量的细化序列，分析观测收敛阶与外推条件，报告网格和时间步变化造成的数值差异。",
-    "body": "网格研究的对象是具体目标量，例如平均压降、壁面力、中心线速度或热流，而不是“整个彩色图看起来差不多”。不同目标量对局部网格的敏感性不同，壁面梯度常比全域平均值更难收敛。\n\n![保持几何不变的系统网格细化](/assets/diagrams/core-refinement.svg)\n\n建立至少三组有规则关联的网格，保持几何、物性、边界、离散格式与相同物理时刻一致。时间步和迭代误差需要控制在不会掩盖空间差别的水平。每组至少记录：单元数、代表尺度、质量指标、目标量、运行时间。\n\n设最细、中等、最粗网格尺度满足 $h_2/h_1=h_3/h_2=r>1$，目标量为 $Q_1,Q_2,Q_3$。在进入渐近区、误差具有单一主导阶且单调收敛等条件下，可估计\n\n\\[\np_\\mathrm{obs}=\\frac{\\ln\\left|\\dfrac{Q_3-Q_2}{Q_2-Q_1}\\right|}{\\ln r},\n\\qquad\nQ_\\mathrm{ext}=Q_1+\\frac{Q_1-Q_2}{r^{p_\\mathrm{obs}}-1}.\n\\]\n\n这不是无条件可用的精度证书。目标量振荡收敛、差值接近舍入误差、网格质量模式变化或未进入渐近区时，简单公式可能失效。\n\n### 一个可复算的算术演示\n\n以下数字是**人为构造的公式演示**，不是 OpenFOAM 计算结果：$Q_1=1.01$、$Q_2=1.04$、$Q_3=1.16$、$r=2$。则差值比为 4，得到 $p_\\mathrm{obs}=2$，外推值为 1.00。演示只说明计算方法。\n\n```python\nfrom math import log\nq1, q2, q3, r = 1.01, 1.04, 1.16, 2.0\np = log(abs((q3-q2)/(q2-q1))) / log(r)\nq_ext = q1 + (q1-q2)/(r**p - 1)\nprint(p, q_ext)\n```\n\n### 方腔练习的合格报告\n\n使用 $20^2$、$40^2$、$80^2$ 个平面单元，分别记录中心线 $u/U_\\mathrm{lid}$、$v/U_\\mathrm{lid}$ 与采样方式。必须先检查运行时间是否足够达到所需状态，并对时间步敏感性做独立研究。本站展示的单张 $20^2$ 方腔图不满足这一完整验证要求。\n\n报告应写出“在当前目标量与测试序列下变化为多少”，避免无条件写“已达到网格无关”。",
+    "body": "做网格研究之前，先说清楚你要收敛的量是什么。中心线速度、壁面力和平均压降对网格的要求并不相同；两幅颜色相似的图，可能仍给出不同的梯度和积分量。本课把“网格更细”转化为可比较的实验序列，再说明什么时候可以讨论误差阶与外推。\n\n![保持几何不变的系统网格细化](/assets/diagrams/core-refinement.svg)\n\n建立至少三组有规则关联的网格，保持几何、物性、边界、离散格式与相同物理时刻一致。时间步和迭代误差需要控制在不会掩盖空间差别的水平。每组至少记录：单元数、代表尺度、质量指标、目标量、运行时间。\n\n方腔可以从同一基础目录复制出 20、40、80 三组平面网格，保持 0.1 m 的边长与相同雷诺数。细化只应改变空间分辨率；若同时改黏度、顶盖速度或停止时间，就在比较不同实验。包内外层 Allrun 还演示映射和高雷诺数变化，因此不能把它自动生成的所有子案例直接排成一组细化序列。\n\n设最细、中等、最粗网格尺度满足 $h_2/h_1=h_3/h_2=r>1$，目标量为 $Q_1,Q_2,Q_3$。在进入渐近区、误差具有单一主导阶且单调收敛等条件下，可估计\n\n\\[\np_\\mathrm{obs}=\\frac{\\ln\\left|\\dfrac{Q_3-Q_2}{Q_2-Q_1}\\right|}{\\ln r},\n\\qquad\nQ_\\mathrm{ext}=Q_1+\\frac{Q_1-Q_2}{r^{p_\\mathrm{obs}}-1}.\n\\]\n\n这不是无条件可用的精度证书。目标量振荡收敛、差值接近舍入误差、网格质量模式变化或未进入渐近区时，简单公式可能失效。\n\n### 一个可复算的算术演示\n\n以下数字是**人为构造的公式演示**，不是 OpenFOAM 计算结果：$Q_1=1.01$、$Q_2=1.04$、$Q_3=1.16$、$r=2$。则差值比为 4，得到 $p_\\mathrm{obs}=2$，外推值为 1.00。演示只说明计算方法。\n\n```python\nfrom math import log\nq1, q2, q3, r = 1.01, 1.04, 1.16, 2.0\np = log(abs((q3-q2)/(q2-q1))) / log(r)\nq_ext = q1 + (q1-q2)/(r**p - 1)\nprint(p, q_ext)\n```\n\n### 方腔练习的合格报告\n\n对于相同物理位置，不同网格未必恰好都有一个中心点落在那里。因此必须统一采样坐标与插值规则，而不是取各自“差不多在中间”的单元编号。若目标量非常接近零，相对误差还可能因分母很小而夸大，应同时报告绝对差或采用明确的参考尺度。先把比较定义清楚，外推公式才有可解释的输入。\n\n使用 $20^2$、$40^2$、$80^2$ 个平面单元，分别记录中心线 $u/U_\\mathrm{lid}$、$v/U_\\mathrm{lid}$ 与采样方式。必须先检查运行时间是否足够达到所需状态，并对时间步敏感性做独立研究。本站展示的单张 $20^2$ 方腔图不满足这一完整验证要求。\n\n报告应写出“在当前目标量与测试序列下变化为多少”，避免无条件写“已达到网格无关”。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。从基础 cavity 手动建立独立 20×20×1、40×40×1、80×80×1 副本，分别保存网格、时间步、采样与日志。不要使用改变了雷诺数的 cavityHighRe 作为细网格点。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "验证与研究方法",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 18,
@@ -374,7 +664,22 @@
       "prerequisite": "linear-solvers-residuals",
       "duration": "80 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。从基础 cavity 手动建立独立 20×20×1、40×40×1、80×80×1 副本，分别保存网格、时间步、采样与日志。不要使用改变了雷诺数的 cavityHighRe 作为细网格点。"
+        }
+      ],
+      "topics": [
+        "meshing"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -382,12 +687,12 @@
     "kind": "lesson",
     "title": "19 · 设计入口、出口、壁面与周期边界",
     "summary": "从物理信息和约束数量出发选择边界条件，处理回流、入口发展段和压力参考。",
-    "body": "边界条件决定模拟的是哪个物理问题。对于一段内流管道，“给定入口速度、出口参考压力”与“给定压差、让流量成为结果”是两种不同实验。不要把所有已知数值都同时设成强制约束。\n\n![沿流向采样并检查入口和出口影响](/assets/diagrams/core-sampling.svg)\n\n对层流充分发展圆管，压降与平均速度满足\n\n\\[\n\\frac{\\Delta p}{L}=\\frac{32\\mu\\bar U}{D^2},\n\\qquad\nu(r)=2\\bar U\\left[1-\\left(\\frac{r}{R}\\right)^2\\right].\n\\]\n\n这里 $\\Delta p$ 是物理压力差，$\\mu$ 是动力黏度。若求解器存储运动学压力，需按该模型的密度约定换算。利用这个关系可以检查边界、单位和压降提取是否一致。\n\n### 常见入口出口组合的含义\n\n指定入口 `fixedValue` 速度，出口采用适合出流的速度条件和参考压力，是常见起点。但如果涡流持续穿过出口，简单零梯度外推可能不合适。应先判断域是否过短，再按实际回流场景选择边界模型。\n\n```foam\n// 标量 C 的可回流出口片段：流出时零梯度，流入时给定 C=0\noutlet\n{\n    type inletOutlet;\n    inletValue uniform 0;\n    value uniform 0;\n}\n```\n\n这是标量字段示例，向量场需使用相应向量值。`inletValue` 指定回流时进入域内的值；`value` 还承担初始化等作用。不同变量不应机械地使用同一类型。\n\n对称边界约束法向速度与相应梯度，只适用于物理上确实可对称的场景。周期边界还涉及成对 patch 的几何映射及场连续关系；不能把两个独立出口改名后就视为周期。\n\n**检查实验：**保持入口流量不变，适度延长出口段并比较观测区压降和速度。如果核心结果显著变化，说明原出口位置或边界正在影响目标区。对充分发展假设，应同时核查入口发展长度与流动状态。",
+    "body": "边界条件可以理解为计算实验的操作方式。若给定入口流量，压降通常是需要求出的响应；若给定两端压差，流量就可能成为响应。把两种实验中的已知量全部同时强制指定，可能过度约束问题。本课先借助有解析关系的管流理解这一点，再用实际入口出口案例检查字典和结果。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-multiphase-ship-boundaries.png\" alt=\"自由液面计算域与边界定义\" loading=\"lazy\"><figcaption><strong>自由液面计算域与边界定义。</strong>原图标出入口、出口、开口、壁面、滑移与对称面，并区分水相和空气区域。它强调几何区域与场边界的对应关系；实际压力和速度条件须根据 v2512 求解器和流动方向确定。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 88 页（合并讲义 PDF 第 961 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n对层流充分发展圆管，压降与平均速度满足\n\n\\[\n\\frac{\\Delta p}{L}=\\frac{32\\mu\\bar U}{D^2},\n\\qquad\nu(r)=2\\bar U\\left[1-\\left(\\frac{r}{R}\\right)^2\\right].\n\\]\n\n这里 $\\Delta p$ 是物理压力差，$\\mu$ 是动力黏度。若求解器存储运动学压力，需按该模型的密度约定换算。利用这个关系可以检查边界、单位和压降提取是否一致。\n\n### 常见入口出口组合的含义\n\n先画出计算域与真实装置的对应关系：入口代表泵后的哪一个截面，出口离回流区多远，侧面是实体壁面还是人为截断的边界。条件类型的选择要服务于这些物理含义。pitzDaily 是带分离与再附着的通道例子，适合检查入口、出口和壁面配合；它并不是充分发展圆管，不能用上面的圆管公式直接计算其压降误差。\n\n指定入口 `fixedValue` 速度，出口采用适合出流的速度条件和参考压力，是常见起点。但如果涡流持续穿过出口，简单零梯度外推可能不合适。应先判断域是否过短，再按实际回流场景选择边界模型。\n\n```foam\n// 标量 C 的可回流出口片段：流出时零梯度，流入时给定 C=0\noutlet\n{\n    type inletOutlet;\n    inletValue uniform 0;\n    value uniform 0;\n}\n```\n\n这是标量字段示例，向量场需使用相应向量值。`inletValue` 指定回流时进入域内的值；`value` 还承担初始化等作用。不同变量不应机械地使用同一类型。\n\n为什么出口需要考虑回流值？因为局部速度一旦指向域内，这个面就在向计算域带入标量，单纯“让它流出去”的解释已不成立。回流温度、湍流量或组分应代表域外环境，而不是随便填一个数来消除报错。若大范围回流源于出口截断了关键涡结构，还需要调整计算域，不能只依赖边界条件补救。\n\n对称边界约束法向速度与相应梯度，只适用于物理上确实可对称的场景。周期边界还涉及成对 patch 的几何映射及场连续关系；不能把两个独立出口改名后就视为周期。\n\n**检查实验：**保持入口流量不变，适度延长出口段并比较观测区压降和速度。如果核心结果显著变化，说明原出口位置或边界正在影响目标区。对充分发展假设，应同时核查入口发展长度与流动状态。\n\n### 对应案例与练习文件\n\n- [网格划分与 RANS案例包](/downloads/courses/v2512-meshing-rans.zip)：包内 `tutorials/incompressible/simpleFoam/pitzDaily`。阅读 0/U、0/p、0/k、0/epsilon 与 system/blockMeshDict，核对入口、出口及壁面名称。这里用于边界组合与域长影响练习，不作为圆管解析解案例。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "物理模型",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 19,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-sampling.svg",
+    "cover_url": "/assets/wolf/wolf-multiphase-ship-boundaries.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "v2512 finiteVolume/fields/fvPatchFields；Wolf module6 边界条件",
@@ -395,7 +700,25 @@
       "prerequisite": "fields-and-boundaries",
       "duration": "70 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "网格划分与 RANS案例包",
+          "url": "/downloads/courses/v2512-meshing-rans.zip",
+          "size_bytes": 3784678,
+          "sha256": "68b34bdf42765cedf0c47b769943a120e87c2e6965948d8402abac21a399a3e0",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-meshing-rans/tutorials/incompressible/simpleFoam/pitzDaily。阅读 0/U、0/p、0/k、0/epsilon 与 system/blockMeshDict，核对入口、出口及壁面名称。这里用于边界组合与域长影响练习，不作为圆管解析解案例。"
+        }
+      ],
+      "topics": [
+        "turbulence"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-multiphase-ship-boundaries"
+      ]
     }
   },
   {
@@ -403,12 +726,12 @@
     "kind": "lesson",
     "title": "20 · 层流、RANS、LES 与模型选择",
     "summary": "通过尺度、目标量和可用分辨率选择建模层次，区分瞬时速度、平均速度与湍流闭合。",
-    "body": "模型选择从目标问题开始：关心平均压降、瞬时载荷、混合时间还是壁面传热？同一个几何，在不同雷诺数、入口扰动和关注尺度下，可能需要不同处理。\n\n![物理模型误差与其他误差的区别](/assets/diagrams/core-uncertainty.svg)\n\n雷诺数比较惯性和黏性作用，但转捩阈值受几何、扰动及边界条件影响。不能用一个管流经验阈值判断所有流动。低雷诺数方腔可以从层流方程学习；工程高雷诺数问题通常需要考虑湍流的多尺度影响。\n\nRANS 将速度分解为平均和脉动，产生 Reynolds 应力等未闭合项；LES 解析较大的涡尺度、建模未解析尺度；DNS 则要求直接解析相关小尺度。**把网格加密一点并不会自动把 RANS 变成 LES，也不会把 LES 变成 DNS。**\n\nv2512 中某些传统求解器使用 `constant/turbulenceProperties`，示意如下：\n\n```foam\nsimulationType RAS;\nRAS\n{\n    RASModel kOmegaSST;\n    turbulence on;\n    printCoeffs on;\n}\n```\n\n这只是相应求解器家族的设置片段。具体模型文件名、可用模型、必需场和物性接口，应从相近 v2512 完整教程确定；不能把其他发行分支的新文件名机械搬入。\n\n### 模型选择必须带着网格计划\n\nRANS 的近壁处理决定第一层网格需求；LES 需要满足空间与时间分辨率、入口扰动和统计收敛要求。瞬态计算运行很久，也可能因为域宽太窄、网格太粗或平均窗口太短而得到错误统计。\n\n建立一张选择表：目标量、主要流动特征、候选模型、需要的输入、网格与时间分辨率、可用验证数据。至少写出一个你明确没有建模的机制，例如转捩、粗糙度或可压缩性，并说明它是否可能影响结论。\n\n**练习：**比较低 Re 方腔、弯管平均压降、绕流瞬态升力三个问题，说明为什么不能只用同一套 `kOmegaSST` 字典解决全部需求。",
+    "body": "选择湍流模型前，先把“想得到什么”写成一个可测量的量。平均压降、瞬态升力和混合时间依赖的流动细节不同，也未必需要同样的计算代价。模型选择不是从菜单中找一个最复杂的名字，而是让物理假设、输入信息、网格与目标量相互匹配。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-turbulence-rans-les-fields.png\" alt=\"RANS 平均场与 LES 瞬时结构\" loading=\"lazy\"><figcaption><strong>RANS 平均场与 LES 瞬时结构。</strong>原讲义的两幅结果图分别展示平均化描述和瞬时流动结构。比较前应区分统计平均与瞬时样本；瞬时图中结构更多并不自动表示整体预测更准确。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 27 页（合并讲义 PDF 第 900 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n雷诺数比较惯性和黏性作用，但转捩阈值受几何、扰动及边界条件影响。不能用一个管流经验阈值判断所有流动。低雷诺数方腔可以从层流方程学习；工程高雷诺数问题通常需要考虑湍流的多尺度影响。\n\nRANS 将速度分解为平均和脉动，产生 Reynolds 应力等未闭合项；LES 解析较大的涡尺度、建模未解析尺度；DNS 则要求直接解析相关小尺度。**把网格加密一点并不会自动把 RANS 变成 LES，也不会把 LES 变成 DNS。**\n\n这里的“未闭合”指的是平均以后出现了新的未知统计量，需要额外模型表达。RANS 给出的平均速度场即使很平滑，也不意味着真实流动没有脉动；LES 的瞬态结构很多，也不意味着所有尺度都已充分解析。先分清模型试图描述的量，再决定什么观测能支持或反驳它。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-turbulence-averaging.png\" alt=\"时均、空间滤波与速度脉动\" loading=\"lazy\"><figcaption><strong>时均、空间滤波与速度脉动。</strong>原图用空间和时间信号说明均值或滤波量与脉动量的分解。RANS 和 LES 中被解析与被建模的部分不同；相同的符号分解不表示两种方法采用同一闭合假设。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 17 页（合并讲义 PDF 第 890 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\nv2512 中某些传统求解器使用 `constant/turbulenceProperties`，示意如下：\n\n```foam\nsimulationType RAS;\nRAS\n{\n    RASModel kOmegaSST;\n    turbulence on;\n    printCoeffs on;\n}\n```\n\n这只是相应求解器家族的设置片段。具体模型文件名、可用模型、必需场和物性接口，应从相近 v2512 完整教程确定；不能把其他发行分支的新文件名机械搬入。\n\n### 模型选择必须带着网格计划\n\n下载包提供两个 RANS 起点：pitzDaily 默认 kEpsilon，motorBike 默认 kOmegaSST。比较时先列出它们各自需要的场，尤其注意 epsilon 与 omega 不是同一个变量。若要在同一几何比较模型，应在独立副本中同时调整模型、必需字段、边界和近壁策略；只改 RASModel 这一行往往会得到缺字段错误或不一致输入。\n\nRANS 的近壁处理决定第一层网格需求；LES 需要满足空间与时间分辨率、入口扰动和统计收敛要求。瞬态计算运行很久，也可能因为域宽太窄、网格太粗或平均窗口太短而得到错误统计。\n\n建立一张选择表：目标量、主要流动特征、候选模型、需要的输入、网格与时间分辨率、可用验证数据。至少写出一个你明确没有建模的机制，例如转捩、粗糙度或可压缩性，并说明它是否可能影响结论。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-turbulence-model-hierarchy.png\" alt=\"RANS、LES 与 DNS 的解析范围\" loading=\"lazy\"><figcaption><strong>RANS、LES 与 DNS 的解析范围。</strong>图板按不同湍流处理方法组织模型，并示意计算成本的变化方向。它是方法层级图；实际成本还取决于网格、时间跨度、雷诺数和实现，不能从图中推导固定的运行时间倍数。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 26 页（合并讲义 PDF 第 899 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n**练习：**比较低 Re 方腔、弯管平均压降、绕流瞬态升力三个问题，说明为什么不能只用同一套 `kOmegaSST` 字典解决全部需求。\n\n### 对应案例与练习文件\n\n- [网格划分与 RANS案例包](/downloads/courses/v2512-meshing-rans.zip)：包内 `tutorials/incompressible/simpleFoam/pitzDaily`。先检查 constant/turbulenceProperties 与 0/k、0/epsilon；再对照同包 motorBike 的 kOmegaSST、0.orig/k、0.orig/omega 和 nut。两者不同几何不能直接归因为模型差异。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "物理模型",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 20,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-uncertainty.svg",
+    "cover_url": "/assets/wolf/wolf-turbulence-rans-les-fields.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "v2512 turbulenceModels 与不可压缩教程；Wolf module8 湍流模型",
@@ -416,7 +739,27 @@
       "prerequisite": "physical-boundary-design",
       "duration": "65 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "网格划分与 RANS案例包",
+          "url": "/downloads/courses/v2512-meshing-rans.zip",
+          "size_bytes": 3784678,
+          "sha256": "68b34bdf42765cedf0c47b769943a120e87c2e6965948d8402abac21a399a3e0",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-meshing-rans/tutorials/incompressible/simpleFoam/pitzDaily。先检查 constant/turbulenceProperties 与 0/k、0/epsilon；再对照同包 motorBike 的 kOmegaSST、0.orig/k、0.orig/omega 和 nut。两者不同几何不能直接归因为模型差异。"
+        }
+      ],
+      "topics": [
+        "turbulence"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-turbulence-rans-les-fields",
+        "wolf-turbulence-averaging",
+        "wolf-turbulence-model-hierarchy"
+      ]
     }
   },
   {
@@ -424,12 +767,12 @@
     "kind": "lesson",
     "title": "21 · 近壁网格、壁面函数与 y⁺",
     "summary": "把首层单元尺寸与摩擦速度联系起来，理解近壁解析和壁面函数策略的差异。",
-    "body": "壁面附近存在很强的速度和温度梯度，通常也是阻力与换热最敏感的区域。只在主流区加密，而保留过粗的首层单元，未必改善壁面目标量。\n\n![壁面法向网格与第一层中心距](/assets/diagrams/core-wall.svg)\n\n常用无量纲距离为\n\n\\[\ny^+=\\frac{u_\\tau y}{\\nu},\\qquad\nu_\\tau=\\sqrt{\\frac{|\\tau_w|}{\\rho}}.\n\\]\n\n这里 $y$ 是壁面到第一层单元中心的距离，不是整个边界层厚度。粗略估算首层高度后，还需要使用初步计算得到的壁面剪切反算实际 $y^+$ 分布。\n\n低雷诺数近壁解析通常需要第一层落在黏性底层附近；采用适用的壁面函数时则需要与其假设一致的壁面距离。具体范围取决于模型、壁面函数和流动状态，不能把“所有场景 $y^+=1$”或“所有场景 $y^+>30$”作为普遍规则。\n\n### 字典是成套设置\n\n使用 `kOmegaSST` 时要同时检查 `k`、`omega`、`nut` 的壁面条件；换模型后只改 `RASModel` 往往不够。下面是官方 `pitzDaily` 中 `k` 壁面条件的形式，数值来自该案例而非通用推荐：\n\n```foam\nupperWall\n{\n    type kqRWallFunction;\n    value uniform 0.375;\n}\n```\n\n对应求解器和模型已正确建立后，可以尝试求解器的后处理模式：\n\n```bash\nsimpleFoam -postProcess -func yPlus -latestTime\n```\n\n`yPlus` 需要湍流/输运模型等运行环境；把它用于仅有 `U`、`p` 的任意目录，未必能构造所需对象。若缺场或缺模型，应先读错误信息并回到完整算例。\n\n### 验收不只写一个平均数\n\n显示整个目标壁面上的 $y^+$ 分布，报告范围及关键区域。分离点、再附着区和曲率变化附近应单独观察；面积平均值可能掩盖局部严重失配。同时记录首层厚度、增长率、总层数和层覆盖率，再比较壁面剪切或热流对网格的敏感性。",
+    "body": "如果关注阻力或换热，最靠近壁面的几个单元往往比远场的大量单元更关键。因为壁面剪切和热流由近壁梯度决定，而这些梯度变化很快。本课把第一层单元位置、湍流模型与壁面条件联系起来，说明为什么“总单元数很多”仍可能不足以解析目标壁面。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-turbulence-wall-law.png\" alt=\"无量纲壁面速度分布与近壁区域\" loading=\"lazy\"><figcaption><strong>无量纲壁面速度分布与近壁区域。</strong>左图以壁面单位表示速度剖面，标出黏性底层、缓冲层、对数层与外层；右图给出物理速度剖面的示意。此图用于理解近壁分辨率与壁面处理的关系，适用假设仍需单独检查。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 21 页（合并讲义 PDF 第 894 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n常用无量纲距离为\n\n\\[\ny^+=\\frac{u_\\tau y}{\\nu},\\qquad\nu_\\tau=\\sqrt{\\frac{|\\tau_w|}{\\rho}}.\n\\]\n\n这里 $y$ 是壁面到第一层单元中心的距离，不是整个边界层厚度。粗略估算首层高度后，还需要使用初步计算得到的壁面剪切反算实际 $y^+$ 分布。\n\n对近似平直、均匀的第一层单元，中心通常位于层厚的约一半处，因此“首层厚度”和公式中的 y 也不应直接混为一谈。壁面剪切本身又是解的一部分，所以设计阶段得到的是估算值。实际计算后需要回到壁面逐点检查，特别是分离、再附着或局部加速使剪切明显变化的位置。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-mesh-wall-alignment.png\" alt=\"近壁单元方向与面值插值\" loading=\"lazy\"><figcaption><strong>近壁单元方向与面值插值。</strong>图板比较近壁规则单元与倾斜三角形单元中的面值插值位置。网格应分辨壁面法向上的强梯度；单元类型本身不能单独决定计算精度，还需检查方向、尺寸和离散误差。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 20 页（合并讲义 PDF 第 342 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n低雷诺数近壁解析通常需要第一层落在黏性底层附近；采用适用的壁面函数时则需要与其假设一致的壁面距离。具体范围取决于模型、壁面函数和流动状态，不能把“所有场景 $y^+=1$”或“所有场景 $y^+>30$”作为普遍规则。\n\n### 字典是成套设置\n\n这里用 kOmegaSST 说明成套配置的原则，下面 k 的片段则取自默认 kEpsilon 的 pitzDaily，不能据此认为该官方算例已经使用 SST。学习时先保持每个完整教程的原始模型和字段，再检查 k、epsilon 或 omega、nut 的壁面含义。之后再做模型更换，才容易判断变化来自哪里。\n\n使用 `kOmegaSST` 时要同时检查 `k`、`omega`、`nut` 的壁面条件；换模型后只改 `RASModel` 往往不够。下面是官方 `pitzDaily` 中 `k` 壁面条件的形式，数值来自该案例而非通用推荐：\n\n```foam\nupperWall\n{\n    type kqRWallFunction;\n    value uniform 0.375;\n}\n```\n\n对应求解器和模型已正确建立后，可以尝试求解器的后处理模式：\n\n```bash\nsimpleFoam -postProcess -func yPlus -latestTime\n```\n\n`yPlus` 需要湍流/输运模型等运行环境；把它用于仅有 `U`、`p` 的任意目录，未必能构造所需对象。若缺场或缺模型，应先读错误信息并回到完整算例。\n\n### 验收不只写一个平均数\n\n后处理的 yPlus 数值要结合所选近壁处理解释。将整个壁面画成分布图，标出你要积分阻力或热流的区域；再查看极值出现在哪里。如果层网格在关键位置中断，即使全壁面平均 yPlus 接近设计值，也可能掩盖局部不足。目标不是追求一个漂亮的平均数，而是让重要区域落在方法适用范围。\n\n显示整个目标壁面上的 $y^+$ 分布，报告范围及关键区域。分离点、再附着区和曲率变化附近应单独观察；面积平均值可能掩盖局部严重失配。同时记录首层厚度、增长率、总层数和层覆盖率，再比较壁面剪切或热流对网格的敏感性。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-turbulence-flatplate-profile.png\" alt=\"平板算例的壁面单位剖面对照\" loading=\"lazy\"><figcaption><strong>平板算例的壁面单位剖面对照。</strong>图中将多个原课程算例的无量纲速度剖面与近壁关系进行对照。纵横轴、图例和对数尺度保留；在自己的 v2512 算例中，应从实际壁面剪切应力和采样位置计算壁面单位。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 47 页（合并讲义 PDF 第 920 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n### 对应案例与练习文件\n\n- [网格划分与 RANS案例包](/downloads/courses/v2512-meshing-rans.zip)：包内 `tutorials/incompressible/simpleFoam/pitzDaily`。先求解完整 pitzDaily，再用相同模型环境执行 yPlus 后处理。网格层构造可对照同包 motorBike 的 addLayersControls；后者使用不同模型，应分别解释。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "物理模型",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 21,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-wall.svg",
+    "cover_url": "/assets/wolf/wolf-turbulence-wall-law.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "v2512 simpleFoam/pitzDaily/0/k 与 yPlus functionObject；Wolf module8",
@@ -437,7 +780,28 @@
       "prerequisite": "laminar-turbulence-model-choice",
       "duration": "65 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "网格划分与 RANS案例包",
+          "url": "/downloads/courses/v2512-meshing-rans.zip",
+          "size_bytes": 3784678,
+          "sha256": "68b34bdf42765cedf0c47b769943a120e87c2e6965948d8402abac21a399a3e0",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-meshing-rans/tutorials/incompressible/simpleFoam/pitzDaily。先求解完整 pitzDaily，再用相同模型环境执行 yPlus 后处理。网格层构造可对照同包 motorBike 的 addLayersControls；后者使用不同模型，应分别解释。"
+        }
+      ],
+      "topics": [
+        "turbulence",
+        "meshing"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-turbulence-wall-law",
+        "wolf-mesh-wall-alignment",
+        "wolf-turbulence-flatplate-profile"
+      ]
     }
   },
   {
@@ -445,12 +809,12 @@
     "kind": "lesson",
     "title": "22 · VOF 两相流：体积分数、初始化与质量守恒",
     "summary": "以溃坝为例解释 alpha.water、setFields、界面压缩和毛细时间尺度，不将界面截图当作定量验证。",
-    "body": "VOF 使用单元内某一相的体积分数 $\\alpha$ 表示界面：$\\alpha=1$ 表示该单元充满该相，$\\alpha=0$ 表示没有该相，介于两者之间表示界面穿过单元。界面并非额外的一层实体薄膜。\n\n![VOF 单元体积分数示意](/assets/diagrams/core-vof.svg)\n\n`interFoam` 的官方溃坝算例位于 `multiphase/interFoam/laminar/damBreak/damBreak`。水相通常使用 `alpha.water`；相名来自案例配置，不能随意写成 `alpha1` 后期待所有 v2512 模型自动识别。\n\n初始化时，`setFields` 根据几何区域覆盖默认场。官方基础溃坝的关键设置是：\n\n```foam\ndefaultFieldValues\n(\n    volScalarFieldValue alpha.water 0\n);\nregions\n(\n    boxToCell\n    {\n        box (0 0 -1) (0.1461 0.292 1);\n        fieldValues\n        (\n            volScalarFieldValue alpha.water 1\n        );\n    }\n);\n```\n\n必须先生成体网格，再初始化场。阅读该教程 `Allrun`，确认是否需要先从 `0.orig` 恢复 `0`；不要缺少初始字段就直接运行 `setFields`。\n\n### 需要同时控制三类行为\n\n第一，输运过程应保持合理的有界性，检查 $\\alpha$ 是否偏离 $[0,1]$。第二，无质量源且边界不交换该相时，应检查其总体积\n\n\\[\nV_\\alpha(t)=\\sum_i\\alpha_i(t)V_i.\n\\]\n\n第三，界面运动、表面张力和重力可能引入不同时间尺度。降低普通流动 Co 不一定充分控制毛细效应；还应核查求解器使用的相分数步进、子循环和相关控制。\n\n界面压缩是数值处理，不是额外的真实物理吸引力。过强压缩与不合适的网格、时间步可能造成锯齿或寄生流。接触角、壁面润湿和表面张力的设置也要与具体物理场景一致。\n\n**溃坝练习：**保存起始水柱截面、多个时刻的 $\\alpha=0.5$ 界面、总体积历史与前沿位置。改变网格和时间步后，用同样提取规则比较前沿轨迹。未经实验和细化研究，不应声称界面形状已被验证。\n\n参考：[v2512 官方 damBreak](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/damBreak/damBreak)。",
+    "body": "水和空气共存时，固定网格中的一个单元可能被水填满、完全没有水，或被界面切过。VOF 用水占该单元体积的比例来描述这三种状态，而不是另外建立一张实体薄膜网格。溃坝案例让我们从一个明确的水柱初值开始，观察界面运动，同时检查体积分数与总体积是否合理。\n\nVOF 使用单元内某一相的体积分数 $\\alpha$ 表示界面：$\\alpha=1$ 表示该单元充满该相，$\\alpha=0$ 表示没有该相，介于两者之间表示界面穿过单元。界面并非额外的一层实体薄膜。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-vof-volume-fraction.png\" alt=\"相分数如何表示网格内的界面\" loading=\"lazy\"><figcaption><strong>相分数如何表示网格内的界面。</strong>单元相分数为 0 或 1 表示单一相占据，介于两者之间的数值表示该单元包含界面。图板同时给出原课程的混合物性示意关系；具体模型中的密度、黏度定义应以所用方程为准。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 78 页（合并讲义 PDF 第 951 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n`interFoam` 的官方溃坝算例位于 `multiphase/interFoam/laminar/damBreak/damBreak`。水相通常使用 `alpha.water`；相名来自案例配置，不能随意写成 `alpha1` 后期待所有 v2512 模型自动识别。\n\n初始化时，`setFields` 根据几何区域覆盖默认场。官方基础溃坝的关键设置是：\n\n```foam\ndefaultFieldValues\n(\n    volScalarFieldValue alpha.water 0\n);\nregions\n(\n    boxToCell\n    {\n        box (0 0 -1) (0.1461 0.292 1);\n        fieldValues\n        (\n            volScalarFieldValue alpha.water 1\n        );\n    }\n);\n```\n\n必须先生成体网格，再初始化场。阅读该教程 `Allrun`，确认是否需要先从 `0.orig` 恢复 `0`；不要缺少初始字段就直接运行 `setFields`。\n\n在这个案例里，0.orig 提供字段结构，setFields 再按网格单元与区域的关系设置水柱。检查时应在求解前就打开初始化后的 alpha.water：水是否位于左下角，尺寸是否与 box 一致，边界是否仍存在？如果初值已经错误，后续看到异常界面时就不应首先修改压缩系数或压力容差。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-multiphase-dambreak-workflow.png\" alt=\"溃坝算例的完整计算流程\" loading=\"lazy\"><figcaption><strong>溃坝算例的完整计算流程。</strong>原图将网格、相分数初始化、两相求解和后处理连接起来。重点是 setFields 对初始液体区域的定义及求解结果的后续采样；该图不要求所有溃坝算例都同时使用两种网格工具。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module1.pdf 第 154 页（合并讲义 PDF 第 163 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n### 需要同时控制三类行为\n\n还要分清速度、压力和重力的配合。interFoam 中的 p_rgh 与常规压力扣除静水贡献有关，不应把方腔 0/p 原文直接搬过来。先在下载例中阅读 g、相物性、0.orig/p_rgh、U 与 alpha.water，再读控制字典。这样能区分“初始水量不对”“受力不对”和“界面输运误差过大”这三类不同原因。\n\n第一，输运过程应保持合理的有界性，检查 $\\alpha$ 是否偏离 $[0,1]$。第二，无质量源且边界不交换该相时，应检查其总体积\n\n\\[\nV_\\alpha(t)=\\sum_i\\alpha_i(t)V_i.\n\\]\n\n第三，界面运动、表面张力和重力可能引入不同时间尺度。降低普通流动 Co 不一定充分控制毛细效应；还应核查求解器使用的相分数步进、子循环和相关控制。\n\n界面压缩是数值处理，不是额外的真实物理吸引力。过强压缩与不合适的网格、时间步可能造成锯齿或寄生流。接触角、壁面润湿和表面张力的设置也要与具体物理场景一致。\n\n总水体积应从 alpha 与单元体积求和，而不是数一数被等值面包住的像素。若水会通过开放边界离开域，还必须计入该边界的水相通量，体积减少本身不一定是守恒错误。对每次比较统一采用相同的等值面阈值、时间与前沿提取规则，否则“前沿更快”可能只是后处理定义不同。\n\n**溃坝练习：**保存起始水柱截面、多个时刻的 $\\alpha=0.5$ 界面、总体积历史与前沿位置。改变网格和时间步后，用同样提取规则比较前沿轨迹。未经实验和细化研究，不应声称界面形状已被验证。\n\n参考：[v2512 官方 damBreak](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/damBreak/damBreak)。\n\n### 对应案例与练习文件\n\n- [VOF 多相流与溃坝案例包](/downloads/courses/v2512-vof-dambreak.zip)：包内 `tutorials/multiphase/interFoam/laminar/damBreak/damBreak`。从内层 Allrun 启动。重点阅读 system/setFieldsDict、controlDict、fvSolution，及 0.orig/alpha.water、p_rgh、constant/transportProperties、g；外层脚本另含细网格并行扩展。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "物理模型",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 22,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-vof.svg",
+    "cover_url": "/assets/wolf/wolf-vof-volume-fraction.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "v2512 interFoam/damBreak；Wolf module8 多相流；OF_material/advanced_physics",
@@ -458,7 +822,26 @@
       "prerequisite": "time-discretisation-courant",
       "duration": "80 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "VOF 多相流与溃坝案例包",
+          "url": "/downloads/courses/v2512-vof-dambreak.zip",
+          "size_bytes": 29283,
+          "sha256": "417d51fa6b5a14a9384bf8292a7008186e73e562541d02df6b14744c4c1db6af",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-vof-dambreak/tutorials/multiphase/interFoam/laminar/damBreak/damBreak。从内层 Allrun 启动。重点阅读 system/setFieldsDict、controlDict、fvSolution，及 0.orig/alpha.water、p_rgh、constant/transportProperties、g；外层脚本另含细网格并行扩展。"
+        }
+      ],
+      "topics": [
+        "multiphase"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-vof-volume-fraction",
+        "wolf-multiphase-dambreak-workflow"
+      ]
     }
   },
   {
@@ -466,7 +849,7 @@
     "kind": "lesson",
     "title": "23 · 传热、多区域耦合与能量收支",
     "summary": "区分温度扩散、流体能量与流固耦合传热，检查区域定义、界面条件和整体热量平衡。",
-    "body": "仅求解温度扩散方程，与求解可压缩流体的能量方程，不是同一个模型。前者可使用热扩散率 $a=k/(\\rho c_p)$；后者还可能包含对流、压缩功、黏性耗散、辐射或相变，具体由求解器决定。\n\n![流体和固体交界的传热约束](/assets/diagrams/core-heat.svg)\n\n对于流固耦合传热，流体区域解流动与能量，固体区域解导热。区域可以使用独立网格和物性，但界面要通过对应边界模型交换信息。在无接触热阻且采用一致法向约定的情形，界面满足温度连续以及两侧热流守恒。\n\n```text\nconstant/\n  regionProperties\n  fluid/   ...区域物性与网格...\n  solid/   ...区域物性与网格...\nsystem/\n  controlDict\n  fluid/fvSchemes\n  fluid/fvSolution\n  solid/fvSchemes\n  solid/fvSolution\n```\n\n这是结构示意，`fluid` 和 `solid` 应替换成案例真正的区域名称。v2512 官方 `chtMultiRegionFoam/multiRegionHeater` 提供完整示例；不要只新建两个同名文件夹，就认为耦合关系自动成立。\n\n### 用热量收支检查结果\n\n稳态时，域内发热量、入口出口携带的焓差、壁面热流和其他模型项应按一致符号平衡。瞬态时还需考虑系统储能率：\n\n\\[\n\\frac{dE}{dt}=\\dot Q_\\mathrm{in}-\\dot Q_\\mathrm{out}+\\dot Q_\\mathrm{source}+\\text{其他能量交换项}.\n\\]\n\n只看最高温度不能判断能量是否守恒。对于给定热流壁面，面积单位错误会直接改变总功率；对于给定功率的体热源，还要确认它是总功率、体积功率密度还是按质量归一化的源项。\n\n### 逐步建立难度\n\n先验证一维固体导热，再加入一个对流流体区，最后考虑复杂材料或辐射。每增加一种模型，都保留一个极限情况检查，例如关闭热源后系统是否趋向预期温度，改变导热系数后温差趋势是否符合热阻模型。\n\n练习报告应包含区域列表、界面对应关系、物性单位、界面两侧温度与热流、整体热量收支。官方案例命令与区域名称见 [v2512 多区域加热器](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionFoam/multiRegionHeater)。",
+    "body": "讨论传热时，先说清楚温度由哪些机制改变。一个静止均匀固体可以只研究导热；流体中还可能有能量对流、压缩作用和模型源项。共轭传热进一步把流体与固体连接起来：不同区域解各自的方程，通过共同界面交换热量。区域文件夹只是组织输入，真正的耦合由接口设置与求解器完成。\n\n仅求解温度扩散方程，与求解可压缩流体的能量方程，不是同一个模型。前者可使用热扩散率 $a=k/(\\rho c_p)$；后者还可能包含对流、压缩功、黏性耗散、辐射或相变，具体由求解器决定。\n\n![流体和固体交界的传热约束](/assets/diagrams/core-heat.svg)\n\n对于流固耦合传热，流体区域解流动与能量，固体区域解导热。区域可以使用独立网格和物性，但界面要通过对应边界模型交换信息。在无接触热阻且采用一致法向约定的情形，界面满足温度连续以及两侧热流守恒。\n\n```text\nconstant/\n  regionProperties\n  fluid/   ...区域物性与网格...\n  solid/   ...区域物性与网格...\nsystem/\n  controlDict\n  fluid/fvSchemes\n  fluid/fvSolution\n  solid/fvSchemes\n  solid/fvSolution\n```\n\n这是结构示意，`fluid` 和 `solid` 应替换成案例真正的区域名称。v2512 官方 `chtMultiRegionFoam/multiRegionHeater` 提供完整示例；不要只新建两个同名文件夹，就认为耦合关系自动成立。\n\n配套 multiRegionHeater 中的真实区域有 bottomWater、topAir、heater、leftSolid 和 rightSolid。先从 regionProperties 列表开始，再追到各区域物性和字段。Allrun.pre 用 cellZones 划分网格并应用区域字典，所以“案例最初没有每个区域的完整时间目录”可能是正常的生成流程；跳过预处理才会使这些输入缺失。\n\n### 用热量收支检查结果\n\n比较界面两侧热流前，先统一法向约定：从流体向固体流出的热量，对固体就是流入，两侧使用各自外法向时符号通常相反。温度相近只是界面检查的一部分，还应看传递的热量是否匹配。整体稳态收支则把所有外边界与源项放在一起，避免只盯一个最高温度而遗漏额外热源或输出面积错误。\n\n稳态时，域内发热量、入口出口携带的焓差、壁面热流和其他模型项应按一致符号平衡。瞬态时还需考虑系统储能率：\n\n\\[\n\\frac{dE}{dt}=\\dot Q_\\mathrm{in}-\\dot Q_\\mathrm{out}+\\dot Q_\\mathrm{source}+\\text{其他能量交换项}.\n\\]\n\n只看最高温度不能判断能量是否守恒。对于给定热流壁面，面积单位错误会直接改变总功率；对于给定功率的体热源，还要确认它是总功率、体积功率密度还是按质量归一化的源项。\n\n### 逐步建立难度\n\n先验证一维固体导热，再加入一个对流流体区，最后考虑复杂材料或辐射。每增加一种模型，都保留一个极限情况检查，例如关闭热源后系统是否趋向预期温度，改变导热系数后温差趋势是否符合热阻模型。\n\n练习报告应包含区域列表、界面对应关系、物性单位、界面两侧温度与热流、整体热量收支。官方案例命令与区域名称见 [v2512 多区域加热器](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionFoam/multiRegionHeater)。\n\n### 对应案例与练习文件\n\n- [多区域共轭传热案例包](/downloads/courses/v2512-conjugate-heat.zip)：包内 `tutorials/heatTransfer/chtMultiRegionFoam/multiRegionHeater`。按 Allrun.pre/Allrun 的顺序建立与计算全部区域。先核对 constant/regionProperties、各区域 thermophysicalProperties 与 system/*/changeDictionaryDict；Windows 可读副本已展开原始相对软链接。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "物理模型",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 23,
@@ -479,7 +862,20 @@
       "prerequisite": "diffusion-gradients-laplacian",
       "duration": "85 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "多区域共轭传热案例包",
+          "url": "/downloads/courses/v2512-conjugate-heat.zip",
+          "size_bytes": 56157,
+          "sha256": "a05f4868b0afd60f0a0f949ca85f46a6f3b5a2faaa7677cb54d027e7f98cadf7",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-conjugate-heat/tutorials/heatTransfer/chtMultiRegionFoam/multiRegionHeater。按 Allrun.pre/Allrun 的顺序建立与计算全部区域。先核对 constant/regionProperties、各区域 thermophysicalProperties 与 system/*/changeDictionaryDict；Windows 可读副本已展开原始相对软链接。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -487,7 +883,7 @@
     "kind": "lesson",
     "title": "24 · 可压缩流动与热物性模型",
     "summary": "理解 Mach 数、状态方程和能量变量，避免将不可压缩压力文件直接用于可压缩求解器。",
-    "body": "可压缩模型允许密度随压力、温度及成分变化。声速 $a$ 与局部速度给出 Mach 数 $Ma=|\\mathbf{u}|/a$，但低 Mach 数也不必然意味着密度恒定：明显温差或不同组分同样可能造成密度变化。\n\n![模型假设应与输入和验证同时检查](/assets/diagrams/core-uncertainty.svg)\n\n理想气体的基本关系为\n\n\\[\np=\\rho R T.\n\\]\n\n这里 $p$ 为绝对物理压力，温度采用 Kelvin，$R$ 为与所选质量基准一致的气体常数。把不可压缩算例中任意参考的运动学压力直接填入热物性模型，会改变密度甚至导致不合理状态。\n\n### thermophysicalProperties 是一组关联选择\n\nv2512 的热物性配置通过热力学类型、混合物、输运模型、热容模型、状态方程与能量变量共同构造模型。以下展示一种常见层次，完整可运行值应从目标求解器的官方案例复制：\n\n```foam\nthermoType\n{\n    type hePsiThermo;\n    mixture pureMixture;\n    transport const;\n    thermo hConst;\n    equationOfState perfectGas;\n    specie specie;\n    energy sensibleEnthalpy;\n}\n```\n\n这段不包含必需的 `mixture` 物性系数，因此不是完整文件。`sensibleEnthalpy` 与 `sensibleInternalEnergy` 不是随意可交换的标签，需要与实际方程和边界条件一致。\n\n声学或压力波问题还要关注声传播的时间与空间分辨率。仅看流速定义的 Co 可能不足以刻画波的数值传播误差。若有激波，应额外关注激波捕捉、振荡与守恒；不能用平滑低速问题的格式选择代替。\n\n**入门练习：**阅读 v2512 `rhoPimpleFoam/laminar/helmholtzResonance`，先列出其压力、温度、密度、能量变量之间的关系。运行前用一个均匀状态手算理想气体密度并与输入模型核对；运行后比较压力波频率和幅值对时间步的敏感性。\n\n参考：[官方 Helmholtz 共振算例](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/compressible/rhoPimpleFoam/laminar/helmholtzResonance)。本页不将该扩展案例标记为本站已完整验证。",
+    "body": "有些流动不能把密度当成常数：压力波会引起压缩与膨胀，明显温差或成分变化也会改变密度。因此，是否使用可压缩模型不能只凭“速度看起来很低”判断。本课先把压力、温度、密度和能量变量的关系理清，再用共振腔案例认识声传播对时间与空间分辨率的要求。\n\n可压缩模型允许密度随压力、温度及成分变化。声速 $a$ 与局部速度给出 Mach 数 $Ma=|\\mathbf{u}|/a$，但低 Mach 数也不必然意味着密度恒定：明显温差或不同组分同样可能造成密度变化。\n\n![模型假设应与输入和验证同时检查](/assets/diagrams/core-uncertainty.svg)\n\n理想气体的基本关系为\n\n\\[\np=\\rho R T.\n\\]\n\n这里 $p$ 为绝对物理压力，温度采用 Kelvin，$R$ 为与所选质量基准一致的气体常数。把不可压缩算例中任意参考的运动学压力直接填入热物性模型，会改变密度甚至导致不合理状态。\n\n### thermophysicalProperties 是一组关联选择\n\n字典中的几项选择共同定义“怎样由状态求密度、热容和输运性质”。例如，同样写 perfectGas，求解的能量可能是焓，也可能是内能；相应热容模型和输入系数必须一致。可以先把每个选择翻译成一个问题：用什么状态方程、使用哪个能量变量、系数是否随温度变化，然后再核对具体数值与单位。\n\nv2512 的热物性配置通过热力学类型、混合物、输运模型、热容模型、状态方程与能量变量共同构造模型。以下展示一种常见层次，完整可运行值应从目标求解器的官方案例复制：\n\n```foam\nthermoType\n{\n    type hePsiThermo;\n    mixture pureMixture;\n    transport const;\n    thermo hConst;\n    equationOfState perfectGas;\n    specie specie;\n    energy sensibleEnthalpy;\n}\n```\n\n这段不包含必需的 `mixture` 物性系数，因此不是完整文件。`sensibleEnthalpy` 与 `sensibleInternalEnergy` 不是随意可交换的标签，需要与实际方程和边界条件一致。\n\n下载的 helmholtzResonance 实际采用 eConst 和 sensibleInternalEnergy，提供 Cv；上面的 hConst 与 sensibleEnthalpy 是另一种常见结构示意。进入实际练习时应保留官方完整热物性输入，不要用这个片段覆盖它。用 molWeight 对应的质量气体常数、输入的绝对压力与 Kelvin 温度手算密度，能很快暴露把运动学压力或摄氏温度误填进去的问题。\n\n声学或压力波问题还要关注声传播的时间与空间分辨率。仅看流速定义的 Co 可能不足以刻画波的数值传播误差。若有激波，应额外关注激波捕捉、振荡与守恒；不能用平滑低速问题的格式选择代替。\n\n这个共振案例分别用完整几何和边界模型表示腔室，因此 Allrun 会创建 resolved、modelled 两个子案例。两者对照的是腔室表示方法；做时间步研究时，还应在每一种表示内部单独细化时间步。读取颈部压力探针时，绝对压力减去参考环境压力得到的波动，与原始绝对压力不是同一个绘图变量。\n\n**入门练习：**阅读 v2512 `rhoPimpleFoam/laminar/helmholtzResonance`，先列出其压力、温度、密度、能量变量之间的关系。运行前用一个均匀状态手算理想气体密度并与输入模型核对；运行后比较压力波频率和幅值对时间步的敏感性。\n\n参考：[官方 Helmholtz 共振算例](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/compressible/rhoPimpleFoam/laminar/helmholtzResonance)。本页不将该扩展案例标记为本站已完整验证。\n\n### 对应案例与练习文件\n\n- [可压缩流动与声学共振案例包](/downloads/courses/v2512-compressible-acoustics.zip)：包内 `tutorials/compressible/rhoPimpleFoam/laminar/helmholtzResonance`。通过 Allrun -test 建立两种几何表示与相对链接，再读取 resolved/modelled 的压力探针。此参数仍执行计算，只跳过 gnuplot；需要 MPI。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "物理模型",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 24,
@@ -500,7 +896,20 @@
       "prerequisite": "heat-and-multiregion",
       "duration": "75 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "可压缩流动与声学共振案例包",
+          "url": "/downloads/courses/v2512-compressible-acoustics.zip",
+          "size_bytes": 30533,
+          "sha256": "0334a1f7ab0359f423bedcfa7d99684079b020b212a164115e0b536e54feed95",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-compressible-acoustics/tutorials/compressible/rhoPimpleFoam/laminar/helmholtzResonance。通过 Allrun -test 建立两种几何表示与相对链接，再读取 resolved/modelled 的压力探针。此参数仍执行计算，只跳过 gnuplot；需要 MPI。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -508,12 +917,12 @@
     "kind": "lesson",
     "title": "25 · 动网格、旋转参考系与 AMI",
     "summary": "区分真实网格运动和参考系建模，理解运动边界、相对通量与网格质量随时间变化。",
-    "body": "转动机械可以采用不同层次的模型。MRF 在选定区域使用旋转参考系描述效应，常用于某些稳态近似；真实滑移网格随时间转动，区域间通过接口交换；Overset 使用重叠网格和插值连接。它们的假设、守恒处理和代价不同。\n\n![运动与耦合仍需保持单元收支一致](/assets/diagrams/core-finite-volume.svg)\n\n网格运动后，对流相对于运动面发生。离散时既要追踪流体速度，又要处理网格面运动对体积和通量的影响。几何守恒不满足时，即使均匀场也可能产生非物理变化。\n\n动网格通常涉及 `constant/dynamicMeshDict`、相应动态网格库、运动求解器与点位移或刚体参数。不同案例使用的网格类型差别很大，因此以完整官方算例建立第一步，比组合不同来源片段可靠。\n\n```bash\n# 先定位 v2512 的完整运动案例，再阅读它的 Allrun 和字典\nls \"$FOAM_TUTORIALS/incompressible/pimpleFoam/laminar/movingCone\"\nfind \"$FOAM_TUTORIALS/incompressible/pimpleFoam/laminar/movingCone\" \\\n  -name dynamicMeshDict -o -name pointDisplacement\n```\n\n这些命令只定位文件，不会执行计算。具体类型和库必须以该案例实际内容为准。\n\n### AMI 接口需要检查什么\n\n接口两侧的几何覆盖、面法向、区域连通性及插值权重都影响结果。网格运动过程中还要观察最差单元质量是否逐渐恶化。起始时刻 `checkMesh` 通过，不代表整个运动周期都有效。\n\n建议按三个层次验收：先只检查运动轨迹和几何，确认位移、角速度和周期正确；再用尽可能简单的场检查运动与通量；最后加入真实流动，并比较质量收支和周期统计。对滑移网格，还需研究角步长与接口分辨率。\n\n用 v2512 `mixerVesselAMI2D` 阅读区域、运动和接口文件，回答“哪里在运动、哪里保持静止、哪两个面交换数据”。不要仅凭渲染中转子在旋转就认为流固运动耦合正确。\n\n参考：[v2512 pimpleFoam 运动案例](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/laminar)。",
+    "body": "描述旋转或移动问题时，先区分“改变参考系”和“让网格真的运动”。MRF 常用于某些稳态旋转近似；滑移网格随时间运动，通过接口交换信息；Overset 用重叠区域和插值连接不同网格。这些方法回答的物理问题与数值代价不同，不能仅凭画面里是否出现转动来判断模型是否合适。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-dynamic-mesh-modes.png\" alt=\"预设运动、液面晃荡与网格变形\" loading=\"lazy\"><figcaption><strong>预设运动、液面晃荡与网格变形。</strong>图板展示液面晃荡、圆柱预设运动、多物体运动及层网格变化的原课程画面。PDF 中嵌入动画已退化为静态帧，仅用于说明网格运动类型，不能从单帧推断完整运动或计算质量。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 146 页（合并讲义 PDF 第 1019 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-dynamic-cylinder-deformation.png\" alt=\"振荡圆柱附近的网格变形\" loading=\"lazy\"><figcaption><strong>振荡圆柱附近的网格变形。</strong>四幅网格画面展示原课程预设圆柱运动示例。观察物体附近与远场网格的变形分布，有助于理解运动边界、固定边界和网格位移的关联；网格质量仍需逐时刻检查。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 164 页（合并讲义 PDF 第 1037 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n网格运动后，对流相对于运动面发生。离散时既要追踪流体速度，又要处理网格面运动对体积和通量的影响。几何守恒不满足时，即使均匀场也可能产生非物理变化。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-dynamic-rotor-zones.png\" alt=\"旋转区域、静止区域与连接界面\" loading=\"lazy\"><figcaption><strong>旋转区域、静止区域与连接界面。</strong>搅拌槽网格图明确区分旋转单元区、静止单元区及区域间的面集合。应先从几何和网格识别区域，再决定采用 MRF 或实际网格运动及相应的接口处理。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 153 页（合并讲义 PDF 第 1026 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-dynamic-mrf-configuration.png\" alt=\"MRF 的旋转区和壁面参考系\" loading=\"lazy\"><figcaption><strong>MRF 的旋转区和壁面参考系。</strong>原图标出转轴、叶轮与旋转内区，并给出原算例的壁面配置位置。图用于分析相对运动和参考系；示例中的角速度及边界类型需结合自己的几何和 v2512 设置重新核对。 图中保留原示例配置标签；v2512 算例的壁面速度设置需结合求解器和运动参考系核对。<br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 154 页（合并讲义 PDF 第 1027 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n动网格通常涉及 `constant/dynamicMeshDict`、相应动态网格库、运动求解器与点位移或刚体参数。不同案例使用的网格类型差别很大，因此以完整官方算例建立第一步，比组合不同来源片段可靠。\n\n先用 movingCone 分清运动输入与流动输入。它实际使用 velocityComponentLaplacian，点运动字段是 pointMotionUx；并不是每个运动案例都包含 pointDisplacement。dynamicMeshDict 选择怎样移动内部网格点，点场边界给出相应运动约束，U 的边界则描述流体与运动边界的速度关系。这几个文件需要一起读。\n\n```bash\n# 定位 v2512 的运动案例，阅读网格运动字典与点运动字段\nls \"$FOAM_TUTORIALS/incompressible/pimpleFoam/laminar/movingCone\"\nfind \"$FOAM_TUTORIALS/incompressible/pimpleFoam/laminar/movingCone\" \\\n  -name dynamicMeshDict -o -name pointMotionUx\n```\n\n这些命令只定位文件，不会执行计算。具体类型和库必须以该案例实际内容为准。\n\n### AMI 接口需要检查什么\n\nAMI 用于连接两侧不必逐面匹配的接口。mixerVesselAMI2D 中可以沿着 topoSet 定义的区域、dynamicMeshDict 中的运动设置和网格边界的 cyclicAMI 配对，回答“谁转动、谁静止、信息通过哪里交换”。几何上有两个圆面并不代表配对已经成立；还要检查邻接关系、方向和有效覆盖。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-dynamic-ami-interface.png\" alt=\"AMI 旋转接口两侧的非共形网格\" loading=\"lazy\"><figcaption><strong>AMI 旋转接口两侧的非共形网格。</strong>图中区分固定区域、旋转区域与两侧接口网格。几何位置相接不意味着面划分一一匹配；应检查覆盖范围、插值权重及运动过程中接口的有效性。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 159 页（合并讲义 PDF 第 1032 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n接口两侧的几何覆盖、面法向、区域连通性及插值权重都影响结果。网格运动过程中还要观察最差单元质量是否逐渐恶化。起始时刻 `checkMesh` 通过，不代表整个运动周期都有效。\n\n建议按三个层次验收：先只检查运动轨迹和几何，确认位移、角速度和周期正确；再用尽可能简单的场检查运动与通量；最后加入真实流动，并比较质量收支和周期统计。对滑移网格，还需研究角步长与接口分辨率。\n\n网格运动还会改变单元体积和面的位置，因此质量通量应与网格运动一致。观察某一时刻的漂亮网格只能说明那个瞬间的外观；至少应在一个有代表性的运动周期内检查最小体积、质量指标、接口覆盖和目标量历史。增加外循环或降低线性容差，不能自动修复运动导致的局部网格塌陷。\n\n用 v2512 `mixerVesselAMI2D` 阅读区域、运动和接口文件，回答“哪里在运动、哪里保持静止、哪两个面交换数据”。不要仅凭渲染中转子在旋转就认为流固运动耦合正确。\n\n参考：[v2512 pimpleFoam 运动案例](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/laminar)。\n\n### 对应案例与练习文件\n\n- [动网格与 AMI案例包](/downloads/courses/v2512-moving-ami.zip)：包内 `tutorials/incompressible/pimpleFoam/laminar/movingCone`。从 constant/dynamicMeshDict、0/pointMotionUx、0/U 追踪移动边界；blockMesh 后使用 pimpleFoam。\n\n- [动网格与 AMI案例包](/downloads/courses/v2512-moving-ami.zip)：包内 `tutorials/incompressible/pimpleFoam/laminar/mixerVesselAMI2D/mixerVesselAMI2D`。同一下载包中的 AMI 练习位置。先读 Allrun.pre 的 m4 与 topoSet，再读 motion 和 cyclicAMI 配置；运行 Allrun 需要 m4、MPI。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "物理模型",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 25,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-finite-volume.svg",
+    "cover_url": "/assets/wolf/wolf-dynamic-cylinder-deformation.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "v2512 pimpleFoam/laminar/movingCone、mixerVesselAMI2D；Wolf 动网格资料仅作主题参考",
@@ -521,7 +930,30 @@
       "prerequisite": "simple-piso-pimple",
       "duration": "80 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "动网格与 AMI案例包",
+          "url": "/downloads/courses/v2512-moving-ami.zip",
+          "size_bytes": 60114,
+          "sha256": "35b057e44861ffa035fe15e87b475cd102060508fe142bdf95a21af901bb8089",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-moving-ami/tutorials/incompressible/pimpleFoam/laminar/movingCone。从 constant/dynamicMeshDict、0/pointMotionUx、0/U 追踪移动边界；blockMesh 后使用 pimpleFoam。 同包另一入口：tutorials/incompressible/pimpleFoam/laminar/mixerVesselAMI2D/mixerVesselAMI2D。同一下载包中的 AMI 练习位置。先读 Allrun.pre 的 m4 与 topoSet，再读 motion 和 cyclicAMI 配置；运行 Allrun 需要 m4、MPI。"
+        }
+      ],
+      "topics": [
+        "dynamic-mesh",
+        "meshing"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-dynamic-cylinder-deformation",
+        "wolf-dynamic-mesh-modes",
+        "wolf-dynamic-rotor-zones",
+        "wolf-dynamic-mrf-configuration",
+        "wolf-dynamic-ami-interface"
+      ]
     }
   },
   {
@@ -529,7 +961,7 @@
     "kind": "lesson",
     "title": "26 · 并行计算：分区、MPI、重构与效率",
     "summary": "完成 decomposePar 到 reconstructPar 的闭环，理解小算例并行变慢、分区负载和浮点次序差异。",
-    "body": "并行计算将网格分给多个进程，每个进程计算局部单元，并与邻接分区交换面数据。增加进程数减少了单个进程的单元数，也增加通信、同步和 I/O 开销，所以速度不会无限线性提升。\n\n![四个进程的域分解示意](/assets/diagrams/core-parallel.svg)\n\n在已经有有效网格的算例中，新建或修改 `system/decomposeParDict`。以下为使用 Scotch 的完整基础字典：\n\n```foam\nFoamFile\n{\n    format ascii;\n    class dictionary;\n    object decomposeParDict;\n}\nnumberOfSubdomains 4;\nmethod scotch;\n```\n\n确认安装含所需分解库，然后在算例副本中执行：\n\n```bash\ndecomposePar > log.decomposePar 2>&1\nmpirun -np 4 icoFoam -parallel > log.icoFoam.parallel 2>&1\nreconstructPar -latestTime > log.reconstructPar 2>&1\n```\n\nMPI 进程数应与分区数一致。这里的 `icoFoam` 只用于方腔示例，其他案例要用自身求解器。若使用集群，应遵守调度器分配的核数和启动方式，不要在登录节点运行大规模任务。\n\n### 并行验证先于性能宣传\n\n比较同一网格、同一设置在串行与并行的中心线数据及积分量。浮点求和次序和分区路径变化可能产生小差异，严格逐位相同并非普遍要求；但显著差异必须排查分区、边界和处理流程。\n\n速度比和效率定义为\n\n\\[\nS_p=\\frac{T_1}{T_p},\\qquad E_p=\\frac{S_p}{p}.\n\\]\n\n记录计时范围：是否包含网格生成、分区、写盘和重构。400 单元方腔主要用来学习流程，通常不适合证明并行效率。对有意义的性能测试，固定问题规模并比较 1、2、4 个进程，说明硬件、MPI 和文件系统。\n\n重构只处理指定时间的数据，不会自动替你判断结果是否完整。重新分区或清理旧 `processor*` 前，应确认哪些时间目录是唯一副本，并先归档需要的结果。",
+    "body": "并行计算把同一张网格拆成几部分，交给多个进程各自计算；分区边界上的信息仍需相互传递。它改变的是计算任务的分配方式，不应该改变你要解的物理问题。因此，本课先练习分区、启动和重构，再比较串行与并行结果，最后才讨论速度提升。\n\n![四个进程的域分解示意](/assets/diagrams/core-parallel.svg)\n\n在已经有有效网格的算例中，新建或修改 `system/decomposeParDict`。以下为使用 Scotch 的完整基础字典：\n\n```foam\nFoamFile\n{\n    format ascii;\n    class dictionary;\n    object decomposeParDict;\n}\nnumberOfSubdomains 4;\nmethod scotch;\n```\n\n确认安装含所需分解库，然后在算例副本中执行：\n\n```bash\ndecomposePar > log.decomposePar 2>&1\nmpirun -np 4 icoFoam -parallel > log.icoFoam.parallel 2>&1\nreconstructPar -latestTime > log.reconstructPar 2>&1\n```\n\nMPI 进程数应与分区数一致。这里的 `icoFoam` 只用于方腔示例，其他案例要用自身求解器。若使用集群，应遵守调度器分配的核数和启动方式，不要在登录节点运行大规模任务。\n\ndecomposePar 把网格与初始字段写进 processor0 等目录，求解器的 -parallel 模式从这些分区读入并交换数据。reconstructPar 再把指定时间的结果组合成便于整体查看的形式。如果求解失败，先看每个处理步骤及并行日志中的最早异常；没有成功求解的分区，不能靠重构命令补出结果。\n\n### 并行验证先于性能宣传\n\n比较时用一份原始输入分别创建串行副本和并行副本，防止第二次计算从第一次残留的时间目录开始。两者应使用同一网格、边界、结束时间与采样规则。方腔只有 400 个单元，通信开销可能超过节省的计算量；即便并行更慢，也不意味着分区流程必然有错，它可能只是问题规模太小。\n\n比较同一网格、同一设置在串行与并行的中心线数据及积分量。浮点求和次序和分区路径变化可能产生小差异，严格逐位相同并非普遍要求；但显著差异必须排查分区、边界和处理流程。\n\n速度比和效率定义为\n\n\\[\nS_p=\\frac{T_1}{T_p},\\qquad E_p=\\frac{S_p}{p}.\n\\]\n\n记录计时范围：是否包含网格生成、分区、写盘和重构。400 单元方腔主要用来学习流程，通常不适合证明并行效率。对有意义的性能测试，固定问题规模并比较 1、2、4 个进程，说明硬件、MPI 和文件系统。\n\n重构只处理指定时间的数据，不会自动替你判断结果是否完整。重新分区或清理旧 `processor*` 前，应确认哪些时间目录是唯一副本，并先归档需要的结果。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。在副本 system/ 中保存本课给出的 decomposeParDict，再按分区—MPI 求解—重构顺序运行。与另一独立副本的串行结果比较。\n\n- [网格划分与 RANS案例包](/downloads/courses/v2512-meshing-rans.zip)：包内 `tutorials/incompressible/simpleFoam/motorBike`。较大问题的并行流程参照：Allrun 使用 decomposeParDict.6，并区分网格生成与求解步骤；本包不提供本轮并行性能结论。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "计算与数据分析",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 26,
@@ -542,7 +974,31 @@
       "prerequisite": "first-cavity-result",
       "duration": "70 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。在副本 system/ 中保存本课给出的 decomposeParDict，再按分区—MPI 求解—重构顺序运行。与另一独立副本的串行结果比较。"
+        },
+        {
+          "label": "网格划分与 RANS案例包",
+          "url": "/downloads/courses/v2512-meshing-rans.zip",
+          "size_bytes": 3784678,
+          "sha256": "68b34bdf42765cedf0c47b769943a120e87c2e6965948d8402abac21a399a3e0",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-meshing-rans/tutorials/incompressible/simpleFoam/motorBike。较大问题的并行流程参照：Allrun 使用 decomposeParDict.6，并区分网格生成与求解步骤；本包不提供本轮并行性能结论。"
+        }
+      ],
+      "topics": [
+        "meshing"
+      ],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -550,12 +1006,12 @@
     "kind": "lesson",
     "title": "27 · 采样、监测与 function objects",
     "summary": "配置点探针、中心线采样、截面积分和时间平均，明确变量、数据位置、单位与统计窗口。",
-    "body": "后处理的第一步是定义观测量。中心线速度用于比较流动剖面，面通量用于质量收支，压降与力用于工程目标。不同观测量需要不同几何区域与平均方式，不能把彩色图上的一个像素当作定量采样。\n\n![线采样与截面采样的位置](/assets/diagrams/core-sampling.svg)\n\n下面的点探针设置可加入 `controlDict` 的 `functions` 子字典，位置对应基础方腔内部：\n\n```foam\nfunctions\n{\n    cavityProbes\n    {\n        type probes;\n        libs (sampling);\n        writeControl timeStep;\n        writeInterval 1;\n        fields (p U);\n        probeLocations\n        (\n            (0.05 0.05 0.005)\n            (0.025 0.05 0.005)\n        );\n    }\n}\n```\n\n如果已有 `functions`，应合并子对象，不要重复建立互相覆盖的同名键。探针位于流体域内，坐标以米为单位。运行后检查 `postProcessing/cavityProbes` 中的文件头、探针位置与时间列。\n\n### 线采样要明确插值规则\n\n`sets` 适合线与点集，`surfaces` 适合截面。使用 `cell` 或其他插值方式可能改变局部曲线，尤其在粗网格与强梯度区。比较不同网格时保持相同物理位置、坐标轴、分量与归一化方式，并记录插值选择。\n\n### 时间平均的窗口有物理含义\n\n瞬态计算开始后的启动阶段不应随意混入统计稳定阶段。时间平均速度定义为\n\n\\[\n\\overline{\\mathbf{u}}=\\frac{1}{T}\\int_{t_0}^{t_0+T}\\mathbf{u}(t)\\,dt.\n\\]\n\n`fieldAverage` 可以在运行时进行场平均。采用变时间步时，要区分按时间加权与按迭代次数平均；二者通常不相同。重启平均时还要明确是否延续已有累计信息。\n\n每个 function object 对所需模型对象、运行模式和输出位置都有要求。不要假定所有对象均可通过通用 `postProcess` 独立重算；部分对象需要对应求解器的 `-postProcess` 或求解过程中执行。\n\n**验收：**为方腔保留两个探针历史和两条中心线曲线，标出分量、单位与采样时刻。对入口出口案例，再给出通量平衡，解释质量通量与体积通量的区别。",
+    "body": "计算之前就应决定以后用什么量回答问题。一个点的速度历史能反映局部随时间的变化，一条中心线能比较空间剖面，一个截面的积分则可能用于流量收支。三者不是同一种信息。先定义观测量、位置、单位和采样频率，再选择 function object，才能避免算完后才发现缺少关键数据。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-multiphase-ship-validation.png\" alt=\"自由液面高度与阻力的观测量\" loading=\"lazy\"><figcaption><strong>自由液面高度与阻力的观测量。</strong>左图比较船体表面的水位分布，右图展示阻力系数随时间变化。它说明结果分析应同时使用空间观测和时间历史；图中数据属于原课程算例，不是本站新运行的 v2512 结果。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 85 页（合并讲义 PDF 第 958 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n下面的点探针设置可加入 `controlDict` 的 `functions` 子字典，位置对应基础方腔内部：\n\n```foam\nfunctions\n{\n    cavityProbes\n    {\n        type probes;\n        libs (sampling);\n        writeControl timeStep;\n        writeInterval 1;\n        fields (p U);\n        probeLocations\n        (\n            (0.05 0.05 0.005)\n            (0.025 0.05 0.005)\n        );\n    }\n}\n```\n\n如果已有 `functions`，应合并子对象，不要重复建立互相覆盖的同名键。探针位于流体域内，坐标以米为单位。运行后检查 `postProcessing/cavityProbes` 中的文件头、探针位置与时间列。\n\n文件头中记录了探针编号与坐标，速度每个采样点包含三个分量，而压力是标量。整理数据时不要把一个向量括号误读成一个数，也不要忽略时间列。固定探针位置后，先检查它确实在域内；若换了几何尺度而沿用旧坐标，数据缺失可能来自点在域外，而不是求解器没有输出。\n\n### 线采样要明确插值规则\n\n`sets` 适合线与点集，`surfaces` 适合截面。使用 `cell` 或其他插值方式可能改变局部曲线，尤其在粗网格与强梯度区。比较不同网格时保持相同物理位置、坐标轴、分量与归一化方式，并记录插值选择。\n\n### 时间平均的窗口有物理含义\n\n平均之前先画原始历史，判断仍处于启动阶段、已趋于稳定，还是存在持续周期或统计波动。对后一类问题，平均窗口应覆盖足够多的代表性变化，且应报告窗口长度。只因为曲线看起来“抖动”，就把全部初始数据一起平均，可能把启动偏差混入想比较的统计量。\n\n瞬态计算开始后的启动阶段不应随意混入统计稳定阶段。时间平均速度定义为\n\n\\[\n\\overline{\\mathbf{u}}=\\frac{1}{T}\\int_{t_0}^{t_0+T}\\mathbf{u}(t)\\,dt.\n\\]\n\n`fieldAverage` 可以在运行时进行场平均。采用变时间步时，要区分按时间加权与按迭代次数平均；二者通常不相同。重启平均时还要明确是否延续已有累计信息。\n\n每个 function object 对所需模型对象、运行模式和输出位置都有要求。不要假定所有对象均可通过通用 `postProcess` 独立重算；部分对象需要对应求解器的 `-postProcess` 或求解过程中执行。\n\n**验收：**为方腔保留两个探针历史和两条中心线曲线，标出分量、单位与采样时刻。对入口出口案例，再给出通量平衡，解释质量通量与体积通量的区别。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。把 cavityProbes 合并到 system/controlDict/functions。求解后读取 postProcessing/cavityProbes，并保持与中心线采样一致的时刻、分量和单位。\n\n- [网格划分与 RANS案例包](/downloads/courses/v2512-meshing-rans.zip)：包内 `tutorials/incompressible/simpleFoam/pitzDaily`。官方 system/streamlines 展示一个完整后处理对象及 includeEtc 模板；有入口出口的流动还应另外定义明确的通量收支。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "计算与数据分析",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 27,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-sampling.svg",
+    "cover_url": "/assets/wolf/wolf-multiphase-ship-validation.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "v2512 src/sampling/probes、functionObjects/field/fieldAverage；Wolf module5 与 supplement3",
@@ -563,7 +1019,32 @@
       "prerequisite": "parallel-decompose-reconstruct",
       "duration": "75 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。把 cavityProbes 合并到 system/controlDict/functions。求解后读取 postProcessing/cavityProbes，并保持与中心线采样一致的时刻、分量和单位。"
+        },
+        {
+          "label": "网格划分与 RANS案例包",
+          "url": "/downloads/courses/v2512-meshing-rans.zip",
+          "size_bytes": 3784678,
+          "sha256": "68b34bdf42765cedf0c47b769943a120e87c2e6965948d8402abac21a399a3e0",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-meshing-rans/tutorials/incompressible/simpleFoam/pitzDaily。官方 system/streamlines 展示一个完整后处理对象及 includeEtc 模板；有入口出口的流动还应另外定义明确的通量收支。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-multiphase-ship-validation"
+      ]
     }
   },
   {
@@ -571,12 +1052,12 @@
     "kind": "lesson",
     "title": "28 · 数值验证、物理确认与不确定性",
     "summary": "区分代码与数值解验证、物理模型确认及不确定性来源，说明各类结论所需的证据和适用条件。",
-    "body": "程序正常结束、线性残差降低、彩色图平滑，分别说明了某一层面的情况，却都不能独立证明预测可信。研究报告应将数值实现、数值解和物理模型的证据分开。\n\n![离散、模型、输入和实验的不确定性来源](/assets/diagrams/core-uncertainty.svg)\n\n代码验证关注实现是否正确，例如解析解、制造解或严格单元问题；解的数值验证关注当前计算中的网格、时间步和迭代误差；物理确认关注模型预测与相应实验或观测是否一致。不同中文资料对 verification/validation 的译名可能不同，因此报告中应明确你使用的定义。\n\n### 三个层次的实例\n\n一维常系数导热能检验离散与边界处理。方腔网格细化能检验数值解对分辨率的敏感性。实验管路压降对比则还涉及入口发展、壁面粗糙度、传感器精度和物性温度依赖。不能用第一个测试通过来替代后两项。\n\n计算和实验都可能有不确定性。若将彼此独立、同一覆盖含义下的标准不确定度作近似组合，常见形式为\n\n\\[\nu_c=\\sqrt{u_1^2+u_2^2+\\cdots+u_n^2}.\n\\]\n\n相关输入需考虑协方差；系统偏差不能不加说明地塞入独立随机误差。离散误差估计也未必服从相同的统计解释，应清楚写出处理方法和限制。\n\n### 面向初学者的最小证据表\n\n| 证据 | 最少记录 | 主要排除的问题 |\n| --- | --- | --- |\n| 版本与输入 | 分支、构建、物性、边界、几何 | 用错程序或物理问题 |\n| 网格与时间 | 质量、细化序列、时间步比较 | 分辨率不足 |\n| 数值迭代 | 残差、守恒、目标量历史 | 解算未充分收敛 |\n| 物理参照 | 解析、实验或可信基准及条件 | 模型假设不适用 |\n| 后处理 | 位置、变量、单位、平均窗口 | 比较口径不一致 |\n\n**练习：**审阅一张 CFD 图片，只依据附带资料判断哪些结论有证据、哪些需要补充。用精确表达替代“效果很好”：例如“在当前三组网格上，平均压降相对变化为某值；尚未检验入口扰动敏感性”。",
+    "body": "一项可信的 CFD 结论，需要知道它的证据能支持到哪里。程序正常结束说明执行流程完成，残差下降说明某一层迭代改善，图像平滑说明数据经过了某种显示；这些都不能独自证明物理预测准确。本课把实现、分辨率、模型和比较口径逐层分开，帮助你写出可被检查的结论。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-turbulence-flatplate-profile.png\" alt=\"平板算例的壁面单位剖面对照\" loading=\"lazy\"><figcaption><strong>平板算例的壁面单位剖面对照。</strong>图中将多个原课程算例的无量纲速度剖面与近壁关系进行对照。纵横轴、图例和对数尺度保留；在自己的 v2512 算例中，应从实际壁面剪切应力和采样位置计算壁面单位。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 47 页（合并讲义 PDF 第 920 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n代码验证关注实现是否正确，例如解析解、制造解或严格单元问题；解的数值验证关注当前计算中的网格、时间步和迭代误差；物理确认关注模型预测与相应实验或观测是否一致。不同中文资料对 verification/validation 的译名可能不同，因此报告中应明确你使用的定义。\n\n### 三个层次的实例\n\n下载的一维导热案例具有明确解析解，适合检查简单离散与边界是否实现正确。方腔则可在没有实验数据时开展网格和时间敏感性研究。要进一步判断某个工程湍流模型能否预测真实压降，还需要条件匹配的实验或基准；前两个测试提供的是基础证据，不能自动覆盖这个更复杂问题。\n\n一维常系数导热能检验离散与边界处理。方腔网格细化能检验数值解对分辨率的敏感性。实验管路压降对比则还涉及入口发展、壁面粗糙度、传感器精度和物性温度依赖。不能用第一个测试通过来替代后两项。\n\n计算和实验都可能有不确定性。若将彼此独立、同一覆盖含义下的标准不确定度作近似组合，常见形式为\n\n\\[\nu_c=\\sqrt{u_1^2+u_2^2+\\cdots+u_n^2}.\n\\]\n\n相关输入需考虑协方差；系统偏差不能不加说明地塞入独立随机误差。离散误差估计也未必服从相同的统计解释，应清楚写出处理方法和限制。\n\n### 面向初学者的最小证据表\n\n读者应能从记录中重建你的比较，而不是只接受“验证通过”四个字。比如，哪一条中心线、哪个速度分量、什么时间、哪种归一化和插值规则，都应明确。若引用文献，也要核实它的几何、雷诺数和边界定义；同名 cavity 或同名湍流模型并不足以保证在比较同一个问题。\n\n| 证据 | 最少记录 | 主要排除的问题 |\n| --- | --- | --- |\n| 版本与输入 | 分支、构建、物性、边界、几何 | 用错程序或物理问题 |\n| 网格与时间 | 质量、细化序列、时间步比较 | 分辨率不足 |\n| 数值迭代 | 残差、守恒、目标量历史 | 解算未充分收敛 |\n| 物理参照 | 解析、实验或可信基准及条件 | 模型假设不适用 |\n| 后处理 | 位置、变量、单位、平均窗口 | 比较口径不一致 |\n\n**练习：**审阅一张 CFD 图片，只依据附带资料判断哪些结论有证据、哪些需要补充。用精确表达替代“效果很好”：例如“在当前三组网格上，平均压降相对变化为某值；尚未检验入口扰动敏感性”。\n\n### 对应案例与练习文件\n\n- [标量输运与扩散案例包](/downloads/courses/v2512-scalar-diffusion.zip)：包内 `exercises/one-dimensional-diffusion`。用 comparison.csv 检查解析线性温度解，明确这项检查只覆盖常系数正交单材料问题。\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。结合第 18 课建立独立网格与时间步序列。既有 400 单元单次结果不能充当完整网格独立性或物理确认。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "验证与研究方法",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 28,
     "status": "published",
-    "cover_url": "/assets/diagrams/core-uncertainty.svg",
+    "cover_url": "/assets/wolf/wolf-turbulence-flatplate-profile.png",
     "owner": "FoamLab",
     "metadata": {
       "source": "Wolf module6 / supplement8；有限体积数值验证与误差分析基础",
@@ -584,7 +1065,32 @@
       "prerequisite": "grid-time-verification",
       "duration": "70 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "标量输运与扩散案例包",
+          "url": "/downloads/courses/v2512-scalar-diffusion.zip",
+          "size_bytes": 328196,
+          "sha256": "99969ba25792909a48f4519ff585ab90e9592b970d29b361b5ba4ef14b610930",
+          "kind": "case",
+          "verification": "两个 FoamLab 一维案例已在 v2512 完成 blockMesh、完整 checkMesh 和指定终点求解，包内含日志与解析比较；官方 pitzDaily/flange 本轮未运行。",
+          "description": "解压后进入 v2512-scalar-diffusion/exercises/one-dimensional-diffusion。用 comparison.csv 检查解析线性温度解，明确这项检查只覆盖常系数正交单材料问题。"
+        },
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。结合第 18 课建立独立网格与时间步序列。既有 400 单元单次结果不能充当完整网格独立性或物理确认。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1",
+      "wolf_figures": [
+        "wolf-turbulence-flatplate-profile"
+      ]
     }
   },
   {
@@ -592,7 +1098,7 @@
     "kind": "lesson",
     "title": "29 · 可复现算例的组织与共享",
     "summary": "组织算例输入、运行脚本、环境记录、数据和图，注明执行顺序、检查方法及实际验证范围。",
-    "body": "共享一个巨大结果文件夹，未必能让别人复现。高质量资料首先需要明确物理问题、软件版本、运行入口与检查方法；结果图是证据的一部分，而不是唯一交付物。\n\n![可复现计算的输入、运行与证据](/assets/diagrams/core-reproducibility.svg)\n\n推荐在算例外层保留一个简洁结构：\n\n```text\ncase/             # 0、constant、system 与必要网格输入\nscripts/          # 有明确工作目录和错误处理的运行脚本\nresults/          # 用于报告的 CSV、PNG 与后处理脚本\nREADME.md         # 物理问题、版本、执行顺序、预期检查\nenvironment.txt   # 系统、构建、编译器、MPI、后处理版本\n```\n\n把重建成本高的大网格或大量时间目录作为单独资源，并标注体积与是否必需。CAD、第三方脚本和原始资料应保留来源及许可证。公开分享前清除密码、令牌和私人绝对路径。\n\n### 一个明确失败语义的运行脚本\n\n```bash\n#!/usr/bin/env bash\nset -euo pipefail\ncd \"$(dirname \"$0\")/../case\"\n: \"${WM_PROJECT_VERSION:?请先加载 OpenFOAM 环境}\"\nprintf 'OpenFOAM=%s\\n' \"$WM_PROJECT_VERSION\"\nblockMesh 2>&1 | tee log.blockMesh\ncheckMesh 2>&1 | tee log.checkMesh\nif grep -Eq 'Failed [1-9][0-9]* mesh checks' log.checkMesh; then\n    printf '%s\\n' '网格质量检查有失败项，请查看 log.checkMesh。' >&2\n    exit 1\nfi\nicoFoam 2>&1 | tee log.icoFoam\n```\n\n这个脚本针对基础方腔，不适用于所有求解器。它遇到命令失败会停止，同时保存日志；另外识别 `checkMesh` 的明确失败汇总，因为质量失败未必通过非零退出码传递。日志格式变更时应核对这一判据，并继续人工检查网格警告和目标量。退出码是必要证据，但不是物理验证结论。\n\n**README 至少写清楚：**算例做什么；采用哪些假设；需要哪个版本；从哪一目录执行哪些命令；结果存在哪里；什么数值或趋势说明流程合理；哪些功能仅经过启动检查、哪些完成了全时段计算、哪些经过网格研究。\n\n上传到本站时，将课程讲解、可下载资源和讨论关联起来。问题帖优先附最小可复現输入、完整版本横幅、出错命令及最早异常日志。不要仅贴最后一行报错或没有色标的截图。\n\n练习：请另一位同学仅阅读你的 README 运行方腔。如果需要口头补充路径、环境或缺失文件，就把这些信息写回资料中。可复现性通过实际复跑检验。",
+    "body": "共享算例的目标，是让另一位读者不依赖你的口头说明，也能知道输入是什么、从哪里运行、怎样判断结果。一个很大的结果文件夹未必做到这一点；一份完整输入、清楚的运行入口与可核查日志往往更重要。本课把前面的版本、网格、数值与证据记录组织成可以交给别人的资料。\n\n![可复现计算的输入、运行与证据](/assets/diagrams/core-reproducibility.svg)\n\n推荐在算例外层保留一个简洁结构：\n\n```text\ncase/             # 0、constant、system 与必要网格输入\nscripts/          # 有明确工作目录和错误处理的运行脚本\nresults/          # 用于报告的 CSV、PNG 与后处理脚本\nREADME.md         # 物理问题、版本、执行顺序、预期检查\nenvironment.txt   # 系统、构建、编译器、MPI、后处理版本\n```\n\n把重建成本高的大网格或大量时间目录作为单独资源，并标注体积与是否必需。CAD、第三方脚本和原始资料应保留来源及许可证。公开分享前清除密码、令牌和私人绝对路径。\n\n### 一个明确失败语义的运行脚本\n\n脚本首先固定工作目录，随后检查环境，再逐步执行网格和求解。这样做是为了减少“在错误目录运行却没注意到”的情况，并保留每一步输出。管道配合 pipefail 使前面的命令失败不会被 tee 掩盖；网格质量失败则还需要阅读 checkMesh 的检查汇总。自动化减少重复操作，但不能替代结果判断。\n\n```bash\n#!/usr/bin/env bash\nset -euo pipefail\ncd \"$(dirname \"$0\")/../case\"\n: \"${WM_PROJECT_VERSION:?请先加载 OpenFOAM 环境}\"\nprintf 'OpenFOAM=%s\\n' \"$WM_PROJECT_VERSION\"\nblockMesh 2>&1 | tee log.blockMesh\ncheckMesh 2>&1 | tee log.checkMesh\nif grep -Eq 'Failed [1-9][0-9]* mesh checks' log.checkMesh; then\n    printf '%s\\n' '网格质量检查有失败项，请查看 log.checkMesh。' >&2\n    exit 1\nfi\nicoFoam 2>&1 | tee log.icoFoam\n```\n\n这个脚本针对基础方腔，不适用于所有求解器。它遇到命令失败会停止，同时保存日志；另外识别 `checkMesh` 的明确失败汇总，因为质量失败未必通过非零退出码传递。日志格式变更时应核对这一判据，并继续人工检查网格警告和目标量。退出码是必要证据，但不是物理验证结论。\n\n**README 至少写清楚：**算例做什么；采用哪些假设；需要哪个版本；从哪一目录执行哪些命令；结果存在哪里；什么数值或趋势说明流程合理；哪些功能仅经过启动检查、哪些完成了全时段计算、哪些经过网格研究。\n\n本站下载包也遵循这一区分：原始文件哈希用于核查输入完整性，DEPENDENCIES.txt 说明包含文件和系统依赖，运行日志用于证明实际执行范围。哈希一致并不意味着解正确，完整求解也不意味着已有实验确认。写分享文章时，把这些证据分别说明，能使后来者更容易复跑、定位差异并继续改进。\n\n上传到本站时，将课程讲解、可下载资源和讨论关联起来。问题帖优先附最小可复现输入、完整版本横幅、出错命令及最早异常日志。不要仅贴最后一行报错或没有色标的截图。\n\n“最小”不等于只剩一个 fvSolution 文件。若它通过 include 读取其他文件，依赖也必须一并提供；几何、初始字段和必要脚本同样不能遗漏。可以先把自己准备发布的 ZIP 解压到一个新目录，只按 README 运行一遍，再请别人复跑。这个过程常能发现自己电脑上存在、压缩包里却没有的隐含依赖。\n\n练习：请另一位同学仅阅读你的 README 运行方腔。如果需要口头补充路径、环境或缺失文件，就把这些信息写回资料中。可复现性通过实际复跑检验。\n\n### 对应案例与练习文件\n\n- [方腔与基础计算案例包](/downloads/courses/v2512-cavity.zip)：包内 `tutorials/incompressible/icoFoam/cavity/cavity`。以基础方腔组织自己的共享目录与运行脚本。参考本包 README.zh-CN.md、SOURCE.txt、COPYING、MANIFEST.sha256 和 DEPENDENCIES.txt，完整说明输入、许可与验证范围。\n\n下载后先读包根目录的 `README.zh-CN.md`，在副本中修改本课指定文件。包中保留官方原始输入；运行状态与系统依赖在说明中单独列出。",
     "track": "验证与研究方法",
     "series": "OpenFOAM v2512 系统课程",
     "sort_order": 29,
@@ -605,7 +1111,20 @@
       "prerequisite": "sampling-functions-and-observables",
       "duration": "55 分钟",
       "version": "OpenCFD OpenFOAM v2512",
-      "figure_type": "教学示意图；真实计算图另见图注"
+      "figure_type": "教学示意图；真实计算图另见图注",
+      "downloads": [
+        {
+          "label": "方腔与基础计算案例包",
+          "url": "/downloads/courses/v2512-cavity.zip",
+          "size_bytes": 35881,
+          "sha256": "c8875b50a5e9cb3604de17b7177898d1b3c3c30723d67cc116650f3bf5b74c1c",
+          "kind": "case",
+          "verification": "已核对 v2512 源文件、包含依赖与 ZIP 完整性；官方案例本轮未重新求解。",
+          "description": "解压后进入 v2512-cavity/tutorials/incompressible/icoFoam/cavity/cavity。以基础方腔组织自己的共享目录与运行脚本。参考本包 README.zh-CN.md、SOURCE.txt、COPYING、MANIFEST.sha256 和 DEPENDENCIES.txt，完整说明输入、许可与验证范围。"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "core-readability-cases-2026-10-02-v1"
     }
   },
   {
@@ -739,7 +1258,7 @@
     "kind": "log",
     "title": "建设日志 · 以 v2512 为基线重新组织学习资料",
     "summary": "说明课程来源、版本适配、图片证据和内容维护原则，公开区分已运行、已核对与待验证的内容。",
-    "body": "本次重整把学习路径从固定讲次数量改为可扩展的课程与专题：先认识环境和算例，再学习网格与数值方法，随后进入物理模型、计算分析、编程和扩展工具。命令与配置索引承担查询功能，课程负责解释为什么使用这些条目以及如何检查结果。\n\n![学习资料需要能追溯到输入和证据](/assets/diagrams/core-reproducibility.svg)\n\n### 资料来源与版本处理\n\nWolf Dynamics 的基础培训为教学顺序、算例组织和有限体积概念提供参考。用户提供的基础资料采用 Foundation 9；本站运行基线是 OpenCFD v2512，所以保留概念关联，同时根据 v2512 官方教程和源码核对文件、命令与设置。这里是重新编写的中文课程，不是把旧幻灯片原样改一个版本号。\n\n`BasicOFProgramming` 纳入编程路径；`OF_material` 中已适配的代码优先作为示例来源。适配记录中的字典解析、Shell 语法检查、网格检查和短时求解，分别提供不同层次的证据。它们不能自动等同于所有案例已完成长时间计算或网格无关性研究。\n\n### 图片的三类证据\n\n原创 SVG 图用于解释控制体积、网格、耦合和工作流，属于示意图。本站生成的方腔速度图来自实际 v2512 运行，参数和时间写在课程图注中。首页视觉封面是 CFD 概念插画，不应被引用为真实求解结果。阅读、下载和再次分享时，请保留这个区别。\n\n首次方腔使用官方基础设置：$20\\times20\\times1$ 网格、$Re=10$、结束时间 $0.5\\,\\mathrm{s}$。这次运行用于验证求解与出图流程，没有被描述为网格独立验证。以后扩展结果应附输入、日志、脚本和必要的数值数据。\n\n### 下一步如何增加内容\n\n一篇可发布的课程至少需要清楚的问题、版本、具体示例、必要图解、可检查的结果及来源。新命令条目要区分主仓库程序、Shell 工具、可选模块和第三方软件；新配置示例要注明它适用的求解器与模型。改名、迁移或删除内容时，优先保留读者能追踪的修订记录。\n\n欢迎通过讨论中心提交可复现问题，也欢迎补充运行记录和纠错。提问时附版本横幅、命令、最早异常日志与最小输入；回答时说明结论依据和适用条件。维护者会优先合并能够重现、能够核对的改进。\n\n来源：[Wolf Dynamics 培训资料入口](https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit)、[OpenCFD v2512 源码标签](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512)。",
+    "body": "本次重整把学习路径从固定讲次数量改为可扩展的课程与专题：先认识环境和算例，再学习网格与数值方法，随后进入物理模型、计算分析、编程和扩展工具。命令与配置索引承担查询功能，课程负责解释为什么使用这些条目以及如何检查结果。\n\n![学习资料需要能追溯到输入和证据](/assets/diagrams/core-reproducibility.svg)\n\n### 资料来源与操作依据\n\nWolf Dynamics 的基础培训为有限体积原理、网格解释和算例组织提供参考。课程操作统一使用 OpenCFD OpenFOAM v2512，相关命令、配置与案例按该版本官方教程和源码核对。教学图注明作者、材料与页码，运行示例另外说明输入、软件构建和核验范围，便于读者追溯依据。\n\n`BasicOFProgramming` 纳入编程路径；`OF_material` 中已适配的代码优先作为示例来源。适配记录中的字典解析、Shell 语法检查、网格检查和短时求解，分别提供不同层次的证据。它们不能自动等同于所有案例已完成长时间计算或网格无关性研究。\n\n### 图片的三类证据\n\n原创 SVG 图用于解释控制体积、网格、耦合和工作流，属于示意图。本站生成的方腔速度图来自实际 v2512 运行，参数和时间写在课程图注中。首页视觉封面是 CFD 概念插画，不应被引用为真实求解结果。阅读、下载和再次分享时，请保留这个区别。\n\n首次方腔使用官方基础设置：$20\\times20\\times1$ 网格、$Re=10$、结束时间 $0.5\\,\\mathrm{s}$。这次运行用于验证求解与出图流程，没有被描述为网格独立验证。以后扩展结果应附输入、日志、脚本和必要的数值数据。\n\n### 下一步如何增加内容\n\n一篇可发布的课程至少需要清楚的问题、版本、具体示例、必要图解、可检查的结果及来源。新命令条目要区分主仓库程序、Shell 工具、可选模块和第三方软件；新配置示例要注明它适用的求解器与模型。改名、迁移或删除内容时，优先保留读者能追踪的修订记录。\n\n欢迎通过讨论中心提交可复现问题，也欢迎补充运行记录和纠错。提问时附版本横幅、命令、最早异常日志与最小输入；回答时说明结论依据和适用条件。维护者会优先合并能够重现、能够核对的改进。\n\n来源：[Wolf Dynamics 培训资料入口](https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit)、[OpenCFD v2512 源码标签](https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512)。",
     "track": "作者专栏",
     "series": "FoamLab 建设与维护",
     "sort_order": 36,

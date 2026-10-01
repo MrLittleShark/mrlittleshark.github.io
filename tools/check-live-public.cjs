@@ -5,8 +5,15 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'.openfoam-work/repla
 async function go(route,ready){await page.goto(origin+route,{waitUntil:'networkidle'});if(ready)await page.locator(ready).first().waitFor({timeout:20000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,'horizontal overflow '+route);checks.push(route);console.log('PASS '+route);}
 await go('/','.science-hero');assert.equal(await page.locator('h1').count(),1);assert(!await page.locator('main').innerText().then(x=>x.includes('图片应该解释结果')||x.includes('把问题描述清楚')));await page.screenshot({path:path.join(out,'home-final-desktop.png'),fullPage:true,animations:'disabled'});
 for(const [route,count] of [['courses',46],['programming',17],['tools',6],['resources',7],['authors',1],['assignments',3],['announcements',1],['recommendations',15]]){await go('/'+route+'/','.lab-card');assert((await page.locator('.lab-card').count())>=count,route+' count');}
+await go('/courses/','.lab-card-download');assert.equal(await page.locator('.lab-card-download').count(),46);
+await go('/topics/','.topic-collection');assert.equal(await page.locator('.topic-collection').count(),4);
+for(const key of ['turbulence','multiphase','meshing','dynamic-mesh']){
+ await go('/topics/'+key+'/','#topic-cases');assert((await page.locator('#topic-courses .lab-card').count())>0);assert((await page.locator('#topic-cases [download]').count())>0);assert.equal(await page.locator('.math-error').count(),0);
+}
+await page.locator('.figure-viewable').first().click();assert(await page.locator('#figure-dialog').evaluate(e=>e.open));await page.waitForFunction(()=>document.querySelector('.figure-dialog-image img')?.naturalWidth>0);assert((await page.locator('.figure-dialog-source').innerText()).includes('Wolf Dynamics'));await page.keyboard.press('Escape');
 await go('/algorithms/','.lab-card');assert((await page.locator('.lab-card').count())>=7);
 await go('/read/?slug=programming-10','#live-article .prose');assert((await page.locator('.katex').count())>0);assert.equal(await page.locator('.math-error').count(),0);assert((await page.locator('.code-panel').count())>=3);await page.screenshot({path:path.join(out,'course-final-desktop.png'),fullPage:false,animations:'disabled'});
+assert((await page.locator('#lesson-downloads [download]').count())>0);
 for(const slug of ['first-cavity-result','simple-piso-pimple','resource-basic-programming','practice-programming']){await go('/read/?slug='+slug,'#live-article .prose');assert.equal(await page.locator('.math-error').count(),0);}
 await go('/commands/?q=checkMesh','.command-card');assert(await page.getByRole('heading',{name:'checkMesh',exact:true}).isVisible());
 await go('/commands/blockmesh/','[data-cms-slug] .prose');await page.locator('#cms-reference-comments').waitFor({timeout:20000});assert(!(await page.locator('main').innerText()).includes('内容尚未发布'));assert((await page.locator('.prose pre').count())>0);

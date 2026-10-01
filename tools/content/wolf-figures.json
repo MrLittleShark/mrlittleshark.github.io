@@ -1,0 +1,2199 @@
+[
+  {
+    "id": "wolf-mesh-nonorthogonality",
+    "title": "非正交角的几何定义",
+    "caption": "单元中心连线 d 与公共面的面积法向 S 不平行时，需要检查非正交误差及相应的离散修正。图中的 P、N 是相邻单元中心，f 是公共面中心；夹角不是网格能否使用的唯一判据。",
+    "topic": "网格",
+    "related_slugs": [
+      "checkmesh-and-quality",
+      "diffusion-gradients-laplacian"
+    ],
+    "crop_points": [
+      164,
+      282,
+      542,
+      484
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-mesh-nonorthogonality.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 338,
+    "printed_page": 330,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 16,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 330。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        164,
+        282,
+        542,
+        484
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1050,
+      "height": 561
+    },
+    "sha256": "b4321dbe865362e177f2d3a4a7fbf42c95b09cd662fc9bba984b173791f6264c",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-mesh-skewness",
+    "title": "面心偏斜与非正交性的区别",
+    "caption": "单元中心连线与公共面相交于 fi，而实际面心位于 f；两点的偏移反映面心偏斜。对照上一幅非正交图，注意角度偏差和面心位置偏差是两个不同的几何问题。",
+    "topic": "网格",
+    "related_slugs": [
+      "checkmesh-and-quality",
+      "diffusion-gradients-laplacian"
+    ],
+    "crop_points": [
+      200,
+      322,
+      500,
+      526
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-mesh-skewness.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 339,
+    "printed_page": 331,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 17,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 331。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        200,
+        322,
+        500,
+        526
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 833,
+      "height": 567
+    },
+    "sha256": "c3361836cdceebbb828cde23d3862af9e22423207b3dce44a1d23732904c07a8",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-mesh-smooth-transition",
+    "title": "网格尺寸的突变与平滑过渡",
+    "caption": "左侧单元尺寸在局部突然变化，右侧使用较平滑的间距过渡。图用于比较邻近单元尺度变化；可接受的增长率还取决于所求物理过程与离散方法，不将原讲义的经验数值当作统一阈值。",
+    "topic": "网格",
+    "related_slugs": [
+      "checkmesh-and-quality",
+      "blockmesh-first-principles"
+    ],
+    "crop_points": [
+      96,
+      320,
+      658,
+      532
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-mesh-smooth-transition.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 341,
+    "printed_page": 333,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 19,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 333。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        96,
+        320,
+        658,
+        532
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1561,
+      "height": 589
+    },
+    "sha256": "3c4654af0a9238bf1587d6f3b3dc95df5e416103529f91936845198ba5d93cf0",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-mesh-wall-alignment",
+    "title": "近壁单元方向与面值插值",
+    "caption": "图板比较近壁规则单元与倾斜三角形单元中的面值插值位置。网格应分辨壁面法向上的强梯度；单元类型本身不能单独决定计算精度，还需检查方向、尺寸和离散误差。",
+    "topic": "网格",
+    "related_slugs": [
+      "wall-resolution-yplus",
+      "checkmesh-and-quality"
+    ],
+    "crop_points": [
+      10,
+      240,
+      713,
+      522
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-mesh-wall-alignment.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 342,
+    "printed_page": 334,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 20,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 334。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        10,
+        240,
+        713,
+        522
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1953,
+      "height": 783
+    },
+    "sha256": "d25129b1d43d14e8b1f5f5c9ff8750e6eec7da3a3b729d7570e2f0af61200aad",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-snappy-workflow",
+    "title": "snappyHexMesh 的几何与背景网格输入",
+    "caption": "背景体网格与几何表面共同输入 snappyHexMesh。此图说明输入关系；局部加密、贴体和边界层生成还需分别配置并检查，不能由一张表面模型直接推出合格的计算网格。",
+    "topic": "网格",
+    "related_slugs": [
+      "snappyhexmesh-workflow"
+    ],
+    "crop_points": [
+      104,
+      310,
+      662,
+      524
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-snappy-workflow.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 393,
+    "printed_page": 385,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 71,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 385。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        104,
+        310,
+        662,
+        524
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1550,
+      "height": 594
+    },
+    "sha256": "ee1edf3f06bb46e344361ed7f8b36498829ba60e8359069c3a96bc68eeb8ee88",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-snappy-refinement-level",
+    "title": "加密等级与单元尺度",
+    "caption": "图板给出基本网格逐级细分的关系。每增加一级，示意中的边长减半；二维截面上的四分不能直接当成三维单元数量，三维六面体细分对应不同的总单元增长率。",
+    "topic": "网格",
+    "related_slugs": [
+      "snappyhexmesh-workflow"
+    ],
+    "crop_points": [
+      0,
+      64,
+      720,
+      540
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-snappy-refinement-level.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 394,
+    "printed_page": 386,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 72,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 386。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        64,
+        720,
+        540
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1322
+    },
+    "sha256": "a86d18bc6ffd22a612f2edf8e2f760b689db7725eb0a4a4abd9b4351773ca05b",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-snappy-background",
+    "title": "表面几何与背景六面体网格",
+    "caption": "原讲义的背景网格覆盖目标表面和周围流体空间。图中网格尚未完成贴体；后续应按照特征、曲率和所需分辨率逐步细分，并指定保留的流体区域。",
+    "topic": "网格",
+    "related_slugs": [
+      "snappyhexmesh-workflow"
+    ],
+    "crop_points": [
+      218,
+      110,
+      510,
+      402
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-snappy-background.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 396,
+    "printed_page": 388,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 74,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 388。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        218,
+        110,
+        510,
+        402
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 811,
+      "height": 811
+    },
+    "sha256": "0b0526c539c7b4f06b308a728b613ea7c741c899fb3ff98907e49126a22aa888",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-snappy-surface-refinement",
+    "title": "几何表面附近的局部网格加密",
+    "caption": "表面附近单元经过细分，远离几何的区域保留较粗尺度。右侧框与箭头是原讲义的体积加密区域提示；它帮助区分按表面和按空间区域控制分辨率。",
+    "topic": "网格",
+    "related_slugs": [
+      "snappyhexmesh-workflow"
+    ],
+    "crop_points": [
+      218,
+      110,
+      713,
+      402
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-snappy-surface-refinement.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 398,
+    "printed_page": 390,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 76,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 390。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        218,
+        110,
+        713,
+        402
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1375,
+      "height": 811
+    },
+    "sha256": "cc9174e9591cfb3a7e3423302369eeb8675bde487dacb19f3fb1b347d98b79f7",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-snappy-surface-snapping",
+    "title": "网格顶点向几何表面贴合",
+    "caption": "完成局部细分和区域选择后，边界网格向目标表面贴合。观察几何尖角和曲率变化处的单元形状，再结合网格检查定位非正交或高偏斜区域。",
+    "topic": "网格",
+    "related_slugs": [
+      "snappyhexmesh-workflow"
+    ],
+    "crop_points": [
+      218,
+      110,
+      510,
+      402
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-snappy-surface-snapping.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 401,
+    "printed_page": 393,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 79,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 393。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        218,
+        110,
+        510,
+        402
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 811,
+      "height": 811
+    },
+    "sha256": "0277425c6144b386fb0b2aa8adcca98a9a34726feebf5128ba7c7f5487bc57cd",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-snappy-layer-stage",
+    "title": "贴体网格中的边界层生成阶段",
+    "caption": "原讲义在完成表面贴合后展示层网格阶段。层的覆盖率、厚度和局部塌缩应分别检查；图片中的阶段关系不意味着任意参数都能生成完整的壁面层。",
+    "topic": "网格",
+    "related_slugs": [
+      "snappyhexmesh-workflow",
+      "wall-resolution-yplus"
+    ],
+    "crop_points": [
+      218,
+      110,
+      713,
+      402
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-snappy-layer-stage.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 402,
+    "printed_page": 394,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 80,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 394。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        218,
+        110,
+        713,
+        402
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1375,
+      "height": 811
+    },
+    "sha256": "edc7273505348eb7f7dbfb2d412dbec173cda2bdcbfeb69eeaa902ade682aa65",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-snappy-relative-layer-size",
+    "title": "相对与绝对层厚设置的网格对比",
+    "caption": "左右图给出 relativeSizes 设置不同的边界层网格及原参数。比较时先明确厚度参数相对于局部网格尺度还是采用长度单位，再检查最终层厚；原图参数仅用于说明这一算例。",
+    "topic": "网格",
+    "related_slugs": [
+      "snappyhexmesh-workflow",
+      "wall-resolution-yplus"
+    ],
+    "crop_points": [
+      45,
+      125,
+      674,
+      468
+    ],
+    "scientific_note": "图用于解释层厚设置；v2512 参数的读取、默认值及层厚组合须对照其 snappyHexMeshDict 与帮助。",
+    "file": "/assets/wolf/wolf-snappy-relative-layer-size.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 461,
+    "printed_page": 453,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 139,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 453。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        45,
+        125,
+        674,
+        468
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1747,
+      "height": 953
+    },
+    "sha256": "83d5db16f3b3b064e423be216e5a37319751300ab21445134c12c633617afaf9",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-snappy-layer-coverage",
+    "title": "边界层厚度、层数与覆盖范围",
+    "caption": "上排显示原算例的层厚和层数，下排显示壁面层覆盖区域。应将颜色分布与实际网格截面一起检查，区分未生成层、层数变化和厚度变化。",
+    "topic": "网格",
+    "related_slugs": [
+      "snappyhexmesh-workflow",
+      "wall-resolution-yplus"
+    ],
+    "crop_points": [
+      128,
+      145,
+      633,
+      520
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-snappy-layer-coverage.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 470,
+    "printed_page": 462,
+    "source_module_pdf": "module3.pdf",
+    "source_module_page": 148,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 462。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        128,
+        145,
+        633,
+        520
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1403,
+      "height": 1042
+    },
+    "sha256": "86b0563d27ea469c6f26eeb2665834366f5cab25989288cc281e465e970b4221",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-fvm-convective-face-flux",
+    "title": "从体积分到离散面通量",
+    "caption": "通过 Gauss 定理将对流项体积分转为封闭表面上的通量，再在各网格面上求和。下方多面体标出单元中心、边界面及面积法向，说明有限体积法的局部守恒结构。",
+    "topic": "数值方法",
+    "related_slugs": [
+      "finite-volume-conservation"
+    ],
+    "crop_points": [
+      0,
+      64,
+      720,
+      540
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-fvm-convective-face-flux.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 629,
+    "printed_page": 621,
+    "source_module_pdf": "module6.pdf",
+    "source_module_page": 11,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 621。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        64,
+        720,
+        540
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1322
+    },
+    "sha256": "a385cb4d3bee8b6e7aa32d9b9de06b8aeaa2d882d8251581a65013f774d38779",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-advection-scheme-comparison",
+    "title": "对流格式的扩散与振荡对比",
+    "caption": "原讲义用斜向阶跃输运比较迎风、中心、线性迎风与 TVD 限制格式。观察界面变宽与过冲是不同误差表现；本图是给定算例下的定性比较，不构成对所有流动的格式排名。",
+    "topic": "数值方法",
+    "related_slugs": [
+      "advection-schemes-boundedness"
+    ],
+    "crop_points": [
+      0,
+      64,
+      720,
+      540
+    ],
+    "scientific_note": "图中将 linearUpwind 标记为 Bounded，但该格式本身不保证严格有界；应检查负值与新极值，不能只依据图内标签判断。各结果的网格、时间格式和 Courant 数需要一起比较。",
+    "file": "/assets/wolf/wolf-advection-scheme-comparison.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 640,
+    "printed_page": 632,
+    "source_module_pdf": "module6.pdf",
+    "source_module_page": 22,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 632。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        64,
+        720,
+        540
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1322
+    },
+    "sha256": "3e6c818c6a5df9fb7f1f7a1958809a8683cf400dfde245972736d9c5414cf6da",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-diffusion-orthogonal-comparison",
+    "title": "正交与非正交网格中的扩散通量",
+    "caption": "左侧中心连线与面积法向一致，右侧存在非正交夹角。图板把公共面法向导数与中心差分联系起来，说明非正交部分为何需要额外处理。",
+    "topic": "数值方法",
+    "related_slugs": [
+      "diffusion-gradients-laplacian",
+      "checkmesh-and-quality"
+    ],
+    "crop_points": [
+      0,
+      64,
+      720,
+      540
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-diffusion-orthogonal-comparison.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 647,
+    "printed_page": 639,
+    "source_module_pdf": "module6.pdf",
+    "source_module_page": 29,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 639。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        64,
+        720,
+        540
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1322
+    },
+    "sha256": "cc7d1c170d389cc01ab106cb555dd1d9b29ce10a6239e052a94bc41a69b7ab0c",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-diffusion-nonorthogonal-correction",
+    "title": "扩散通量的非正交分解",
+    "caption": "面积向量被分解为与单元中心连线相关的分量和修正分量。图中的分解用于解释修正项的几何来源；实际离散选择和限制方式应对照 v2512 的 laplacian 与 snGrad 设置。",
+    "topic": "数值方法",
+    "related_slugs": [
+      "diffusion-gradients-laplacian"
+    ],
+    "crop_points": [
+      0,
+      64,
+      720,
+      540
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-diffusion-nonorthogonal-correction.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 648,
+    "printed_page": 640,
+    "source_module_pdf": "module6.pdf",
+    "source_module_page": 30,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 640。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        64,
+        720,
+        540
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1322
+    },
+    "sha256": "3c0acab7a9b9716394f038cbfd59ac3a44ab43b1061d7f7fd6a37f7f5db369ae",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-simple-pressure-coupling",
+    "title": "SIMPLE 压力—速度迭代流程",
+    "caption": "流程图连接动量预测、压力校正、通量更新和速度修正，并标明稳态外迭代。图左为原课程代码片段，仅用于关联算法步骤；v2512 的实际文件组织应以对应求解器源码为准。",
+    "topic": "数值方法",
+    "related_slugs": [
+      "simple-piso-pimple"
+    ],
+    "crop_points": [
+      0,
+      64,
+      720,
+      540
+    ],
+    "scientific_note": "图用于说明动量预测与压力校正的关系，其中 fvm::ddt(U) 是示意中的瞬态项；v2512 simpleFoam 的稳态 UEqn.H 不包含物理时间导数，迭代目录不代表物理时间推进。",
+    "file": "/assets/wolf/wolf-simple-pressure-coupling.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 708,
+    "printed_page": 700,
+    "source_module_pdf": "module6.pdf",
+    "source_module_page": 90,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 700。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        64,
+        720,
+        540
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1322
+    },
+    "sha256": "a4a024cea23c72426b5acb784dd61f31b0fd2be6d95e2a14553f1e1b1f7d425c",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-piso-pressure-coupling",
+    "title": "PISO 时间步与压力校正循环",
+    "caption": "图中区分时间推进、动量预测、压力校正与非正交修正。阅读时先确认哪些循环发生在同一个时间步内，再对照当前求解器的校正次数和残差输出。",
+    "topic": "数值方法",
+    "related_slugs": [
+      "simple-piso-pimple"
+    ],
+    "crop_points": [
+      0,
+      64,
+      720,
+      540
+    ],
+    "scientific_note": "图用于解释循环嵌套；v2512 各求解器的具体调用顺序应分别核对。",
+    "file": "/assets/wolf/wolf-piso-pressure-coupling.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 711,
+    "printed_page": 703,
+    "source_module_pdf": "module6.pdf",
+    "source_module_page": 93,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 703。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        64,
+        720,
+        540
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1322
+    },
+    "sha256": "007397485ac8da7e9c5eaf96581bc124cbc8cc62d3ae5bfa9c2a285bd88b3957",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-pimple-pressure-coupling",
+    "title": "PIMPLE 外校正与 PISO 内校正",
+    "caption": "PIMPLE 图板将外校正循环与压力内校正放在同一时间步中。应结合时间步长、非线性耦合和收敛检查理解循环用途，不能用增加迭代次数代替时间精度检验。",
+    "topic": "数值方法",
+    "related_slugs": [
+      "simple-piso-pimple"
+    ],
+    "crop_points": [
+      0,
+      64,
+      720,
+      540
+    ],
+    "scientific_note": "图用于解释校正循环；具体循环条件、模型更新位置及关键字以 v2512 对应实现为准。",
+    "file": "/assets/wolf/wolf-pimple-pressure-coupling.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 714,
+    "printed_page": 706,
+    "source_module_pdf": "module6.pdf",
+    "source_module_page": 96,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 706。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        64,
+        720,
+        540
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1322
+    },
+    "sha256": "b5025369a5972007f1c5a653e04c6ec5c15b8e4f9d76a65f4d77fc89ed3dbef6",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-advection-profile-errors",
+    "title": "一维输运中的格式误差曲线",
+    "caption": "图中相同的阶跃输入被不同空间格式输运，比较对象同时包含耗散、过冲与波形保持。坐标、精确解曲线和各方法图例均保留；图示条件为原讲义给出的 100 个单元、Euler 时间推进和 CFL 0.1。",
+    "topic": "数值方法",
+    "related_slugs": [
+      "advection-schemes-boundedness",
+      "grid-time-verification"
+    ],
+    "crop_points": [
+      0,
+      64,
+      720,
+      540
+    ],
+    "scientific_note": "这是原讲义在其给定初值、网格和 Courant 数下的比较，条件与本站余弦平方脉冲案例不同。可参考比较方法，不应直接逐点对照两者数值或据此给出普适排名。",
+    "file": "/assets/wolf/wolf-advection-profile-errors.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 775,
+    "printed_page": 768,
+    "source_module_pdf": "module6.pdf",
+    "source_module_page": 157,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 768。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        64,
+        720,
+        540
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1322
+    },
+    "sha256": "b39058d949bd496f95f49058e321d1c7093ad9f91e7e6aad6523a67b27d2c780",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-turbulence-averaging",
+    "title": "时均、空间滤波与速度脉动",
+    "caption": "原图用空间和时间信号说明均值或滤波量与脉动量的分解。RANS 和 LES 中被解析与被建模的部分不同；相同的符号分解不表示两种方法采用同一闭合假设。",
+    "topic": "湍流",
+    "related_slugs": [
+      "laminar-turbulence-model-choice"
+    ],
+    "crop_points": [
+      40,
+      105,
+      705,
+      365
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-turbulence-averaging.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 890,
+    "printed_page": 883,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 17,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 883。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        40,
+        105,
+        705,
+        365
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1847,
+      "height": 722
+    },
+    "sha256": "51352d9f666ad862560f8f1b1a003130defa6823fb4933f81d6b5c088a3eadb2",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-turbulence-wall-law",
+    "title": "无量纲壁面速度分布与近壁区域",
+    "caption": "左图以壁面单位表示速度剖面，标出黏性底层、缓冲层、对数层与外层；右图给出物理速度剖面的示意。此图用于理解近壁分辨率与壁面处理的关系，适用假设仍需单独检查。",
+    "topic": "湍流",
+    "related_slugs": [
+      "wall-resolution-yplus"
+    ],
+    "crop_points": [
+      8,
+      108,
+      710,
+      435
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-turbulence-wall-law.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 894,
+    "printed_page": 887,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 21,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 887。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        8,
+        108,
+        710,
+        435
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1950,
+      "height": 908
+    },
+    "sha256": "24163e1f0df2bf7643c0429cc39e6c26cf254e66597e7d087face5ed6b00ce7e",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-turbulence-model-hierarchy",
+    "title": "RANS、LES 与 DNS 的解析范围",
+    "caption": "图板按不同湍流处理方法组织模型，并示意计算成本的变化方向。它是方法层级图；实际成本还取决于网格、时间跨度、雷诺数和实现，不能从图中推导固定的运行时间倍数。",
+    "topic": "湍流",
+    "related_slugs": [
+      "laminar-turbulence-model-choice"
+    ],
+    "crop_points": [
+      65,
+      110,
+      706,
+      522
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-turbulence-model-hierarchy.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 899,
+    "printed_page": 892,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 26,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 892。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        65,
+        110,
+        706,
+        522
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1781,
+      "height": 1144
+    },
+    "sha256": "0d2db997b06276333b191acdc3a86a4a8e784b907273d78f0186ba0e544df173",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-turbulence-rans-les-fields",
+    "title": "RANS 平均场与 LES 瞬时结构",
+    "caption": "原讲义的两幅结果图分别展示平均化描述和瞬时流动结构。比较前应区分统计平均与瞬时样本；瞬时图中结构更多并不自动表示整体预测更准确。",
+    "topic": "湍流",
+    "related_slugs": [
+      "laminar-turbulence-model-choice"
+    ],
+    "crop_points": [
+      8,
+      114,
+      712,
+      262
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-turbulence-rans-les-fields.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 900,
+    "printed_page": 893,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 27,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 893。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        8,
+        114,
+        712,
+        262
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1956,
+      "height": 411
+    },
+    "sha256": "e1df4785a97bba433675649b592afd7ab5feb4147762fd9a6e159b4b6749154b",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-turbulence-flatplate-profile",
+    "title": "平板算例的壁面单位剖面对照",
+    "caption": "图中将多个原课程算例的无量纲速度剖面与近壁关系进行对照。纵横轴、图例和对数尺度保留；在自己的 v2512 算例中，应从实际壁面剪切应力和采样位置计算壁面单位。",
+    "topic": "湍流",
+    "related_slugs": [
+      "wall-resolution-yplus",
+      "verification-validation-uncertainty"
+    ],
+    "crop_points": [
+      115,
+      125,
+      620,
+      415
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-turbulence-flatplate-profile.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 920,
+    "printed_page": 913,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 47,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 913。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        115,
+        125,
+        620,
+        415
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1403,
+      "height": 806
+    },
+    "sha256": "5e24f5ce280b6d080249558f9dca3e2c1fe80dd7f4ced384d8a5cd372acd8529",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-multiphase-dambreak-workflow",
+    "title": "溃坝算例的完整计算流程",
+    "caption": "原图将网格、相分数初始化、两相求解和后处理连接起来。重点是 setFields 对初始液体区域的定义及求解结果的后续采样；该图不要求所有溃坝算例都同时使用两种网格工具。",
+    "topic": "多相流",
+    "related_slugs": [
+      "vof-interface-dambreak"
+    ],
+    "crop_points": [
+      22,
+      105,
+      701,
+      510
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-multiphase-dambreak-workflow.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 163,
+    "printed_page": 154,
+    "source_module_pdf": "module1.pdf",
+    "source_module_page": 154,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 154。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        22,
+        105,
+        701,
+        510
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1886,
+      "height": 1125
+    },
+    "sha256": "83f7b0d099d5c91135a5918508bccb987ec8ce1c28103c66c1c03d5ad0aac3ff",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-multiphase-morphology",
+    "title": "分散相与分离界面的形态区别",
+    "caption": "左图是一种相以分散区域存在于连续相中的示意，右图是较清晰的分离界面。形态分类用于提出建模问题；是否采用 VOF、双流体或颗粒跟踪还取决于尺度分辨率与相间作用。",
+    "topic": "多相流",
+    "related_slugs": [
+      "vof-interface-dambreak"
+    ],
+    "crop_points": [
+      0,
+      310,
+      720,
+      480
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-multiphase-morphology.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 938,
+    "printed_page": 931,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 65,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 931。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        310,
+        720,
+        480
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 472
+    },
+    "sha256": "44b0f365768d572ccebef6c705e8759a48bb6bdd8eb1d24e16820c7dd2889f16",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-multiphase-model-families",
+    "title": "多相流计算框架的对照",
+    "caption": "原图对照分离界面 VOF、Euler–Euler 分散相描述和 Euler–Lagrange 颗粒描述。阅读时辨认相的表示方式及所求方程，避免仅凭求解器名称选择模型。",
+    "topic": "多相流",
+    "related_slugs": [
+      "vof-interface-dambreak"
+    ],
+    "crop_points": [
+      5,
+      105,
+      715,
+      515
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-multiphase-model-families.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 944,
+    "printed_page": 937,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 71,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 937。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        5,
+        105,
+        715,
+        515
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1972,
+      "height": 1139
+    },
+    "sha256": "8b459ca456f2d38a53a20e0800fb2baa9e3a20f19164ff9fa911c7b08cccf1ba",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-vof-volume-fraction",
+    "title": "相分数如何表示网格内的界面",
+    "caption": "单元相分数为 0 或 1 表示单一相占据，介于两者之间的数值表示该单元包含界面。图板同时给出原课程的混合物性示意关系；具体模型中的密度、黏度定义应以所用方程为准。",
+    "topic": "多相流",
+    "related_slugs": [
+      "vof-interface-dambreak"
+    ],
+    "crop_points": [
+      0,
+      64,
+      720,
+      540
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-vof-volume-fraction.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 951,
+    "printed_page": 944,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 78,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 944。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        64,
+        720,
+        540
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1322
+    },
+    "sha256": "4ccda99371b393646d58b7a78104cfb59e08096b94e910880544fb7bc6bcbda8",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-multiphase-ship-validation",
+    "title": "自由液面高度与阻力的观测量",
+    "caption": "左图比较船体表面的水位分布，右图展示阻力系数随时间变化。它说明结果分析应同时使用空间观测和时间历史；图中数据属于原课程算例，不是本站新运行的 v2512 结果。",
+    "topic": "多相流",
+    "related_slugs": [
+      "vof-interface-dambreak",
+      "sampling-functions-and-observables",
+      "verification-validation-uncertainty"
+    ],
+    "crop_points": [
+      0,
+      145,
+      720,
+      486
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-multiphase-ship-validation.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 958,
+    "printed_page": 951,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 85,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 951。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        145,
+        720,
+        486
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 947
+    },
+    "sha256": "bb9ba91f4a6be4422e9de6db2b130180cb0c3db8c06575106d4c1ff29eb38d64",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-multiphase-ship-boundaries",
+    "title": "自由液面计算域与边界定义",
+    "caption": "原图标出入口、出口、开口、壁面、滑移与对称面，并区分水相和空气区域。它强调几何区域与场边界的对应关系；实际压力和速度条件须根据 v2512 求解器和流动方向确定。",
+    "topic": "多相流",
+    "related_slugs": [
+      "vof-interface-dambreak",
+      "physical-boundary-design"
+    ],
+    "crop_points": [
+      0,
+      105,
+      720,
+      538
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-multiphase-ship-boundaries.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 961,
+    "printed_page": 954,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 88,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 954。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        105,
+        720,
+        538
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1203
+    },
+    "sha256": "c7fada1b894c9860075da8e136003532870eff6771d0b8d5c6b995d3bb768ec9",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-dynamic-mesh-modes",
+    "title": "预设运动、液面晃荡与网格变形",
+    "caption": "图板展示液面晃荡、圆柱预设运动、多物体运动及层网格变化的原课程画面。PDF 中嵌入动画已退化为静态帧，仅用于说明网格运动类型，不能从单帧推断完整运动或计算质量。",
+    "topic": "动网格",
+    "related_slugs": [
+      "moving-mesh-and-ami"
+    ],
+    "crop_points": [
+      0,
+      112,
+      720,
+      538
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-dynamic-mesh-modes.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 1019,
+    "printed_page": 1012,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 146,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 1012。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        112,
+        720,
+        538
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1183
+    },
+    "sha256": "d5a72db9d1bdb453ff1555be72e91ec9095ade08dc4a8434497aa54c915ad83c",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-dynamic-rotor-zones",
+    "title": "旋转区域、静止区域与连接界面",
+    "caption": "搅拌槽网格图明确区分旋转单元区、静止单元区及区域间的面集合。应先从几何和网格识别区域，再决定采用 MRF 或实际网格运动及相应的接口处理。",
+    "topic": "动网格",
+    "related_slugs": [
+      "moving-mesh-and-ami"
+    ],
+    "crop_points": [
+      70,
+      345,
+      620,
+      535
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-dynamic-rotor-zones.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 1026,
+    "printed_page": 1019,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 153,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 1019。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        70,
+        345,
+        620,
+        535
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1528,
+      "height": 528
+    },
+    "sha256": "fcbce23ff0f616b4a857546e2224fe4e74455b55fef449cad08a1667806ad518",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-dynamic-mrf-configuration",
+    "title": "MRF 的旋转区和壁面参考系",
+    "caption": "原图标出转轴、叶轮与旋转内区，并给出原算例的壁面配置位置。图用于分析相对运动和参考系；示例中的角速度及边界类型需结合自己的几何和 v2512 设置重新核对。",
+    "topic": "动网格",
+    "related_slugs": [
+      "moving-mesh-and-ami"
+    ],
+    "crop_points": [
+      25,
+      286,
+      701,
+      516
+    ],
+    "scientific_note": "图中保留原示例配置标签；v2512 算例的壁面速度设置需结合求解器和运动参考系核对。",
+    "file": "/assets/wolf/wolf-dynamic-mrf-configuration.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 1027,
+    "printed_page": 1020,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 154,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 1020。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        25,
+        286,
+        701,
+        516
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 1878,
+      "height": 639
+    },
+    "sha256": "0daacd9b13a34cd14b176c827f49a164db05c49311fa9243caf4888f7aca1415",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-dynamic-ami-interface",
+    "title": "AMI 旋转接口两侧的非共形网格",
+    "caption": "图中区分固定区域、旋转区域与两侧接口网格。几何位置相接不意味着面划分一一匹配；应检查覆盖范围、插值权重及运动过程中接口的有效性。",
+    "topic": "动网格",
+    "related_slugs": [
+      "moving-mesh-and-ami"
+    ],
+    "crop_points": [
+      0,
+      235,
+      720,
+      505
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-dynamic-ami-interface.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 1032,
+    "printed_page": 1025,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 159,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 1025。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        235,
+        720,
+        505
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 750
+    },
+    "sha256": "06edacd4012df940ccbdfdfe2f0b88f66eafa44e8d325aeecde33af690d37841",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-dynamic-cylinder-deformation",
+    "title": "振荡圆柱附近的网格变形",
+    "caption": "四幅网格画面展示原课程预设圆柱运动示例。观察物体附近与远场网格的变形分布，有助于理解运动边界、固定边界和网格位移的关联；网格质量仍需逐时刻检查。",
+    "topic": "动网格",
+    "related_slugs": [
+      "moving-mesh-and-ami"
+    ],
+    "crop_points": [
+      0,
+      115,
+      720,
+      508
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-dynamic-cylinder-deformation.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 1037,
+    "printed_page": 1030,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 164,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 1030。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        115,
+        720,
+        508
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1092
+    },
+    "sha256": "e099576ee2631f953248834369a295881f91a2fea43c77c83cc75af27614cbae",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  },
+  {
+    "id": "wolf-dynamic-floating-body",
+    "title": "浮体运动曲线与自由液面耦合",
+    "caption": "左侧保留原课程的运动时间曲线，右侧为浮体与计算网格示意。它连接刚体运动、自由液面和网格响应；PDF 中的图像帧不代表完整时间序列，也不属于本站新增计算。",
+    "topic": "动网格",
+    "related_slugs": [
+      "moving-mesh-and-ami",
+      "vof-interface-dambreak"
+    ],
+    "crop_points": [
+      0,
+      110,
+      720,
+      538
+    ],
+    "scientific_note": "",
+    "file": "/assets/wolf/wolf-dynamic-floating-body.png",
+    "source_pdf": "all-slides.pdf",
+    "page": 1043,
+    "printed_page": 1036,
+    "source_module_pdf": "module8.pdf",
+    "source_module_page": 170,
+    "source_pdf_sha256": "acb9264929c37b10b6f09edc38145acbe2c4726cd226a9a22b341ef7f8a9694e",
+    "source_url": "https://www.wolfdynamics.com/tutorials.html?id=181&layout=edit",
+    "source_archive_url": "https://doi.org/10.6084/m9.figshare.16783657",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "attribution": "Joel Guerrero / Wolf Dynamics, OpenFOAM Introductory Training (2021), 原讲义印刷页 1036。CC BY-SA 4.0；本站裁剪提取。",
+    "license_evidence": {
+      "pdf": "all-slides.pdf",
+      "page": 2,
+      "quote": "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA 4.0)",
+      "scope": "依据本地 PDF 内许可声明；本次逐页排除独立第三方图片版权限制。分册页与合并讲义页对应。",
+      "excluded_material": "OpenFOAM 进阶有限体积讲义保留所有权利；module8 的第三方照片与带版权限制页未收录。"
+    },
+    "attribution_review": "已阅读该页文字并检查渲染图；未发现独立第三方图像署名或版权限制。页面自带来源、图例及图片内部说明按裁剪范围保留。",
+    "crop": {
+      "coordinate_system": "PDF points; origin top-left",
+      "original_page": [
+        720,
+        540
+      ],
+      "box": [
+        0,
+        110,
+        720,
+        538
+      ],
+      "operation": "矩形裁剪；去除讲义总标题或外围文字留白，不重画、不修饰原始数据。"
+    },
+    "resolution": {
+      "dpi": 200,
+      "width": 2000,
+      "height": 1189
+    },
+    "sha256": "92185bf62be95d36ddf71dad44427c6d81798b851d0e4ee448a21ab0a6fa79f4",
+    "version_note": "图为 Wolf 原讲义资料，用于原理说明；本站操作、命令和案例以 v2512 为准。原讲义图不代表本站新运行的计算结果。",
+    "derivative_license": "CC BY-SA 4.0",
+    "checked_on": "2026-10-02"
+  }
+]
