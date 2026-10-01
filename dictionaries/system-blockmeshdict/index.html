@@ -6,7 +6,10 @@
   <meta name="description" content="blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -46,54 +49,54 @@
 <div class="app-shell">
   <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>system/blockMeshDict</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
   <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>system/blockMeshDict</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
-<p class="source-note">配置位置：<code>system/blockMeshDict</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>vertices</code> · <code>blocks</code> · <code>edges</code> · <code>boundary</code> · <code>scale</code> · <code>convertToMeters</code> · <code>simpleGrading</code></p><h2>关联命令</h2><p><a href="/commands/?q=blockMesh">blockMesh</a></p><h2>本机核对</h2><pre><code>foamVersion
+<p class="source-note">配置位置：<code>system/blockMeshDict</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>vertices</code> · <code>blocks</code> · <code>edges</code> · <code>boundary</code> · <code>scale</code> · <code>convertToMeters</code> · <code>simpleGrading</code></p><h2>关联命令</h2><p><a href="/commands/?q=blockMesh">blockMesh</a></p><h2>本机核对</h2><div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">3 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">foamVersion
 foamDictionary system/blockMeshDict -keywords
-blockMesh -help</code></pre><h2>7.1 system/blockMeshDict</h2><p>blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。</p>
+blockMesh -<span class="hljs-built_in">help</span></code></pre></div><h2>7.1 system/blockMeshDict</h2><p>blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。</p>
 <p>下例建立长 1 m、宽 0.1 m、厚 0.01 m 的二维通道。厚度方向设置一层单元，两侧边界设为 empty。</p>
-<pre><code>FoamFile
-&#123;
-    version 2.0; format ascii;
-    class dictionary; object blockMeshDict;
-&#125;
-scale 1;
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">41 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-keyword">FoamFile</span>
+{
+    <span class="hljs-keyword">version</span> <span class="hljs-number">2.0</span>; <span class="hljs-keyword">format</span> ascii;
+    <span class="hljs-keyword">class</span> dictionary; <span class="hljs-keyword">object</span> blockMeshDict;
+}
+scale <span class="hljs-number">1</span>;
 vertices
 (
-    (0 0 0) (1 0 0) (1 0.1 0) (0 0.1 0)
-    (0 0 0.01) (1 0 0.01) (1 0.1 0.01) (0 0.1 0.01)
+    (<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>) (<span class="hljs-number">1</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>) (<span class="hljs-number">1</span> <span class="hljs-number">0.1</span> <span class="hljs-number">0</span>) (<span class="hljs-number">0</span> <span class="hljs-number">0.1</span> <span class="hljs-number">0</span>)
+    (<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0.01</span>) (<span class="hljs-number">1</span> <span class="hljs-number">0</span> <span class="hljs-number">0.01</span>) (<span class="hljs-number">1</span> <span class="hljs-number">0.1</span> <span class="hljs-number">0.01</span>) (<span class="hljs-number">0</span> <span class="hljs-number">0.1</span> <span class="hljs-number">0.01</span>)
 );
 blocks
 (
-    hex (0 1 2 3 4 5 6 7) (100 20 1)
-        simpleGrading (1 1 1)
+    hex (<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span>) (<span class="hljs-number">100</span> <span class="hljs-number">20</span> <span class="hljs-number">1</span>)
+        simpleGrading (<span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>)
 );
 edges ();
 boundary
 (
     inlet
-    &#123;
-        type patch;
-        faces ((0 4 7 3));
-    &#125;
+    {
+        <span class="hljs-keyword">type</span> patch;
+        faces ((<span class="hljs-number">0</span> <span class="hljs-number">4</span> <span class="hljs-number">7</span> <span class="hljs-number">3</span>));
+    }
     outlet
-    &#123;
-        type patch;
-        faces ((1 2 6 5));
-    &#125;
+    {
+        <span class="hljs-keyword">type</span> patch;
+        faces ((<span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">6</span> <span class="hljs-number">5</span>));
+    }
     walls
-    &#123;
-        type wall;
-        faces ((0 1 5 4) (3 7 6 2));
-    &#125;
+    {
+        <span class="hljs-keyword">type</span> wall;
+        faces ((<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">5</span> <span class="hljs-number">4</span>) (<span class="hljs-number">3</span> <span class="hljs-number">7</span> <span class="hljs-number">6</span> <span class="hljs-number">2</span>));
+    }
     frontAndBack
-    &#123;
-        type empty;
-        faces ((0 3 2 1) (4 5 6 7));
-    &#125;
+    {
+        <span class="hljs-keyword">type</span> <span class="hljs-built_in">empty</span>;
+        faces ((<span class="hljs-number">0</span> <span class="hljs-number">3</span> <span class="hljs-number">2</span> <span class="hljs-number">1</span>) (<span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span>));
+    }
 );
-mergePatchPairs ();</code></pre>
+mergePatchPairs ();</code></pre></div>
 <p>执行 blockMesh 生成网格，再执行 checkMesh -allTopology -allGeometry 检查拓扑和几何。边界面的顶点顺序按外法向排列；多块网格应统一局部坐标和顶点编号。</p>
 <div class="table-scroll"><table>
-<tr><th>参数或结构</th><th>设置方法</th><th>使用条件</th></tr>
+<tbody><tr><th>参数或结构</th><th>设置方法</th><th>使用条件</th></tr>
 <tr><td>scale</td><td>如 0.001 表示原坐标按毫米给出</td><td>采用 scale 统一设置坐标缩放</td></tr>
 <tr><td>simpleGrading</td><td>例如 (1 10 1)</td><td>沿块的局部方向设置；反向时取对应倒数</td></tr>
 <tr><td>多段 grading</td><td>某方向可写 ((0.2 0.3 4) (0.6 0.4 1) (0.2 0.3 0.25))</td><td>每段分别为长度比例、单元比例、扩张比</td></tr>
@@ -102,11 +105,11 @@ mergePatchPairs ();</code></pre>
 <tr><td>boundary/type</td><td>patch、wall、empty、symmetryPlane、wedge、cyclic 等</td><td>定义网格边界类型；场边界另行配置</td></tr>
 <tr><td>defaultPatch</td><td>为未显式列出的面指定名称和类型</td><td>显式边界之外的面归入该边界</td></tr>
 <tr><td>mergePatchPairs</td><td>((patchA patchB))</td><td>合并指定的块接口</td></tr>
-</table></div>
+</tbody></table></div>
 <h2>第 15 章　system/blockMeshDict</h2>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

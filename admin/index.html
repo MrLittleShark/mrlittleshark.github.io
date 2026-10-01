@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>网站管理平台 · FoamLab</title>
+  <meta name="description" content="面向初学者的 OpenFOAM v2512 学习站。28 讲课程、命令查询、配置手册与电极气泡建模。">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="admin" data-lesson="">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>网站管理平台</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="page-wrap admin-page"><div class="eyebrow">SITE ADMINISTRATION</div><div class="page-heading"><h1>网站管理平台</h1><p>管理课程作业、公告与学习资料，查看网站发布状态。</p></div>
+<section class="admin-gate"><h2>管理员身份验证</h2><p id="admin-status" role="status">正在检查登录状态…</p><button class="button" id="admin-login">使用 GitHub 管理员账号授权</button><a class="text-link" href="/account/">个人中心 →</a><p class="muted">管理操作仅限本站管理员。发布时使用管理员的 GitHub 授权，公开课堂记录仍保存在课程仓库。</p></section>
+<div id="admin-error" class="account-error" hidden role="alert"></div>
+<div id="admin-workspace" hidden><nav class="admin-tabs" aria-label="管理模块"><button data-admin-tab="publish" aria-selected="true">发布作业 / 公告</button><button data-admin-tab="records" aria-selected="false">已发布记录</button><button data-admin-tab="content" aria-selected="false">课程内容维护</button><button data-admin-tab="deploy" aria-selected="false">发布状态与维护</button></nav>
+<section class="admin-panel" data-admin-panel="publish"><h2 id="publish-heading">发布新内容</h2><form id="admin-publish-form"><div class="form-grid"><label class="form-field"><span>内容类型</span><select name="kind"><option value="assignment">课程作业</option><option value="announcement">课程公告</option></select></label><label class="form-field"><span>课程练习模板（可选）</span><select id="admin-template"><option value="">手动填写</option><option value="1">第 01 讲 · 环境与 Linux</option><option value="2">第 02 讲 · 方腔流动与 ParaView</option><option value="3">第 03 讲 · 算例目录与量纲</option><option value="4">第 04 讲 · 日志阅读与排错</option><option value="5">第 05 讲 · 溃坝与上升气泡</option><option value="6">第 06 讲 · 圆柱绕流</option><option value="7">第 07 讲 · 网格质量</option><option value="8">第 08 讲 · blockMesh 与轴对称</option><option value="9">第 09 讲 · snappyHexMesh 原理</option><option value="10">第 10 讲 · snappyHexMesh 实战</option><option value="11">第 11 讲 · 网格转换与边界分区</option><option value="12">第 12 讲 · 有限体积与离散格式</option><option value="13">第 13 讲 · 时间步与线性求解器</option><option value="14">第 14 讲 · 压力速度耦合</option><option value="15">第 15 讲 · 残差与边界条件</option><option value="16">第 16 讲 · 格式误差实验</option><option value="17">第 17 讲 · 静止气泡与寄生流</option><option value="18">第 18 讲 · 并行计算</option><option value="19">第 19 讲 · 气泡特征量与后处理</option><option value="20">第 20 讲 · VOF 与接触角</option><option value="21">第 21 讲 · 标量扩散与通量边界</option><option value="22">第 22 讲 · 稳态扩散与混合边界</option><option value="23">第 23 讲 · 源项与自适应加密</option><option value="24">第 24 讲 · codeStream 与 coded 边界</option><option value="25">第 25 讲 · 自定义 myInterFoam</option><option value="26">第 26 讲 · 电极气泡的产气与生长</option><option value="27">第 27 讲 · 电势耦合与气泡脱落</option><option value="28">第 28 讲 · 结课项目与定量验证</option></select></label></div><label class="form-field"><span>标题</span><input name="title" maxlength="100" required></label><label class="form-field"><span>正文（支持 GitHub Markdown 与 TeX 公式）</span><textarea name="body" rows="12" maxlength="20000" required></textarea></label><label class="form-field" id="record-state-field" hidden><span>状态</span><select name="state"><option value="open">进行中 / 已发布</option><option value="closed">已结束</option></select></label><div class="admin-actions"><button class="button" type="submit">检查发布内容</button><button class="button secondary" type="button" id="new-record">清空并新建</button></div></form><div id="publish-review" class="admin-review" hidden><h3>发布前核对</h3><strong id="review-title"></strong><pre id="review-body"></pre><button class="button" id="confirm-publish">确认发布到公开课堂</button><p id="publish-result" role="status"></p></div></section>
+<section class="admin-panel" data-admin-panel="records" hidden><div class="section-heading"><h2>已发布记录</h2><button class="button secondary" id="reload-admin-records">刷新</button></div><div id="admin-records"></div></section>
+<section class="admin-panel" data-admin-panel="content" hidden><h2>课程内容维护</h2><p class="muted">选择课程或参考页面，编辑 Markdown 和 TeX。保存后自动运行 Hexo 并更新网站；发布前会检查公式与构建结果。</p><label class="form-field"><span>页面</span><select id="admin-content-path"><option value="">正在读取页面目录…</option></select></label><div class="admin-actions"><button class="button secondary" id="load-content">载入当前版本</button><span id="content-version" class="muted"></span></div><label class="form-field"><span>页面源文件</span><textarea class="admin-editor" id="admin-content-editor" rows="24" spellcheck="false" disabled></textarea></label><div class="admin-actions"><button class="button" id="save-content" disabled>保存并发布更新</button><a class="text-link" id="content-live-link" target="_blank" rel="noopener" href="/courses/">查看线上页面 ↗</a></div><p id="content-save-status" role="status"></p><p class="muted">保留文件开头的页面信息和原有 raw 标记。独立公式使用 \[ … \]，行内公式使用 \( … \)。代码块请标注 bash、openfoam、cpp 或 python。</p></section>
+<section class="admin-panel" data-admin-panel="deploy" hidden><div class="section-heading"><h2>发布状态与维护</h2><button class="button secondary" id="reload-deployments">刷新状态</button></div><div id="admin-deployments"></div><div class="quick-links"><a href="/maintenance/">网站维护手册 →</a><a href="https://github.com/MrLittleShark/mrlittleshark.github.io/tree/foamlab-source" target="_blank" rel="noopener">网站源文件 ↗</a><a href="https://github.com/MrLittleShark/mrlittleshark.github.io/actions" target="_blank" rel="noopener">构建日志 ↗</a><a href="https://supabase.com/dashboard/project/nmkforbzmbstasnjxlid" target="_blank" rel="noopener">认证与数据库 ↗</a></div></section>
+</div></div><script src="/assets/admin.js" defer></script>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>

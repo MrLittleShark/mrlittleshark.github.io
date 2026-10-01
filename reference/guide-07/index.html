@@ -6,7 +6,10 @@
   <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -47,21 +50,21 @@
   <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>第 7 章　求解器与运行控制</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
   <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>第 7 章　求解器与运行控制</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
 <p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h4>7.1 跑一个算例的标准流程</h4>
-<pre><code>$ run                                     # 去工作目录
-$ cp -r $FOAM_TUTORIALS/incompressible/simpleFoam/pitzDaily .
-$ cd pitzDaily
-$ blockMesh              &gt; log.blockMesh  2&gt;&amp;1    # ① 建网格
-$ checkMesh              &gt; log.checkMesh  2&gt;&amp;1    # ② 查网格
-$ simpleFoam             &gt; log.simpleFoam 2&gt;&amp;1 &amp;  # ③ 后台求解，日志落盘
-$ tail -f log.simpleFoam                          # ④ 实时看进度（Ctrl+C 只退出查看，不影响计算）
-$ foamLog log.simpleFoam                          # ⑤ 提取残差
-$ paraFoam                                        # ⑥ 可视化</code></pre>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">9 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">$ run                                     <span class="hljs-comment"># 去工作目录</span>
+$ <span class="hljs-built_in">cp</span> -r <span class="hljs-variable">$FOAM_TUTORIALS</span>/incompressible/simpleFoam/pitzDaily .
+$ <span class="hljs-built_in">cd</span> pitzDaily
+$ blockMesh              &gt; log.blockMesh  2&gt;&amp;1    <span class="hljs-comment"># ① 建网格</span>
+$ checkMesh              &gt; log.checkMesh  2&gt;&amp;1    <span class="hljs-comment"># ② 查网格</span>
+$ simpleFoam             &gt; log.simpleFoam 2&gt;&amp;1 &amp;  <span class="hljs-comment"># ③ 后台求解，日志落盘</span>
+$ <span class="hljs-built_in">tail</span> -f log.simpleFoam                          <span class="hljs-comment"># ④ 实时看进度（Ctrl+C 只退出查看，不影响计算）</span>
+$ foamLog log.simpleFoam                          <span class="hljs-comment"># ⑤ 提取残差</span>
+$ paraFoam                                        <span class="hljs-comment"># ⑥ 可视化</span></code></pre></div>
 <p>重定向可保存标准输出与标准错误，便于记录运行过程和排查异常。2&gt;&amp;1 将标准错误合并到标准输出。foamLog 可从求解器日志提取残差数据；foamMonitor 可用于监视相应的数据文件。</p>
 <p>为什么用 &amp; 放后台：前台运行时终端被占住，网络一断（尤其是 ssh 到服务器）进程就被杀。更稳的做法见第 20 章的 nohup 与 tmux。</p>
 <h4>7.2 求解器名字的构词法</h4>
 <p>不要死记两百个求解器名，先掌握构词规律：</p>
 <div class="table-scroll"><table>
-<tr><th>词缀</th><th>含义</th><th>例子</th></tr>
+<tbody><tr><th>词缀</th><th>含义</th><th>例子</th></tr>
 <tr><td>ico</td><td>incompressible，层流不可压</td><td>icoFoam</td></tr>
 <tr><td>simple</td><td>用 SIMPLE 算法 → 稳态</td><td>simpleFoam、rhoSimpleFoam</td></tr>
 <tr><td>piso / pimple</td><td>PISO / PIMPLE 算法 → 瞬态</td><td>pisoFoam、pimpleFoam</td></tr>
@@ -74,44 +77,44 @@ $ paraFoam                                        # ⑥ 可视化</code></pre>
 <tr><td>over</td><td>重叠网格（overset）</td><td>overInterDyMFoam</td></tr>
 <tr><td>DyM</td><td>动网格（v1706 后大多已并入主求解器）</td><td>pimpleFoam 直接支持动网格</td></tr>
 <tr><td>Foam</td><td>后缀，无实义</td><td>——</td></tr>
-</table></div>
+</tbody></table></div>
 <p>由此可以推断：想算”瞬态、可压、带反应”的问题，八成是 reactingFoam；“稳态、不可压、湍流”就是 simpleFoam。这个推断能力比背表有用。</p>
 <h4>7.3 常用求解器速查</h4>
 <p>基础</p>
 <div class="table-scroll"><table>
-<tr><th>求解器</th><th>解什么</th><th>关键字典</th></tr>
+<tbody><tr><th>求解器</th><th>解什么</th><th>关键字典</th></tr>
 <tr><td>laplacianFoam</td><td>纯扩散方程（导热）</td><td>transportProperties（DT）</td></tr>
 <tr><td>scalarTransportFoam</td><td>给定流场下的标量输运</td><td>transportProperties</td></tr>
 <tr><td>potentialFoam</td><td>势流。常用来给复杂算例造初场</td><td>——</td></tr>
-</table></div>
+</tbody></table></div>
 <p>不可压缩</p>
 <div class="table-scroll"><table>
-<tr><th>求解器</th><th>适用</th></tr>
+<tbody><tr><th>求解器</th><th>适用</th></tr>
 <tr><td>icoFoam</td><td>层流、瞬态、牛顿流体。教学入门用</td></tr>
 <tr><td>simpleFoam</td><td>稳态、湍流。外流绕流、管道，最常用</td></tr>
 <tr><td>pimpleFoam</td><td>瞬态、湍流，允许大 Courant 数（LES/URANS 主力）</td></tr>
-<tr><td>pisoFoam</td><td>瞬态、湍流，要求 Co &lt; 1（做 LES 时精度更可控）</td></tr>
+<tr><td>pisoFoam</td><td>瞬态、湍流，要求 <span class="math-formula" data-tex="\mathrm{Co} < 1"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi></mrow><mo>&lt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{Co} &lt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathrm">Co</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>（做 LES 时精度更可控）</td></tr>
 <tr><td>boundaryFoam</td><td>一维充分发展边界层，标定壁面函数用</td></tr>
 <tr><td>adjointShapeOptimizationFoam</td><td>伴随法形状优化</td></tr>
-</table></div>
+</tbody></table></div>
 <p>可压缩</p>
 <div class="table-scroll"><table>
-<tr><th>求解器</th><th>适用</th></tr>
+<tbody><tr><th>求解器</th><th>适用</th></tr>
 <tr><td>rhoSimpleFoam</td><td>稳态可压</td></tr>
 <tr><td>rhoPimpleFoam</td><td>瞬态可压（亚声速到跨声速），基于压力</td></tr>
 <tr><td>rhoCentralFoam</td><td>基于密度的中心格式，激波捕捉。超声速、激波管、爆炸问题首选</td></tr>
 <tr><td>sonicFoam</td><td>瞬态跨/超声速（较老，多数场景已被上面两个取代）</td></tr>
-</table></div>
+</tbody></table></div>
 <p>传热/浮力</p>
 <div class="table-scroll"><table>
-<tr><th>求解器</th><th>适用</th></tr>
+<tbody><tr><th>求解器</th><th>适用</th></tr>
 <tr><td>buoyantSimpleFoam / buoyantPimpleFoam</td><td>稳态/瞬态自然对流</td></tr>
 <tr><td>chtMultiRegionFoam</td><td>流固共轭传热（多区域）</td></tr>
 <tr><td>thermoFoam</td><td>冻结流场，只解能量方程</td></tr>
-</table></div>
+</tbody></table></div>
 <p>多相</p>
 <div class="table-scroll"><table>
-<tr><th>求解器</th><th>适用</th></tr>
+<tbody><tr><th>求解器</th><th>适用</th></tr>
 <tr><td>interFoam</td><td>两相不可压 VOF（溃坝、自由液面）。多相入门必学</td></tr>
 <tr><td>interIsoFoam</td><td>用 isoAdvector 几何界面重构，界面更锐利</td></tr>
 <tr><td>compressibleInterFoam</td><td>两相且可压（空化、水下爆炸）</td></tr>
@@ -121,10 +124,10 @@ $ paraFoam                                        # ⑥ 可视化</code></pre>
 <tr><td>driftFluxFoam</td><td>沉降/悬浮泥沙类</td></tr>
 <tr><td>multiphaseEulerFoam</td><td>欧拉-欧拉多相（气泡塔、流化床）</td></tr>
 <tr><td>potentialFreeSurfaceFoam</td><td>小变形自由液面（势流近似）</td></tr>
-</table></div>
+</tbody></table></div>
 <p>颗粒 / 反应 / 其他</p>
 <div class="table-scroll"><table>
-<tr><th>求解器</th><th>适用</th></tr>
+<tbody><tr><th>求解器</th><th>适用</th></tr>
 <tr><td>DPMFoam / MPPICFoam</td><td>离散颗粒（稠密颗粒用 MPPIC）</td></tr>
 <tr><td>icoUncoupledKinematicParcelFoam</td><td>单向耦合示踪颗粒</td></tr>
 <tr><td>reactingFoam</td><td>燃烧/化学反应</td></tr>
@@ -135,56 +138,56 @@ $ paraFoam                                        # ⑥ 可视化</code></pre>
 <tr><td>solidDisplacementFoam</td><td>线弹性固体应力</td></tr>
 <tr><td>electrostaticFoam / mhdFoam / magneticFoam</td><td>静电 / 磁流体 / 静磁</td></tr>
 <tr><td>overPimpleDyMFoam / overInterDyMFoam</td><td>重叠网格版本</td></tr>
-</table></div>
+</tbody></table></div>
 <p>怎么确认本机到底有哪些：</p>
-<pre><code>$ ls $FOAM_APPBIN | grep -i foam | sort | less
-$ ls $FOAM_SOLVERS/*                      # 按类别看源码目录</code></pre>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">2 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">$ <span class="hljs-built_in">ls</span> <span class="hljs-variable">$FOAM_APPBIN</span> | grep -i foam | <span class="hljs-built_in">sort</span> | less
+$ <span class="hljs-built_in">ls</span> <span class="hljs-variable">$FOAM_SOLVERS</span>/*                      <span class="hljs-comment"># 按类别看源码目录</span></code></pre></div>
 <h4>7.4 求解器的运行选项</h4>
-<pre><code>simpleFoam [-case &lt;dir&gt;] [-parallel] [-postProcess] [-dry-run] [-noFunctionObjects]
-           [-fileHandler collated] [-libs &#x27;(&quot;libMyBC.so&quot;)&#x27;] [-region &lt;name&gt;]</code></pre>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">2 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">simpleFoam [-<span class="hljs-keyword">case</span> &lt;<span class="hljs-built_in">dir</span>&gt;] [-parallel] [-postProcess] [-dry-run] [-noFunctionObjects]
+           [-fileHandler collated] [-libs <span class="hljs-string">'("libMyBC.so")'</span>] [-region &lt;name&gt;]</code></pre></div>
 <p>-postProcess：把求解器当后处理器用（非常重要的技巧）</p>
-<pre><code># 用求解器自己的物理模型，对已有结果做后处理（例如算 yPlus 需要湍流模型信息）
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">3 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash"><span class="hljs-comment"># 用求解器自己的物理模型，对已有结果做后处理（例如算 yPlus 需要湍流模型信息）</span>
 $ simpleFoam -postProcess -func yPlus -latestTime
-$ pimpleFoam -postProcess -func &quot;grad(p)&quot; -time &#x27;1:5&#x27;</code></pre>
+$ pimpleFoam -postProcess -func <span class="hljs-string">"grad(p)"</span> -<span class="hljs-keyword">time</span> <span class="hljs-string">'1:5'</span></code></pre></div>
 <p>为什么要用 -postProcess 而不是 postProcess：postProcess 是通用工具，不知道你的湍流模型和物性；而 &lt;求解器&gt; -postProcess 会加载与求解时完全相同的模型，所以像 yPlus、wallShearStress、turbulenceFields 这类依赖模型的量必须用它。</p>
 <p>-dry-run：开算前的语法体检</p>
-<pre><code>$ interFoam -dry-run</code></pre>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">1 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">$ interFoam -dry-run</code></pre></div>
 <p>它会读完所有字典、建好场、然后退出。字典写错、边界条件名拼错、场文件缺失都会在这一步暴露——比跑 3 小时后崩掉划算得多。</p>
 <h4>7.5 续算、中止与在线改参数</h4>
 <p>续算（从上次结果接着算）</p>
-<pre><code>// system/controlDict
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">4 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">// system/controlDict
 startFrom       latestTime;    // 从最新时间目录接着算
 endTime         10;            // 把结束时间改大
-$ simpleFoam &gt;&gt; log.simpleFoam 2&gt;&amp;1 &amp;      # 用 &gt;&gt; 追加，保留之前的日志</code></pre>
+$ simpleFoam &gt;&gt; log.simpleFoam 2&gt;&amp;1 &amp;      <span class="hljs-comment"># 用 &gt;&gt; 追加，保留之前的日志</span></code></pre></div>
 <p>优雅地提前中止（不要直接 kill，否则最后一步结果没写完）</p>
-<pre><code>// controlDict 里保证
-runTimeModifiable  true;      // 允许运行中修改 controlDict</code></pre>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">2 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-comment">// controlDict 里保证</span>
+runTimeModifiable  <span class="hljs-literal">true</span>;      <span class="hljs-comment">// 允许运行中修改 controlDict</span></code></pre></div>
 <p>然后在算例跑着的时候改 controlDict：</p>
-<pre><code>$ foamDictionary system/controlDict -entry stopAt -set writeNow</code></pre>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">1 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">$ foamDictionary system/controlDict -entry stopAt -<span class="hljs-built_in">set</span> writeNow</code></pre></div>
 <p>求解器会在当前时间步结束后写出结果再退出。这就是 runTimeModifiable 的价值：算到一半发现输出频率不合适、想提前停，都不用重来。</p>
 <p>stopAt 的四个取值</p>
 <div class="table-scroll"><table>
-<tr><th>值</th><th>行为</th></tr>
+<tbody><tr><th>值</th><th>行为</th></tr>
 <tr><td>endTime</td><td>算到 endTime（默认）</td></tr>
 <tr><td>writeNow</td><td>立即写结果并退出</td></tr>
 <tr><td>noWriteNow</td><td>立即退出，不写</td></tr>
 <tr><td>nextWrite</td><td>到下一个输出时刻后退出</td></tr>
-</table></div>
+</tbody></table></div>
 <h4>7.6 时间步长与 Courant 数</h4>
 <p>瞬态算例几乎都会用自适应时间步：</p>
-<pre><code>// system/controlDict
-adjustTimeStep  yes;
-maxCo           0.9;        // 全场最大 Courant 数
-maxAlphaCo      0.9;        // VOF：界面处的 Courant 数（更严）
-maxDeltaT       1e-3;       // 时间步上限，防止流速很低时步长失控变大</code></pre>
-<p>为什么要控制 Courant 数：Co = |U|Δt/Δx，表示一个时间步内流体走过几个网格。显式格式 Co &gt; 1 直接发散；隐式格式（PIMPLE）虽能容忍 Co &gt; 1，但精度会掉。interFoam 这类界面追踪算法对界面处的 Co 尤其敏感，所以单列一个 maxAlphaCo。</p>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">5 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-comment">// system/controlDict</span>
+adjustTimeStep  <span class="hljs-literal">yes</span>;
+maxCo           <span class="hljs-number">0.9</span>;        <span class="hljs-comment">// 全场最大 Courant 数</span>
+maxAlphaCo      <span class="hljs-number">0.9</span>;        <span class="hljs-comment">// VOF：界面处的 Courant 数（更严）</span>
+maxDeltaT       <span class="hljs-number">1e-3</span>;       <span class="hljs-comment">// 时间步上限，防止流速很低时步长失控变大</span></code></pre></div>
+<p>为什么要控制 Courant 数：<span class="math-formula" data-tex="\mathrm{Co}=\frac{|\boldsymbol U|\Delta t}{\Delta x}"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi></mrow><mo>=</mo><mfrac><mrow><mi mathvariant="normal">∣</mi><mi mathvariant="bold-italic">U</mi><mi mathvariant="normal">∣</mi><mi mathvariant="normal">Δ</mi><mi>t</mi></mrow><mrow><mi mathvariant="normal">Δ</mi><mi>x</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\mathrm{Co}=\frac{|\boldsymbol U|\Delta t}{\Delta x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord"><span class="mord mathrm">Co</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1.355em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">Δ</span><span class="mord mathnormal mtight">x</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">∣</span><span class="mord mtight"><span class="mord mtight"><span class="mord boldsymbol mtight" style="margin-right:0.1142em;">U</span></span></span><span class="mord mtight">∣Δ</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>，表示一个时间步内流体走过几个网格。显式格式 <span class="math-formula" data-tex="\mathrm{Co} > 1"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi></mrow><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{Co} &gt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathrm">Co</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span> 直接发散；隐式格式（PIMPLE）虽能容忍 <span class="math-formula" data-tex="\mathrm{Co} > 1"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">C</mi><mi mathvariant="normal">o</mi></mrow><mo>&gt;</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\mathrm{Co} &gt; 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathrm">Co</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，但精度会掉。interFoam 这类界面追踪算法对界面处的 Co 尤其敏感，所以单列一个 maxAlphaCo。</p>
 <p>日志里怎么看：</p>
-<pre><code>Courant Number mean: 0.0132 max: 0.847
-deltaT = 0.000123</code></pre>
+<div class="code-panel" data-language="plaintext"><div class="code-toolbar"><span class="code-language">文本 / 日志</span><span class="code-lines">2 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="文本 / 日志代码"><code class="hljs language-plaintext">Courant Number mean: 0.0132 max: 0.847
+deltaT = 0.000123</code></pre></div>
 <p>max 长期贴着你设的上限是正常的（说明自适应在起作用）；如果 deltaT 越缩越小到 1e-12，说明局部有问题（网格坏点或场发散），该去查网格而不是继续等。</p>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

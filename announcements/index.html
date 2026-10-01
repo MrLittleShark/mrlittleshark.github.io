@@ -6,7 +6,10 @@
   <meta name="description" content="面向初学者的 OpenFOAM v2512 学习站。28 讲课程、命令查询、配置手册与电极气泡建模。">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -48,15 +51,14 @@
   <main id="main">
 <div class="page-wrap" id="classroom" data-type="announcements">
 <div class="eyebrow">COURSE BULLETIN</div>
-<div class="page-heading workspace-heading"><div><h1>课程公告</h1><p>查看课程安排、资料更新与作业通知。</p></div><a class="button" href="#teacher-tools">发布公告 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a></div>
+<div class="page-heading workspace-heading"><div><h1>课程公告</h1><p>查看课程安排、资料更新与作业通知。</p></div></div>
 <div class="classroom-note"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg><p>使用 GitHub 账号参与。发布、提交与回复会在 GitHub 上确认，内容公开可见；请勿填写密码、学号等个人敏感信息。</p><a href="https://github.com/MrLittleShark/MrLittleShark.github.io/issues" target="_blank" rel="noopener noreferrer" class="text-link">在 GitHub 查看 ↗</a></div>
 <div class="workspace-tools"><div class="filter-tabs" role="group" aria-label="内容筛选"><button data-issue-filter="0" class="selected" aria-pressed="true">课程公告</button></div><button class="text-link icon-button-text" id="refresh-issues">刷新内容 ↻</button></div><p class="live-status" id="live-status" aria-live="polite">正在连接 GitHub，读取公开记录…</p><div class="issue-list" id="issue-list"></div><button class="button secondary" id="load-more" hidden>加载更多记录</button>
 
-<details class="teaching-tools" id="teacher-tools"><summary>教师工作区 · 发布课程公告</summary><p>正式作业和公告仅展示仓库所有者或配置中指定教师发布的记录。其他账号同名发布的内容不会进入正式列表。</p><section class="composer"><form id="teacher-form" data-kind="announcement"><div class="form-grid"><label class="form-field"><span>标题</span><input name="subject" type="text" required maxlength="90" placeholder="例如：本周学习安排"></label></div><label class="form-field"><span>公告内容</span><textarea name="body" required maxlength="4000" placeholder="写明时间、涉及讲次和需要完成的事项。"></textarea></label><div class="composer-actions"><button type="submit" class="button">前往 GitHub 确认发布 ↗</button><p>使用教师 GitHub 账号发布，可在原 Issue 中编辑或关闭。</p></div><p class="form-error error" role="alert"></p></form></section></details>
-<p class="github-destination">公开记录保存在 MrLittleShark / MrLittleShark.github.io 仓库。学习进度仅保存在当前浏览器。</p>
+<p class="github-destination">公开记录保存在 MrLittleShark / MrLittleShark.github.io 仓库。登录后可在个人中心同步学习进度。</p>
 </div><script src="/assets/classroom.js" defer></script>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

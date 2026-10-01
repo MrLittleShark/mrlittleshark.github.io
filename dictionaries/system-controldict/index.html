@@ -6,7 +6,10 @@
   <meta name="description" content="Courant 数由局部速度、通量、单元尺寸和时间步共同决定。可压缩激波计算还需考虑声速约束，时间步上限应结合所用求解器和离散格式确定。">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -46,34 +49,34 @@
 <div class="app-shell">
   <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>system/controlDict</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
   <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>system/controlDict</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
-<p class="source-note">配置位置：<code>system/controlDict</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>application</code> · <code>startFrom</code> · <code>startTime</code> · <code>stopAt</code> · <code>endTime</code> · <code>deltaT</code> · <code>writeControl</code> · <code>writeInterval</code> · <code>purgeWrite</code> · <code>adjustTimeStep</code> · <code>maxCo</code> · <code>maxAlphaCo</code> · <code>functions</code> · <code>libs</code></p><h2>关联命令</h2><p><a href="/commands/?q=icoFoam">icoFoam</a> · <a href="/commands/?q=interFoam">interFoam</a> · <a href="/commands/?q=simpleFoam">simpleFoam</a></p><h2>本机核对</h2><pre><code>foamVersion
+<p class="source-note">配置位置：<code>system/controlDict</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>application</code> · <code>startFrom</code> · <code>startTime</code> · <code>stopAt</code> · <code>endTime</code> · <code>deltaT</code> · <code>writeControl</code> · <code>writeInterval</code> · <code>purgeWrite</code> · <code>adjustTimeStep</code> · <code>maxCo</code> · <code>maxAlphaCo</code> · <code>functions</code> · <code>libs</code></p><h2>关联命令</h2><p><a href="/commands/?q=icoFoam">icoFoam</a> · <a href="/commands/?q=interFoam">interFoam</a> · <a href="/commands/?q=simpleFoam">simpleFoam</a></p><h2>本机核对</h2><div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">3 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">foamVersion
 foamDictionary system/controlDict -keywords
-icoFoam -help</code></pre><h2>8.1 system/controlDict</h2><pre><code>FoamFile
-&#123;
-    version 2.0; format ascii;
-    class dictionary; object controlDict;
-&#125;
-application pimpleFoam;
+icoFoam -<span class="hljs-built_in">help</span></code></pre></div><h2>8.1 system/controlDict</h2><div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">24 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-keyword">FoamFile</span>
+{
+    <span class="hljs-keyword">version</span> <span class="hljs-number">2.0</span>; <span class="hljs-keyword">format</span> ascii;
+    <span class="hljs-keyword">class</span> dictionary; <span class="hljs-keyword">object</span> controlDict;
+}
+<span class="hljs-keyword">application</span> pimpleFoam;
 startFrom startTime;
-startTime 0;
+startTime <span class="hljs-number">0</span>;
 stopAt endTime;
-endTime 1;
-deltaT 0.001;
+endTime <span class="hljs-number">1</span>;
+deltaT <span class="hljs-number">0.001</span>;
 writeControl adjustableRunTime;
-writeInterval 0.05;
-purgeWrite 0;
+writeInterval <span class="hljs-number">0.05</span>;
+purgeWrite <span class="hljs-number">0</span>;
 writeFormat ascii;
-writePrecision 8;
-writeCompression off;
+writePrecision <span class="hljs-number">8</span>;
+writeCompression <span class="hljs-literal">off</span>;
 timeFormat general;
-timePrecision 8;
-runTimeModifiable true;
-adjustTimeStep true;
-maxCo 0.5;
-maxDeltaT 0.01;
-functions &#123;&#125;;</code></pre>
+timePrecision <span class="hljs-number">8</span>;
+runTimeModifiable <span class="hljs-literal">true</span>;
+adjustTimeStep <span class="hljs-literal">true</span>;
+maxCo <span class="hljs-number">0.5</span>;
+maxDeltaT <span class="hljs-number">0.01</span>;
+<span class="hljs-keyword">functions</span> {};</code></pre></div>
 <div class="table-scroll"><table>
-<tr><th>参数</th><th>含义与可选值</th><th>设置方法</th></tr>
+<tbody><tr><th>参数</th><th>含义与可选值</th><th>设置方法</th></tr>
 <tr><td>application</td><td>供运行脚本选择的应用名称</td><td>脚本按此项调用程序；终端直接调用时执行指定程序</td></tr>
 <tr><td>startFrom</td><td>startTime、firstTime、latestTime</td><td>续算通常用 latestTime</td></tr>
 <tr><td>startTime</td><td>开始时刻</td><td>在采用相应 startFrom 模式时读取</td></tr>
@@ -90,14 +93,14 @@ functions &#123;&#125;;</code></pre>
 <tr><td>adjustTimeStep、maxCo、maxDeltaT</td><td>自动时间步控制</td><td>仅在实现相应时间步控制的求解器中生效</td></tr>
 <tr><td>maxAlphaCo</td><td>VOF 相分数相关 Courant 限制</td><td>仅相关求解器使用</td></tr>
 <tr><td>maxDi</td><td>热扩散数控制</td><td>仅相关传热求解器使用</td></tr>
-<tr><td>libs</td><td>加载自定义或功能库</td><td>例如 (&quot;libMyBC.so&quot;)</td></tr>
+<tr><td>libs</td><td>加载自定义或功能库</td><td>例如 ("libMyBC.so")</td></tr>
 <tr><td>functions</td><td>运行时函数对象</td><td>见第 10 章</td></tr>
-</table></div>
+</tbody></table></div>
 <p>Courant 数由局部速度、通量、单元尺寸和时间步共同决定。可压缩激波计算还需考虑声速约束，时间步上限应结合所用求解器和离散格式确定。</p>
 <h2>第 12 章　system/controlDict</h2><p>它管什么：算多久、多久输出一次、用什么求解器、跑哪些后处理。每个算例必需。</p>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

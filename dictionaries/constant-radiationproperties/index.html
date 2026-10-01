@@ -6,7 +6,10 @@
   <meta name="description" content="air 和 solidBlock 分别配置 constant/区域名/polyMesh、热物性文件以及 system/区域名 下的 fvSchemes 和 fvSolution。初始场位于 0/区域名/。流固界面通常采用 mappedWall 网格边界，并设置相邻区域映射和温度耦合条件。">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -46,17 +49,17 @@
 <div class="app-shell">
   <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>constant/radiationProperties</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
   <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>constant/radiationProperties</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
-<p class="source-note">配置位置：<code>constant/radiationProperties</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>radiation</code> · <code>radiationModel</code> · <code>absorptionEmissionModel</code> · <code>scatterModel</code> · <code>sootModel</code></p><h2>关联命令</h2><p><a href="/commands/?q=buoyantSimpleFoam">buoyantSimpleFoam</a></p><h2>本机核对</h2><pre><code>foamVersion
+<p class="source-note">配置位置：<code>constant/radiationProperties</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>radiation</code> · <code>radiationModel</code> · <code>absorptionEmissionModel</code> · <code>scatterModel</code> · <code>sootModel</code></p><h2>关联命令</h2><p><a href="/commands/?q=buoyantSimpleFoam">buoyantSimpleFoam</a></p><h2>本机核对</h2><div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">3 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">foamVersion
 foamDictionary constant/radiationProperties -keywords
-buoyantSimpleFoam -help</code></pre><h2>9.12 多区域传热及专用模型配置</h2><pre><code>// constant/regionProperties 片段
+buoyantSimpleFoam -<span class="hljs-built_in">help</span></code></pre></div><h2>9.12 多区域传热及专用模型配置</h2><div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">6 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-comment">// constant/regionProperties 片段</span>
 regions
 (
     fluid (air)
     solid (solidBlock)
-);</code></pre>
+);</code></pre></div>
 <p>air 和 solidBlock 分别配置 constant/区域名/polyMesh、热物性文件以及 system/区域名 下的 fvSchemes 和 fvSolution。初始场位于 0/区域名/。流固界面通常采用 mappedWall 网格边界，并设置相邻区域映射和温度耦合条件。</p>
 <div class="table-scroll"><table>
-<tr><th>文件</th><th>用途</th><th>主要参数</th></tr>
+<tbody><tr><th>文件</th><th>用途</th><th>主要参数</th></tr>
 <tr><td>constant/radiationProperties</td><td>辐射模型</td><td>radiation on/off、radiationModel（P1、fvDOM、viewFactor 等）、solverFreq 及模型专用系数</td></tr>
 <tr><td>constant/viewFactorsDict</td><td>视角因子设置</td><td>指定参与边界，按生成工具配置积分或射线参数</td></tr>
 <tr><td>constant/chemistryProperties</td><td>化学积分</td><td>chemistry、chemistryType 中的 solver/method、initialChemicalTimeStep、ODE 系数</td></tr>
@@ -71,17 +74,17 @@ regions
 <tr><td>system/faSchemes、faSolution 的有限面积位置</td><td>面上离散与求解</td><td>v2512 常位于 system/finite-area/；使用 faMesh 对应的字段和算子</td></tr>
 <tr><td>system/finite-area/faMeshDefinition</td><td>有限面积网格生成</td><td>polyMeshPatches、boundary、面选取和边界命名</td></tr>
 <tr><td>system/optimisationDict</td><td>伴随优化</td><td>优化类型、设计变量、目标函数、约束和更新算法</td></tr>
-</table></div>
-<p>专用模型的配置项随物种机理、粒子模型、燃烧模型和优化算法变化。可通过 find &quot;$FOAM_TUTORIALS&quot; -name 文件名 查找对应求解器算例，并据模型源码确定条目层级及参数。</p>
-<h2>18.6 radiationProperties</h2><pre><code>radiation       on;
-radiationModel  P1;              // none / P1 / fvDOM / viewFactor / opaqueSolid
-solverFreq      10;
+</tbody></table></div>
+<p>专用模型的配置项随物种机理、粒子模型、燃烧模型和优化算法变化。可通过 find "$FOAM_TUTORIALS" -name 文件名 查找对应求解器算例，并据模型源码确定条目层级及参数。</p>
+<h2>18.6 radiationProperties</h2><div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">6 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">radiation       <span class="hljs-literal">on</span>;
+radiationModel  P1;              <span class="hljs-comment">// none / P1 / fvDOM / viewFactor / opaqueSolid</span>
+solverFreq      <span class="hljs-number">10</span>;
 absorptionEmissionModel constantAbsorptionEmission;
-constantAbsorptionEmissionCoeffs &#123; absorptivity 0.5; emissivity 0.5; E 0; &#125;
-scatterModel    none;</code></pre>
+constantAbsorptionEmissionCoeffs { absorptivity <span class="hljs-number">0.5</span>; emissivity <span class="hljs-number">0.5</span>; E <span class="hljs-number">0</span>; }
+scatterModel    none;</code></pre></div>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

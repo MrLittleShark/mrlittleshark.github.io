@@ -4,7 +4,7 @@
  const state={client:null,user:null,profile:null,progress:[],configured:false,githubEnabled:false,dataError:false};window.foamAuth=state;
  const report=message=>{const box=$('#account-error');if(box){box.hidden=false;box.textContent=message;}else window.foamNotify?.(message);};
  const text=(selector,value)=>{if($(selector))$(selector).textContent=value;};
- const emit=()=>window.dispatchEvent(new CustomEvent('foam-auth-change',{detail:{user:state.user,progress:[...state.progress]}}));
+ const emit=()=>{window.dispatchEvent(new CustomEvent('foam-auth-change',{detail:{user:state.user,progress:[...state.progress]}}));if(state.user&&location.pathname==='/account/'&&sessionStorage.getItem('foamlab.returnTo')==='admin'){sessionStorage.removeItem('foamlab.returnTo');location.replace('/admin/');}};
  function render(){const signed=!!state.user;const nav=$('#account-nav-label');if(nav)nav.textContent=signed?'个人中心':'登录 / 个人中心';const page=$('.account-page');if(!page)return;
  $('#sign-in').hidden=signed;$('#sign-out').hidden=!signed;$('#profile-fields').disabled=!signed||state.dataError;$('#sign-in').disabled=!state.githubEnabled;
  if(!signed){text('#account-name','尚未登录');text('#account-state',state.githubEnabled?'使用 GitHub 授权登录；本站不读取或保存 GitHub 密码。':state.configured?'GitHub 登录正在配置中。课程、资料与公开课堂仍可访问。':'登录服务尚未启用。课程、资料与公开课堂仍可访问。');return;}

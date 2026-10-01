@@ -6,7 +6,10 @@
   <meta name="description" content="下例给出不可压缩非稳态层流的离散设置。采用湍流模型或求解能量方程时，应补充相应方程的对流项。">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -46,28 +49,28 @@
 <div class="app-shell">
   <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>system/fvSchemes</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
   <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>system/fvSchemes</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
-<p class="source-note">配置位置：<code>system/fvSchemes</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>ddtSchemes</code> · <code>gradSchemes</code> · <code>divSchemes</code> · <code>laplacianSchemes</code> · <code>interpolationSchemes</code> · <code>snGradSchemes</code> · <code>fluxRequired</code> · <code>wallDist</code></p><h2>关联命令</h2><p><a href="/commands/?q=icoFoam">icoFoam</a> · <a href="/commands/?q=interFoam">interFoam</a> · <a href="/commands/?q=simpleFoam">simpleFoam</a></p><h2>本机核对</h2><pre><code>foamVersion
+<p class="source-note">配置位置：<code>system/fvSchemes</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>ddtSchemes</code> · <code>gradSchemes</code> · <code>divSchemes</code> · <code>laplacianSchemes</code> · <code>interpolationSchemes</code> · <code>snGradSchemes</code> · <code>fluxRequired</code> · <code>wallDist</code></p><h2>关联命令</h2><p><a href="/commands/?q=icoFoam">icoFoam</a> · <a href="/commands/?q=interFoam">interFoam</a> · <a href="/commands/?q=simpleFoam">simpleFoam</a></p><h2>本机核对</h2><div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">3 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">foamVersion
 foamDictionary system/fvSchemes -keywords
-icoFoam -help</code></pre><h2>8.2 system/fvSchemes</h2><p>下例给出不可压缩非稳态层流的离散设置。采用湍流模型或求解能量方程时，应补充相应方程的对流项。</p>
-<pre><code>FoamFile
-&#123;
-    version 2.0; format ascii;
-    class dictionary; object fvSchemes;
-&#125;
-ddtSchemes &#123; default Euler; &#125;
-gradSchemes &#123; default Gauss linear; &#125;
+icoFoam -<span class="hljs-built_in">help</span></code></pre></div><h2>8.2 system/fvSchemes</h2><p>下例给出不可压缩非稳态层流的离散设置。采用湍流模型或求解能量方程时，应补充相应方程的对流项。</p>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">17 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-keyword">FoamFile</span>
+{
+    <span class="hljs-keyword">version</span> <span class="hljs-number">2.0</span>; <span class="hljs-keyword">format</span> ascii;
+    <span class="hljs-keyword">class</span> dictionary; <span class="hljs-keyword">object</span> fvSchemes;
+}
+ddtSchemes { default <span class="hljs-built_in">Euler</span>; }
+gradSchemes { default <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span>; }
 divSchemes
-&#123;
+{
     default none;
-    div(phi,U) Gauss linearUpwind grad(U);
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
-&#125;
-laplacianSchemes &#123; default Gauss linear corrected; &#125;
-interpolationSchemes &#123; default linear; &#125;
-snGradSchemes &#123; default corrected; &#125;
-wallDist &#123; method meshWave; &#125;</code></pre>
+    div(phi,U) <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linearUpwind</span> grad(U);
+    div((nuEff*dev2(T(grad(U))))) <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span>;
+}
+laplacianSchemes { default <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span> corrected; }
+interpolationSchemes { default <span class="hljs-built_in">linear</span>; }
+snGradSchemes { default corrected; }
+wallDist { method meshWave; }</code></pre></div>
 <div class="table-scroll"><table>
-<tr><th>字典</th><th>控制对象</th><th>常用设置</th></tr>
+<tbody><tr><th>字典</th><th>控制对象</th><th>常用设置</th></tr>
 <tr><td>ddtSchemes</td><td>时间导数</td><td>Euler 为一阶；backward 为二阶；CrankNicolson 0.9 为混合格式；steadyState 用于稳态</td></tr>
 <tr><td>gradSchemes</td><td>梯度</td><td>Gauss linear、leastSquares、cellLimited Gauss linear 1</td></tr>
 <tr><td>divSchemes</td><td>对流及显式散度</td><td>Gauss upwind 耗散较强；linearUpwind 阶数较高；limitedLinear 等限制格式按字段类型选择</td></tr>
@@ -77,12 +80,12 @@ wallDist &#123; method meshWave; &#125;</code></pre>
 <tr><td>fluxRequired</td><td>指定需保留通量的场</td><td>按求解器要求标记 p 等场</td></tr>
 <tr><td>wallDist</td><td>壁距算法</td><td>meshWave 等</td></tr>
 <tr><td>default none</td><td>无默认格式</td><td>所需离散项必须显式配置，缺失时报告错误</td></tr>
-</table></div>
+</tbody></table></div>
 <p>湍流方程可采用 div(phi,k) Gauss upwind; 和 div(phi,omega) Gauss upwind;，字段名称随模型确定。VOF 求解器的 div(phi,alpha)、div(phirb,alpha) 等条目采用其配套教程的定义。rhoCentralFoam 还需设置 fluxScheme 及变量重构格式。</p>
 <h2>第 13 章　system/fvSchemes（离散格式）</h2><p>它管什么：每一项微分算子用什么数值格式离散。这是精度与稳定性的主要旋钮，也是初学者最容易被卡住的地方。</p>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

@@ -6,7 +6,10 @@
   <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -52,12 +55,12 @@
 <p>FOAM_ 开头：使用期用的。基本都是路径，让你不用记一长串目录就能跳过去。</p>
 <p>为什么值得专门记一章：OpenFOAM 没有图形界面，你 90% 的时间在终端里找文件——找一个类似的算例、找某个边界条件的源码、找某个字典的官方模板。用环境变量找，一行命令的事；不用，就得一层层 cd。</p>
 <p>查看方法：</p>
-<pre><code>$ echo $FOAM_TUTORIALS              # 看单个变量
-$ env | grep FOAM_ | sort           # 看所有 FOAM_ 变量
-$ env | grep WM_ | sort             # 看所有 WM_ 变量</code></pre>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">3 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">$ <span class="hljs-built_in">echo</span> <span class="hljs-variable">$FOAM_TUTORIALS</span>              <span class="hljs-comment"># 看单个变量</span>
+$ <span class="hljs-built_in">env</span> | grep FOAM_ | <span class="hljs-built_in">sort</span>           <span class="hljs-comment"># 看所有 FOAM_ 变量</span>
+$ <span class="hljs-built_in">env</span> | grep WM_ | <span class="hljs-built_in">sort</span>             <span class="hljs-comment"># 看所有 WM_ 变量</span></code></pre></div>
 <h4>4.2 FOAM_*：路径类（最常用）</h4>
 <div class="table-scroll"><table>
-<tr><th>变量</th><th>指向</th><th>典型用途</th></tr>
+<tbody><tr><th>变量</th><th>指向</th><th>典型用途</th></tr>
 <tr><td>$FOAM_TUTORIALS</td><td>官方算例库</td><td>最常用。找相似算例照抄设置</td></tr>
 <tr><td>$FOAM_RUN</td><td>$HOME/OpenFOAM/&lt;用户名&gt;-v2512/run</td><td>你自己的工作目录，算例都放这</td></tr>
 <tr><td>$FOAM_SRC</td><td>src/ 核心库源码</td><td>查边界条件、湍流模型怎么实现的</td></tr>
@@ -74,19 +77,19 @@ $ env | grep WM_ | sort             # 看所有 WM_ 变量</code></pre>
 <tr><td>$FOAM_API</td><td>2512</td><td>脚本里判断版本用</td></tr>
 <tr><td>$FOAM_JOB_DIR</td><td>foamJob 的日志目录</td><td>集群批量作业时用</td></tr>
 <tr><td>$WM_PROJECT_USER_DIR</td><td>$HOME/OpenFOAM/&lt;用户名&gt;-v2512</td><td>你的私有开发目录（源码放这，见第 10 章）</td></tr>
-</table></div>
+</tbody></table></div>
 <p>四个”调试开关”型变量（不是路径，是行为控制，排错时极有用）：</p>
 <div class="table-scroll"><table>
-<tr><th>变量</th><th>作用</th><th>怎么用</th></tr>
-<tr><td>FOAM_SIGFPE</td><td>捕获浮点异常（除零、NaN）并立即中止 + 打印调用栈</td><td>export FOAM_SIGFPE=true</td></tr>
-<tr><td>FOAM_SETNAN</td><td>把新分配的内存初始化成 NaN，让”用了未初始化变量”立刻暴露</td><td>export FOAM_SETNAN=true</td></tr>
-<tr><td>FOAM_ABORT</td><td>让 FatalError 触发 abort 并生成 core dump，方便 gdb 调试</td><td>export FOAM_ABORT=true</td></tr>
+<tbody><tr><th>变量</th><th>作用</th><th>怎么用</th></tr>
+<tr><td>FOAM_SIGFPE</td><td>捕获浮点异常（除零、NaN）并立即中止 + 打印调用栈</td><td><code>export FOAM_SIGFPE=true</code></td></tr>
+<tr><td>FOAM_SETNAN</td><td>把新分配的内存初始化成 NaN，让”用了未初始化变量”立刻暴露</td><td><code>export FOAM_SETNAN=true</code></td></tr>
+<tr><td>FOAM_ABORT</td><td>让 FatalError 触发 abort 并生成 core dump，方便 gdb 调试</td><td><code>export FOAM_ABORT=true</code></td></tr>
 <tr><td>FOAM_CODE_TEMPLATES</td><td>codedFixedValue 等动态编译功能的模板目录</td><td>自定义模板时改</td></tr>
-</table></div>
+</tbody></table></div>
 <p>FOAM_SIGFPE 用于启用浮点异常捕获。在运行环境支持的情况下，它可帮助定位除零、无效浮点运算等异常。异常位置仍需结合调用栈、初始场、边界条件及离散设置分析。</p>
 <h4>4.3 WM_*：编译类</h4>
 <div class="table-scroll"><table>
-<tr><th>变量</th><th>典型值</th><th>含义</th></tr>
+<tbody><tr><th>变量</th><th>典型值</th><th>含义</th></tr>
 <tr><td>$WM_PROJECT</td><td>OpenFOAM</td><td>项目名</td></tr>
 <tr><td>$WM_PROJECT_VERSION</td><td>v2512</td><td>版本</td></tr>
 <tr><td>$WM_PROJECT_DIR</td><td>~/OpenFOAM/OpenFOAM-v2512</td><td>安装根目录</td></tr>
@@ -102,12 +105,12 @@ $ env | grep WM_ | sort             # 看所有 WM_ 变量</code></pre>
 <tr><td>$WM_THIRD_PARTY_DIR</td><td>~/OpenFOAM/ThirdParty-v2512</td><td>第三方库目录</td></tr>
 <tr><td>$WM_DIR</td><td>$WM_PROJECT_DIR/wmake</td><td>编译系统所在</td></tr>
 <tr><td>$WM_PROJECT_SITE</td><td>（常为空）</td><td>多用户站点共享目录</td></tr>
-</table></div>
+</tbody></table></div>
 <p>用得上的场景：合作者说”我这儿能跑你那儿不能”，第一件事就是对比双方的 echo $WM_OPTIONS——精度不同（DP vs SP）、标签位宽不同（Int32 vs Int64）编译出来的库互不兼容。</p>
 <h4>4.4 快捷别名：tut、sol、run……</h4>
 <p>etc/config.sh/aliases 里预定义了一批别名，全是”跳目录”和”改编译选项”的：</p>
 <div class="table-scroll"><table>
-<tr><th>别名</th><th>等价于</th><th>说明</th></tr>
+<tbody><tr><th>别名</th><th>等价于</th><th>说明</th></tr>
 <tr><td>foam</td><td>cd $WM_PROJECT_DIR</td><td>回安装根目录</td></tr>
 <tr><td>run</td><td>cd $FOAM_RUN</td><td>回你的工作目录</td></tr>
 <tr><td>tut</td><td>cd $FOAM_TUTORIALS</td><td>去官方算例库</td></tr>
@@ -122,40 +125,40 @@ $ env | grep WM_ | sort             # 看所有 WM_ 变量</code></pre>
 <tr><td>wmDP / wmSP</td><td>切双精度 / 单精度</td><td>切完要重新编译</td></tr>
 <tr><td>wmInt32 / wmInt64</td><td>切标签位宽</td><td>同上</td></tr>
 <tr><td>wmSchedOn / wmSchedOff</td><td>开/关分布式编译调度</td><td>集群编译用</td></tr>
-</table></div>
+</tbody></table></div>
 <p>查看你这台机器上实际有哪些别名（不同版本略有出入，以本机为准）：</p>
-<pre><code>$ alias | grep -E &#x27;cd \$(FOAM|WM)&#x27;</code></pre>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">1 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">$ <span class="hljs-built_in">alias</span> | grep -E <span class="hljs-string">'cd \$(FOAM|WM)'</span></code></pre></div>
 <p>示例：别名到底省了多少事</p>
-<pre><code>$ tut                                    # 一步跳到教程库
-$ cd incompressible/simpleFoam/pitzDaily # 打开经典的后台阶算例
-$ run                                    # 一步跳回工作目录
-$ cp -r $FOAM_TUTORIALS/incompressible/simpleFoam/pitzDaily .   # 复制到工作目录</code></pre>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">4 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">$ tut                                    <span class="hljs-comment"># 一步跳到教程库</span>
+$ <span class="hljs-built_in">cd</span> incompressible/simpleFoam/pitzDaily <span class="hljs-comment"># 打开经典的后台阶算例</span>
+$ run                                    <span class="hljs-comment"># 一步跳回工作目录</span>
+$ <span class="hljs-built_in">cp</span> -r <span class="hljs-variable">$FOAM_TUTORIALS</span>/incompressible/simpleFoam/pitzDaily .   <span class="hljs-comment"># 复制到工作目录</span></code></pre></div>
 <h4>4.5 常用”找东西”套路（把变量真正用起来）</h4>
-<pre><code># ① 本机所有可执行命令（求解器 + 工具），约 200 多个
-ls $FOAM_APPBIN | sort | less
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">20 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"># ① 本机所有可执行命令（求解器 + 工具），约 <span class="hljs-number">200</span> 多个
+ls <span class="hljs-variable">$FOAM_APPBIN</span> | sort | less
 
 # ② 所有 foam 开头的脚本类命令
-ls $WM_PROJECT_DIR/bin
+ls <span class="hljs-variable">$WM_PROJECT_DIR/bin</span>
 
 # ③ 找出所有可压缩求解器
-ls $FOAM_SOLVERS/compressible
+ls <span class="hljs-variable">$FOAM_SOLVERS/compressible</span>
 
 # ④ 哪些教程用了 interFoam（找相似算例）
-grep -rl &quot;application *interFoam&quot; $FOAM_TUTORIALS --include=controlDict
+grep -rl <span class="hljs-string">"application *interFoam"</span> <span class="hljs-variable">$FOAM_TUTORIALS</span> --<span class="hljs-keyword">include</span>=controlDict
 
 # ⑤ 别人的 fvSolution 里 p 用什么线性求解器（学习别人的参数选择）
-grep -rA3 &quot;^ *p$&quot; $FOAM_TUTORIALS/incompressible/simpleFoam/*/system/fvSolution | grep solver
+grep -rA3 <span class="hljs-string">"^ *p$"</span> <span class="hljs-variable">$FOAM_TUTORIALS/incompressible/simpleFoam/</span>*/system/fvSolution | grep <span class="hljs-keyword">solver</span>
 
 # ⑥ 某个边界条件的源码在哪、有哪些可选参数
-find $FOAM_SRC -name &quot;*inletOutlet*&quot;
+find <span class="hljs-variable">$FOAM_SRC</span> -<span class="hljs-keyword">name</span> <span class="hljs-string">"*inletOutlet*"</span>
 
 # ⑦ 官方字典模板（functionObject 模板全在这）
-ls $FOAM_ETC/caseDicts/postProcessing/</code></pre>
+ls <span class="hljs-variable">$FOAM_ETC/caseDicts/postProcessing/</span></code></pre></div>
 <p>第 ④⑤ 条是这一章最值钱的东西：遇到不会设的参数，不要凭空猜，去 $FOAM_TUTORIALS 里找一个物理上最接近的官方算例照抄。官方算例是被验证过的，你猜的不是。</p>
 <h2>第二部分　命令大全</h2>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

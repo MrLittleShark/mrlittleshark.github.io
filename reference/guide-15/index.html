@@ -6,7 +6,10 @@
   <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -48,95 +51,95 @@
   <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>第 15 章　system/blockMeshDict</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
 <p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h4>15.1 完整结构与一个可运行的例子</h4>
 <p>下面是标准方腔算例（cavity）的字典，每一行都加了注释：</p>
-<pre><code>FoamFile &#123; version 2.0; format ascii; class dictionary; object blockMeshDict; &#125;
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">45 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-keyword">FoamFile</span> { <span class="hljs-keyword">version</span> <span class="hljs-number">2.0</span>; <span class="hljs-keyword">format</span> ascii; <span class="hljs-keyword">class</span> dictionary; <span class="hljs-keyword">object</span> blockMeshDict; }
 
-scale   0.1;              // 所有坐标乘这个系数（旧版叫 convertToMeters）
+scale   <span class="hljs-number">0.1</span>;              <span class="hljs-comment">// 所有坐标乘这个系数（旧版叫 convertToMeters）</span>
 
-vertices                  // ① 顶点表，编号从 0 开始，顺序很重要
+vertices                  <span class="hljs-comment">// ① 顶点表，编号从 0 开始，顺序很重要</span>
 (
-    (0 0 0)      // 0
-    (1 0 0)      // 1
-    (1 1 0)      // 2
-    (0 1 0)      // 3
-    (0 0 0.1)    // 4
-    (1 0 0.1)    // 5
-    (1 1 0.1)    // 6
-    (0 1 0.1)    // 7
+    (<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>)      <span class="hljs-comment">// 0</span>
+    (<span class="hljs-number">1</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>)      <span class="hljs-comment">// 1</span>
+    (<span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">0</span>)      <span class="hljs-comment">// 2</span>
+    (<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">0</span>)      <span class="hljs-comment">// 3</span>
+    (<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0.1</span>)    <span class="hljs-comment">// 4</span>
+    (<span class="hljs-number">1</span> <span class="hljs-number">0</span> <span class="hljs-number">0.1</span>)    <span class="hljs-comment">// 5</span>
+    (<span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">0.1</span>)    <span class="hljs-comment">// 6</span>
+    (<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">0.1</span>)    <span class="hljs-comment">// 7</span>
 );
 
-blocks                    // ② 块定义
+blocks                    <span class="hljs-comment">// ② 块定义</span>
 (
-    hex (0 1 2 3 4 5 6 7)   // 8 个顶点，顺序见下文
-    (20 20 1)               // x、y、z 三个方向的网格数
-    simpleGrading (1 1 1)   // 三个方向的加密比
+    hex (<span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">2</span> <span class="hljs-number">3</span> <span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span>)   <span class="hljs-comment">// 8 个顶点，顺序见下文</span>
+    (<span class="hljs-number">20</span> <span class="hljs-number">20</span> <span class="hljs-number">1</span>)               <span class="hljs-comment">// x、y、z 三个方向的网格数</span>
+    simpleGrading (<span class="hljs-number">1</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span>)   <span class="hljs-comment">// 三个方向的加密比</span>
 );
 
-edges ( );                // ③ 曲边（不写就是直线）
+edges ( );                <span class="hljs-comment">// ③ 曲边（不写就是直线）</span>
 
-boundary                  // ④ 边界定义
+boundary                  <span class="hljs-comment">// ④ 边界定义</span>
 (
     movingWall
-    &#123;
-        type            wall;
-        faces           ( (3 7 6 2) );
-    &#125;
+    {
+        <span class="hljs-keyword">type</span>            wall;
+        faces           ( (<span class="hljs-number">3</span> <span class="hljs-number">7</span> <span class="hljs-number">6</span> <span class="hljs-number">2</span>) );
+    }
     fixedWalls
-    &#123;
-        type            wall;
-        faces           ( (0 4 7 3) (2 6 5 1) (1 5 4 0) );
-    &#125;
+    {
+        <span class="hljs-keyword">type</span>            wall;
+        faces           ( (<span class="hljs-number">0</span> <span class="hljs-number">4</span> <span class="hljs-number">7</span> <span class="hljs-number">3</span>) (<span class="hljs-number">2</span> <span class="hljs-number">6</span> <span class="hljs-number">5</span> <span class="hljs-number">1</span>) (<span class="hljs-number">1</span> <span class="hljs-number">5</span> <span class="hljs-number">4</span> <span class="hljs-number">0</span>) );
+    }
     frontAndBack
-    &#123;
-        type            empty;          // 二维算例的前后面
-        faces           ( (0 3 2 1) (4 5 6 7) );
-    &#125;
+    {
+        <span class="hljs-keyword">type</span>            <span class="hljs-built_in">empty</span>;          <span class="hljs-comment">// 二维算例的前后面</span>
+        faces           ( (<span class="hljs-number">0</span> <span class="hljs-number">3</span> <span class="hljs-number">2</span> <span class="hljs-number">1</span>) (<span class="hljs-number">4</span> <span class="hljs-number">5</span> <span class="hljs-number">6</span> <span class="hljs-number">7</span>) );
+    }
 );
 
-mergePatchPairs ( );      // ⑤ 需要缝合的 patch 对</code></pre>
+mergePatchPairs ( );      <span class="hljs-comment">// ⑤ 需要缝合的 patch 对</span></code></pre></div>
 <h4>15.2 顶点顺序的规则（最容易错的地方）</h4>
 <p>hex (v0 v1 v2 v3 v4 v5 v6 v7) 的顺序不是随便写的：</p>
-<p>先给块建立一个局部坐标系 (x₁, x₂, x₃)；</p>
-<p>前四个点（v0–v3）构成 x₃ = 0 的那个面，按逆时针（从 x₃ 正方向往回看）排列；</p>
-<p>后四个点（v4–v7）是把前四个点沿 x₃ 正方向平移得到的，顺序一一对应。</p>
+<p>先给块建立一个局部坐标系 <span class="math-formula" data-tex="(x_{1}, x_{2}, x_{3})"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><msub><mi>x</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>x</mi><mn>2</mn></msub><mo separator="true">,</mo><msub><mi>x</mi><mn>3</mn></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x_{1}, x_{2}, x_{3})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>；</p>
+<p>前四个点（v0–v3）构成 <span class="math-formula" data-tex="x_{3} = 0"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>3</mn></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x_{3} = 0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span> 的那个面，按逆时针（从 <span class="math-formula" data-tex="x_{3}"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">x_{3}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 正方向往回看）排列；</p>
+<p>后四个点（v4–v7）是把前四个点沿 <span class="math-formula" data-tex="x_{3}"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">x_{3}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 正方向平移得到的，顺序一一对应。</p>
 <p>写反了会得到”负体积”网格，blockMesh 会直接报错：</p>
-<pre><code>--&gt; FOAM FATAL ERROR: Block ... has negative volume</code></pre>
+<div class="code-panel" data-language="plaintext"><div class="code-toolbar"><span class="code-language">文本 / 日志</span><span class="code-lines">1 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="文本 / 日志代码"><code class="hljs language-plaintext">--&gt; FOAM FATAL ERROR: Block ... has negative volume</code></pre></div>
 <p>看到这个报错，回去检查顶点顺序，不要怀疑别的。</p>
-<p>(20 20 1) 对应的是局部 x₁、x₂、x₃ 三个方向的单元数（不是节点数）。二维算例在厚度方向写 1，同时把前后两个面设为 empty。</p>
+<p>(20 20 1) 对应的是局部 <span class="math-formula" data-tex="x_{1}"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>1</mn></msub></mrow><annotation encoding="application/x-tex">x_{1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>、<span class="math-formula" data-tex="x_{2}"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">x_{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>、<span class="math-formula" data-tex="x_{3}"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mn>3</mn></msub></mrow><annotation encoding="application/x-tex">x_{3}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> 三个方向的单元数（不是节点数）。二维算例在厚度方向写 1，同时把前后两个面设为 empty。</p>
 <h4>15.3 网格加密 grading</h4>
 <p>均匀</p>
-<pre><code>simpleGrading (1 1 1)</code></pre>
+<div class="code-panel" data-language="plaintext"><div class="code-toolbar"><span class="code-language">文本 / 日志</span><span class="code-lines">1 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="文本 / 日志代码"><code class="hljs language-plaintext">simpleGrading (1 1 1)</code></pre></div>
 <p>单方向加密：数字表示”最后一个单元长度 ÷ 第一个单元长度”</p>
-<pre><code>simpleGrading (1 10 1)      // y 方向：最后一个单元是第一个的 10 倍（往下密）
-simpleGrading (1 0.1 1)     // 反过来（往上密）</code></pre>
+<div class="code-panel" data-language="plaintext"><div class="code-toolbar"><span class="code-language">文本 / 日志</span><span class="code-lines">2 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="文本 / 日志代码"><code class="hljs language-plaintext">simpleGrading (1 10 1)      // y 方向：最后一个单元是第一个的 10 倍（往下密）
+simpleGrading (1 0.1 1)     // 反过来（往上密）</code></pre></div>
 <p>多段加密（一个方向分几段，各段单独控制）——边界层网格常用：</p>
-<pre><code>simpleGrading
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">10 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">simpleGrading
 (
-    1                                  // x 方向均匀
-    (                                  // y 方向分三段：
-        (0.2  0.3  4)                  // 占长度 20%，占单元 30%，段内比例 4
-        (0.6  0.4  1)                  // 中间均匀
-        (0.2  0.3  0.25)               // 对称加密
+    <span class="hljs-number">1</span>                                  <span class="hljs-comment">// x 方向均匀</span>
+    (                                  <span class="hljs-comment">// y 方向分三段：</span>
+        (<span class="hljs-number">0.2</span>  <span class="hljs-number">0.3</span>  <span class="hljs-number">4</span>)                  <span class="hljs-comment">// 占长度 20%，占单元 30%，段内比例 4</span>
+        (<span class="hljs-number">0.6</span>  <span class="hljs-number">0.4</span>  <span class="hljs-number">1</span>)                  <span class="hljs-comment">// 中间均匀</span>
+        (<span class="hljs-number">0.2</span>  <span class="hljs-number">0.3</span>  <span class="hljs-number">0.25</span>)               <span class="hljs-comment">// 对称加密</span>
     )
-    1
-);</code></pre>
+    <span class="hljs-number">1</span>
+);</code></pre></div>
 <p>三个数依次是 长度占比、单元数占比、段内首末比。三段的长度占比之和、单元数占比之和都应为 1。</p>
 <p>edgeGrading：给 12 条边分别指定比例，用于更精细的控制（很少手写）。</p>
-<p>怎么定第一层厚度：想让 y⁺ ≈ 1，先估算第一层厚度 Δy，再由总高 H、单元数 N 和 Δy 反解加密比。实际做法通常是先猜一个比例算一遍，用 simpleFoam -postProcess -func yPlus 看实际 y⁺，再调整——这是标准的迭代过程，一次猜中反而不正常。</p>
+<p>怎么定第一层厚度：想让 <span class="math-formula" data-tex="y^{+} \approx  1"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>y</mi><mo lspace="0em" rspace="0em">+</mo></msup><mo>≈</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">y^{+} \approx  1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9658em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">+</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>，先估算第一层厚度 <span class="math-formula" data-tex="\Delta y"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">\Delta y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></span>，再由总高 H、单元数 N 和 <span class="math-formula" data-tex="\Delta y"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">\Delta y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span></span> 反解加密比。实际做法通常是先猜一个比例算一遍，用 simpleFoam -postProcess -func yPlus 看实际 <span class="math-formula" data-tex="y^{+}"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>y</mi><mo lspace="0em" rspace="0em">+</mo></msup></mrow><annotation encoding="application/x-tex">y^{+}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9658em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">+</span></span></span></span></span></span></span></span></span></span></span></span></span>，再调整——这是标准的迭代过程，一次猜中反而不正常。</p>
 <h4>15.4 曲边 edges</h4>
-<pre><code>edges
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">8 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">edges
 (
-    arc     1 5 (1.1 0.0 0.5)        // 过点 (1.1,0,0.5) 的圆弧
-    arc     1 5 origin (0 0 0)       // 或指定圆心
-    spline  0 3 ( (0.2 0.1 0) (0.4 0.3 0) )   // 样条
-    polyLine 2 6 ( (…) (…) )          // 折线
-    line    0 1                       // 直线（默认，可省）
-);</code></pre>
+    arc     <span class="hljs-number">1</span> <span class="hljs-number">5</span> (<span class="hljs-number">1.1</span> <span class="hljs-number">0.0</span> <span class="hljs-number">0.5</span>)        <span class="hljs-comment">// 过点 (1.1,0,0.5) 的圆弧</span>
+    arc     <span class="hljs-number">1</span> <span class="hljs-number">5</span> origin (<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>)       <span class="hljs-comment">// 或指定圆心</span>
+    spline  <span class="hljs-number">0</span> <span class="hljs-number">3</span> ( (<span class="hljs-number">0.2</span> <span class="hljs-number">0.1</span> <span class="hljs-number">0</span>) (<span class="hljs-number">0.4</span> <span class="hljs-number">0.3</span> <span class="hljs-number">0</span>) )   <span class="hljs-comment">// 样条</span>
+    polyLine <span class="hljs-number">2</span> <span class="hljs-number">6</span> ( (…) (…) )          <span class="hljs-comment">// 折线</span>
+    line    <span class="hljs-number">0</span> <span class="hljs-number">1</span>                       <span class="hljs-comment">// 直线（默认，可省）</span>
+);</code></pre></div>
 <p>用途：圆柱绕流、弯管这类含圆弧的几何。不写 arc 的话，圆会被画成折线，网格贴不上真实几何。</p>
 <h4>15.5 boundary 里的 type</h4>
 <div class="table-scroll"><table>
-<tr><th>type</th><th>含义</th><th>场文件里怎么配</th></tr>
+<tbody><tr><th>type</th><th>含义</th><th>场文件里怎么配</th></tr>
 <tr><td>patch</td><td>普通边界（进出口）</td><td>场里给 fixedValue、zeroGradient 等</td></tr>
-<tr><td>wall</td><td>壁面</td><td>必须用它，否则壁面函数、y⁺ 计算都不对</td></tr>
+<tr><td>wall</td><td>壁面</td><td>必须用它，否则壁面函数、<span class="math-formula" data-tex="y^{+}"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>y</mi><mo lspace="0em" rspace="0em">+</mo></msup></mrow><annotation encoding="application/x-tex">y^{+}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.9658em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="katex-sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">+</span></span></span></span></span></span></span></span></span></span></span></span></span> 计算都不对</td></tr>
 <tr><td>empty</td><td>二维算例的前后面</td><td>场里必须写 empty</td></tr>
 <tr><td>symmetryPlane</td><td>对称面（平面）</td><td>场里写 symmetryPlane</td></tr>
 <tr><td>symmetry</td><td>对称（不要求平面）</td><td>场里写 symmetry</td></tr>
@@ -144,33 +147,33 @@ simpleGrading (1 0.1 1)     // 反过来（往上密）</code></pre>
 <tr><td>cyclic</td><td>周期性边界，需 neighbourPatch</td><td>场里写 cyclic</td></tr>
 <tr><td>cyclicAMI</td><td>非匹配周期（旋转机械）</td><td></td></tr>
 <tr><td>processor</td><td>并行内部边界</td><td>由 decomposePar 自动生成</td></tr>
-</table></div>
-<pre><code>inlet
-&#123;
-    type            patch;
-    faces           ( (0 4 7 3) );
-&#125;
+</tbody></table></div>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">11 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">inlet
+{
+    <span class="hljs-keyword">type</span>            patch;
+    faces           ( (<span class="hljs-number">0</span> <span class="hljs-number">4</span> <span class="hljs-number">7</span> <span class="hljs-number">3</span>) );
+}
 left
-&#123;
-    type            cyclic;
-    neighbourPatch  right;         // 成对出现，互相指认
+{
+    <span class="hljs-keyword">type</span>            <span class="hljs-built_in">cyclic</span>;
+    neighbourPatch  right;         <span class="hljs-comment">// 成对出现，互相指认</span>
     faces           ( ... );
-&#125;</code></pre>
+}</code></pre></div>
 <p>wall 与 patch 的区别为什么重要：湍流壁面函数（nutkWallFunction 等）只在 wall 类型的边界上生效；checkMesh、yPlus、forces 也都按 wall 来识别固壁。把壁面写成 patch，程序不报错，但湍流结果是错的——这是”能跑出结果但结果不对”的典型来源。</p>
 <h4>15.6 多块与 mergePatchPairs</h4>
 <p>多个块之间如果顶点完全共用，blockMesh 会自动连成一体（推荐做法）。如果两块的接触面网格不匹配，就要用 mergePatchPairs 缝合：</p>
-<pre><code>mergePatchPairs
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">4 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">mergePatchPairs
 (
     ( masterPatch slavePatch )
-);</code></pre>
+);</code></pre></div>
 <h4>15.7 调试 blockMesh 的方法</h4>
-<pre><code>$ blockMesh                    # 看报错
-$ paraFoam -block              # ★ 直接可视化块结构与顶点编号，找错最快
-$ checkMesh -allGeometry</code></pre>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">3 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">$ blockMesh                    <span class="hljs-comment"># 看报错</span>
+$ paraFoam -block              <span class="hljs-comment"># ★ 直接可视化块结构与顶点编号，找错最快</span>
+$ checkMesh -allGeometry</code></pre></div>
 <p>paraFoam -block 能把顶点编号、块、边界都画出来，比在脑子里想象八个顶点的顺序可靠得多。</p>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

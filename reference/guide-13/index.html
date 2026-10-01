@@ -6,7 +6,10 @@
   <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -48,41 +51,41 @@
   <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>第 13 章　system/fvSchemes（离散格式）</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
 <p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><p>它管什么：每一项微分算子用什么数值格式离散。这是精度与稳定性的主要旋钮，也是初学者最容易被卡住的地方。</p>
 <h4>13.1 六个子字典</h4>
-<pre><code>ddtSchemes          &#123; &#125;   // 时间导数 ∂/∂t
-gradSchemes         &#123; &#125;   // 梯度 ∇
-divSchemes          &#123; &#125;   // 对流项 ∇·( )   ← 最关键
-laplacianSchemes    &#123; &#125;   // 扩散项 ∇²
-interpolationSchemes&#123; &#125;   // 单元中心 → 面 的插值
-snGradSchemes       &#123; &#125;   // 面法向梯度
-wallDist            &#123; &#125;   // 壁面距离算法（湍流模型需要）</code></pre>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">7 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">ddtSchemes          { }   <span class="hljs-comment">// 时间导数 ∂/∂t</span>
+gradSchemes         { }   <span class="hljs-comment">// 梯度 ∇</span>
+divSchemes          { }   <span class="hljs-comment">// 对流项 ∇·( )   ← 最关键</span>
+laplacianSchemes    { }   <span class="hljs-comment">// 扩散项 ∇²</span>
+interpolationSchemes{ }   <span class="hljs-comment">// 单元中心 → 面 的插值</span>
+snGradSchemes       { }   <span class="hljs-comment">// 面法向梯度</span>
+wallDist            { }   <span class="hljs-comment">// 壁面距离算法（湍流模型需要）</span></code></pre></div>
 <h4>13.2 ddtSchemes</h4>
 <div class="table-scroll"><table>
-<tr><th>写法</th><th>精度/性质</th><th>何时用</th></tr>
+<tbody><tr><th>写法</th><th>精度/性质</th><th>何时用</th></tr>
 <tr><td>steadyState</td><td>去掉时间项</td><td>稳态求解器必须用这个</td></tr>
 <tr><td>Euler</td><td>一阶隐式，无条件稳定，有数值耗散</td><td>瞬态起步、鲁棒优先</td></tr>
 <tr><td>backward</td><td>二阶隐式</td><td>LES/DNS 的主力</td></tr>
 <tr><td>CrankNicolson 0.9</td><td>二阶，系数 0~1（0=Euler，1=纯 CN）</td><td>精度要求高时，一般取 0.9 保稳</td></tr>
 <tr><td>localEuler</td><td>伪时间步（局部时间步长加速收敛）</td><td>稳态加速</td></tr>
-</table></div>
-<pre><code>ddtSchemes &#123; default backward; &#125;</code></pre>
+</tbody></table></div>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">1 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">ddtSchemes { default <span class="hljs-built_in">backward</span>; }</code></pre></div>
 <p>为什么 LES 不能用 Euler：一阶格式的数值耗散会把小尺度涡抹掉，你解出来的”湍流”其实是格式耗散造出来的假象。做 LES 一律 backward 或 CrankNicolson。</p>
 <h4>13.3 gradSchemes</h4>
 <div class="table-scroll"><table>
-<tr><th>写法</th><th>说明</th></tr>
+<tbody><tr><th>写法</th><th>说明</th></tr>
 <tr><td>Gauss linear</td><td>标准二阶，最常用</td></tr>
 <tr><td>leastSquares</td><td>最小二乘，网格差时更准</td></tr>
 <tr><td>cellLimited Gauss linear 1</td><td>限制梯度不产生新极值，1 = 完全限制</td></tr>
 <tr><td>cellLimited&lt;cubic&gt; 1.5 Gauss linear 1</td><td>更平滑的限制器</td></tr>
-</table></div>
-<pre><code>gradSchemes
-&#123;
-    default         Gauss linear;
-    grad(U)         cellLimited Gauss linear 1;    // 网格差或有激波时加限制
-&#125;</code></pre>
+</tbody></table></div>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">5 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">gradSchemes
+{
+    default         <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span>;
+    grad(U)         cellLimited <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span> <span class="hljs-number">1</span>;    <span class="hljs-comment">// 网格差或有激波时加限制</span>
+}</code></pre></div>
 <h4>13.4 divSchemes（对流项，最关键）</h4>
 <p>写法是 Gauss &lt;插值格式&gt;，Gauss 表示用高斯定理做体积分→面积分。真正起作用的是后面的插值格式：</p>
 <div class="table-scroll"><table>
-<tr><th>插值格式</th><th>阶数</th><th>有界性</th><th>评价</th></tr>
+<tbody><tr><th>插值格式</th><th>阶数</th><th>有界性</th><th>评价</th></tr>
 <tr><td>upwind</td><td>一阶</td><td>绝对有界</td><td>最稳但最耗散，只用来救急或做初场</td></tr>
 <tr><td>linear</td><td>二阶中心</td><td>无界</td><td>精度最好，LES 用；RANS 上容易振荡</td></tr>
 <tr><td>linearUpwind grad(U)</td><td>二阶迎风</td><td>基本有界</td><td>稳态 RANS 的常用选择</td></tr>
@@ -91,53 +94,53 @@ wallDist            &#123; &#125;   // 壁面距离算法（湍流模型需要�
 <tr><td>interfaceCompression vanLeer 1</td><td>VOF 界面压缩</td><td></td><td>interFoam 的 alpha 方程</td></tr>
 <tr><td>LUST grad(U)</td><td>75% 线性 + 25% 迎风</td><td></td><td>LES 折中方案</td></tr>
 <tr><td>limitedLinear01 1</td><td>限制在 [0,1]</td><td></td><td>alpha、组分等有物理上下界的量</td></tr>
-</table></div>
-<pre><code>// 稳态 RANS 的典型配置
+</tbody></table></div>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">26 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-comment">// 稳态 RANS 的典型配置</span>
 divSchemes
-&#123;
-    default         none;                          // ★ 强制每一项都显式指定
-    div(phi,U)      bounded Gauss linearUpwind grad(U);
-    div(phi,k)      bounded Gauss limitedLinear 1;
-    div(phi,omega)  bounded Gauss limitedLinear 1;
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
-&#125;
-// LES 的典型配置
+{
+    default         none;                          <span class="hljs-comment">// ★ 强制每一项都显式指定</span>
+    div(phi,U)      bounded <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linearUpwind</span> grad(U);
+    div(phi,k)      bounded <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">limitedLinear</span> <span class="hljs-number">1</span>;
+    div(phi,omega)  bounded <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">limitedLinear</span> <span class="hljs-number">1</span>;
+    div((nuEff*dev2(T(grad(U))))) <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span>;
+}
+<span class="hljs-comment">// LES 的典型配置</span>
 divSchemes
-&#123;
+{
     default         none;
-    div(phi,U)      Gauss LUST grad(U);
-    div(phi,k)      Gauss limitedLinear 1;
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
-&#125;
-// interFoam（VOF）的典型配置
+    div(phi,U)      <span class="hljs-built_in">Gauss</span> LUST grad(U);
+    div(phi,k)      <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">limitedLinear</span> <span class="hljs-number">1</span>;
+    div((nuEff*dev2(T(grad(U))))) <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span>;
+}
+<span class="hljs-comment">// interFoam（VOF）的典型配置</span>
 divSchemes
-&#123;
+{
     default         none;
-    div(rhoPhi,U)   Gauss linearUpwind grad(U);
-    div(phi,alpha)  Gauss vanLeer;
-    div(phirb,alpha) Gauss linear;              // 界面压缩项
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
-&#125;</code></pre>
+    div(rhoPhi,U)   <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linearUpwind</span> grad(U);
+    div(phi,alpha)  <span class="hljs-built_in">Gauss</span> vanLeer;
+    div(phirb,alpha) <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span>;              <span class="hljs-comment">// 界面压缩项</span>
+    div(((rho*nuEff)*dev2(T(grad(U))))) <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span>;
+}</code></pre></div>
 <p>在相应格式字典中使用 default none，可要求相关项显式指定离散格式。缺失项会在运行时报告。应先确认方程项、变量及适用格式，再补充配置，避免仅根据名称机械复制。</p>
-<p>bounded 前缀是什么：稳态计算中间过程质量并不严格守恒，bounded 会减去 (∇·φ)U 这一项来抵消不守恒带来的虚假源。稳态加、瞬态不加。</p>
+<p>bounded 前缀是什么：稳态计算中间过程质量并不严格守恒，bounded 会减去 <span class="math-formula" data-tex="(\nabla \cdot \varphi )U"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi mathvariant="normal">∇</mi><mo>⋅</mo><mi>φ</mi><mo stretchy="false">)</mo><mi>U</mi></mrow><annotation encoding="application/x-tex">(\nabla \cdot \varphi )U</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">∇</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">φ</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.109em;">U</span></span></span></span></span> 这一项来抵消不守恒带来的虚假源。稳态加、瞬态不加。</p>
 <h4>13.5 laplacianSchemes 与 snGradSchemes</h4>
-<pre><code>laplacianSchemes &#123; default Gauss linear corrected; &#125;
-snGradSchemes    &#123; default corrected; &#125;</code></pre>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">2 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">laplacianSchemes { default <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span> corrected; }
+snGradSchemes    { default corrected; }</code></pre></div>
 <div class="table-scroll"><table>
-<tr><th>修正方式</th><th>适用非正交角</th></tr>
+<tbody><tr><th>修正方式</th><th>适用非正交角</th></tr>
 <tr><td>orthogonal</td><td>完全正交网格（如标准 blockMesh 方腔）</td></tr>
 <tr><td>corrected</td><td>&lt; 70°，标准选择</td></tr>
 <tr><td>limited corrected 0.5</td><td>70°–80°，0.5 表示限制到一半</td></tr>
 <tr><td>limited corrected 0.33</td><td>&gt; 80°，更保守</td></tr>
 <tr><td>uncorrected</td><td>不修正，最稳但有误差</td></tr>
-</table></div>
+</tbody></table></div>
 <p>怎么选：跑一次 checkMesh 看最大非正交角，按上表挑。这就是 6.5 节强调 checkMesh 的原因之一——它的输出直接决定这里怎么填。</p>
 <h4>13.6 其余两项</h4>
-<pre><code>interpolationSchemes &#123; default linear; &#125;
-wallDist             &#123; method meshWave; &#125;</code></pre>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">2 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">interpolationSchemes { default <span class="hljs-built_in">linear</span>; }
+wallDist             { method meshWave; }</code></pre></div>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

@@ -6,7 +6,10 @@
   <meta name="description" content="检查 v2512 环境，复制并运行第一个方腔流动算例。">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -48,21 +51,37 @@
   <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">OPENFOAM · v2512</div><h1>快速开始</h1><div class="prose"><p>先完成一次“复制算例 → 生成网格 → 检查网格 → 求解 → 查看结果”，再逐步理解每个配置文件。</p>
 <h2 id="1-确认软件分支与环境"><a href="#1-确认软件分支与环境" class="headerlink" title="1 确认软件分支与环境"></a>1 确认软件分支与环境</h2><p>本站使用 <strong>openfoam.com 分支的 OpenFOAM v2512</strong>。不同分支的版本号、求解器和字典名称可能不同，请先核对实际环境。Windows 用户可在 WSL2 的 Ubuntu 中进行操作；下面的命令在 Linux Bash 终端执行。</p>
 <p>还没有安装时，从 <a href="https://www.openfoam.com/news/main-news/openfoam-v2512">v2512 官方发布页面</a> 选择适合系统的安装包，或查阅 <a href="https://dl.openfoam.com/source/v2512/">v2512 官方下载目录</a>。安装位置取决于所用安装方式。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 适用于安装在此目录的 Ubuntu 软件包；其他安装方式请改成实际路径</span></span><br><span class="line"><span class="built_in">source</span> /usr/lib/openfoam/openfoam2512/etc/bashrc</span><br><span class="line">foamVersion</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$WM_PROJECT_DIR</span>&quot;</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$FOAM_TUTORIALS</span>&quot;</span></span><br><span class="line">icoFoam -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">6 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash"><span class="hljs-comment"># 适用于安装在此目录的 Ubuntu 软件包；其他安装方式请改成实际路径</span>
+<span class="hljs-built_in">source</span> /usr/lib/openfoam/openfoam2512/etc/bashrc
+foamVersion
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$WM_PROJECT_DIR</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"<span class="hljs-variable">$FOAM_TUTORIALS</span>"</span>
+icoFoam -<span class="hljs-built_in">help</span>
+</code></pre></div>
 <p>**检查结果：**版本信息应包含 <code>2512</code>，教程路径存在，<code>icoFoam -help</code> 能正常显示帮助。遇到 <code>command not found</code> 时，先检查环境脚本的位置与当前终端，不要直接修改算例文件。</p>
 <h2 id="2-复制方腔算例"><a href="#2-复制方腔算例" class="headerlink" title="2 复制方腔算例"></a>2 复制方腔算例</h2><p>在加载环境的同一个终端中执行。下面使用一个新目录保存本次练习，避免覆盖已有计算。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p <span class="string">&quot;<span class="variable">$FOAM_RUN</span>&quot;</span></span><br><span class="line"><span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$FOAM_RUN</span>&quot;</span></span><br><span class="line"><span class="comment"># 如果 cavity-first 已存在，请换一个新的目标名称</span></span><br><span class="line"><span class="built_in">cp</span> -r <span class="string">&quot;<span class="variable">$FOAM_TUTORIALS</span>/incompressible/icoFoam/cavity/cavity&quot;</span> cavity-first</span><br><span class="line"><span class="built_in">cd</span> cavity-first</span><br><span class="line"><span class="built_in">pwd</span></span><br><span class="line"><span class="built_in">ls</span> 0 constant system</span><br></pre></td></tr></table></figure>
-
-<p>**检查结果：**当前目录应为自己的 <code>cavity-first</code>，并包含 <code>0</code>、<code>constant</code> 和 <code>system</code>。如果官方教程路径不存在，先用 <code>find &quot;$FOAM_TUTORIALS&quot; -path &#39;*/icoFoam/*/system/controlDict&#39;</code> 查找本机教程位置。</p>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">7 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash"><span class="hljs-built_in">mkdir</span> -p <span class="hljs-string">"<span class="hljs-variable">$FOAM_RUN</span>"</span>
+<span class="hljs-built_in">cd</span> <span class="hljs-string">"<span class="hljs-variable">$FOAM_RUN</span>"</span>
+<span class="hljs-comment"># 如果 cavity-first 已存在，请换一个新的目标名称</span>
+<span class="hljs-built_in">cp</span> -r <span class="hljs-string">"<span class="hljs-variable">$FOAM_TUTORIALS</span>/incompressible/icoFoam/cavity/cavity"</span> cavity-first
+<span class="hljs-built_in">cd</span> cavity-first
+<span class="hljs-built_in">pwd</span>
+<span class="hljs-built_in">ls</span> 0 constant system
+</code></pre></div>
+<p>**检查结果：**当前目录应为自己的 <code>cavity-first</code>，并包含 <code>0</code>、<code>constant</code> 和 <code>system</code>。如果官方教程路径不存在，先用 <code>find "$FOAM_TUTORIALS" -path '*/icoFoam/*/system/controlDict'</code> 查找本机教程位置。</p>
 <div class="directory-map"><a href="/reference/guide-19/"><code>0/</code><h3>初始场与边界</h3><p>速度 U、压力 p</p></a><a href="/reference/guide-18/"><code>constant/</code><h3>物性与网格</h3><p>黏度、polyMesh</p></a><a href="/reference/guide-12/"><code>system/</code><h3>计算控制</h3><p>网格字典、格式与求解设置</p></a></div>
 
 <h2 id="3-生成网格并检查"><a href="#3-生成网格并检查" class="headerlink" title="3 生成网格并检查"></a>3 生成网格并检查</h2><p>逐条运行，确认前一步成功后再执行下一条。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">blockMesh &gt; log.blockMesh 2&gt;&amp;1</span><br><span class="line"><span class="built_in">tail</span> -n 15 log.blockMesh</span><br><span class="line">checkMesh &gt; log.checkMesh 2&gt;&amp;1</span><br><span class="line"><span class="built_in">tail</span> -n 25 log.checkMesh</span><br></pre></td></tr></table></figure>
-
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">4 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">blockMesh &gt; log.blockMesh 2&gt;&amp;1
+<span class="hljs-built_in">tail</span> -n 15 log.blockMesh
+checkMesh &gt; log.checkMesh 2&gt;&amp;1
+<span class="hljs-built_in">tail</span> -n 25 log.checkMesh
+</code></pre></div>
 <p>**检查结果：**网格生成正常结束，<code>checkMesh</code> 报告 <code>Mesh OK</code>。出现 <code>FOAM FATAL ERROR</code> 或网格失败项时，先阅读错误前后的日志，修正后再开始求解。</p>
-<h2 id="4-求解与查看结果"><a href="#4-求解与查看结果" class="headerlink" title="4 求解与查看结果"></a>4 求解与查看结果</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">icoFoam &gt; log.icoFoam 2&gt;&amp;1</span><br><span class="line"><span class="built_in">tail</span> -n 20 log.icoFoam</span><br><span class="line">paraFoam -<span class="built_in">builtin</span></span><br></pre></td></tr></table></figure>
-
+<h2 id="4-求解与查看结果"><a href="#4-求解与查看结果" class="headerlink" title="4 求解与查看结果"></a>4 求解与查看结果</h2><div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">3 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">icoFoam &gt; log.icoFoam 2&gt;&amp;1
+<span class="hljs-built_in">tail</span> -n 20 log.icoFoam
+paraFoam -<span class="hljs-built_in">builtin</span>
+</code></pre></div>
 <p>日志正常结束时通常包含 <code>End</code>。在 ParaView 中点击 <strong>Apply</strong>，选择速度 <code>U</code> 或压力 <code>p</code>，切换到最后保存的时刻。先观察网格和边界，再用流线或矢量观察方腔中的回流。</p>
 <p>若当前环境不能打开图形窗口，可执行 <code>touch case.foam</code>，在能访问同一算例目录的 ParaView 中打开此文件；也可用 <code>foamToVTK -latestTime</code> 导出。<code>.foam</code> 文件只是读取入口，查看结果时还需要同目录下的网格与场数据。</p>
 <h2 id="5-第一次练习"><a href="#5-第一次练习" class="headerlink" title="5 第一次练习"></a>5 第一次练习</h2><ol>
@@ -75,7 +94,7 @@
 <p><a class="button" href="/lessons/01/">进入第 01 讲 →</a> <a class="button secondary" href="/community/">遇到问题，去答疑区</a></p>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

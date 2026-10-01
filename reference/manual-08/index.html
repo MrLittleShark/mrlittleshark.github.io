@@ -6,7 +6,10 @@
   <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -47,32 +50,32 @@
   <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>08 时间控制与数值求解设置</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
   <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>08 时间控制与数值求解设置</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
 <p class="source-note">资料来源：OpenFOAM_v2512命令与配置参考手册（GPT整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h3>8.1 system/controlDict</h3>
-<pre><code>FoamFile
-&#123;
-    version 2.0; format ascii;
-    class dictionary; object controlDict;
-&#125;
-application pimpleFoam;
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">24 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-keyword">FoamFile</span>
+{
+    <span class="hljs-keyword">version</span> <span class="hljs-number">2.0</span>; <span class="hljs-keyword">format</span> ascii;
+    <span class="hljs-keyword">class</span> dictionary; <span class="hljs-keyword">object</span> controlDict;
+}
+<span class="hljs-keyword">application</span> pimpleFoam;
 startFrom startTime;
-startTime 0;
+startTime <span class="hljs-number">0</span>;
 stopAt endTime;
-endTime 1;
-deltaT 0.001;
+endTime <span class="hljs-number">1</span>;
+deltaT <span class="hljs-number">0.001</span>;
 writeControl adjustableRunTime;
-writeInterval 0.05;
-purgeWrite 0;
+writeInterval <span class="hljs-number">0.05</span>;
+purgeWrite <span class="hljs-number">0</span>;
 writeFormat ascii;
-writePrecision 8;
-writeCompression off;
+writePrecision <span class="hljs-number">8</span>;
+writeCompression <span class="hljs-literal">off</span>;
 timeFormat general;
-timePrecision 8;
-runTimeModifiable true;
-adjustTimeStep true;
-maxCo 0.5;
-maxDeltaT 0.01;
-functions &#123;&#125;;</code></pre>
+timePrecision <span class="hljs-number">8</span>;
+runTimeModifiable <span class="hljs-literal">true</span>;
+adjustTimeStep <span class="hljs-literal">true</span>;
+maxCo <span class="hljs-number">0.5</span>;
+maxDeltaT <span class="hljs-number">0.01</span>;
+<span class="hljs-keyword">functions</span> {};</code></pre></div>
 <div class="table-scroll"><table>
-<tr><th>参数</th><th>含义与可选值</th><th>设置方法</th></tr>
+<tbody><tr><th>参数</th><th>含义与可选值</th><th>设置方法</th></tr>
 <tr><td>application</td><td>供运行脚本选择的应用名称</td><td>脚本按此项调用程序；终端直接调用时执行指定程序</td></tr>
 <tr><td>startFrom</td><td>startTime、firstTime、latestTime</td><td>续算通常用 latestTime</td></tr>
 <tr><td>startTime</td><td>开始时刻</td><td>在采用相应 startFrom 模式时读取</td></tr>
@@ -89,31 +92,31 @@ functions &#123;&#125;;</code></pre>
 <tr><td>adjustTimeStep、maxCo、maxDeltaT</td><td>自动时间步控制</td><td>仅在实现相应时间步控制的求解器中生效</td></tr>
 <tr><td>maxAlphaCo</td><td>VOF 相分数相关 Courant 限制</td><td>仅相关求解器使用</td></tr>
 <tr><td>maxDi</td><td>热扩散数控制</td><td>仅相关传热求解器使用</td></tr>
-<tr><td>libs</td><td>加载自定义或功能库</td><td>例如 (&quot;libMyBC.so&quot;)</td></tr>
+<tr><td>libs</td><td>加载自定义或功能库</td><td>例如 ("libMyBC.so")</td></tr>
 <tr><td>functions</td><td>运行时函数对象</td><td>见第 10 章</td></tr>
-</table></div>
+</tbody></table></div>
 <p>Courant 数由局部速度、通量、单元尺寸和时间步共同决定。可压缩激波计算还需考虑声速约束，时间步上限应结合所用求解器和离散格式确定。</p>
 <h3>8.2 system/fvSchemes</h3>
 <p>下例给出不可压缩非稳态层流的离散设置。采用湍流模型或求解能量方程时，应补充相应方程的对流项。</p>
-<pre><code>FoamFile
-&#123;
-    version 2.0; format ascii;
-    class dictionary; object fvSchemes;
-&#125;
-ddtSchemes &#123; default Euler; &#125;
-gradSchemes &#123; default Gauss linear; &#125;
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">17 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-keyword">FoamFile</span>
+{
+    <span class="hljs-keyword">version</span> <span class="hljs-number">2.0</span>; <span class="hljs-keyword">format</span> ascii;
+    <span class="hljs-keyword">class</span> dictionary; <span class="hljs-keyword">object</span> fvSchemes;
+}
+ddtSchemes { default <span class="hljs-built_in">Euler</span>; }
+gradSchemes { default <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span>; }
 divSchemes
-&#123;
+{
     default none;
-    div(phi,U) Gauss linearUpwind grad(U);
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
-&#125;
-laplacianSchemes &#123; default Gauss linear corrected; &#125;
-interpolationSchemes &#123; default linear; &#125;
-snGradSchemes &#123; default corrected; &#125;
-wallDist &#123; method meshWave; &#125;</code></pre>
+    div(phi,U) <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linearUpwind</span> grad(U);
+    div((nuEff*dev2(T(grad(U))))) <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span>;
+}
+laplacianSchemes { default <span class="hljs-built_in">Gauss</span> <span class="hljs-built_in">linear</span> corrected; }
+interpolationSchemes { default <span class="hljs-built_in">linear</span>; }
+snGradSchemes { default corrected; }
+wallDist { method meshWave; }</code></pre></div>
 <div class="table-scroll"><table>
-<tr><th>字典</th><th>控制对象</th><th>常用设置</th></tr>
+<tbody><tr><th>字典</th><th>控制对象</th><th>常用设置</th></tr>
 <tr><td>ddtSchemes</td><td>时间导数</td><td>Euler 为一阶；backward 为二阶；CrankNicolson 0.9 为混合格式；steadyState 用于稳态</td></tr>
 <tr><td>gradSchemes</td><td>梯度</td><td>Gauss linear、leastSquares、cellLimited Gauss linear 1</td></tr>
 <tr><td>divSchemes</td><td>对流及显式散度</td><td>Gauss upwind 耗散较强；linearUpwind 阶数较高；limitedLinear 等限制格式按字段类型选择</td></tr>
@@ -123,47 +126,47 @@ wallDist &#123; method meshWave; &#125;</code></pre>
 <tr><td>fluxRequired</td><td>指定需保留通量的场</td><td>按求解器要求标记 p 等场</td></tr>
 <tr><td>wallDist</td><td>壁距算法</td><td>meshWave 等</td></tr>
 <tr><td>default none</td><td>无默认格式</td><td>所需离散项必须显式配置，缺失时报告错误</td></tr>
-</table></div>
+</tbody></table></div>
 <p>湍流方程可采用 div(phi,k) Gauss upwind; 和 div(phi,omega) Gauss upwind;，字段名称随模型确定。VOF 求解器的 div(phi,alpha)、div(phirb,alpha) 等条目采用其配套教程的定义。rhoCentralFoam 还需设置 fluxScheme 及变量重构格式。</p>
 <h3>8.3 system/fvSolution</h3>
-<pre><code>FoamFile
-&#123;
-    version 2.0; format ascii;
-    class dictionary; object fvSolution;
-&#125;
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">36 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-keyword">FoamFile</span>
+{
+    <span class="hljs-keyword">version</span> <span class="hljs-number">2.0</span>; <span class="hljs-keyword">format</span> ascii;
+    <span class="hljs-keyword">class</span> dictionary; <span class="hljs-keyword">object</span> fvSolution;
+}
 solvers
-&#123;
+{
     p
-    &#123;
-        solver GAMG;
-        tolerance 1e-7;
-        relTol 0.05;
+    {
+        <span class="hljs-keyword">solver</span> <span class="hljs-built_in">GAMG</span>;
+        tolerance <span class="hljs-number">1e-7</span>;
+        relTol <span class="hljs-number">0.05</span>;
         smoother GaussSeidel;
-    &#125;
-    pFinal &#123; $p; relTol 0; &#125;
+    }
+    pFinal { <span class="hljs-variable">$p</span>; relTol <span class="hljs-number">0</span>; }
     U
-    &#123;
-        solver smoothSolver;
+    {
+        <span class="hljs-keyword">solver</span> <span class="hljs-built_in">smoothSolver</span>;
         smoother symGaussSeidel;
-        tolerance 1e-8;
-        relTol 0;
-    &#125;
-&#125;
-PIMPLE
-&#123;
-    nOuterCorrectors 2;
-    nCorrectors 2;
-    nNonOrthogonalCorrectors 0;
-    momentumPredictor yes;
-    pRefCell 0;
-    pRefValue 0;
-&#125;
+        tolerance <span class="hljs-number">1e-8</span>;
+        relTol <span class="hljs-number">0</span>;
+    }
+}
+<span class="hljs-built_in">PIMPLE</span>
+{
+    nOuterCorrectors <span class="hljs-number">2</span>;
+    nCorrectors <span class="hljs-number">2</span>;
+    nNonOrthogonalCorrectors <span class="hljs-number">0</span>;
+    momentumPredictor <span class="hljs-literal">yes</span>;
+    pRefCell <span class="hljs-number">0</span>;
+    pRefValue <span class="hljs-number">0</span>;
+}
 relaxationFactors
-&#123;
-    equations &#123; U 1; &#125;
-&#125;</code></pre>
+{
+    equations { U <span class="hljs-number">1</span>; }
+}</code></pre></div>
 <div class="table-scroll"><table>
-<tr><th>条目</th><th>含义</th><th>设置原则</th></tr>
+<tbody><tr><th>条目</th><th>含义</th><th>设置原则</th></tr>
 <tr><td>solver</td><td>线性代数求解器</td><td>PCG 适于相容的对称矩阵；PBiCGStab 可处理非对称矩阵；GAMG 为多重网格</td></tr>
 <tr><td>preconditioner</td><td>预条件器</td><td>DIC、DILU 等须与矩阵和 solver 相容</td></tr>
 <tr><td>smoother</td><td>平滑器</td><td>如 GaussSeidel、symGaussSeidel、DICGaussSeidel</td></tr>
@@ -174,51 +177,51 @@ relaxationFactors
 <tr><td>cacheAgglomeration</td><td>缓存 GAMG 聚合</td><td>静态网格可复用聚合结果</td></tr>
 <tr><td>nCellsInCoarsestLevel</td><td>GAMG 最粗层目标单元数</td><td>结合并行分区和收敛情况调整</td></tr>
 <tr><td>pFinal、UFinal 等</td><td>最后一次校正的专用设置</td><td>是否使用由求解器控制</td></tr>
-<tr><td>正则字段名</td><td>共享线性求解配置</td><td>如 &quot;(U|k|omega)&quot;，采用引号包围正则表达式</td></tr>
+<tr><td>正则字段名</td><td>共享线性求解配置</td><td>如 "(U|k|omega)"，采用引号包围正则表达式</td></tr>
 <tr><td>relaxationFactors/fields</td><td>场松弛</td><td>如稳态 p 0.3</td></tr>
 <tr><td>relaxationFactors/equations</td><td>方程松弛</td><td>如稳态 U 0.7；较小因子降低更新幅度</td></tr>
-</table></div>
+</tbody></table></div>
 <p>SIMPLE、PISO 和 PIMPLE 分别采用对应的算法子字典。SIMPLE 常用 nNonOrthogonalCorrectors、consistent、residualControl 和 pRefCell/pRefValue；PISO 通过 nCorrectors 控制校正次数；PIMPLE 另设 nOuterCorrectors 控制外迭代。压力方程需要参考值且求解器采用该机制时，设置 pRefCell 和 pRefValue。</p>
-<pre><code>// SIMPLE 片段：稳态算例
-SIMPLE
-&#123;
-    nNonOrthogonalCorrectors 0;
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">16 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-comment">// SIMPLE 片段：稳态算例</span>
+<span class="hljs-built_in">SIMPLE</span>
+{
+    nNonOrthogonalCorrectors <span class="hljs-number">0</span>;
     residualControl
-    &#123;
-        p 1e-5;
-        U 1e-6;
-        &quot;(k|omega)&quot; 1e-6;
-    &#125;
-&#125;
+    {
+        p <span class="hljs-number">1e-5</span>;
+        U <span class="hljs-number">1e-6</span>;
+        <span class="hljs-string">"(k|omega)"</span> <span class="hljs-number">1e-6</span>;
+    }
+}
 relaxationFactors
-&#123;
-    fields &#123; p 0.3; &#125;
-    equations &#123; U 0.7; k 0.7; omega 0.7; &#125;
-&#125;</code></pre>
+{
+    fields { p <span class="hljs-number">0.3</span>; }
+    equations { U <span class="hljs-number">0.7</span>; k <span class="hljs-number">0.7</span>; omega <span class="hljs-number">0.7</span>; }
+}</code></pre></div>
 <p>residualControl 的结构由算法接口确定，部分 PIMPLE 控制采用 tolerance/relTol 子字典。收敛判定应同时考察残差、质量守恒及力、流量、温度等目标量的稳定性。</p>
 <h3>8.4 system/decomposeParDict</h3>
-<pre><code>FoamFile
-&#123;
-    version 2.0; format ascii;
-    class dictionary; object decomposeParDict;
-&#125;
-numberOfSubdomains 4;
-method scotch;</code></pre>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">7 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-keyword">FoamFile</span>
+{
+    <span class="hljs-keyword">version</span> <span class="hljs-number">2.0</span>; <span class="hljs-keyword">format</span> ascii;
+    <span class="hljs-keyword">class</span> dictionary; <span class="hljs-keyword">object</span> decomposeParDict;
+}
+numberOfSubdomains <span class="hljs-number">4</span>;
+method scotch;</code></pre></div>
 <p>numberOfSubdomains 指定分区数，与求解阶段 mpirun -np 的进程数一致。scotch 采用图分割，simple 按坐标规则划分，hierarchical 按指定方向依次划分，manual 使用给定的处理器映射，multiLevel 组合多级分解方法。</p>
-<pre><code>// 用 simple 替换上面的 method 时，加入以下系数
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">7 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-comment">// 用 simple 替换上面的 method 时，加入以下系数</span>
 method simple;
 simpleCoeffs
-&#123;
-    n (2 2 1);
-    delta 0.001;
-&#125;</code></pre>
+{
+    n (<span class="hljs-number">2</span> <span class="hljs-number">2</span> <span class="hljs-number">1</span>);
+    delta <span class="hljs-number">0.001</span>;
+}</code></pre></div>
 <p>示例中 n 的三个分量乘积为 4。hierarchicalCoeffs 还通过 order 指定划分顺序，如 xyz。多区域算例可在 regions 子字典中分别设置方法和子域数。constraints 用于保持挡板、面区域及指定连接关系，约束范围同时影响负载均衡。</p>
 <h3>8.5 system/renumberMeshDict 与文件处理器</h3>
 <p>renumberMethod 指定网格编号算法，如 CuthillMcKee；算法参数置于对应系数字典。运行 renumberMesh -list-renumber 可查询可用方法。重新编号用于调整稀疏矩阵带宽，网格几何分辨率保持不变。</p>
 <p>FOAM_FILEHANDLER 设置默认文件处理器，常用值为 uncollated 和 collated；命令行 -fileHandler 可覆盖该设置。collated 通过合并并行 I/O 减少文件数量，其性能取决于文件系统、MPI 和缓冲策略。结果读取及重分配应使用支持该格式的工具。</p>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

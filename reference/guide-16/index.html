@@ -6,7 +6,10 @@
   <meta name="description" content="OpenFOAM v2512 命令、文件与配置参考">
   <meta name="theme-color" content="#1d4874">
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -47,150 +50,150 @@
   <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>第 16 章　system/snappyHexMeshDict</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
   <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">REFERENCE · v2512</div><h1>第 16 章　system/snappyHexMeshDict</h1><div class="article-meta"><a href="/reference/">← 返回参考手册</a><span>来源文档的网页版</span></div><div class="prose">
 <p class="source-note">资料来源：OpenFOAM命令与文件大全_v2512（Claude整理）.docx。网页版已对部分表述作技术性修订，原文可在资料页下载。命令选项以本机 v2512 的 <code>-help</code> 为准。核心模板工具使用 <code>foamGetDict</code>；版本差异与安装步骤需结合官方说明核对。</p><h4>16.1 三阶段开关与总体结构</h4>
-<pre><code>castellatedMesh true;      // ① 按几何切割背景网格 + 局部加密
-snap            true;      // ② 把切割后的网格贴合到几何表面
-addLayers       true;      // ③ 在壁面上长边界层
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">11 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">castellatedMesh <span class="hljs-literal">true</span>;      <span class="hljs-comment">// ① 按几何切割背景网格 + 局部加密</span>
+snap            <span class="hljs-literal">true</span>;      <span class="hljs-comment">// ② 把切割后的网格贴合到几何表面</span>
+addLayers       <span class="hljs-literal">true</span>;      <span class="hljs-comment">// ③ 在壁面上长边界层</span>
 
-geometry &#123; ... &#125;                 // 几何来源
-castellatedMeshControls &#123; ... &#125;
-snapControls &#123; ... &#125;
-addLayersControls &#123; ... &#125;
-meshQualityControls &#123; ... &#125;
+geometry { ... }                 <span class="hljs-comment">// 几何来源</span>
+castellatedMeshControls { ... }
+snapControls { ... }
+addLayersControls { ... }
+meshQualityControls { ... }
 
-mergeTolerance 1e-6;</code></pre>
+mergeTolerance <span class="hljs-number">1e-6</span>;</code></pre></div>
 <h4>16.2 geometry</h4>
-<pre><code>geometry
-&#123;
-    body.stl                              // 文件放在 constant/triSurface/
-    &#123;
-        type triSurfaceMesh;
-        name body;                        // 后面用这个名字引用
-    &#125;
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">22 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">geometry
+{
+    body.stl                              <span class="hljs-comment">// 文件放在 constant/triSurface/</span>
+    {
+        <span class="hljs-keyword">type</span> triSurfaceMesh;
+        <span class="hljs-keyword">name</span> body;                        <span class="hljs-comment">// 后面用这个名字引用</span>
+    }
 
-    refineBox                             // 也可以用解析形状定义加密区
-    &#123;
-        type searchableBox;
-        min  (-1 -1 -1);
-        max  ( 3  1  1);
-    &#125;
+    refineBox                             <span class="hljs-comment">// 也可以用解析形状定义加密区</span>
+    {
+        <span class="hljs-keyword">type</span> searchableBox;
+        min  (<span class="hljs-number">-1</span> <span class="hljs-number">-1</span> <span class="hljs-number">-1</span>);
+        max  ( <span class="hljs-number">3</span>  <span class="hljs-number">1</span>  <span class="hljs-number">1</span>);
+    }
 
     refineSphere
-    &#123;
-        type searchableSphere;
-        origin (0 0 0);
-        radius 0.5;
-    &#125;
-&#125;;</code></pre>
+    {
+        <span class="hljs-keyword">type</span> searchableSphere;
+        origin (<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>);
+        radius <span class="hljs-number">0.5</span>;
+    }
+};</code></pre></div>
 <h4>16.3 castellatedMeshControls</h4>
-<pre><code>castellatedMeshControls
-&#123;
-    maxLocalCells        1000000;    // 单进程最大单元数
-    maxGlobalCells       20000000;   // 全局最大单元数（超了会自动降级加密）
-    minRefinementCells   10;
-    nCellsBetweenLevels  3;          // ★ 相邻加密等级之间的缓冲层数，2–4 合适
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">35 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">castellatedMeshControls
+{
+    maxLocalCells        <span class="hljs-number">1000000</span>;    <span class="hljs-comment">// 单进程最大单元数</span>
+    maxGlobalCells       <span class="hljs-number">20000000</span>;   <span class="hljs-comment">// 全局最大单元数（超了会自动降级加密）</span>
+    minRefinementCells   <span class="hljs-number">10</span>;
+    nCellsBetweenLevels  <span class="hljs-number">3</span>;          <span class="hljs-comment">// ★ 相邻加密等级之间的缓冲层数，2–4 合适</span>
 
-    features                          // 特征边捕捉（先跑 surfaceFeatureExtract）
+    features                          <span class="hljs-comment">// 特征边捕捉（先跑 surfaceFeatureExtract）</span>
     (
-        &#123; file &quot;body.eMesh&quot;; level 3; &#125;
+        { file <span class="hljs-string">"body.eMesh"</span>; level <span class="hljs-number">3</span>; }
     );
 
-    refinementSurfaces               // 表面加密
-    &#123;
+    refinementSurfaces               <span class="hljs-comment">// 表面加密</span>
+    {
         body
-        &#123;
-            level (2 3);             // (最小 最大) 加密等级
-            patchInfo &#123; type wall; &#125; // ★ 生成的 patch 类型，壁面一定写 wall
-        &#125;
-    &#125;
+        {
+            level (<span class="hljs-number">2</span> <span class="hljs-number">3</span>);             <span class="hljs-comment">// (最小 最大) 加密等级</span>
+            patchInfo { <span class="hljs-keyword">type</span> wall; } <span class="hljs-comment">// ★ 生成的 patch 类型，壁面一定写 wall</span>
+        }
+    }
 
-    resolveFeatureAngle  30;         // 夹角大于此值的地方自动加密
+    resolveFeatureAngle  <span class="hljs-number">30</span>;         <span class="hljs-comment">// 夹角大于此值的地方自动加密</span>
 
-    refinementRegions                // 区域加密
-    &#123;
+    refinementRegions                <span class="hljs-comment">// 区域加密</span>
+    {
         refineBox
-        &#123;
-            mode   inside;           // inside / outside / distance
-            levels ((1e15 2));       // (距离 等级)；inside 模式下距离随便填大数
-        &#125;
-    &#125;
+        {
+            mode   inside;           <span class="hljs-comment">// inside / outside / distance</span>
+            levels ((<span class="hljs-number">1e15</span> <span class="hljs-number">2</span>));       <span class="hljs-comment">// (距离 等级)；inside 模式下距离随便填大数</span>
+        }
+    }
 
-    locationInMesh (2.5 0.5 0.5);    // ★★ 保留哪一侧：必须落在&quot;流体区域&quot;内
-    allowFreeStandingZoneFaces true;
-&#125;</code></pre>
+    locationInMesh (<span class="hljs-number">2.5</span> <span class="hljs-number">0.5</span> <span class="hljs-number">0.5</span>);    <span class="hljs-comment">// ★★ 保留哪一侧：必须落在"流体区域"内</span>
+    allowFreeStandingZoneFaces <span class="hljs-literal">true</span>;
+}</code></pre></div>
 <p>locationInMesh 指定待保留流体区域内部的一个点。该点应位于目标连通区域内，并避开几何表面和网格面。坐标选择应依据几何尺寸和区域拓扑，不宜使用与模型尺度无关的固定偏移。</p>
 <p>加密等级的含义：level n 表示单元边长被二分 n 次，即尺寸变成背景网格的 1/2ⁿ。level 3 就是 1/8。每加一级，该区域单元数变 8 倍——因此应逐级增加加密等级，并记录单元数与计算成本。</p>
 <h4>16.4 snapControls</h4>
-<pre><code>snapControls
-&#123;
-    nSmoothPatch    3;
-    tolerance       2.0;
-    nSolveIter      30;        // 贴合迭代次数，质量不好时加大到 50–100
-    nRelaxIter      5;
-    nFeatureSnapIter 10;       // 特征边贴合迭代
-    implicitFeatureSnap false;
-    explicitFeatureSnap  true; // 用 surfaceFeatureExtract 提取的特征
-    multiRegionFeatureSnap false;
-&#125;</code></pre>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">11 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">snapControls
+{
+    nSmoothPatch    <span class="hljs-number">3</span>;
+    tolerance       <span class="hljs-number">2.0</span>;
+    nSolveIter      <span class="hljs-number">30</span>;        <span class="hljs-comment">// 贴合迭代次数，质量不好时加大到 50–100</span>
+    nRelaxIter      <span class="hljs-number">5</span>;
+    nFeatureSnapIter <span class="hljs-number">10</span>;       <span class="hljs-comment">// 特征边贴合迭代</span>
+    implicitFeatureSnap <span class="hljs-literal">false</span>;
+    explicitFeatureSnap  <span class="hljs-literal">true</span>; <span class="hljs-comment">// 用 surfaceFeatureExtract 提取的特征</span>
+    multiRegionFeatureSnap <span class="hljs-literal">false</span>;
+}</code></pre></div>
 <h4>16.5 addLayersControls</h4>
-<pre><code>addLayersControls
-&#123;
-    relativeSizes    true;       // 厚度相对于邻近单元尺寸（true 更好控制）
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">29 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">addLayersControls
+{
+    relativeSizes    <span class="hljs-literal">true</span>;       <span class="hljs-comment">// 厚度相对于邻近单元尺寸（true 更好控制）</span>
 
     layers
-    &#123;
-        body                     // patch 名（支持正则 &quot;body.*&quot;）
-        &#123;
-            nSurfaceLayers 5;    // 层数
-        &#125;
-    &#125;
+    {
+        body                     <span class="hljs-comment">// patch 名（支持正则 "body.*"）</span>
+        {
+            nSurfaceLayers <span class="hljs-number">5</span>;    <span class="hljs-comment">// 层数</span>
+        }
+    }
 
-    expansionRatio      1.2;     // 层间增长比，1.1–1.3
-    finalLayerThickness 0.5;     // 最外层厚度 / 邻近单元尺寸
-    minThickness        0.1;     // 低于此值就不加层
-    nGrow               0;
+    expansionRatio      <span class="hljs-number">1.2</span>;     <span class="hljs-comment">// 层间增长比，1.1–1.3</span>
+    finalLayerThickness <span class="hljs-number">0.5</span>;     <span class="hljs-comment">// 最外层厚度 / 邻近单元尺寸</span>
+    minThickness        <span class="hljs-number">0.1</span>;     <span class="hljs-comment">// 低于此值就不加层</span>
+    nGrow               <span class="hljs-number">0</span>;
 
-    featureAngle        130;     // 大于此角度的地方不加层（凹角处易失败）
-    maxFaceThicknessRatio 0.5;
-    maxThicknessToMedialRatio 0.3;
-    minMedianAxisAngle  90;
-    nBufferCellsNoExtrude 0;
+    featureAngle        <span class="hljs-number">130</span>;     <span class="hljs-comment">// 大于此角度的地方不加层（凹角处易失败）</span>
+    maxFaceThicknessRatio <span class="hljs-number">0.5</span>;
+    maxThicknessToMedialRatio <span class="hljs-number">0.3</span>;
+    minMedianAxisAngle  <span class="hljs-number">90</span>;
+    nBufferCellsNoExtrude <span class="hljs-number">0</span>;
 
-    nLayerIter          50;      // 加层迭代次数
-    nRelaxIter          5;
-    nSmoothSurfaceNormals 1;
-    nSmoothNormals      3;
-    nSmoothThickness    10;
-&#125;</code></pre>
+    nLayerIter          <span class="hljs-number">50</span>;      <span class="hljs-comment">// 加层迭代次数</span>
+    nRelaxIter          <span class="hljs-number">5</span>;
+    nSmoothSurfaceNormals <span class="hljs-number">1</span>;
+    nSmoothNormals      <span class="hljs-number">3</span>;
+    nSmoothThickness    <span class="hljs-number">10</span>;
+}</code></pre></div>
 <p>加层失败怎么看：日志最后会打印每个 patch 的 Layer thickness ratio（实际层数/期望层数）。低于 0.7 就说明加层大面积失败，常见原因是 featureAngle 太小、几何有尖角、或者 minThickness 设得太大。先降 nSurfaceLayers，确认能加上，再逐步加回去。</p>
 <h4>16.6 meshQualityControls</h4>
-<pre><code>meshQualityControls
-&#123;
-    maxNonOrtho         65;
-    maxBoundarySkewness 20;
-    maxInternalSkewness  4;
-    maxConcave          80;
-    minVol              1e-13;
-    minTetQuality       1e-15;   // 常见做法：设为 -1e30 放宽（否则加层容易全失败）
-    minArea             -1;
-    minTwist            0.02;
-    minDeterminant      0.001;
-    minFaceWeight       0.02;
-    minVolRatio         0.01;
-    minTriangleTwist    -1;
-    nSmoothScale        4;
-    errorReduction      0.75;
-&#125;</code></pre>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">17 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam">meshQualityControls
+{
+    maxNonOrtho         <span class="hljs-number">65</span>;
+    maxBoundarySkewness <span class="hljs-number">20</span>;
+    maxInternalSkewness  <span class="hljs-number">4</span>;
+    maxConcave          <span class="hljs-number">80</span>;
+    minVol              <span class="hljs-number">1e-13</span>;
+    minTetQuality       <span class="hljs-number">1e-15</span>;   <span class="hljs-comment">// 常见做法：设为 -1e30 放宽（否则加层容易全失败）</span>
+    minArea             <span class="hljs-number">-1</span>;
+    minTwist            <span class="hljs-number">0.02</span>;
+    minDeterminant      <span class="hljs-number">0.001</span>;
+    minFaceWeight       <span class="hljs-number">0.02</span>;
+    minVolRatio         <span class="hljs-number">0.01</span>;
+    minTriangleTwist    <span class="hljs-number">-1</span>;
+    nSmoothScale        <span class="hljs-number">4</span>;
+    errorReduction      <span class="hljs-number">0.75</span>;
+}</code></pre></div>
 <p>这些是 snappy 内部的接受阈值：任何一步操作若使网格质量突破这些限制，该操作就被撤销。所以质量控制太严 = 贴不上、加不了层；太松 = 网格能生成但 checkMesh 不过。常见折中是把 minTetQuality 放宽到 -1e30，其余保持默认。</p>
 <h4>16.7 一份可用的操作顺序</h4>
-<pre><code>$ cp geometry.stl constant/triSurface/
-$ surfaceCheck constant/triSurface/geometry.stl      # 查封闭性和尺寸
-$ blockMesh                                          # 造背景网格
-$ surfaceFeatureExtract                              # 提特征边
-$ snappyHexMesh -overwrite                           # 生成
-$ checkMesh -allGeometry -allTopology                # 验收</code></pre>
+<div class="code-panel" data-language="bash"><div class="code-toolbar"><span class="code-language">Bash / 终端</span><span class="code-lines">6 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="Bash / 终端代码"><code class="hljs language-bash">$ <span class="hljs-built_in">cp</span> geometry.stl constant/triSurface/
+$ surfaceCheck constant/triSurface/geometry.stl      <span class="hljs-comment"># 查封闭性和尺寸</span>
+$ blockMesh                                          <span class="hljs-comment"># 造背景网格</span>
+$ surfaceFeatureExtract                              <span class="hljs-comment"># 提特征边</span>
+$ snappyHexMesh -overwrite                           <span class="hljs-comment"># 生成</span>
+$ checkMesh -allGeometry -allTopology                <span class="hljs-comment"># 验收</span></code></pre></div>
 </div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
 </main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a></span></footer>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

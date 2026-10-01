@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>网站维护手册 · FoamLab</title>
+  <meta name="description" content="面向初学者的 OpenFOAM v2512 学习站。28 讲课程、命令查询、配置手册与电极气泡建模。">
+  <meta name="theme-color" content="#1d4874">
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <script src="/assets/appearance.js"></script>
+  <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/presentation.css">
+  <script src="/assets/vendor/supabase.js" defer></script>
+  <script src="/assets/account.js" defer></script>
+  <script src="/assets/site.js" defer></script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+<body data-section="maintenance" data-lesson="">
+<a class="skip" href="#main">跳到主要内容</a>
+<aside class="sidebar" id="sidebar">
+  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <nav aria-label="主要导航">
+    <div class="nav-label">学习空间</div>
+    
+    <a href="/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3z"/><path d="M9 20v-7h6v7"/></svg><span>学习概览</span></a>
+    
+    <a href="/courses/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>课程学习</span><span class="nav-badge">28</span></a>
+    
+    <a href="/start/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>快速开始</span></a>
+    
+    <a href="/commands/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 7 4 5-4 5m8 0h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg><span>命令速查</span></a>
+    
+    <a href="/dictionaries/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8m-8 4h6"/></svg><span>文件与 Dict</span></a>
+    
+    <a href="/reference/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6c-3-3-7-3-10-2v15c3-1 7-1 10 2 3-3 7-3 10-2V4c-3-1-7-1-10 2Zm0 0v15"/></svg><span>参考手册</span></a>
+    
+    <a href="/bubble/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="7"/><path d="M3 22h18M12 17v5"/></svg><span>电极气泡专题</span></a>
+    
+    <a href="/account/" class="nav-item "><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>个人中心</span></a>
+    <div class="nav-label">课堂与交流</div>
+    
+    <a href="/assignments/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="15" height="18" rx="2"/><path d="M9 4V2h6v2m-7 8 2 2 5-5M9 18h7"/></svg><span>作业中心</span></a>
+    <a href="/announcements/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10M9 21h6"/></svg><span>课程公告</span></a>
+    <a href="/community/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a9 9 0 0 1-9 9H4l-3 2 2-7a9 9 0 1 1 18-4Z"/><path d="M7 9h9m-9 5h6"/></svg><span>提问与答疑</span></a>
+    <a href="/resources/" class="nav-item " ><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v14m-5-5 5 5 5-5M3 16v6h18v-6"/></svg><span>资料下载</span></a>
+  </nav>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>两相流与电极气泡建模</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="breadcrumb">学习空间 <span>/</span> <strong>网站维护手册</strong></div><button class="search-trigger" data-open-search><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/MrLittleShark/MrLittleShark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 20c-5 1-5-3-7-3m14 5v-4c0-1-.3-2-1-2 4-.5 7-2 7-6 0-2-1-3-2-4 0-1 0-3-1-4-2 0-4 1-4 1-2-.5-4-.5-6 0 0 0-2-1-4-1-1 1-1 3-1 4-1 1-2 2-2 4 0 4 3 5.5 7 6-.7.5-1 1-1 2v4"/></svg></a></header>
+  <main id="main"><div class="article-shell"><article class="article"><div class="eyebrow">OPENFOAM · v2512</div><h1>网站维护手册</h1><div class="prose"><h2 id="管理入口"><a href="#管理入口" class="headerlink" title="管理入口"></a>管理入口</h2><p>打开 <a href="/admin/">网站管理平台</a>，使用仓库所有者 <strong>MrLittleShark</strong> 的 GitHub 账号授权。首次管理授权需要允许访问公开仓库。普通学习账号的资料和学习进度功能保持独立。</p>
+<p>管理服务在服务端核验 GitHub 账号、与当前登录会话关联的身份及仓库写入权限。修改个人资料中的姓名或用户名不能获得管理权限。若提示授权失效，重新点击管理授权按钮。</p>
+<h2 id="发布作业和公告"><a href="#发布作业和公告" class="headerlink" title="发布作业和公告"></a>发布作业和公告</h2><ol>
+<li>选择“发布作业 / 公告”，填写类型、标题和正文。作业可以使用 28 讲练习模板。</li>
+<li>补充截止日期、时区、提交内容和评价要求，点击“检查发布内容”。</li>
+<li>核对后确认发布。记录保存在公开 GitHub Issues 中；课堂页面刷新后可见。</li>
+<li>在“已发布记录”中修改内容或将状态设为“已结束”。关闭作业后不再显示该作业的快捷提交按钮，GitHub 本身不会自动禁止逾期提交。</li>
+</ol>
+<p>学生在作业中心点击“提交此作业”，到 GitHub 确认提交并添加附件。教师在对应提交下评论反馈。答疑使用同一方式公开讨论。不要提交密码、访问令牌或个人敏感信息。</p>
+<h2 id="修改课程正文"><a href="#修改课程正文" class="headerlink" title="修改课程正文"></a>修改课程正文</h2><p>在“课程内容维护”选择页面并载入当前版本，修改后点击“保存并发布更新”。源文件保存到仓库的 <code>foamlab-source</code> 分支。GitHub Actions 检查 TeX 并调用 Hexo 构建，成功后更新网站。源文件已保存与网站已发布是两个状态，请在“发布状态与维护”确认结果。构建失败时原网站继续提供服务。</p>
+<p>保留文件开头的 <code>---</code> 页面信息，以及原有的 Hexo raw 标记。网页编辑使用版本校验；若提示文件已变化，重新载入并合并修改。源文件的历史版本可在 GitHub 提交记录中查看。</p>
+<h3 id="公式"><a href="#公式" class="headerlink" title="公式"></a>公式</h3><p>正文使用 TeX。行内示例：<span class="math-formula" data-tex="\mathrm{Re}=UL/\nu"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mi mathvariant="normal">R</mi><mi mathvariant="normal">e</mi></mrow><mo>=</mo><mi>U</mi><mi>L</mi><mi mathvariant="normal">/</mi><mi>ν</mi></mrow><annotation encoding="application/x-tex">\mathrm{Re}=UL/\nu</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.6833em;"></span><span class="mord"><span class="mord mathrm">Re</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">U</span><span class="mord mathnormal">L</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0637em;">ν</span></span></span></span></span>。独立公式示例：</p>
+<p><span class="math-formula math-display" data-tex="
+\Delta p=\frac{2\sigma}{R}
+"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">Δ</mi><mi>p</mi><mo>=</mo><mfrac><mrow><mn>2</mn><mi>σ</mi></mrow><mi>R</mi></mfrac></mrow><annotation encoding="application/x-tex">
+\Delta p=\frac{2\sigma}{R}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="katex-base"><span class="katex-strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">Δ</span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="katex-base"><span class="katex-strut" style="height:2.0074em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0077em;">R</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></span></p>
+<p>对应源文件写法如下，推荐显式定界符：</p>
+<div class="code-panel" data-language="tex"><div class="code-toolbar"><span class="code-language">TeX / LaTeX</span><span class="code-lines">5 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="TeX / LaTeX代码"><code class="hljs language-tex">行内：<span class="hljs-keyword">\(</span><span class="hljs-keyword">\mathrm</span>{Re}=UL/<span class="hljs-keyword">\nu</span><span class="hljs-keyword">\)</span>
+独立公式：
+<span class="hljs-keyword">\[</span>
+<span class="hljs-keyword">\Delta</span> p=<span class="hljs-keyword">\frac</span>{2<span class="hljs-keyword">\sigma</span>}{R}
+<span class="hljs-keyword">\]</span>
+</code></pre></div>
+<p>支持 <code>$...$</code> 和 <code>$$...$$</code>，但 Shell 环境变量应放在代码块中。TeX 在构建时渲染，不依赖外部公式服务。公式语法错误会中止发布。</p>
+<h3 id="代码与配置"><a href="#代码与配置" class="headerlink" title="代码与配置"></a>代码与配置</h3><p>使用 Markdown 围栏代码块，注明 <code>bash</code>、<code>openfoam</code>、<code>cpp</code> 或 <code>python</code>。网站显示语言、行数、语法高亮、复制和换行按钮。复制结果不含工具栏文字。已有课程的 HTML <code>pre</code> / <code>code</code> 块也会得到相同显示效果。代码中的美元符号、变量和运算符保留原样。</p>
+<div class="code-panel" data-language="openfoam"><div class="code-toolbar"><span class="code-language">OpenFOAM 字典</span><span class="code-lines">5 行</span><button type="button" class="code-wrap" aria-pressed="false">自动换行</button><button type="button" class="copy-code" aria-label="复制代码">复制</button></div><pre tabindex="0" aria-label="OpenFOAM 字典代码"><code class="hljs language-openfoam"><span class="hljs-keyword">application</span>     interFoam;
+startFrom       startTime;
+deltaT          <span class="hljs-number">1e-5</span>;
+adjustTimeStep  <span class="hljs-literal">yes</span>;
+maxCo           <span class="hljs-number">0.5</span>;
+</code></pre></div>
+<p>作业与公告正文在 GitHub 使用 Markdown 和 TeX；课堂列表显示文字摘要，完整内容在记录链接中查看。</p>
+<h2 id="本地维护与发布"><a href="#本地维护与发布" class="headerlink" title="本地维护与发布"></a>本地维护与发布</h2><p>本地工程目录为 <code>E:\Hexo</code>。双击“启动学习网站.cmd”预览，双击“发布学习网站.cmd”发布。本地发布先同步远程源文件，执行 Hexo 构建，再推送源文件并触发自动发布。若同一文件在网页和本地均有修改，同步程序会停止并列出冲突文件；先合并内容，不能直接覆盖。</p>
+<table>
+<thead>
+<tr>
+<th>内容</th>
+<th>本地位置</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>28 讲课程</td>
+<td><code>source-openfoam/lessons</code></td>
+</tr>
+<tr>
+<td>参考章节与 Dict 页面</td>
+<td><code>source-openfoam/reference</code>、<code>source-openfoam/dictionaries</code></td>
+</tr>
+<tr>
+<td>命令、配置索引数据</td>
+<td><code>source-openfoam/assets/commands.json</code>、<code>dictionaries.json</code></td>
+</tr>
+<tr>
+<td>课程目录与模板</td>
+<td><code>source-openfoam/_data/learning.json</code>、<code>source-openfoam/assets/assignment-templates.json</code></td>
+</tr>
+<tr>
+<td>页面结构与样式</td>
+<td><code>themes/foam-lab</code></td>
+</tr>
+<tr>
+<td>原始文档与算例包</td>
+<td><code>source-openfoam/downloads</code></td>
+</tr>
+<tr>
+<td>管理服务</td>
+<td><code>supabase/functions/foamlab-admin/index.ts</code></td>
+</tr>
+</tbody></table>
+<p>普通内容修改不需要重新运行 Word 导入。<code>tools/build-content.py</code> 会覆盖导入生成的课程、参考页面和索引；需要重新导入时，应先备份并合并已经在线修改的内容。全文搜索索引随 Hexo 构建自动更新。</p>
+<h2 id="备份与故障检查"><a href="#备份与故障检查" class="headerlink" title="备份与故障检查"></a>备份与故障检查</h2><ul>
+<li>内容和主题：备份 <code>foamlab-source</code> 分支及本地工程。Git 历史保存正文修改记录。</li>
+<li>个人资料与进度：由 Supabase 数据库保存，数据库备份与 Git 仓库备份相互独立。</li>
+<li>发布失败：查看 <a href="https://github.com/MrLittleShark/mrlittleshark.github.io/actions">GitHub Actions</a>，修正对应文件后重新发布。</li>
+<li>登录失败：检查 Supabase GitHub 提供商和回调配置，见本地 <code>supabase/SETUP.md</code>。</li>
+<li>课堂列表加载失败：使用页面上的 GitHub 入口查看记录；公开 API 存在频率限制。</li>
+</ul>
+<p>界面右上角按钮依次切换亮色、暗色、跟随系统；显示偏好保存在当前浏览器。首页图片来自 <a href="https://www.openfoam.com/">OpenFOAM 官方网站</a>，图注保留来源。本站是学习资料整理网站。</p>
+</div></article><aside class="article-toc"><div>本页目录</div><nav id="toc" aria-label="本页目录"></nav></aside></div>
+</main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span>学习 · 实践 · 验证 <a href="/resources/#sources">资料来源</a> <a href="/admin/">管理入口</a></span></footer>
+</div>
+<dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m16 16 5 5"/></svg><input id="global-search" type="search" placeholder="例如：blockMesh、接触角、压力边界" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
+<div class="toast" role="status" hidden></div>
+</body></html>
