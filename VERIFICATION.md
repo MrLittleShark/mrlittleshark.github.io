@@ -78,6 +78,7 @@
 - 后台原有 14 组隔离检查与新增 6 组课程附件、专题关联、图片查看检查通过；未向社区写入测试内容。桌面/手机亮暗模式的 20 个视觉场景完成检查，清理重建修复一个生成目录中的空图片副本，12 个相关场景复测无断图或溢出。
 - 数据库以期望修订号更新 51 条既有记录，新增 4 条专题；通过公开只读接口逐字段回读 55 条记录，正文、封面、元数据与本地一致，既有记录修订号均增加 1。未修改认证配置、数据库结构或 RLS。
 - 维护手册已补充课程附件、专题关联与 Wolf 图源维护方法。验证文件位于 .openfoam-work/course-refinement/。
+- 本轮功能源码提交 c642c7880715e53f1e7c0344ef625e7e9b7f2268 已发布，[GitHub Actions 36921706529](https://github.com/MrLittleShark/mrlittleshark.github.io/actions/runs/36921706529) 构建与 Pages 部署成功。部署后在真实站点检查 32 条页面路径，无脚本错误、断图或横向溢出；67 个线上文件（24 个 ZIP、37 张 Wolf 图、6 个页面脚本与样式）的 SHA-256 均与本地产物一致，共 13,868,705 字节。报告为 published-live-check.json 与 course-refinement/published-assets.json。
 
 ## 复查命令与记录位置
 
