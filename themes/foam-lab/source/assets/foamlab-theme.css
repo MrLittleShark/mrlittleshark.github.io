@@ -9,8 +9,8 @@ html[data-theme=dark]{
  --bg:#111816;--surface:#17201d;--surface:#17201d;--surface-2:#1c2723;--ink:#e5ede9;--muted:#a2b3ab;--accent:#8fcfb4;--accent-dark:#b5e2cd;--accent-ink:#0f1a16;--teal:#79c7c0;--gold:#e0b65e;--mint:#1f302a;--line:#2a3833;--line-strong:#3a4c45;
  --refine-panel:rgba(23,32,29,.97);--refine-chrome:rgba(17,24,22,.86);--refine-hover:#22322c;--refine-line:#4f7d6b;--refine-selected:#24382f;--refine-ring:#8fcfb4;--refine-focus:#a9dcc6;
  --shadow:0 1px 2px rgba(0,0,0,.25);--grid-line:rgba(143,207,180,.05)}
-html[data-theme] body{color:var(--ink);background:var(--bg)}
-html[data-theme] .app-shell{background:linear-gradient(to bottom,transparent 0,var(--bg) 560px),linear-gradient(var(--grid-line) 1px,transparent 1px) 0 0/24px 24px,linear-gradient(90deg,var(--grid-line) 1px,transparent 1px) 0 0/24px 24px,var(--bg);background-attachment:scroll}
+html[data-theme] body{color:var(--ink);background:var(--bg);isolation:isolate}
+html[data-theme] .app-shell{background:none}
 
 /* chrome */
 html[data-theme] .sidebar{background:var(--surface);border-color:var(--line)}
@@ -88,3 +88,36 @@ html[data-theme] .learning-route>a{border-color:var(--line)}
 html[data-theme] .learning-route>a:hover{background:var(--mint)}
 html[data-theme] .account-avatar{background:var(--mint);color:var(--accent)}
 html[data-theme=dark] .prose img[src*="/assets/diagrams/"]{filter:brightness(.9) contrast(1.02);border-radius:14px}
+
+/* Background, veil and reading surfaces are separate layers. */
+:root,html[data-theme=light]{
+ --scene-veil:linear-gradient(105deg,rgba(246,245,240,.79),rgba(246,245,240,.57) 48%,rgba(246,245,240,.40)),linear-gradient(0deg,rgba(246,245,240,.24),transparent 70%);
+ --scene-panel:rgba(255,254,251,.95);
+ --scene-reading:rgba(255,254,251,.985);
+ --scene-label:rgba(250,249,245,.94);
+ --scene-shadow:0 6px 26px rgba(21,49,68,.09);
+}
+html[data-theme=dark]{
+ --scene-veil:linear-gradient(105deg,rgba(13,23,26,.90),rgba(13,23,26,.75) 48%,rgba(13,23,26,.65)),linear-gradient(0deg,rgba(13,23,26,.23),transparent 70%);
+ --scene-panel:rgba(23,32,29,.95);
+ --scene-reading:rgba(23,32,29,.985);
+ --scene-label:rgba(17,24,22,.95);
+ --scene-shadow:0 6px 28px rgba(0,0,0,.22);
+}
+.site-backdrop{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:var(--bg)}
+.site-backdrop::before,.site-backdrop::after{content:"";position:absolute;pointer-events:none}
+.site-backdrop::before{inset:-8px;background:url('/assets/covers/panda-fluid-background-v1.webp') 50% 34%/cover no-repeat;filter:blur(2px) saturate(.8)}
+.site-backdrop::after{inset:0;background:var(--scene-veil)}
+html[data-theme] :is(.fl-home .fl-hero,.fl-home .fl-stats>a,.fl-home .fl-card,.fl-home .fl-community>a,.fl-panel,.lab-card,.resource-card,.dictionary-card,.command-card,.topic-collection,.profile-editor,.profile-progress,.account-summary){background:var(--scene-panel);box-shadow:var(--scene-shadow)}
+html[data-theme] .article-shell>.article{background:var(--scene-reading);box-shadow:var(--scene-shadow)}
+html[data-theme] :is(.page-heading,.fl-section>.fl-head){background:var(--scene-label);border:1px solid var(--line);border-radius:var(--radius);padding:18px 22px;box-shadow:var(--scene-shadow)}
+html[data-theme] .footer{background:var(--scene-label);padding-left:18px;border-radius:14px 14px 0 0}
+@media(max-width:760px){
+ .site-backdrop{height:100lvh}
+ .site-backdrop::before{background-image:url('/assets/covers/panda-fluid-background-mobile-v1.webp');background-position:50% 32%;filter:blur(1.5px) saturate(.7)}
+ html[data-theme=light]{--scene-veil:linear-gradient(rgba(246,245,240,.66),rgba(246,245,240,.76))}
+ html[data-theme=dark]{--scene-veil:linear-gradient(rgba(13,23,26,.73),rgba(13,23,26,.83))}
+ html[data-theme] :is(.page-heading,.fl-section>.fl-head){padding:15px 17px}
+}
+@media(prefers-reduced-transparency:reduce){html[data-theme]{--scene-panel:var(--surface);--scene-reading:var(--surface);--scene-label:var(--surface)}}
+@media print,(forced-colors:active){.site-backdrop{display:none}html[data-theme] :is(.article-shell>.article,.page-heading,.fl-section>.fl-head,.fl-home .fl-hero,.fl-panel,.footer){background:var(--surface);box-shadow:none}}

@@ -7,6 +7,8 @@
   <meta name="theme-color" content="#f6f5f0" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#111816" media="(prefers-color-scheme: dark)">
   <% if(page.noindex || page.admin_only || page.section==='admin'){ %><meta name="robots" content="noindex, nofollow"><% } %>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="preload" as="image" href="/assets/covers/panda-fluid-background-v1.webp" media="(min-width: 761px)">
+  <link rel="preload" as="image" href="/assets/covers/panda-fluid-background-mobile-v1.webp" media="(max-width: 760px)">
   <script src="/assets/appearance.js"></script>
   <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
@@ -47,6 +49,7 @@
   <script src="/assets/panda-notes.js" defer></script>
 </head>
 <body data-section="<%= page.section || page.layout || '' %>" data-lesson="<%= page.lesson_id || '' %>">
+<div class="site-backdrop" aria-hidden="true"></div>
 <a class="skip" href="#main">跳到主要内容</a>
 <aside class="sidebar" id="sidebar">
   <button class="icon-button sidebar-close" type="button" data-close-nav aria-label="关闭导航">×</button>
@@ -73,7 +76,7 @@
   <g class="pa-hat pa-o pa-o-raincoat"><path class="pa-rain pa-line" d="M40 38c4-16 20-26 40-26s36 10 40 26c-24-6-56-6-80 0z"/><path class="pa-rain pa-line" d="M34 40c28-8 64-8 92 0l-4 6c-26-6-58-6-84 0z"/></g>
   <g class="pa-hat pa-o pa-o-wizard"><path class="pa-wizard pa-line" d="M54 36c8-12 16-28 34-34-4 10-2 20 18 34z"/><ellipse class="pa-wizard pa-line" cx="80" cy="37" rx="34" ry="6"/><path class="pa-gold" d="M84 16l2 4.4 4.8.6-3.5 3.3.9 4.8-4.2-2.3-4.2 2.3.9-4.8-3.5-3.3 4.8-.6z"/></g>
   </g></g></svg></span><span>FoamLab<small>熊猫带你学 OpenFOAM</small></span></a>
-  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch" title="openfoam.com（OpenCFD）发行版">ESI 版</span></div>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong></div>
   <nav aria-label="主要导航">
     <div class="nav-label">学习空间</div>
     <%- partial('_partial/learning-nav') %>
