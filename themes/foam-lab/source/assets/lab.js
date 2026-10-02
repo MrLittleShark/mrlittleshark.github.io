@@ -40,7 +40,16 @@
   return holder.innerHTML;
  };
  document.addEventListener('click',async e=>{const wrap=e.target.closest('[data-lab-wrap]');if(wrap){const on=wrap.closest('.code-panel').classList.toggle('wrap-lines');wrap.setAttribute('aria-pressed',String(on));return;}const b=e.target.closest('[data-lab-copy]');if(b){try{await navigator.clipboard.writeText(b.closest('.code-panel').querySelector('pre').textContent);b.textContent='已复制';setTimeout(()=>b.textContent='复制代码',1300);}catch{window.foamNotify?.('请选中代码后复制。');}}});
- lab.ready=(async()=>{await window.foamAuth.ready;lab.client=window.foamAuth.client;lab.user=window.foamAuth.user;if(!lab.client)throw Error('内容服务未连接，请刷新重试。');if(lab.user){const r=await lab.client.from('foamlab_roles').select('role').eq('user_id',lab.user.id).maybeSingle();lab.role=r.data?.role||'member';}return lab;})();
+ let authInitialized=false;
+ lab.ready=(async()=>{await window.foamAuth.ready;lab.client=window.foamAuth.client;lab.user=window.foamAuth.user;if(!lab.client)throw Error('内容服务未连接，请刷新重试。');if(lab.user){const id=lab.user.id,r=await lab.client.from('foamlab_roles').select('role').eq('user_id',id).maybeSingle();if(window.foamAuth.user?.id===id)lab.role=r.data?.role||'member';else{lab.user=window.foamAuth.user;lab.role=null;}}authInitialized=true;return lab;})();
+ window.addEventListener('foam-auth-change',()=>{
+  if(!authInitialized||lab.user?.id===window.foamAuth.user?.id)return;
+  lab.user=window.foamAuth.user;lab.role=null;
+  document.querySelectorAll('[data-management-link],#profile-admin-link').forEach(link=>link.hidden=true);
+  // Rebuild member/admin controls with the new identity, including changes
+  // received from other tabs. Token refresh and progress updates do not reload.
+  location.reload();
+ });
  lab.ready.catch(()=>{});
  lab.ready.then(()=>{document.querySelectorAll('[data-management-link],#profile-admin-link').forEach(link=>link.hidden=!['admin','editor','moderator'].includes(lab.role));}).catch(()=>{});
  lab.refreshAccountProgress=async()=>{if(!lab.user||!$('.account-page')||window.foamAuth.dataError)return;try{const lessons=[];for(let offset=0;;offset+=500){const batch=lab.check(await lab.client.from('foamlab_content').select('id').eq('status','published').eq('kind','lesson').order('id').range(offset,offset+499));lessons.push(...batch);if(batch.length<500)break;}const completed=new Set(window.foamAuth.progress||[]),count=lessons.filter(item=>completed.has(item.id)).length,total=lessons.length;window.foamAuth.totalLessons=total;window.foamAuth.visibleCompleted=count;const number=$('#account-completed'),state=$('#account-progress-state'),bar=$('#account-progress-bar');if(number)number.textContent=String(count);if(state)state.textContent='已完成 '+count+' / '+total+' 节课程。';if(bar)bar.style.width=(total?Math.min(100,count/total*100):0)+'%';}catch{const state=$('#account-progress-state'),bar=$('#account-progress-bar');if(state)state.textContent='账号记录已读取，课程目录暂时无法同步；请刷新后查看当前进度。';if(bar)bar.style.width='0%';}};
@@ -55,7 +64,7 @@
   }
   return cfg;
  }).catch(()=>({}));
- lab.login=async()=>{sessionStorage.setItem('foamlab.afterLogin',location.pathname+location.search);await window.foamAuth.ready;const r=await lab.client.auth.signInWithOAuth({provider:'github',options:{redirectTo:location.origin+'/account/'}});if(r.error)window.foamNotify?.(r.error.message);};
+ lab.login=async()=>{try{await window.foamAuth.signIn({returnTo:location.pathname+location.search+location.hash});}catch(e){window.foamNotify?.(e.message||'登录暂时无法发起，请稍后重试。');}};
  document.addEventListener('click',e=>{if(e.target.closest('[data-lab-login]'))lab.login();});
  lab.ensureProfile=async()=>{const meta=lab.user?.user_metadata||{};const display=(window.foamAuth.profile?.display_name||meta.user_name||meta.full_name||'学习者').slice(0,60);lab.check(await lab.client.from('foamlab_public_profiles').upsert({user_id:lab.user.id,display_name:display},{onConflict:'user_id'}));};
  lab.names=async ids=>{const unique=[...new Set(ids.filter(Boolean))],names={};for(let i=0;i<unique.length;i+=100){const r=await lab.client.from('foamlab_public_profiles').select('user_id,display_name').in('user_id',unique.slice(i,i+100));for(const profile of r.data||[])names[profile.user_id]=profile.display_name;}return names;};
