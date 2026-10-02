@@ -13,7 +13,7 @@ ENV=dict(os.environ,GIT_TERMINAL_PROMPT='0',GCM_INTERACTIVE='Never')
 
 def allowed(name):
     p=Path(name)
-    return not p.is_absolute() and '..' not in p.parts and '__pycache__' not in p.parts and p.suffix not in ('.pyc','.log') and (name in FILES or any(name.startswith(d+'/') for d in DIRECTORIES))
+    return not p.is_absolute() and '..' not in p.parts and '__pycache__' not in p.parts and '.temp' not in p.parts and p.suffix not in ('.pyc','.log') and (name in FILES or any(name.startswith(d+'/') for d in DIRECTORIES))
 
 def safe(base,name):
     p=(base/name).resolve()

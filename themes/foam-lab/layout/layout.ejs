@@ -22,6 +22,8 @@
   <link rel="stylesheet" href="/assets/reader.css">
   <link rel="stylesheet" href="/assets/page-outline.css">
   <link rel="stylesheet" href="/assets/navigation.css">
+  <link rel="stylesheet" href="/assets/panda-theme.css">
+  <link rel="stylesheet" href="/assets/panda-pet.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -36,12 +38,15 @@
   <script src="/assets/figure-viewer.js" defer></script>
   <script src="/assets/page-outline.js" defer></script>
   <script src="/assets/navigation.js" defer></script>
+  <script src="/assets/panda-art.js" defer></script>
+  <script src="/assets/panda-pet.js" defer></script>
+  <script src="/assets/panda-notes.js" defer></script>
 </head>
 <body data-section="<%= page.section || page.layout || '' %>" data-lesson="<%= page.lesson_id || '' %>">
 <a class="skip" href="#main">跳到主要内容</a>
 <aside class="sidebar" id="sidebar">
   <button class="icon-button sidebar-close" type="button" data-close-nav aria-label="关闭导航">×</button>
-  <a class="brand" href="/"><span class="brand-mark">f<span>∿</span></span><span>FoamLab<small>OpenFOAM 学习站</small></span></a>
+  <a class="brand" href="/"><span class="brand-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="#283738"/><circle cx="37" cy="11" r="9" fill="#283738"/><ellipse cx="24" cy="26" rx="22" ry="20" fill="#fffcf4" stroke="#d3decd"/><ellipse cx="15" cy="24" rx="6" ry="8" fill="#283738" transform="rotate(25 15 24)"/><ellipse cx="33" cy="24" rx="6" ry="8" fill="#283738" transform="rotate(-25 33 24)"/><circle cx="16" cy="23" r="2" fill="white"/><circle cx="32" cy="23" r="2" fill="white"/><path d="M21 32q3-3 6 0l-3 4Z" fill="#283738"/><path d="M24 35q-3 5-7 1m7-1q3 5 7 1" fill="none" stroke="#283738" stroke-width="1.5"/></svg></span><span>FoamLab<small>熊猫带你学 OpenFOAM</small></span></a>
   <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
   <nav aria-label="主要导航">
     <div class="nav-label">学习空间</div>

@@ -13,3 +13,4 @@ server/
 .source_foamlab/
 __pycache__/
 *.pyc
+supabase/.temp/

@@ -1,9 +1,9 @@
 <% const data=learning(); %>
 <div class="page-wrap scientific-home">
 <div class="science-overline"><span class="eyebrow">OPENFOAM LEARNING LAB</span><span>v2512</span></div>
-<section class="science-hero">
- <div class="science-intro"><div class="pill">计算流体力学 · 中文课程与参考资料</div><h1>OpenFOAM v2512<br><em>数值模拟与程序开发</em></h1><p>课程、命令查询、配置实例与技术讨论。</p><div class="science-actions"><a class="button" href="/read/?slug=cfd-and-openfoam">开始学习 <%- icon('arrow') %></a><a class="button secondary" href="/courses/">课程目录</a></div><div class="science-version"><span class="status-dot"></span>OpenFOAM v2512</div></div>
- <figure class="science-cover"><img src="/assets/covers/foamlab-aircraft-background-v1.png" alt="飞机表面压力色彩、流线与翼尖涡" width="1672" height="941" fetchpriority="high"><div class="science-cover-label">OpenFOAM <span>v2512</span></div></figure>
+<section class="science-hero panda-home-hero">
+ <div class="science-intro"><div class="pill">OpenFOAM v2512 · 中文学习社区</div><h1>跟熊猫一起<br><em>学 OpenFOAM</em></h1><p>算例教程 · 命令与配置 · 编程实践</p><div class="science-actions"><a class="button" href="/read/?slug=cfd-and-openfoam">开始学习 <%- icon('arrow') %></a><a class="button secondary" href="/courses/">课程目录</a></div><div class="science-version"><span class="status-dot"></span>自学 · 实践 · 交流</div></div>
+ <div class="panda-home-scene"><svg class="panda-flow-line" viewBox="0 0 400 320" fill="none" aria-hidden="true"><path d="M0 100Q80 80 140 40T400 90M0 130Q80 110 140 70T400 120M0 230Q80 170 140 210T400 160M0 260Q80 200 140 240T400 190" stroke="currentColor" stroke-width="2"/><path d="M35 290v-50m-15 25h30M345 45v-25m-12 12h25" stroke="currentColor"/><circle cx="340" cy="260" r="12" stroke="currentColor"/></svg><div class="panda-home-bubble">今天从哪个算例开始？</div><div class="panda-home-portrait" data-panda-portrait role="img" aria-label="抱着竹子的熊猫泡泡"></div><span class="panda-home-chip mesh">$ blockMesh</span><span class="panda-home-chip code">fvm::laplacian</span><div class="panda-hero-foot"><a href="/account/#my-panda">登录，和泡泡一起积累学习经验 →</a></div></div>
 </section>
 <div class="science-statistics"><a href="/courses/"><strong><%= course_count() %></strong><span>课程单元</span></a><a href="/commands/"><strong><%= data.commands.length %></strong><span>命令与辅助入口</span></a><a href="/dictionaries/"><strong><%= data.dictionaries.length %></strong><span>配置参考条目</span></a><a href="/programming/"><strong><%= course_count("OpenFOAM 编程") %></strong><span>编程实例</span></a></div>
 <div class="science-main-grid">
