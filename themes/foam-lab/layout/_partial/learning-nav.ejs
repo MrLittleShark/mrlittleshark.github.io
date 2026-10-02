@@ -6,20 +6,18 @@ const nav=[
   ['/read/?slug=cfd-and-openfoam','认识 CFD 与 OpenFOAM'],
   ['/read/?slug=start-openfoam-v2512','安装与环境配置'],
   ['/read/?slug=first-cavity-result','运行第一个算例']]],
- ['courses','/courses/','book','系统学习',categoryLinks('/courses/','track',['起步与算例','几何与网格','数值方法','物理模型','计算与数据分析','验证与研究方法'])],
+ ['courses','/courses/','book','系统学习',categoryLinks('/courses/','track',['起步与算例','几何与网格','数值方法','物理模型','计算与数据分析','验证与研究方法']).map(([href,label])=>[href,label==='数值方法'?'离散与求解':label])],
  ['topics','/topics/','grid','专题学习',[
-  ['/topics/finite-volume/','有限体积法'],['/topics/turbulence/','湍流'],['/topics/multiphase/','多相流'],['/topics/meshing/','网格划分'],['/topics/dynamic-mesh/','动网格']]],
+  ['/algorithms/','数值方法'],['/topics/finite-volume/','有限体积法'],['/topics/turbulence/','湍流'],['/topics/multiphase/','多相流'],['/topics/meshing/','网格划分'],['/topics/dynamic-mesh/','动网格']]],
  ['commands','/commands/','terminal','命令速查',categoryLinks('/commands/','category',['系统工具','前处理','求解与并行','后处理','环境与编译','Linux'])],
  ['dictionaries','/dictionaries/','file','配置与字典',categoryLinks('/dictionaries/','group',['网格','初始化','初始场','计算控制','数值方法','物理模型','并行计算','函数对象','后处理','编译'])],
- ['algorithms','/algorithms/','grid','数值方法',[
-  ['/read/?slug=algorithm-theory-01','控制方程与有限体积法'],['/read/?slug=algorithm-theory-02','一致性、稳定性与收敛性'],['/read/?slug=algorithm-theory-03','矩阵与线性求解'],['/read/?slug=algorithm-theory-04','压力与速度耦合']]],
  ['programming','/programming/','terminal','OpenFOAM 编程',[
   ['/linux/','Linux 入门'],['/cpp/','C++ 入门'],['/programming/?q='+encodeURIComponent('编程'),'基础编程实例'],['/read/?slug=development-solver','开发求解器'],['/read/?slug=development-boundary','开发边界条件'],['/read/?slug=development-utility','开发后处理工具']]],
  ['tools','/tools/','grid','工具生态',[
   ['/read/?slug=tool-paraview','ParaView 可视化'],['/read/?slug=tool-gmsh','Gmsh 网格生成'],['/read/?slug=tool-salome','SALOME 几何与网格'],['/read/?slug=tool-pyvista','PyVista 数据分析'],['/read/?slug=tool-pyfoam','PyFoam 运行管理'],['/read/?slug=tool-freecad-geometry','FreeCAD 几何建模']]]
 ];
 nav.forEach(([key,url,ico,label,children])=>{
- const active=url==='/'?page.path==='index.html':!!page.path&&(page.path.startsWith(url.slice(1))||(key==='courses'&&page.path.startsWith('lessons/'))||(key==='programming'&&['linux','cpp'].includes(page.section)));
+ const active=url==='/'?page.path==='index.html':!!page.path&&(page.path.startsWith(url.slice(1))||(key==='courses'&&page.path.startsWith('lessons/'))||(key==='topics'&&page.section==='algorithms')||(key==='programming'&&['linux','cpp'].includes(page.section)));
 %>
 <div class="nav-group" data-nav-section="<%= key %>">
   <div class="nav-parent">

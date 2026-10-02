@@ -2,6 +2,6 @@
 title: 实践与分享
 layout: catalog
 section: sharing
-description: 分享可复现的计算经验，记录建模依据、调试过程和数值结果。
+description: 计算案例、技术文章、研究笔记与作者日志。
 eyebrow: ARTICLES & FIELD NOTES
 ---

@@ -4,4 +4,3 @@
 
 .prose figure.wolf-figure .figure-source{display:block;font-size:11px;line-height:1.6;color:var(--muted);margin-top:4px;font-weight:400}
 
-@media(min-width:761px){.topic-collection[data-topic="finite-volume"]{grid-column:1/-1;grid-template-columns:240px minmax(0,1fr)}.topic-collection[data-topic="finite-volume"] img{max-height:220px}.topic-collection[data-topic="finite-volume"] .topic-collection-body{align-self:center}}

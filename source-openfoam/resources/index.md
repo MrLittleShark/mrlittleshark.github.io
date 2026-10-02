@@ -1,7 +1,7 @@
 ---
-title: 资料与算例
+title: 资料中心
 layout: catalog
 section: resources
-description: 课程讲义、源码与算例，均可下载到本地使用。
+description: 课程讲义、配套算例、源码，以及推荐的文档、网站和学习资源。
 eyebrow: DATA, CODE & REFERENCES
 ---

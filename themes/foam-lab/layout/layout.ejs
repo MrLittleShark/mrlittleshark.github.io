@@ -79,10 +79,8 @@
   <nav aria-label="主要导航">
     <div class="nav-label">学习空间</div>
     <%- partial('_partial/learning-nav') %>
-    <a href="/account/" class="nav-item <%= page.section==='account'?'active':'' %>"><%- icon('grid') %><span>个人中心</span></a>
     <div class="nav-label">资源与社区</div>
-    <% [['resources','download','资料与算例'],['recommendations','grid','资源推荐'],['sharing','book','实践与分享'],['authors','file','作者专栏'],['community','chat','讨论中心'],['assignments','task','作业与实践'],['announcements','bell','网站公告']].forEach(([slug,ico,label])=>{ %>
-    <a href="/<%= slug %>/" class="nav-item <%= page.section===slug?'active':'' %>" <%- page.section===slug?'aria-current="page"':'' %>><%- icon(ico) %><span><%= label %></span></a><% }); %>
+    <%- partial('_partial/community-nav') %>
   </nav>
   <div class="sidebar-bottom"><div class="tiny-label">软件版本</div><p>OpenFOAM v2512</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
 </aside>
