@@ -16,7 +16,7 @@ hexo.extend.deployer.register('git-safe',async function(args){
   }
   if(path.dirname(deploy)!==root||path.basename(deploy)!=='.deploy_foamlab')throw new Error('Unexpected deployment directory');
   const repo=args.repo,branch=args.branch||'main';
-  if(repo!=='https://github.com/MrLittleShark/MrLittleShark.github.io.git'||branch!=='main')throw new Error('Review deploy.js for a new repository or branch');
+  if(repo!=='https://github.com/foamlabshark/foamlabshark.github.io.git'||branch!=='main')throw new Error('Review deploy.js for a new repository or branch');
   const run=(...gitArgs)=>execFileSync('git',gitArgs,{cwd:deploy,stdio:'inherit',env:{...process.env,GIT_TERMINAL_PROMPT:'0',GCM_INTERACTIVE:'Never'}});
   if(!fs.existsSync(path.join(deploy,'.git'))){
     if(fs.existsSync(deploy)&&fs.readdirSync(deploy).length)throw new Error('Deployment folder is not an empty Git checkout');
@@ -36,7 +36,7 @@ hexo.extend.deployer.register('git-safe',async function(args){
   const workflows=path.join(root,'.github','workflows');
   if(fs.existsSync(workflows))fs.cpSync(workflows,path.join(deploy,'.github','workflows'),{recursive:true});
   fs.writeFileSync(path.join(deploy,'.nojekyll'),'');
-  fs.writeFileSync(path.join(deploy,'README.md'),'# FoamLab\n\nOpenFOAM v2512 learning website.\n\nhttps://mrlittleshark.github.io/\n\nBuilt and deployed with Hexo. Course interactions use public GitHub Issues.\n');
+  fs.writeFileSync(path.join(deploy,'README.md'),'# FoamLab\n\nOpenFOAM v2512 learning website.\n\nhttps://foamlabshark.github.io/\n\nBuilt and deployed with Hexo. Course interactions use public GitHub Issues.\n');
   run('add','--all');
   const changes=execFileSync('git',['diff','--cached','--name-only'],{cwd:deploy,encoding:'utf8'}).trim();
   if(changes)run('commit','-m',args.message||'Publish FoamLab OpenFOAM v2512 learning site');

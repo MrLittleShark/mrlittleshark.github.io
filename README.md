@@ -1,10 +1,14 @@
 # FoamLab · OpenFOAM v2512 学习社区
 
-网站：<https://mrlittleshark.github.io/>。本地工程：`E:\Hexo`。
+网站：<https://foamlabshark.github.io/>。本地工程：`E:\Hexo`。
 
 本站以 **OpenCFD OpenFOAM v2512** 为软件基准，使用 Hexo 8.1.2 和 `themes/foam-lab` 主题生成网站，部署到 GitHub Pages。Supabase 提供 GitHub 登录、内容管理、讨论、评论、附件和跨设备学习记录。课程、参考资料、实践分享与讨论分别组织，电极气泡专题暂不纳入当前内容。
 
 ## 内容范围
+
+仓库已转移至 [foamlabshark/foamlabshark.github.io](https://github.com/foamlabshark/foamlabshark.github.io)。本地发布仓库与源码同步工具均使用该地址，源码分支仍为 foamlab-source。日常发布继续使用“发布学习网站.cmd”。
+
+已有 Supabase 项目的域名配置见 [域名迁移说明](supabase/SETUP.md)。在线内容库中的 3 篇作业和维护手册已通过 [内容链接更新 SQL](supabase/maintenance/repository-domain-transfer.sql) 同步新地址。数据库内容、登录返回地址及历史 Edge Function 的部署分别管理，不会随 Hexo 配置自动更新。
 
 以下数量为本次重构的初始内容清单；后台增删后，线上目录以实际已发布记录为准。
 
@@ -24,7 +28,7 @@
 
 ## 日常内容管理
 
-打开 [管理平台](https://mrlittleshark.github.io/admin/)，使用已分配角色的 GitHub 账号登录。日常管理无需额外提供 GitHub 仓库访问令牌，也无需重新部署 Hexo。
+打开 [管理平台](https://foamlabshark.github.io/admin/)，使用已分配角色的 GitHub 账号登录。日常管理无需额外提供 GitHub 仓库访问令牌，也无需重新部署 Hexo。
 
 | 角色 | 主要权限 |
 | --- | --- |
@@ -34,17 +38,17 @@
 | 普通会员 | 提问、回答、评论、个人学习记录，以及自己的文章和日志草稿 |
 | 禁止发言账号 | 公开阅读；停止社区写入与投稿 |
 
-权限由数据库角色和行级访问控制执行，认证写入要求真实 GitHub 身份关联，修改个人资料或伪造身份元数据不能改变角色。站内管理的内容类型包括课程单元、课程集合、分享文章、作者日志、下载资料、资源推荐、扩展工具、专题模块、公告、作业、命令与配置。普通会员在 [作者工作台](https://mrlittleshark.github.io/studio/)保存文章或日志草稿，编辑审核后发布。
+权限由数据库角色和行级访问控制执行，认证写入要求真实 GitHub 身份关联，修改个人资料或伪造身份元数据不能改变角色。站内管理的内容类型包括课程单元、课程集合、分享文章、作者日志、下载资料、资源推荐、扩展工具、专题模块、公告、作业、命令与配置。普通会员在 [作者工作台](https://foamlabshark.github.io/studio/)保存文章或日志草稿，编辑审核后发布。
 
 内容正文地址为 `/read/?slug=地址标识`。`track` 决定分类，`series` 组织连续课程或专栏，`sort_order` 数值越小越靠前。课程的首章、上一章、下一章和末章导航，只读取同一 `series` 中已发布的课程单元；同权重时按 `slug` 排序。更改标题或排序无需手工修改翻页链接。
 
 内容保存支持修订历史与并发冲突检查；回收站恢复为草稿，永久删除需要管理员权限。文件上传到公开 `foamlab-resources` 存储桶，常规文件上限 50 MB。内容归档与删除附件是两个动作，删除文件前应检查其引用。
 
-完整操作说明见 [维护手册](source-openfoam/maintenance/index.md)及[线上维护入口](https://mrlittleshark.github.io/maintenance/)。
+完整操作说明见 [维护手册](source-openfoam/maintenance/index.md)及[线上维护入口](https://foamlabshark.github.io/maintenance/)。
 
 ## 讨论、评论与作业
 
-[讨论中心](https://mrlittleshark.github.io/community/)允许匿名阅读；提问、回答和评论需要 GitHub 登录。新版站内讨论存储在 Supabase。GitHub Issues 保留为公开作业提交入口，提交链接可以粘贴到作业评论区。两处内容不会自动互相同步。
+[讨论中心](https://foamlabshark.github.io/community/)允许匿名阅读；提问、回答和评论需要 GitHub 登录。新版站内讨论存储在 Supabase。GitHub Issues 保留为公开作业提交入口，提交链接可以粘贴到作业评论区。两处内容不会自动互相同步。
 
 管理员或版主可置顶、关闭、隐藏和恢复主题及回复。文章评论可逐篇开关，站点设置可暂停新建讨论。普通用户每小时最多新建 5 个主题、发布 40 条回答或评论。关闭站内主题后停止新增回复；作业中写出的截止日期不会自动限制外部 GitHub Issues 的提交。
 
@@ -52,9 +56,9 @@ GitHub OAuth 由 Supabase Auth 处理。个人资料与新版课程进度使用�
 
 ## 分类推荐与支持入口
 
-[资源推荐](https://mrlittleshark.github.io/recommendations/)使用 `recommendation` 类型。编辑可维护标题、分类、正文、外部入口和版本核对信息；分类来自 `track`，统一系列可填“资源推荐”。第三方工具的版本兼容性与社区经验应分别注明，不能把推荐条目写成未经验证的运行承诺。
+[资源推荐](https://foamlabshark.github.io/recommendations/)使用 `recommendation` 类型。编辑可维护标题、分类、正文、外部入口和版本核对信息；分类来自 `track`，统一系列可填“资源推荐”。第三方工具的版本兼容性与社区经验应分别注明，不能把推荐条目写成未经验证的运行承诺。
 
-[支持入口](https://mrlittleshark.github.io/support/)的启用状态、用途说明、微信与支付宝图片由管理员在“站点与导航”中维护。**本次未上传真实收款码，入口保持停用。** 可上传不超过 5 MB 的 PNG、JPEG 或 WebP 图片，核对预览与收款对象后保存并启用。关闭入口不会删除已上传的公开图片。
+[支持入口](https://foamlabshark.github.io/support/)的启用状态、用途说明、微信与支付宝图片由管理员在“站点与导航”中维护。**本次未上传真实收款码，入口保持停用。** 可上传不超过 5 MB 的 PNG、JPEG 或 WebP 图片，核对预览与收款对象后保存并启用。关闭入口不会删除已上传的公开图片。
 
 ## 本地预览与 Hexo 发布
 
@@ -82,7 +86,7 @@ npm run deploy
 python tools/source-sync.py resolve source-openfoam/maintenance/index.md
 ```
 
-此命令只适用于已经人工合并的实际冲突路径。发布结果以 [GitHub Actions](https://github.com/MrLittleShark/mrlittleshark.github.io/actions)及线上页面复核为准；每次发布的实际结果记录在 `VERIFICATION.md`。
+此命令只适用于已经人工合并的实际冲突路径。发布结果以 [GitHub Actions](https://github.com/foamlabshark/foamlabshark.github.io/actions)及线上页面复核为准；每次发布的实际结果记录在 `VERIFICATION.md`。
 
 ## 内容主稿与目录
 

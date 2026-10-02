@@ -5,7 +5,7 @@ import subprocess,os,json,hashlib,shutil,sys
 ROOT=Path(__file__).resolve().parents[1]
 CHECKOUT=ROOT/'.source_foamlab'
 STATE=ROOT/'.openfoam-work/source-sync.json'
-REPO='https://github.com/MrLittleShark/MrLittleShark.github.io.git'
+REPO='https://github.com/foamlabshark/foamlabshark.github.io.git'
 BRANCH='foamlab-source'
 DIRECTORIES=('source-openfoam','themes/foam-lab','scripts','lib','tools','supabase','.github')
 FILES=('_config.yml','package.json','package-lock.json','.gitignore','README.md','VERIFICATION.md','发布学习网站.cmd','启动学习网站.cmd')

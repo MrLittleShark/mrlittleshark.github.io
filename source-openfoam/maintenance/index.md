@@ -157,7 +157,7 @@ npm run build
 npx hexo deploy
 ```
 
-发布器在同步时检测远端变动。遇到冲突应比较并合并源文件，不要强制覆盖远端修改。构建失败时检查 [GitHub Actions 日志](https://github.com/MrLittleShark/mrlittleshark.github.io/actions)。
+发布器在同步时检测远端变动。遇到冲突应比较并合并源文件，不要强制覆盖远端修改。构建失败时检查 [GitHub Actions 日志](https://github.com/foamlabshark/foamlabshark.github.io/actions)。
 
 ## 字体、亮暗模式与界面规范
 

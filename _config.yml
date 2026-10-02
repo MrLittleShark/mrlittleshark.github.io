@@ -4,7 +4,7 @@ description: OpenFOAM v2512 中文学习社区：课程、命令配置、编程�
 author: MrLittleShark
 language: zh-CN
 timezone: Asia/Shanghai
-url: https://mrlittleshark.github.io
+url: https://foamlabshark.github.io
 root: /
 permalink: :title/
 source_dir: source-openfoam
@@ -44,6 +44,6 @@ feed:
   content: false
 deploy:
   type: git-safe
-  repo: https://github.com/MrLittleShark/MrLittleShark.github.io.git
+  repo: https://github.com/foamlabshark/foamlabshark.github.io.git
   branch: main
   source_branch: foamlab-source

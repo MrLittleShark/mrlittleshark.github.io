@@ -13,11 +13,13 @@ const assert=require('node:assert/strict'),fs=require('node:fs');
   if(url.endsWith('/issues')&&options.method==='POST')return response({number:16,html_url:'https://github.com/example/issues/16',title:JSON.parse(options.body).title});
   return response({permissions:{push:true}});
  });
- async function call(input,authorization='Bearer mock.jwt.token'){calls=[];return handler(new Request('https://service.example',{method:'POST',headers:{Authorization:authorization,Origin:'https://mrlittleshark.github.io'},body:JSON.stringify({githubToken:'test-only',...input})}));}
+ async function call(input,authorization='Bearer mock.jwt.token'){calls=[];return handler(new Request('https://service.example',{method:'POST',headers:{Authorization:authorization,Origin:'https://foamlabshark.github.io'},body:JSON.stringify({githubToken:'test-only',...input})}));}
  assert.equal((await call({action:'status'},'')).status,401);assert.equal(calls.length,0);
  mode='student';assert.equal((await call({action:'publish',kind:'assignment',title:'Test',body:'Body'})).status,403);assert.equal(calls.length,2);
  mode='mismatch';assert.equal((await call({action:'status'})).status,403);
  mode='owner';assert.equal((await call({action:'status'})).status,200);
+ assert(calls.some(x=>x.url==='https://api.github.com/repos/foamlabshark/foamlabshark.github.io'));
+ const preflight=await handler(new Request('https://service.example',{method:'OPTIONS',headers:{Origin:'https://foamlabshark.github.io'}}));assert.equal(preflight.status,200);assert.equal(preflight.headers.get('Access-Control-Allow-Origin'),'https://foamlabshark.github.io');
  assert.equal((await call({action:'content-save',path:'source-openfoam/../_config.yml'})).status,403);
  assert.equal((await call({action:'record-update',number:5,kind:'assignment',title:'Test',body:'Body',state:'closed'})).status,403);assert(!calls.some(x=>x.options.method==='PATCH'));
  mode='readonly';assert.equal((await call({action:'publish',kind:'assignment',title:'Test',body:'Body'})).status,403);

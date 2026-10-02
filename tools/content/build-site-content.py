@@ -141,7 +141,7 @@ u(r)=u_{\max}\left[1-\left(\frac{r}{R}\right)^2\right]
 ## 验收
 
 边界必须真实参与算例；单独编译成功不能证明入口条件正确。比较理论剖面与实际采样，报告几何离散、法向方向和归一化方式。''')]):
- link='https://github.com/MrLittleShark/MrLittleShark.github.io/issues/new?'+urlencode({'title':'[作业提交] '+title,'body':'对应作业：https://mrlittleshark.github.io/read/?slug='+slug+'\n\n## 版本与运行命令\n\n## 配置与附件\n\n## 结果与检查\n\n## 问题与反思\n'})
+ link='https://github.com/foamlabshark/foamlabshark.github.io/issues/new?'+urlencode({'title':'[作业提交] '+title,'body':'对应作业：https://foamlabshark.github.io/read/?slug='+slug+'\n\n## 版本与运行命令\n\n## 配置与附件\n\n## 结果与检查\n\n## 问题与反思\n'})
  add(slug,'assignment',title,'提交最小配置、计算结果与检查依据；支持 GitHub 公开提交和站内评论反馈。',body+'\n\n## 提交与反馈\n\n[使用 GitHub 提交此作业]('+link+')。附件可拖到 GitHub 提交框中。提交后将链接粘贴到下方评论区，便于讨论。\n\n这是自主实践作业，暂不设截止日期。\n',track='实践作业',order=i)
 add('resource-cavity-evidence','resource','方腔 v2512：真实运行记录与绘图脚本','获取本次 blockMesh、checkMesh、icoFoam 日志与 ParaView 绘图脚本，按相同设置重现图片。',r'''## 下载
 

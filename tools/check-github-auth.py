@@ -9,7 +9,7 @@ if not token:
 if not token:
     print(json.dumps({'authenticated':False,'reason':'No noninteractive GitHub credential available'}))
     raise SystemExit(0)
-for endpoint in ['user','repos/MrLittleShark/MrLittleShark.github.io','repos/MrLittleShark/MrLittleShark.github.io/pages']:
+for endpoint in ['user','repos/foamlabshark/foamlabshark.github.io','repos/foamlabshark/foamlabshark.github.io/pages']:
     req=urllib.request.Request('https://api.github.com/'+endpoint,headers={'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','User-Agent':'FoamLab-setup'})
     try:
         with urllib.request.urlopen(req,timeout=20) as r:d=json.load(r)

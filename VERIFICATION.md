@@ -1,5 +1,15 @@
 # 重构验证记录
 
+## 仓库转移后的本地同步
+
+2026-10-02：已核对新仓库 foamlabshark/foamlabshark.github.io 属于 Organization，源码分支 foamlab-source 的提交为 1d285d000a61c8e5675aa4f2604e15d1391415c2，main 为 086f43e5e3708eedccfb7fd96b7d945763879f65，与本地历史一致。本地两个现用 Git 工作副本的 origin 已更新并 fetch，Hexo 配置、发布保护检查、界面链接、内容源与操作文档已同步到新域名；个人管理员身份与权限条件保持原值。
+
+新站 https://foamlabshark.github.io/ 返回 200，GitHub Pages 显示 built / workflow。线上内容库只读检查发现 4 条记录仍有旧链接，站点设置表无旧域名；已准备独立维护 SQL，未执行。登录服务仅检查 OAuth 发起跳转，未完成个人授权回跳。本次为本地同步，未推送源码或重新部署网站。
+
+修改前文件和核验报告位于 .openfoam-work/repository-transfer/。以下为迁移前的发布与内容验证记录，保留当时域名与提交作为历史依据。
+
+本地同步核验：Hexo 构建成功；649 个页面、34,129 个本地链接无错误；676 条内容渲染与 105 项 TeX 检查通过。活动源码及生成 HTML/JS/JSON 中未发现旧域名，28 个静态 ZIP 内也未发现旧站点地址。隔离浏览器检查确认页头仓库链接、后台源码与部署入口、个人作业链接均指向新仓库；权限测试确认原个人身份仍可管理，新域名 CORS 预检通过。内容链接更新 SQL 的只读预览对 4 条目标记录均正确，未执行 UPDATE。
+
 记录日期：2026-10-02。站点：<https://mrlittleshark.github.io/>。本轮重构已完成 Hexo 构建、GitHub Pages 发布和线上抽查。以下记录区分源码完整性、浏览器检查、权限验证与数值计算的验证范围。
 
 ## 当前内容清单

@@ -1,12 +1,13 @@
 // Administrative requests require BOTH a verified Supabase session and the
-// repository owner's GitHub token. Profile metadata never grants a role.
-const REPO='MrLittleShark/mrlittleshark.github.io';
+// authorized individual's GitHub token. The organization owns the repository;
+// profile metadata never grants a role.
+const REPO='foamlabshark/foamlabshark.github.io';
 const OWNER_ID=112299157;
 const SOURCE_BRANCH='foamlab-source';
-const ALLOWED_ORIGINS=new Set(['https://mrlittleshark.github.io','http://localhost:4173','http://127.0.0.1:4173']);
+const ALLOWED_ORIGINS=new Set(['https://foamlabshark.github.io','http://localhost:4173','http://127.0.0.1:4173']);
 const CONTENT_PATH=/^source-openfoam\/(?:lessons\/(?:0[1-9]|1[0-9]|2[0-8])|reference\/(?:manual|guide)-\d{2}|dictionaries\/[a-z0-9-]+|start|bubble|maintenance)\/index\.md$/;
 export function createHandler(env,request=fetch){return async function handler(req){
- const origin=req.headers.get('Origin')||'';const cors={'Access-Control-Allow-Origin':ALLOWED_ORIGINS.has(origin)?origin:'https://mrlittleshark.github.io','Access-Control-Allow-Headers':'authorization,apikey,content-type,x-client-info','Access-Control-Allow-Methods':'POST,OPTIONS','Vary':'Origin','Cache-Control':'no-store'};
+ const origin=req.headers.get('Origin')||'';const cors={'Access-Control-Allow-Origin':ALLOWED_ORIGINS.has(origin)?origin:'https://foamlabshark.github.io','Access-Control-Allow-Headers':'authorization,apikey,content-type,x-client-info','Access-Control-Allow-Methods':'POST,OPTIONS','Vary':'Origin','Cache-Control':'no-store'};
  const respond=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{...cors,'Content-Type':'application/json; charset=utf-8'}});
  if(origin&&!ALLOWED_ORIGINS.has(origin))return respond({error:'不允许的请求来源。'},403);
  if(req.method==='OPTIONS')return new Response('ok',{headers:cors});

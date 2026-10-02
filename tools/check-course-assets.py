@@ -46,7 +46,7 @@ class Check:
     def __init__(self):
         self.errors = []
         self.files = {}
-        self.origin = "https://mrlittleshark.github.io"
+        self.origin = "https://foamlabshark.github.io"
         config = ROOT / "_config.yml"
         if config.is_file():
             match = re.search(r"^url:\s*([^\s#]+)", config.read_text(encoding="utf-8-sig"), re.M)

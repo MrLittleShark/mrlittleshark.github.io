@@ -2,7 +2,7 @@
 (() => {
  const root=document.querySelector('#classroom');if(!root)return;
  const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
- const repo='MrLittleShark/MrLittleShark.github.io',base='https://github.com/'+repo;
+ const repo='foamlabshark/foamlabshark.github.io',base='https://github.com/'+repo;
  const teachers=['mrlittleshark']; // Add additional trusted GitHub logins here.
  const prefixes={assignment:'[作业发布]',submission:'[作业提交]',announcement:'[公告]',question:'[提问]'};
  const type=root.dataset.type,status=$('#live-status'),list=$('#issue-list');let issues=[],page=1,filter=0,loading=false;
