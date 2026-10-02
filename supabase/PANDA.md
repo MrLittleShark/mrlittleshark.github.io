@@ -13,7 +13,8 @@
 ## 文件
 
 - `themes/foam-lab/source/assets/panda-art.js`：像素画布入口。
-- `panda-pixels.js`：原创像素造型、逐帧姿态、亮暗调色板、装饰与服饰。逻辑分辨率 64 × 72，动画每秒 12 帧，颜色与透明度量化后按最近邻放大。
+- `panda-pixels.js`：像素角色部件、逐帧姿态、装饰与服饰。逻辑坐标为 64 × 72，实际画布为 128 × 144，动画每秒 12 帧，颜色与透明度量化后按最近邻显示。
+- `panda-sprites-v2.webp`：原创熊猫图集，包含四种表情、身体、手掌、脚掌与竹叶。首页、悬浮宠物、个人中心和提示图标共用该图集；生成提示词保存在 `tools/artwork/panda-sprites-v2.prompt.json`。图集未加载时使用本地绘制造型。
 - `tools/panda-catalog.json`：42 项收藏的标题、说明与等级，供迁移核对和隔离测试使用；实际权限仍以数据库为准。
 - `panda-animation.css`：动作菜单和点击粒子的界面样式。
 - `panda-motion.js`：动画时长、取消与 Web Audio 旋律。
