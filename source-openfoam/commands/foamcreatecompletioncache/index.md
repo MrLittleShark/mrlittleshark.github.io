@@ -27,18 +27,4 @@ cms_slug: "command-foamcreatecompletioncache"
 <pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamCreateCompletionCache" -dir "$FOAM_USER_APPBIN" -no-header -output completion-user
 </code></pre>
 <p>限定输入目录并省略文件头，便于与其他缓存拼接。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-dir DIR</code></td><td>Directory to process</td></tr><tr><td><code>-user</code></td><td>Add \$FOAM_USER_APPBIN to the search directories</td></tr><tr><td><code>-no-header</code></td><td>Suppress header generation Write to alternative output</td></tr><tr><td><code>-h | -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamCreateCompletionCache [OPTION] [appName .. [appNameN]]
-options:
-  -dir DIR          Directory to process
-  -user             Add \$FOAM_USER_APPBIN to the search directories
-  -no-header        Suppress header generation
-  -output FILE, -o FILE
-                    Write to alternative output
-  -h | -help        Print the usage
-
-Create cache of bash completion values for OpenFOAM applications.
-The cached values are typically used by the tcsh completion wrapper.
-Default search: \$FOAM_APPBIN only.
-Default output: $defaultOutputFile
-
-Uses the search directory if applications are specified.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamCreateCompletionCache">源码与说明</a> · <a href="/assets/command-help/foamcreatecompletioncache.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-dir DIR</code></td><td>指定要处理的目录。</td></tr><tr><td><code>-user</code></td><td>将 $FOAM_USER_APPBIN 加入搜索目录。</td></tr><tr><td><code>-no-header</code></td><td>跳过头部内容生成。</td></tr><tr><td><code>-output FILE, -o FILE</code></td><td>指定输出文件。</td></tr><tr><td><code>-h | -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamCreateCompletionCache">源码与说明</a> · <a href="/assets/command-help/foamcreatecompletioncache.txt">帮助文本</a></p>

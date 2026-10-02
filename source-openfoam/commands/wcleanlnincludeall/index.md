@@ -29,9 +29,4 @@ wcleanLnIncludeAll
 wmakeLnIncludeAll user-libraries
 </code></pre>
 <p>删除旧索引后按当前源码位置重建，实际头文件保留。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-h, -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wcleanLnIncludeAll [dir1 [..dirN]]
-
-options:
-  -h, -help         Print the usage
-
-Remove all lnInclude directories found in the tree</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wcleanLnIncludeAll">源码与说明</a> · <a href="/assets/command-help/wcleanlnincludeall.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-h, -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wcleanLnIncludeAll">源码与说明</a> · <a href="/assets/command-help/wcleanlnincludeall.txt">帮助文本</a></p>

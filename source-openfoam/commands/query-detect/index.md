@@ -29,11 +29,4 @@ cms_slug: "command-query-detect"
 diff -u detection-install.txt detection-all.txt
 </code></pre>
 <p>对比用户/站点覆盖是否改变依赖检测结果。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-all</code></td><td>Test all</td></tr><tr><td><code>-mode=MODE</code></td><td>Pass-through option for foamEtcFile</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: query-detect [OPTIONS] [name1 .. [nameN]]
-options:
-  -all              Test all
-  -mode=MODE        Pass-through option for foamEtcFile
-  -help             Display short help and exit
-
-Calls various wmake &#x27;have_*&#x27; scripts with -test to report the
-detected software locations</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/query-detect">源码与说明</a> · <a href="/assets/command-help/query-detect.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-all</code></td><td>运行全部检测。</td></tr><tr><td><code>-mode=MODE</code></td><td>将此选项传给 foamEtcFile。</td></tr><tr><td><code>-help</code></td><td>显示简要帮助并退出。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/query-detect">源码与说明</a> · <a href="/assets/command-help/query-detect.txt">帮助文本</a></p>

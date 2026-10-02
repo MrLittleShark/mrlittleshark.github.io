@@ -33,12 +33,4 @@ cms_slug: "command-allrun"
 ./Allrun -collect
 </code></pre>
 <p>将执行与日志汇总分开，便于在不同阶段检查结果。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-collect</code></td><td>Collect logs only. Can be useful for aborted runs.</td></tr><tr><td><code>-no-collect</code></td><td>Run without collecting logs</td></tr><tr><td><code>-test</code></td><td>Pass -test argument to scripts, end of option processing</td></tr><tr><td><code>--</code></td><td>End of option processing</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: Allrun [OPTION]
-options:
-  -collect          Collect logs only. Can be useful for aborted runs.
-  -no-collect       Run without collecting logs
-  -test             Pass -test argument to scripts, end of option processing
-  --                End of option processing
-  -help             print the usage
-
-Run tutorial cases and summarize the outcome as &#x27;testLoopReport&#x27;</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/Allrun">源码与说明</a> · <a href="/assets/command-help/allrun.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-collect</code></td><td>仅收集日志，适用于中途停止的运行。</td></tr><tr><td><code>-no-collect</code></td><td>运行算例，跳过日志收集。</td></tr><tr><td><code>-test</code></td><td>向下级脚本传入 -test，并结束本层选项解析。</td></tr><tr><td><code>--</code></td><td>结束选项解析，后续参数交给下级脚本。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/Allrun">源码与说明</a> · <a href="/assets/command-help/allrun.txt">帮助文本</a></p>

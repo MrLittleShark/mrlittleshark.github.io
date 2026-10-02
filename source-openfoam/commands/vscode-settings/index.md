@@ -29,12 +29,4 @@ python3 -m json.tool workspace-check.code-workspace
 "$WM_PROJECT_DIR/bin/tools/vscode-settings" &gt; utility-review.code-workspace
 </code></pre>
 <p>先生成 compile_commands.json，再把模板中语言服务器的数据库路径改为该真实文件或目录。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: vscode-settings [OPTIONS]
-
-options:
-    -help           Print the usage
-
-Emit some settings for Visual Studio Code + OpenFOAM
-
-For example,
-    bin/tools/vscode-settings &gt; openfoam.code-workspace</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/vscode-settings">源码与说明</a> · <a href="/assets/command-help/vscode-settings.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/vscode-settings">源码与说明</a> · <a href="/assets/command-help/vscode-settings.txt">帮助文本</a></p>

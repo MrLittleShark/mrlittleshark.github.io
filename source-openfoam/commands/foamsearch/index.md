@@ -68,20 +68,4 @@ cat U-relaxation-counts.txt
 done
 </code></pre>
 <p>循环依次把 <code>field</code> 替换成四个字段名。双引号让变量展开后仍作为完整条目路径传入。输出按字段分组，可比较压力方程与速度、湍流方程的线性求解器选择。若某个查询没有结果，进入对应教程查看 <code>solvers</code> 中实际使用的字段名、正则表达式或引用关系。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-c | -count</code></td><td>prefix lines by the number of occurrences</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamSearch [OPTIONS] &lt;directory&gt; &lt;keyword&gt; &lt;fileName&gt;
-       foamSearch [OPTIONS] &lt;keyword&gt; &lt;fileName&gt;
-
-Options:
-    -c | -count     prefix lines by the number of occurrences
-    -help           help
-
-* Searches the &lt;directory&gt; for files named &lt;fileName&gt; and extracts entries
-  with &lt;keyword&gt;. Sorts result into a list of unique entries.
-  Uses the cwd if the &lt;directory&gt; is not provided.
-
-Examples:
-* Default ddtSchemes entries in the fvSchemes files in all tutorials:
-    foamSearch \$FOAM_TUTORIALS ddtSchemes.default fvSchemes
-
-* Relaxations factors for U in fvSolutions files in all tutorials:
-    foamSearch -count \$FOAM_TUTORIALS relaxationFactors.equations.U fvSolution</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamSearch">源码与说明</a> · <a href="/assets/command-help/foamsearch.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-c | -count</code></td><td>在每行前面显示该配置的出现次数。</td></tr><tr><td><code>-help</code></td><td>显示帮助。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamSearch">源码与说明</a> · <a href="/assets/command-help/foamsearch.txt">帮助文本</a></p>

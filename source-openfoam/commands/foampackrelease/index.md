@@ -30,38 +30,4 @@ less pack-head.sh
 bash pack-copy.sh
 </code></pre>
 <p>输入目录必须是真实 Git 仓库；审核脚本后执行，生成该提交的源码包。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-name=NAME</code></td><td>Stem for tar-file (default: auto)</td></tr><tr><td><code>-output=DIR</code></td><td>Output directory (default: &quot;.&quot;)</td></tr><tr><td><code>-prefix=NAME</code></td><td>Prefix directory within tar-file (default: auto)</td></tr><tr><td><code>-pkg-modules</code></td><td>Package &#x27;modules&#x27; exclusively (no OpenFOAM)</td></tr><tr><td><code>-pkg-plugins</code></td><td>Package &#x27;plugins&#x27; exclusively (no OpenFOAM)</td></tr><tr><td><code>-no-extras</code></td><td>Exclude &#x27;modules, plugins,...&#x27; from source pack</td></tr><tr><td><code>-no-modules</code></td><td>Exclude &#x27;modules&#x27; from source pack (default: off)</td></tr><tr><td><code>-no-plugins</code></td><td>Exclude &#x27;plugins&#x27; from source pack (default: on)</td></tr><tr><td><code>-all-extras</code></td><td>Include &#x27;modules, plugins,...&#x27; into source pack</td></tr><tr><td><code>-with-modules</code></td><td>Include &#x27;modules&#x27; into source pack (default: on)</td></tr><tr><td><code>-with-plugins</code></td><td>Include &#x27;plugins&#x27; into source pack (default: off)</td></tr><tr><td><code>-no-patch</code></td><td>Ignore &#x27;_patch&#x27; number for output tar-file</td></tr><tr><td><code>-no-prefix</code></td><td>Do not prefix subdirectory</td></tr><tr><td><code>-no-compress</code></td><td>Disable compression</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamPackRelease [OPTION] commit-ish
-options:
-  -name=NAME        Stem for tar-file (default: auto)
-  -output=DIR       Output directory (default: &quot;.&quot;)
-  -prefix=NAME      Prefix directory within tar-file (default: auto)
-  -pkg-modules      Package &#x27;modules&#x27; exclusively (no OpenFOAM)
-  -pkg-plugins      Package &#x27;plugins&#x27; exclusively (no OpenFOAM)
-  -no-extras        Exclude &#x27;modules, plugins,...&#x27; from source pack
-  -no-modules       Exclude &#x27;modules&#x27; from source pack (default: off)
-  -no-plugins       Exclude &#x27;plugins&#x27; from source pack (default: on)
-  -all-extras       Include &#x27;modules, plugins,...&#x27; into source pack
-  -with-modules     Include &#x27;modules&#x27; into source pack (default: on)
-  -with-plugins     Include &#x27;plugins&#x27; into source pack (default: off)
-  -modules=name1,.. Include specifed &#x27;modules&#x27; into source pack
-  -plugins=name1,.. Include specifed &#x27;plugins&#x27; into source pack
-  -no-patch         Ignore &#x27;_patch&#x27; number for output tar-file
-  -no-prefix        Do not prefix subdirectory
-  -no-compress      Disable compression
-  -compress=TYPE    Use specified compression type
-  -sep=SEP          Change version/patch separator from &#x27;_&#x27; to SEP
-  -gitbase=DIR      Alternative repository location
-  -with-api=NUM     Specify alternative api value for packaging
-  -tgz, -xz, -zstd  Alias for -compress=tgz, -compress=xz, -compress=zstd
-  -debian           Auto (debian) naming with -no-prefix, -xz
-  -debian=NUM       Auto (debian) naming with specified debian patch value
-  -debian=NAME      Short-cut for -name=NAME.orig, -no-prefix, -xz
-  -help             Print help
-
-Script generator for packing OpenFOAM sources and submodules.
-Eg,
-
-    foamPackRelease -output=some-dir origin/master &gt; create-tar-file
-    bash ./create-tar-file
-
-    foamPackRelease -tgz origin/master | bash</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamPackRelease">源码与说明</a> · <a href="/assets/command-help/foampackrelease.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-name=NAME</code></td><td>指定归档文件的基本名称，默认自动生成。</td></tr><tr><td><code>-output=DIR</code></td><td>指定输出目录，默认为当前目录。</td></tr><tr><td><code>-prefix=NAME</code></td><td>指定归档内部的顶层目录名，默认自动生成。</td></tr><tr><td><code>-pkg-modules</code></td><td>仅打包 modules。</td></tr><tr><td><code>-pkg-plugins</code></td><td>仅打包 plugins。</td></tr><tr><td><code>-no-extras</code></td><td>从源码包中排除 modules、plugins 等附加内容。</td></tr><tr><td><code>-no-modules</code></td><td>从源码包中排除 modules；默认包含。</td></tr><tr><td><code>-no-plugins</code></td><td>从源码包中排除 plugins；默认排除。</td></tr><tr><td><code>-all-extras</code></td><td>将 modules、plugins 等附加内容加入源码包。</td></tr><tr><td><code>-with-modules</code></td><td>将 modules 加入源码包；默认包含。</td></tr><tr><td><code>-with-plugins</code></td><td>将 plugins 加入源码包；默认排除。</td></tr><tr><td><code>-no-patch</code></td><td>输出归档名称中省略 _patch 补丁编号。</td></tr><tr><td><code>-no-prefix</code></td><td>打包时省略顶层子目录前缀。</td></tr><tr><td><code>-no-compress</code></td><td>生成未压缩归档。</td></tr></tbody></table><details class="command-more-options"><summary>更多参数（9 项）</summary><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-compress=TYPE</code></td><td>指定压缩格式。</td></tr><tr><td><code>-sep=SEP</code></td><td>将版本号与补丁号之间的分隔符从下划线改为指定字符。</td></tr><tr><td><code>-gitbase=DIR</code></td><td>指定另一个仓库位置。</td></tr><tr><td><code>-with-api=NUM</code></td><td>指定打包使用的 API 版本值。</td></tr><tr><td><code>-tgz, -xz, -zstd</code></td><td>分别等同于 -compress=tgz、-compress=xz、-compress=zstd。</td></tr><tr><td><code>-debian</code></td><td>采用 Debian 自动命名，并启用 -no-prefix、-xz。</td></tr><tr><td><code>-debian=NUM</code></td><td>采用 Debian 自动命名，并指定 Debian 补丁号。</td></tr><tr><td><code>-debian=NAME</code></td><td>等同于 -name=NAME.orig、-no-prefix 和 -xz 的组合。</td></tr><tr><td><code>-help</code></td><td>显示帮助。</td></tr></tbody></table></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamPackRelease">源码与说明</a> · <a href="/assets/command-help/foampackrelease.txt">帮助文本</a></p>

@@ -41,10 +41,4 @@ wrmo myModel.C
 wmake libso
 </code></pre>
 <p>重编译该源文件并链接共享库，适用于重新核查编译选项的影响。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-a | -all | all</code></td><td>All platforms (current: $WM_OPTIONS)</td></tr><tr><td><code>-h | -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wrmo [OPTION] [file1 [... fileN]]
-
-options:
-  -a | -all | all   All platforms (current: $WM_OPTIONS)
-  -h | -help        Print the usage
-
-Remove all .o files or remove .o file corresponding to &lt;file&gt;</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wrmo">源码与说明</a> · <a href="/assets/command-help/wrmo.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-a | -all | all</code></td><td>清理所有平台的构建结果；当前平台由 WM_OPTIONS 指定。</td></tr><tr><td><code>-h | -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wrmo">源码与说明</a> · <a href="/assets/command-help/wrmo.txt">帮助文本</a></p>

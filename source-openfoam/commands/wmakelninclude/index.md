@@ -28,16 +28,4 @@ wmakeLnInclude -pwd
 <pre><code class="language-bash">wmakeLnInclude -update libraryA libraryB
 </code></pre>
 <p>为两个独立编译单元各自更新索引。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-f | -force</code></td><td>Force remove of existing lnInclude/ before recreating</td></tr><tr><td><code>-u | -update</code></td><td>Update existing lnInclude directories</td></tr><tr><td><code>-s | -silent</code></td><td>Silent mode (do not echo command)</td></tr><tr><td><code>-extra</code></td><td>Also include all source files in lnInclude/</td></tr><tr><td><code>-no-extra</code></td><td>Do not include all source files in lnInclude/ [default]</td></tr><tr><td><code>-pwd</code></td><td>Locate root directory containing Make/ directory</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wmakeLnInclude [OPTION] [-pwd | dir [.. dirN]]
-
-options:
-  -f | -force       Force remove of existing lnInclude/ before recreating
-  -u | -update      Update existing lnInclude directories
-  -s | -silent      Silent mode (do not echo command)
-  -extra            Also include all source files in lnInclude/
-  -no-extra         Do not include all source files in lnInclude/ [default]
-  -pwd              Locate root directory containing Make/ directory
-  -help             Print the usage
-
-Link header/template files from specified dir(s) into their respective
-lnInclude/ directories. With &#x27;-update&#x27;, items are relinked with &#x27;ln -sf&#x27;</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmakeLnInclude">源码与说明</a> · <a href="/assets/command-help/wmakelninclude.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-f | -force</code></td><td>删除已有 lnInclude/ 后重新创建。</td></tr><tr><td><code>-u | -update</code></td><td>更新已有 lnInclude 目录。</td></tr><tr><td><code>-s | -silent</code></td><td>静默运行，省略命令回显。</td></tr><tr><td><code>-extra</code></td><td>同时将所有源文件加入 lnInclude/。</td></tr><tr><td><code>-no-extra</code></td><td>仅包含默认类型的文件，省略其余源文件；此项为默认设置。</td></tr><tr><td><code>-pwd</code></td><td>查找包含 Make/ 的源码根目录。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmakeLnInclude">源码与说明</a> · <a href="/assets/command-help/wmakelninclude.txt">帮助文本</a></p>

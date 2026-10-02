@@ -28,19 +28,4 @@ cms_slug: "command-makeparser"
 "$WM_PROJECT_DIR/wmake/scripts/makeParser" -prefix=demo- -parser=toy.lyy -code
 </code></pre>
 <p>实际输入由 prefix 与 parser 拼接，读取 demo-toy.lyy。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-prefix=NAME</code></td><td>Common prefix for parser and scanner</td></tr><tr><td><code>-parser=FILE</code></td><td>Generate lemon parser header</td></tr><tr><td><code>-scanner=FILE</code></td><td>Generate ragel scanner code</td></tr><tr><td><code>-code</code></td><td>Generate parser code, not header</td></tr><tr><td><code>-header</code></td><td>Generate parser header, not code (default)</td></tr><tr><td><code>-grammar</code></td><td>Output grammar tables (if supported)</td></tr><tr><td><code>-dry-run</code></td><td>Process m4 only (output on stdout)</td></tr><tr><td><code>-no-lines</code></td><td>Suppress generation of #line directives</td></tr><tr><td><code>-no-tmp</code></td><td>Do not retain temporary m4 processed files</td></tr><tr><td><code>-remove</code></td><td>Remove generated code</td></tr><tr><td><code>-h, -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: makeParser [options]
-
-options:
-  -prefix=NAME      Common prefix for parser and scanner
-  -parser=FILE      Generate lemon parser header
-  -scanner=FILE     Generate ragel scanner code
-  -code             Generate parser code, not header
-  -header           Generate parser header, not code (default)
-  -grammar          Output grammar tables (if supported)
-  -dry-run          Process m4 only (output on stdout)
-  -no-lines         Suppress generation of #line directives
-  -no-tmp           Do not retain temporary m4 processed files
-  -remove           Remove generated code
-  -h, -help         Print the usage
-
-Pregenerate ragel code and/or lemon parser headers</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/makeParser">源码与说明</a> · <a href="/assets/command-help/makeparser.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-prefix=NAME</code></td><td>设置解析器与词法扫描器共用的前缀。</td></tr><tr><td><code>-parser=FILE</code></td><td>指定要生成的 Lemon 解析器头文件。</td></tr><tr><td><code>-scanner=FILE</code></td><td>指定要生成的 Ragel 扫描器代码。</td></tr><tr><td><code>-code</code></td><td>生成解析器实现代码。</td></tr><tr><td><code>-header</code></td><td>生成解析器头文件，此项为默认设置。</td></tr><tr><td><code>-grammar</code></td><td>输出语法表，具体取决于所用生成器的支持情况。</td></tr><tr><td><code>-dry-run</code></td><td>仅处理 m4，并将结果输出到终端。</td></tr><tr><td><code>-no-lines</code></td><td>省略 #line 指令。</td></tr><tr><td><code>-no-tmp</code></td><td>清理经过 m4 处理的临时文件。</td></tr><tr><td><code>-remove</code></td><td>删除已生成的代码。</td></tr><tr><td><code>-h, -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/makeParser">源码与说明</a> · <a href="/assets/command-help/makeparser.txt">帮助文本</a></p>

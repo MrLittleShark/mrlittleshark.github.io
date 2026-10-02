@@ -12,7 +12,7 @@ cms_slug: "reference-manual-14"
 <tr><td>找不到 foamGet</td><td>命令名称与发行版本不一致</td><td>使用 foamGetDict；type foamGet 可查询本地定义</td></tr>
 <tr><td>keyword not found</td><td>缺少键、父字典层级错误或版本不匹配</td><td>按报错文件及行号检查字典，与同版教程比较</td></tr>
 <tr><td>unknown patchField type</td><td>模型名、字段类型或动态库不匹配</td><td>检查 libs、拼写和 foamHelp boundary -field 字段</td></tr>
-<tr><td>cannot find patchField entry</td><td>网格边界与场边界条目不对应</td><td>查看 constant/polyMesh/boundary 和所有 0/ 字段</td></tr>
+<tr><td>缺少边界场条目：<code>cannot find patchField entry</code></td><td>网格边界与场边界条目不对应</td><td>查看 constant/polyMesh/boundary 和所有 0/ 字段</td></tr>
 <tr><td>inconsistent dimensions</td><td>量纲不匹配</td><td>区分 Pa、运动学压力、nu、mu 等</td></tr>
 <tr><td>floating point exception</td><td>非物理数值、网格质量问题、过大时间步或模型失效</td><td>定位日志中首次异常及对应场量</td></tr>
 <tr><td>Courant 数持续增长</td><td>流速增大、局部小单元或时间步不合适</td><td>检查局部流场及时间步控制是否生效</td></tr>
@@ -20,7 +20,7 @@ cms_slug: "reference-manual-14"
 <tr><td>并行进程数错误</td><td>numberOfSubdomains 与 MPI 核数不一致</td><td>核对分区字典及现有 processor 数据</td></tr>
 <tr><td>重构失败或字段不完整</td><td>网格拓扑变化、时刻不一致或处理器寻址缺失</td><td>核对输出时刻，按需先运行 reconstructParMesh</td></tr>
 <tr><td>ParaView 无法读取算例</td><td>缺读取器、格式不兼容或路径选择错误</td><td>采用 paraFoam -builtin，或用 foamToVTK 转换</td></tr>
-<tr><td>error while loading shared libraries</td><td>库路径或 ABI 不匹配</td><td>echo "$WM_OPTIONS"；foamHasLibrary；检查是否混用版本</td></tr>
+<tr><td>共享库加载失败：<code>error while loading shared libraries</code></td><td>库路径或 ABI 不匹配</td><td>echo "$WM_OPTIONS"；foamHasLibrary；检查是否混用版本</td></tr>
 <tr><td>Allrun 提示 bad interpreter 或 \(^M\)</td><td>Windows CRLF 换行</td><td>转换为 LF，并 chmod u+x Allrun</td></tr>
 </table></div>
 <p>程序接口通过 -help 或 -help-full 查询。foamSolverSweeps 采用交互式日志输入；foamHelp 按类别查询，并加载相应算例环境。</p>

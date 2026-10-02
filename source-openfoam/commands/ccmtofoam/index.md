@@ -27,13 +27,4 @@ cms_slug: "command-ccmtofoam"
 <pre><code class="language-bash">ccmToFoam mesh-mm.ccm -scale 0.001 -ascii -numbered
 </code></pre>
 <p>输入毫米坐标换算为米，网格以 ASCII 保存，并使用编号式 patch/zone 名称。适合原始名称需要统一处理的导入流程，后续按日志建立名称对应关系。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 command reference
-Command: ccmToFoam
-Evidence: not-installed
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/ccm/ccmToFoam/ccmToFoam.C
-
-未取得运行时帮助。
-
-源码路径：applications/utilities/mesh/conversion/ccm/ccmToFoam/ccmToFoam.C
-
-Reads CCM files as written by PROSTAR/STARCCM and writes an OPENFOAM polyMesh.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/ccm/ccmToFoam/ccmToFoam.C">源码与说明</a> · <a href="/assets/command-help/ccmtofoam.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/ccm/ccmToFoam/ccmToFoam.C">源码与说明</a> · <a href="/assets/command-help/ccmtofoam.txt">帮助文本</a></p>

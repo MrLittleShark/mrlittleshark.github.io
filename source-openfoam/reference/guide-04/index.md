@@ -24,7 +24,7 @@ env | grep WM_ | sort             # 看所有 WM_ 变量</code></pre>
 <tr><td>$FOAM_SOLVERS</td><td>applications/solvers/</td><td>查某个求解器解了哪几个方程</td></tr>
 <tr><td>$FOAM_UTILITIES</td><td>applications/utilities/</td><td>查某个工具的源码与默认字典</td></tr>
 <tr><td>$FOAM_APPBIN</td><td>可执行文件目录</td><td>ls $FOAM_APPBIN 列出本机所有命令</td></tr>
-<tr><td>$FOAM_LIBBIN</td><td>动态库目录</td><td>排查 “cannot open shared object file”</td></tr>
+<tr><td>$FOAM_LIBBIN</td><td>动态库目录</td><td>排查共享库加载失败（<code>cannot open shared object file</code>）</td></tr>
 <tr><td>$FOAM_ETC</td><td>etc/</td><td>官方字典模板都在 $FOAM_ETC/caseDicts</td></tr>
 <tr><td>$FOAM_USER_APPBIN</td><td>你自己编译的可执行文件</td><td>自写求解器编译后进这里</td></tr>
 <tr><td>$FOAM_USER_LIBBIN</td><td>你自己编译的库</td><td>自写边界条件/模型编译后进这里</td></tr>

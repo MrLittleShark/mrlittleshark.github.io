@@ -29,21 +29,4 @@ foamGetDict -target templates createPatchDict
 foamGetDict -force -case caseA decomposeParDict
 </code></pre>
 <p>先备份再使用 -force 允许覆盖，新的分区设置仍需按算例填写。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-ext</code></td><td>&lt;ext&gt;       File extension</td></tr><tr><td><code>-cfg</code></td><td>Same as &#x27;-ext cfg&#x27; for &#x27;.cfg&#x27; files</td></tr><tr><td><code>-f | -force</code></td><td>Force overwrite of existing files</td></tr><tr><td><code>-no-ext</code></td><td>Files without extension</td></tr><tr><td><code>-target &lt;dir&gt;</code></td><td>Target directory (default: system, or auto-detected)</td></tr><tr><td><code>-with-api=NUM</code></td><td>Alternative api value for searching</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamGetDict [OPTIONS] &lt;file&gt;
-options:
-  -case &lt;dir&gt;       Alternative case directory, default is the cwd
-  -ext  &lt;ext&gt;       File extension
-  -cfg              Same as &#x27;-ext cfg&#x27; for &#x27;.cfg&#x27; files
-  -f | -force       Force overwrite of existing files
-  -no-ext           Files without extension
-  -target &lt;dir&gt;     Target directory (default: system, or auto-detected)
-  -with-api=NUM     Alternative api value for searching
-  -help             Display short help and exit
-
-Find an OpenFOAM dictionary file from etc/caseDicts/ or {user,site} locations
-and copy it into the case directory. For example,
-
-    foamGetDict decomposeParDict
-    foamGetDict extrudeMeshDict
-    foamGetDict createPatchDict
-    foamGetDict surfaces</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamGetDict">源码与说明</a> · <a href="/assets/command-help/foamgetdict.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；默认使用当前目录。</td></tr><tr><td><code>-ext  &lt;ext&gt;</code></td><td>指定文件扩展名。</td></tr><tr><td><code>-cfg</code></td><td>等同于 -ext cfg，查找 .cfg 文件。</td></tr><tr><td><code>-f | -force</code></td><td>覆盖已有文件。</td></tr><tr><td><code>-no-ext</code></td><td>查找没有扩展名的文件。</td></tr><tr><td><code>-target &lt;dir&gt;</code></td><td>指定目标目录；默认写入 system，或由程序自动识别。</td></tr><tr><td><code>-with-api=NUM</code></td><td>指定搜索使用的 API 版本值。</td></tr><tr><td><code>-help</code></td><td>显示简要帮助并退出。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamGetDict">源码与说明</a> · <a href="/assets/command-help/foamgetdict.txt">帮助文本</a></p>

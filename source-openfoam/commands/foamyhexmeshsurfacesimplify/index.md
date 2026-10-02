@@ -28,13 +28,4 @@ cms_slug: "command-foamyhexmeshsurfacesimplify"
 surfaceCheck constant/triSurface/rebuilt.stl
 </code></pre>
 <p>重建后检查闭合性、面数和包围盒，再决定是否用于后续网格生成。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 command reference
-Command: foamyHexMeshSurfaceSimplify
-Evidence: not-installed
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/foamyMesh/foamyHexMeshSurfaceSimplify/foamyHexMeshSurfaceSimplify_non_octree.C
-
-未取得运行时帮助。
-
-源码路径：applications/utilities/mesh/generation/foamyMesh/foamyHexMeshSurfaceSimplify/foamyHexMeshSurfaceSimplify_non_octree.C
-
-Simplifies surfaces by resampling. Uses Thomas Lewiner&#x27;s topology preserving MarchingCubes.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/foamyMesh/foamyHexMeshSurfaceSimplify/foamyHexMeshSurfaceSimplify_non_octree.C">源码与说明</a> · <a href="/assets/command-help/foamyhexmeshsurfacesimplify.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/foamyMesh/foamyHexMeshSurfaceSimplify/foamyHexMeshSurfaceSimplify_non_octree.C">源码与说明</a> · <a href="/assets/command-help/foamyhexmeshsurfacesimplify.txt">帮助文本</a></p>

@@ -29,12 +29,4 @@ cms_slug: "command-wmake-with-bear"
 "$WM_PROJECT_DIR/wmake/scripts/wmake-with-bear" -bear-output-dir="$PWD/db-fresh" myUtility
 </code></pre>
 <p>在个人副本中清理后重编，使所有编译单元被 Bear 捕获。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-bear-output-dir=DIR</code></td><td>Specify output directory</td></tr><tr><td><code>-version</code></td><td>Print bear version</td></tr><tr><td><code>-h | -help</code></td><td>Display short help and exit</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wmake-with-bear [wmake options and args]
-
-options:
-  -bear-output-dir=DIR  Specify output directory
-  -version              Print bear version
-  -h | -help            Display short help and exit
-
-Call wmake via &#x27;bear&#x27; to create json output.
-Output: ${outputDir:-&quot;${WM_PROJECT_DIR:-&lt;project&gt;}/$cacheDirName&quot;}</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmake-with-bear">源码与说明</a> · <a href="/assets/command-help/wmake-with-bear.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-bear-output-dir=DIR</code></td><td>指定输出目录。</td></tr><tr><td><code>-version</code></td><td>显示 bear 版本。</td></tr><tr><td><code>-h | -help</code></td><td>显示简要帮助并退出。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmake-with-bear">源码与说明</a> · <a href="/assets/command-help/wmake-with-bear.txt">帮助文本</a></p>

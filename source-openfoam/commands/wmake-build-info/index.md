@@ -35,23 +35,4 @@ printf 'comparison exit=%s\n' "$status"
 "$WM_PROJECT_DIR/wmake/scripts/wmake-build-info" -filter build-template.txt
 </code></pre>
 <p>读取模板并替换构建标记，输出过滤内容用于发行说明。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-cmp, -check</code></td><td>Compare make and meta information (exit 0 for no changes)</td></tr><tr><td><code>-diff</code></td><td>Display differences between make and meta information (exit code 0 for no changes)</td></tr><tr><td><code>-dry-run</code></td><td>In combination with -update</td></tr><tr><td><code>-filter FILE</code></td><td>Filter @API@, @BUILD@ tags in file with make information</td></tr><tr><td><code>-no-git</code></td><td>Disable use of git for obtaining information</td></tr><tr><td><code>-remove</code></td><td>Remove meta-info build information and exit</td></tr><tr><td><code>-update</code></td><td>Update meta-info from make information</td></tr><tr><td><code>-query</code></td><td>Report make-info and meta-info</td></tr><tr><td><code>-query-make</code></td><td>Report make-info values (api, branch, build)</td></tr><tr><td><code>-query-meta</code></td><td>Report meta-info values (api, branch, build)</td></tr><tr><td><code>-show-api</code></td><td>Print api value from wmake/rules, or meta-info and exit</td></tr><tr><td><code>-show-patch</code></td><td>Print patch value from meta-info and exit</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wmake-build-info [OPTION]
-       wmake-build-info [-update] -filter FILE
-options:
-  -cmp, -check  Compare make and meta information (exit 0 for no changes)
-  -diff         Display differences between make and meta information
-                (exit code 0 for no changes)
-  -dry-run      In combination with -update
-  -filter FILE  Filter @API@, @BUILD@ tags in file with make information
-  -no-git       Disable use of git for obtaining information
-  -remove       Remove meta-info build information and exit
-  -update       Update meta-info from make information
-  -query        Report make-info and meta-info
-  -query-make   Report make-info values (api, branch, build)
-  -query-meta   Report meta-info values (api, branch, build)
-  -show-api     Print api value from wmake/rules, or meta-info and exit
-  -show-patch   Print patch value from meta-info and exit
-  -help         Print the usage
-
-Query/manage status of {api,branch,build} information.
-Default without any arguments is the same as &#x27;-query-make&#x27;.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmake-build-info">源码与说明</a> · <a href="/assets/command-help/wmake-build-info.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-cmp, -check</code></td><td>比较 Make 构建信息与元信息；一致时退出码为 0。</td></tr><tr><td><code>-diff</code></td><td>显示 Make 与元信息的差异；一致时退出码为 0。</td></tr><tr><td><code>-dry-run</code></td><td>配合 -update 使用，仅预览更新。</td></tr><tr><td><code>-filter FILE</code></td><td>用 Make 构建信息替换文件中的 @API@、@BUILD@ 标记。</td></tr><tr><td><code>-no-git</code></td><td>直接扫描文件获取信息，跳过 Git 查询。</td></tr><tr><td><code>-remove</code></td><td>删除元信息中的构建记录并退出。</td></tr><tr><td><code>-update</code></td><td>根据 Make 构建信息更新元信息。</td></tr><tr><td><code>-query</code></td><td>显示 Make 构建信息与元信息。</td></tr><tr><td><code>-query-make</code></td><td>显示 Make 中的 api、branch、build 值。</td></tr><tr><td><code>-query-meta</code></td><td>显示元信息中的 api、branch、build 值。</td></tr><tr><td><code>-show-api</code></td><td>显示 wmake/rules 或元信息中的 API 版本值并退出。</td></tr><tr><td><code>-show-patch</code></td><td>显示元信息中的补丁版本值并退出。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmake-build-info">源码与说明</a> · <a href="/assets/command-help/wmake-build-info.txt">帮助文本</a></p>

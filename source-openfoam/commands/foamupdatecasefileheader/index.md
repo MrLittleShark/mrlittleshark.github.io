@@ -29,12 +29,4 @@ cms_slug: "command-foamupdatecasefileheader"
 diff -u controlDict.before caseA/system/controlDict
 </code></pre>
 <p>比较头部与空行变化，便于在版本库提交前阅读。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-version=VER</code></td><td>Specifies version for header (default: $FOAM_API)</td></tr><tr><td><code>-h | -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamUpdateCaseFileHeader [OPTION] &lt;file1&gt; ... &lt;fileN&gt;
-
-options:
-  -version=VER      Specifies version for header (default: $FOAM_API)
-  -h | -help        Print the usage
-
-Updates the header of application files and removes consecutive blank lines.
-By default, writes current OpenFOAM API number version in the header.
-An alternative version can be specified with the -version option.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamUpdateCaseFileHeader">源码与说明</a> · <a href="/assets/command-help/foamupdatecasefileheader.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-version=VER</code></td><td>指定文件头中的版本号，默认使用 $FOAM_API。</td></tr><tr><td><code>-h | -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamUpdateCaseFileHeader">源码与说明</a> · <a href="/assets/command-help/foamupdatecasefileheader.txt">帮助文本</a></p>

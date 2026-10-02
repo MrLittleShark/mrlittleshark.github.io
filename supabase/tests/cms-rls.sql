@@ -18,7 +18,8 @@ set local role authenticated;
 do $$ begin
  if (select count(*) from public.foamlab_content where slug='test-draft-rls')<>0 then raise exception 'Other user draft leaked';end if;
  begin insert into public.foamlab_roles(user_id,role) values(auth.uid(),'admin');raise exception 'Self promotion succeeded';exception when insufficient_privilege then null;end;
- begin insert into public.foamlab_content(slug,kind,title,status) values('test-illegal-publish','article','Illegal publish','published');raise exception 'Member publish succeeded';exception when insufficient_privilege then null;end;
+ insert into public.foamlab_content(slug,kind,title,status) values('test-member-publish','article','Member publication','published');
+ begin insert into public.foamlab_content(slug,kind,title,status) values('test-illegal-publish','lesson','Illegal course publish','published');raise exception 'Member course publish succeeded';exception when insufficient_privilege then null;end;
  insert into public.foamlab_content(slug,kind,title,status) values('test-member-draft','article','Member draft','draft');
  insert into public.foamlab_threads(id,title,body) values('30000000-0000-4000-8000-000000000001','Test question title','Reproducible question body');
  begin update public.foamlab_threads set pinned=true where id='30000000-0000-4000-8000-000000000001';raise exception 'Member pin succeeded';exception when raise_exception then if sqlerrm='Member pin succeeded' then raise;end if;end;

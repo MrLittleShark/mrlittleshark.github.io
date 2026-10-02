@@ -28,40 +28,4 @@ cms_slug: "command-kivatofoam"
 checkMesh -constant
 </code></pre>
 <p>按 z 高度阈值把相应缸套面转入缸盖分组；0.1 应按输入几何坐标确定。检查转换后的缸盖范围和网格质量。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-file &lt;name&gt;</code></td><td>Specify alternative input file name - default is otape17 Override the file handler type Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: kivaToFoam [OPTIONS]
-Options:
-  -case &lt;dir&gt;       Case directory (instead of current directory)
-  -debug-switch &lt;name=val&gt;
-                    Set named DebugSwitch (default value: 1).
-                    [Can be used multiple times]
-  -file &lt;name&gt;      Specify alternative input file name - default is otape17
-  -fileHandler &lt;handler&gt;
-                    Override the file handler type
-  -info-switch &lt;name=val&gt;
-                    Set named InfoSwitch (default value: 1).
-                    [Can be used multiple times]
-  -lib &lt;name&gt;       Additional library or library list to load.
-                    [Can be used multiple times]
-  -no-libs          Disable use of the controlDict &#x27;libs&#x27; entry
-  -noFunctionObjects
-                    Do not execute function objects
-  -opt-switch &lt;name=val&gt;
-                    Set named OptimisationSwitch (default value: 1).
-                    [Can be used multiple times]
-  -version &lt;version&gt;
-                    Specify kiva version [kiva3|kiva3v] - default is &#x27;3v&#x27;
-  -zHeadMin &lt;scalar&gt;
-                    Minimum z-height for transferring liner faces to
-                    cylinder-head
-  -doc              Display documentation in browser
-  -doc-source       Display source code in browser
-  -help             Display short help and exit
-  -help-man         Display full help (manpage format) and exit
-  -help-notes       Display help notes (description) and exit
-  -help-full        Display full help and exit
-
-Convert a KIVA3v grid to OpenFOAM
-
-Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
-Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/kivaToFoam/kivaToFoam.C">源码与说明</a> · <a href="/assets/command-help/kivatofoam.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-file &lt;name&gt;</code></td><td>指定输入文件名，默认为 otape17。</td></tr><tr><td><code>-noFunctionObjects</code></td><td>跳过函数对象的执行。</td></tr><tr><td><code>-version &lt;version&gt;</code></td><td>指定 KIVA 版本 kiva3 或 kiva3v，默认采用 3v。</td></tr><tr><td><code>-zHeadMin &lt;scalar&gt;</code></td><td>设置将缸套面归入缸盖的最低 z 坐标。</td></tr><tr><td><code>-help</code></td><td>显示简要帮助并退出。</td></tr><tr><td><code>-help-full</code></td><td>显示完整帮助并退出。</td></tr></tbody></table><details class="command-more-options"><summary>更多参数（10 项）</summary><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-debug-switch &lt;name=val&gt;</code></td><td>设置指定的 DebugSwitch 调试开关，默认值为 1；可重复使用。</td></tr><tr><td><code>-fileHandler &lt;handler&gt;</code></td><td>指定文件读写处理器类型。</td></tr><tr><td><code>-info-switch &lt;name=val&gt;</code></td><td>设置指定的 InfoSwitch 信息输出开关，默认值为 1；可重复使用。</td></tr><tr><td><code>-lib &lt;name&gt;</code></td><td>额外加载一个或一组共享库；可重复使用。</td></tr><tr><td><code>-no-libs</code></td><td>跳过 controlDict 中 libs 条目指定的库。</td></tr><tr><td><code>-opt-switch &lt;name=val&gt;</code></td><td>设置指定的 OptimisationSwitch 优化开关，默认值为 1；可重复使用。</td></tr><tr><td><code>-doc</code></td><td>在浏览器中打开文档。</td></tr><tr><td><code>-doc-source</code></td><td>在浏览器中打开源码。</td></tr><tr><td><code>-help-man</code></td><td>显示完整帮助，以 man 手册格式输出，然后退出。</td></tr><tr><td><code>-help-notes</code></td><td>显示程序功能说明并退出。</td></tr></tbody></table></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/kivaToFoam/kivaToFoam.C">源码与说明</a> · <a href="/assets/command-help/kivatofoam.txt">帮助文本</a></p>

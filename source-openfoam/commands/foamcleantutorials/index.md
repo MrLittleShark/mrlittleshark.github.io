@@ -27,21 +27,4 @@ cms_slug: "command-foamcleantutorials"
 <pre><code class="language-bash">foamCleanTutorials -self -case tutorial-clean-demo
 </code></pre>
 <p>避免再次调用起点自己的 Allclean，防止脚本递归调用自身。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-0</code></td><td>Perform cleanCase, remove 0/ unconditionally</td></tr><tr><td><code>-auto</code></td><td>Perform cleanCase, remove 0/ if 0.orig/ exists [default]</td></tr><tr><td><code>-no-auto</code></td><td>Perform cleanCase only</td></tr><tr><td><code>-case=DIR</code></td><td>Specify starting directory, default is cwd</td></tr><tr><td><code>-self</code></td><td>Avoid Allclean script (prevent infinite recursion)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamCleanTutorials [OPTION]
-       foamCleanTutorials [OPTION] directory
-options:
-  -0            Perform cleanCase, remove 0/ unconditionally
-  -auto         Perform cleanCase, remove 0/ if 0.orig/ exists [default]
-  -no-auto      Perform cleanCase only
-  -case=DIR     Specify starting directory, default is cwd
-  -self         Avoid Allclean script (prevent infinite recursion)
-  -help         Print the usage
-
-Recursively clean an OpenFOAM case directory, using Allclean or Allwclean
-when present.
-
-In the default &#x27;auto&#x27; mode, it will use cleanCase and will automatically
-remove the 0/ directory if a corresponding 0.orig directory exists.
-
-Equivalent options:
-  | -case=DIR  | -case DIR |</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCleanTutorials">源码与说明</a> · <a href="/assets/command-help/foamcleantutorials.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-0</code></td><td>执行 cleanCase，同时删除 0/ 目录。</td></tr><tr><td><code>-auto</code></td><td>执行 cleanCase；若存在 0.orig/，同时删除 0/。此项为默认行为。</td></tr><tr><td><code>-no-auto</code></td><td>仅执行 cleanCase。</td></tr><tr><td><code>-case=DIR</code></td><td>指定起始目录，默认使用当前目录。</td></tr><tr><td><code>-self</code></td><td>跳过 Allclean 脚本，避免递归调用自身。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCleanTutorials">源码与说明</a> · <a href="/assets/command-help/foamcleantutorials.txt">帮助文本</a></p>

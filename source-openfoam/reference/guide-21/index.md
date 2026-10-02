@@ -15,21 +15,21 @@ FOAM exiting</code></pre>
 <h2>21.1 环境与文件类</h2>
 <div class="table-scroll"><table>
 <tr><th>症状</th><th>原因</th><th>处理</th></tr>
-<tr><td>blockMesh: command not found</td><td>没 source 环境</td><td>of2512（或 source .../etc/bashrc），再 foamVersion 确认</td></tr>
+<tr><td>终端未找到 blockMesh：<code>blockMesh: command not found</code></td><td>没 source 环境</td><td>of2512（或 source .../etc/bashrc），再 foamVersion 确认</td></tr>
 <tr><td>cannot find file ".../0/U"</td><td>缺场文件，或 0/ 被 Allclean 删了</td><td>cp -r 0.orig 0</td></tr>
-<tr><td>keyword xxx is undefined in dictionary</td><td>字典里缺关键字</td><td>报错会给出字典路径，去补；不确定填什么就去 $FOAM_TUTORIALS 找同类算例抄</td></tr>
-<tr><td>Cannot find patchField entry for &lt;名字&gt;</td><td>0/ 里某个场漏了某个 patch</td><td>在该场的 boundaryField 里补上；或加 ".*" { type zeroGradient; } 兜底</td></tr>
-<tr><td>ill defined primitiveEntry starting at ...</td><td>语法错：漏分号、括号不配对、有中文全角符号</td><td>从报错行往上找；从 PDF 复制的内容尤其要检查全角字符</td></tr>
-<tr><td>incompatible dimensions for operation</td><td>量纲不匹配</td><td>检查 dimensions。最常见：不可压求解器里把 p 写成了 Pa 的量纲</td></tr>
-<tr><td>Unknown patchField type xxx</td><td>边界条件名拼错，或该类型需要额外的库</td><td>foamHelp boundary -field U 看正确名字；或在 controlDict 里 libs 加载对应库</td></tr>
-<tr><td>object of type ... not found</td><td>object 名与文件名不一致</td><td>改文件头里的 object</td></tr>
+<tr><td>字典中缺少条目 xxx：<code>keyword xxx is undefined in dictionary</code></td><td>字典里缺关键字</td><td>报错会给出字典路径，去补；不确定填什么就去 $FOAM_TUTORIALS 找同类算例抄</td></tr>
+<tr><td>缺少对应边界的场设置：<code>Cannot find patchField entry for &lt;名字&gt;</code></td><td>0/ 里某个场漏了某个 patch</td><td>在该场的 boundaryField 里补上；或加 ".*" { type zeroGradient; } 兜底</td></tr>
+<tr><td>条目语法有误：<code>ill defined primitiveEntry starting at ...</code></td><td>语法错：漏分号、括号不配对、有中文全角符号</td><td>从报错行往上找；从 PDF 复制的内容尤其要检查全角字符</td></tr>
+<tr><td>参与运算的量纲不匹配：<code>incompatible dimensions for operation</code></td><td>量纲不匹配</td><td>检查 dimensions。最常见：不可压求解器里把 p 写成了 Pa 的量纲</td></tr>
+<tr><td>边界条件类型 xxx 未识别：<code>Unknown patchField type xxx</code></td><td>边界条件名拼错，或该类型需要额外的库</td><td>foamHelp boundary -field U 看正确名字；或在 controlDict 里 libs 加载对应库</td></tr>
+<tr><td>未找到所需类型的对象：<code>object of type ... not found</code></td><td>object 名与文件名不一致</td><td>改文件头里的 object</td></tr>
 </table></div>
 <h2>21.2 网格类</h2>
 <div class="table-scroll"><table>
 <tr><th>症状</th><th>原因</th><th>处理</th></tr>
-<tr><td>Block ... has negative volume</td><td>blockMeshDict 顶点顺序错</td><td>按 15.2 的规则重排；用 paraFoam -block 看</td></tr>
+<tr><td>块网格的体积为负：<code>Block ... has negative volume</code></td><td>blockMeshDict 顶点顺序错</td><td>按 15.2 的规则重排；用 paraFoam -block 看</td></tr>
 <tr><td>***Number of severely non-orthogonal faces: N</td><td>网格质量差</td><td>fvSolution 加 nNonOrthogonalCorrectors 2；fvSchemes 改 limited corrected 0.33；根本办法是改网格</td></tr>
-<tr><td>Zero or negative cell volume detected</td><td>网格坏</td><td>必须重建；checkMesh -writeSets vtk 定位坏单元</td></tr>
+<tr><td>检测到零体积或负体积单元：<code>Zero or negative cell volume detected</code></td><td>网格坏</td><td>必须重建；checkMesh -writeSets vtk 定位坏单元</td></tr>
 <tr><td>snappyHexMesh 跑完没有网格 / 只剩一点</td><td>locationInMesh 点在固体内或落在面上</td><td>挪到明确的流体区，坐标带零头（如 (0.501 0.301 0.201)）</td></tr>
 <tr><td>加层几乎全失败（layer ratio &lt; 0.5）</td><td>几何尖角、层太厚、质量阈值太严</td><td>减 nSurfaceLayers、减 finalLayerThickness、minTetQuality 放宽到 -1e30</td></tr>
 <tr><td>结果里壁面函数没起作用</td><td>patch 类型是 patch 而不是 wall</td><td>改 constant/polyMesh/boundary 里的 type，或用 createPatch</td></tr>
@@ -57,13 +57,13 @@ Floating point exception</code></pre>
 <tr><td>deltaT 一直缩小到 1e-12</td><td>局部有坏点或数值爆炸</td><td>用 ParaView 找 U 或 p 最大的位置，八成是网格坏点</td></tr>
 <tr><td>Floating point exception</td><td>出现了 0/0 或 sqrt(负数)</td><td>开 <code>export FOAM_SIGFPE=true 重新计算</code>，定位第一次出错的位置</td></tr>
 <tr><td>GAMG 求解器不收敛 / singular matrix</td><td>压力无基准</td><td>给 pRefCell/pRefValue（全封闭算例必需）</td></tr>
-<tr><td>Maximum number of iterations exceeded</td><td>线性求解器达到上限</td><td>放宽 tolerance 或换求解器；也可能是矩阵已经坏了，先查上面几条</td></tr>
+<tr><td>达到最大迭代次数：<code>Maximum number of iterations exceeded</code></td><td>线性求解器达到上限</td><td>放宽 tolerance 或换求解器；也可能是矩阵已经坏了，先查上面几条</td></tr>
 </table></div>
 <h2>21.4 并行类</h2>
 <div class="table-scroll"><table>
 <tr><th>症状</th><th>原因</th><th>处理</th></tr>
 <tr><td>结果错乱、日志重复 8 遍</td><td>漏了 -parallel</td><td>mpirun -np 8 solver -parallel</td></tr>
-<tr><td>number of processor directories = 4 is not equal to the number of processors = 8</td><td>-np 与 numberOfSubdomains 不一致</td><td>改一致，或 decomposePar -force 重分</td></tr>
+<tr><td>分区目录数与启动进程数不一致：<code>number of processor directories = 4 is not equal to the number of processors = 8</code></td><td>-np 与 numberOfSubdomains 不一致</td><td>改一致，或 decomposePar -force 重分</td></tr>
 <tr><td>mpirun 报共享库错误</td><td>集群 MPI 与编译时的 MPI 不同</td><td>module load 与编译一致的 MPI，或重新编译</td></tr>
 <tr><td>并行比串行还慢</td><td>每核网格太少</td><td>减核数，保证每核 \(\ge  5\) 万单元</td></tr>
 <tr><td>大规模并行写文件极慢</td><td>小文件太多</td><td>加 -fileHandler collated</td></tr>
@@ -71,7 +71,7 @@ Floating point exception</code></pre>
 <h2>21.5 编译类</h2>
 <div class="table-scroll"><table>
 <tr><th>症状</th><th>原因</th><th>处理</th></tr>
-<tr><td>xxx.H: No such file or directory</td><td>Make/options 里 EXE_INC 缺路径</td><td>加对应的 -I$(LIB_SRC)/.../lnInclude</td></tr>
+<tr><td>找不到头文件 xxx.H：<code>xxx.H: No such file or directory</code></td><td>Make/options 里 EXE_INC 缺路径</td><td>加对应的 -I$(LIB_SRC)/.../lnInclude</td></tr>
 <tr><td>undefined reference to ...</td><td>EXE_LIBS 缺库</td><td>加对应的 -lxxx</td></tr>
 <tr><td>编译成功但 command not found</td><td>装到了 $FOAM_USER_APPBIN 但环境没刷新，或 Make/files 里 EXE 路径写错</td><td>wmake 后看输出路径；which 命令名</td></tr>
 <tr><td>改了 codedFixedValue 不生效</td><td>dynamicCode/ 缓存</td><td>rm -rf dynamicCode</td></tr>

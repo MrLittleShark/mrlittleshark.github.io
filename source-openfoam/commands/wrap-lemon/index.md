@@ -38,16 +38,4 @@ EOF
 <pre><code class="language-bash">"$WM_PROJECT_DIR/wmake/scripts/wrap-lemon" -no-tmp -ecc toy.lyy-m4
 </code></pre>
 <p>使用 m4 语法生成解析器，并移除该步骤的临时展开文件。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-header</code></td><td>Generate header only, suppressing other output</td></tr><tr><td><code>-dry-run</code></td><td>Process m4 only (output on stdout)</td></tr><tr><td><code>-grammar</code></td><td>Output grammar tables (stdout)</td></tr><tr><td><code>-no-tmp</code></td><td>Do not retain temporary m4 processed files</td></tr><tr><td><code>-h, -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wrap-lemon [options] [lemon args/options]
-
-options:
-  -header           Generate header only, suppressing other output
-  -dry-run          Process m4 only (output on stdout)
-  -grammar          Output grammar tables (stdout)
-  -no-tmp           Do not retain temporary m4 processed files
-  -h, -help         Print the usage
-
-A lemon wrapper using predefined executable and skeleton locations.
-Files ending with &#x27;m4&#x27; (eg, .lyym4, .lyy-m4) will be filtered through
-the m4(1) macro processor and lemon will be called with &#x27;m4&#x27; as a macro
-definition, which can be used in conditions (%ifdef m4, %ifndef m4)</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wrap-lemon">源码与说明</a> · <a href="/assets/command-help/wrap-lemon.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-header</code></td><td>仅生成头文件。</td></tr><tr><td><code>-dry-run</code></td><td>仅处理 m4，并将结果输出到终端。</td></tr><tr><td><code>-grammar</code></td><td>将语法表输出到终端。</td></tr><tr><td><code>-no-tmp</code></td><td>清理经过 m4 处理的临时文件。</td></tr><tr><td><code>-h, -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wrap-lemon">源码与说明</a> · <a href="/assets/command-help/wrap-lemon.txt">帮助文本</a></p>

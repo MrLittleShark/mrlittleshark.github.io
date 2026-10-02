@@ -29,15 +29,4 @@ foamNewCase -app cavityStarter
 <pre><code class="language-bash">for tag in coarse medium fine; do foamNewCase -app cavityStarter -case "grid-$tag"; done
 </code></pre>
 <p>从同一模板建立不同网格试验，后续分别调整 blockMeshDict。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-app NAME</code></td><td>specify the application to use</td></tr><tr><td><code>-case DIR</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-list</code></td><td>列出可用的预配置函数。</td></tr><tr><td><code>-with-api=NUM</code></td><td>specify alternative api to use (default: \$FOAM_API)</td></tr><tr><td><code>-version VER</code></td><td>[obsolete]</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamNewCase [OPTION]
-options:
-  -app NAME         specify the application to use
-  -case DIR         specify alternative case directory, default is the cwd
-  -list             list the applications available
-  -with-api=NUM     specify alternative api to use (default: \$FOAM_API)
-  -version VER      [obsolete]
-  -help             Print the usage
-
-clone initial application settings to the specified case from
-    $userDir/$templateDir/{$projectApi,}/APP
-    $groupDir/$templateDir/{$projectApi,}/APP</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamNewCase">源码与说明</a> · <a href="/assets/command-help/foamnewcase.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-app NAME</code></td><td>指定使用的应用程序。</td></tr><tr><td><code>-case DIR</code></td><td>指定算例目录；默认使用当前目录。</td></tr><tr><td><code>-list</code></td><td>列出可用的应用程序。</td></tr><tr><td><code>-with-api=NUM</code></td><td>指定 API 版本值，默认使用 $FOAM_API。</td></tr><tr><td><code>-version VER</code></td><td>已废弃的兼容选项。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamNewCase">源码与说明</a> · <a href="/assets/command-help/foamnewcase.txt">帮助文本</a></p>

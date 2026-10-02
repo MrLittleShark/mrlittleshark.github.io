@@ -32,35 +32,4 @@ mpirunDebug -valgrind -np 2 icoFoam -parallel
 mpirunDebug -valgrind -quick -np 2 icoFoam -parallel
 </code></pre>
 <p>-quick 使用摘要级内存检查并限制 core 文件，适用于先定位明显内存问题。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-method=MODE</code></td><td>The run mode</td></tr><tr><td><code>-spawn=TYPE</code></td><td>Spawn type: (1) local (2) remote</td></tr><tr><td><code>-yes</code></td><td>Start without additional prompting</td></tr><tr><td><code>-local</code></td><td>Same as -spawn=1</td></tr><tr><td><code>-remote</code></td><td>Same as -spawn=2</td></tr><tr><td><code>-clean</code></td><td>Remove log and startup files</td></tr><tr><td><code>-no-core</code></td><td>Restrict core dump to 0 size</td></tr><tr><td><code>-quick</code></td><td>Valgrind with &#x27;summary&#x27; (not &#x27;full&#x27;) and use -no-core</td></tr><tr><td><code>-decompose-dict=&lt;file&gt;</code></td><td>Specific decomposeParDict name</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-decomposeParDict &lt;file&gt;</code></td><td>使用指定的并行分解字典。</td></tr><tr><td><code>-normal</code></td><td>= -method=0</td></tr><tr><td><code>-log</code></td><td>= -method=3</td></tr><tr><td><code>-xlog</code></td><td>= -method=4  (log + xterm)</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: mpirunDebug [OPTION] -np &lt;N&gt; &lt;executable&gt; &lt;args&gt;
-
-options:
-  -method=MODE  The run mode
-        (0)  normal
-        (1)  gdb+xterm
-        (2)  gdb
-        (3)  log
-        (4)  log + xterm
-        (5)  valgrind + xterm
-       (5l)  valgrind + log
-        (6)  gperftools(callgrind)
-  -spawn=TYPE   Spawn type: (1) local (2) remote
-  -yes          Start without additional prompting
-  -local        Same as -spawn=1
-  -remote       Same as -spawn=2
-  -clean        Remove log and startup files
-  -no-core      Restrict core dump to 0 size
-  -quick        Valgrind with &#x27;summary&#x27; (not &#x27;full&#x27;) and use -no-core
-  -decompose-dict=&lt;file&gt;   Specific decomposeParDict name
-  -help         Print the usage
-
-Invoke mpirun with separate per-processor log files or with separate XTerms.
-Also detects some OpenFOAM options:
-  -decomposeParDict &lt;file&gt;   Use specified file for decomposePar dictionary
-
-Common shortcuts. Sets default spawn to -local, add -yes.
-  -normal       = -method=0
-  -log          = -method=3
-  -xlog         = -method=4  (log + xterm)
-  -valgrind     = -method=5l (valgrind + log)
-  -xvalgrind    = -method=5  (valgrind + xterm)</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/mpirunDebug">源码与说明</a> · <a href="/assets/command-help/mpirundebug.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-method=MODE</code></td><td>指定运行模式。</td></tr><tr><td><code>-spawn=TYPE</code></td><td>指定启动方式：1 为本地，2 为远程。</td></tr><tr><td><code>-yes</code></td><td>直接启动，省略额外提示。</td></tr><tr><td><code>-local</code></td><td>等同于 -spawn=1。</td></tr><tr><td><code>-remote</code></td><td>等同于 -spawn=2。</td></tr><tr><td><code>-clean</code></td><td>删除日志与启动文件。</td></tr><tr><td><code>-no-core</code></td><td>将核心转储文件的大小限制为 0。</td></tr><tr><td><code>-quick</code></td><td>使用 Valgrind 的 summary 检查级别，并启用 -no-core。</td></tr><tr><td><code>-decompose-dict=&lt;file&gt;</code></td><td>指定 decomposeParDict 的文件名。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr><tr><td><code>-decomposeParDict &lt;file&gt;</code></td><td>使用指定的 decomposeParDict 文件。</td></tr><tr><td><code>-normal</code></td><td>等同于 -method=0，采用普通运行方式。</td></tr><tr><td><code>-log</code></td><td>等同于 -method=3，将输出写入日志。</td></tr><tr><td><code>-xlog</code></td><td>等同于 -method=4，使用日志和 xterm 窗口。</td></tr></tbody></table><details class="command-more-options"><summary>更多参数（2 项）</summary><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-valgrind</code></td><td>等同于 -method=5l，使用 Valgrind 并记录日志。</td></tr><tr><td><code>-xvalgrind</code></td><td>等同于 -method=5，使用 Valgrind 和 xterm 窗口。</td></tr></tbody></table></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/mpirunDebug">源码与说明</a> · <a href="/assets/command-help/mpirundebug.txt">帮助文本</a></p>

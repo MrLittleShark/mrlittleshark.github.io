@@ -31,10 +31,4 @@ cms_slug: "command-foamnew"
 <pre><code class="language-bash">foamNew source App -preview
 </code></pre>
 <p>类名以短横线开头时仅输出原始模板，便于先阅读应用入口结构。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamNew &lt;type&gt; {args}
-
-* create a new standard OpenFOAM source or template file
-
-type:
-    -s | -source | source
-    -t | -template | template</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamNew">源码与说明</a> · <a href="/assets/command-help/foamnew.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamNew">源码与说明</a> · <a href="/assets/command-help/foamnew.txt">帮助文本</a></p>

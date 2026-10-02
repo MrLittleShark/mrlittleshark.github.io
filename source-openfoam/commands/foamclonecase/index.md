@@ -29,12 +29,4 @@ foamCloneCase caseA grid-study/fine
 <pre><code class="language-bash">for re in 100 400 1000; do foamCloneCase caseA "Re-$re" || break; done
 </code></pre>
 <p>为三个参数点创建独立副本，之后逐个编辑物性或入口。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-force</code></td><td>Force overwrite of existing target</td></tr><tr><td><code>-l | -latestTime</code></td><td>Select the latest time directory</td></tr><tr><td><code>-h | -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamCloneCase [OPTION] &lt;sourceCase&gt; &lt;targetCase&gt;
-options:
-  -force              Force overwrite of existing target
-  -l | -latestTime    Select the latest time directory
-  -h | -help          Print the usage
-
-Create a new &lt;targetCase&gt; case directory with a copy of time, system, constant
-directories from &lt;sourceCase&gt; directory.
-The time directory is the first time directory by default.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCloneCase">源码与说明</a> · <a href="/assets/command-help/foamclonecase.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-force</code></td><td>覆盖已有目标。</td></tr><tr><td><code>-l | -latestTime</code></td><td>选择最新的时间目录。</td></tr><tr><td><code>-h | -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCloneCase">源码与说明</a> · <a href="/assets/command-help/foamclonecase.txt">帮助文本</a></p>

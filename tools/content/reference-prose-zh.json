@@ -1,0 +1,23 @@
+{
+  "<td>Unknown model / Unknown type</td>": "<td>模型或类型名称未识别：<code>Unknown model / Unknown type</code></td>",
+  "<td>Unknown patchField / patch type mismatch</td>": "<td>边界条件未识别，或与网格边界类型不匹配：<code>Unknown patchField / patch type mismatch</code></td>",
+  "<td>No field / No functionObject</td>": "<td>未找到指定场或函数对象：<code>No field / No functionObject</code></td>",
+  "<td>blockMesh: command not found</td>": "<td>终端未找到 blockMesh：<code>blockMesh: command not found</code></td>",
+  "<td>keyword xxx is undefined in dictionary</td>": "<td>字典中缺少条目 xxx：<code>keyword xxx is undefined in dictionary</code></td>",
+  "<td>Cannot find patchField entry for &lt;名字&gt;</td>": "<td>缺少对应边界的场设置：<code>Cannot find patchField entry for &lt;名字&gt;</code></td>",
+  "<td>ill defined primitiveEntry starting at ...</td>": "<td>条目语法有误：<code>ill defined primitiveEntry starting at ...</code></td>",
+  "<td>incompatible dimensions for operation</td>": "<td>参与运算的量纲不匹配：<code>incompatible dimensions for operation</code></td>",
+  "<td>Unknown patchField type xxx</td>": "<td>边界条件类型 xxx 未识别：<code>Unknown patchField type xxx</code></td>",
+  "<td>object of type ... not found</td>": "<td>未找到所需类型的对象：<code>object of type ... not found</code></td>",
+  "<td>Block ... has negative volume</td>": "<td>块网格的体积为负：<code>Block ... has negative volume</code></td>",
+  "<td>Zero or negative cell volume detected</td>": "<td>检测到零体积或负体积单元：<code>Zero or negative cell volume detected</code></td>",
+  "<td>Maximum number of iterations exceeded</td>": "<td>达到最大迭代次数：<code>Maximum number of iterations exceeded</code></td>",
+  "<td>number of processor directories = 4 is not equal to the number of processors = 8</td>": "<td>分区目录数与启动进程数不一致：<code>number of processor directories = 4 is not equal to the number of processors = 8</code></td>",
+  "<td>xxx.H: No such file or directory</td>": "<td>找不到头文件 xxx.H：<code>xxx.H: No such file or directory</code></td>",
+  "<td>error: &#x27;xxx&#x27; was not declared</td>": "<td>标识符 xxx 尚未声明：<code>error: 'xxx' was not declared</code></td>",
+  "<td>cannot find patchField entry</td>": "<td>缺少边界场条目：<code>cannot find patchField entry</code></td>",
+  "<td>error while loading shared libraries</td>": "<td>共享库加载失败：<code>error while loading shared libraries</code></td>",
+  "排查 “cannot open shared object file”": "排查共享库加载失败（<code>cannot open shared object file</code>）",
+  "Filters → Contour（先 Cell Data to Point Data）": "等值面：<code>Filters → Contour</code>（先用“单元数据转点数据”过滤器）",
+  "使用 Cell Data to Point Data，或检查 OpenFOAM 读取器的相关转换选项": "使用“单元数据转点数据”（<code>Cell Data to Point Data</code>），或检查 OpenFOAM 读取器的转换选项"
+}

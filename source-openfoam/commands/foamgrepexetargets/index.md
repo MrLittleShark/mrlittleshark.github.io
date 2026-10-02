@@ -29,15 +29,4 @@ diff -u targets-source targets-built
 <pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamGrepExeTargets" -no-git | grep -i mesh
 </code></pre>
 <p>按名称筛选包含 mesh 的目标，辅助查找相关源码编译单元。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-bin</code></td><td>List contents of \$FOAM_APPBIN (no git required)</td></tr><tr><td><code>-no-git</code></td><td>Disable use of git for obtaining information</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: foamGrepExeTargets
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamGrepExeTargets
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-usage: foamGrepExeTargets
-  -bin          List contents of \$FOAM_APPBIN (no git required)
-  -no-git       Disable use of git for obtaining information
-  -help         Print the usage
-
-List exe targets (contains EXE). Uses git when possible</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamGrepExeTargets">源码与说明</a> · <a href="/assets/command-help/foamgrepexetargets.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-bin</code></td><td>列出 $FOAM_APPBIN 中的程序，此操作无需 Git。</td></tr><tr><td><code>-no-git</code></td><td>直接扫描文件获取信息，跳过 Git 查询。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamGrepExeTargets">源码与说明</a> · <a href="/assets/command-help/foamgrepexetargets.txt">帮助文本</a></p>

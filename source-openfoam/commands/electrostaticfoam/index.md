@@ -54,65 +54,8 @@ mpirun -np 2 electrostaticFoam -case parallel-study -parallel &gt; parallel-stud
 reconstructPar -case parallel-study -latestTime
 </code></pre>
 <p>在新副本中用官方模板替换分区字典，将网格分成两个子域；<code>-np 2</code> 与 <code>numberOfSubdomains 2</code> 保持一致。求解器的 <code>-parallel</code> 选项使每个进程读取自己的子域数据，最后合并最新场。可在相同网格和计算区间内比较串行与并行耗时。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-dry-run</code></td><td>Check case set-up only using a single time step</td></tr><tr><td><code>-dry-run-write</code></td><td>Check case set-up and write only using a single time step Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td><code>-listScalarBCs</code></td><td>List scalar field boundary conditions (fvPatchField&lt;scalar&gt;)</td></tr><tr><td><code>-listVectorBCs</code></td><td>List vector field boundary conditions (fvPatchField&lt;vector&gt;)</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-controldict/">controlDict</a> · <a href="/dictionaries/system-fvschemes/">fvSchemes</a> · <a href="/dictionaries/system-fvsolution/">fvSolution</a></p><h2>配套算例</h2><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/electromagnetics/electrostaticFoam/chargedWire">electromagnetics/electrostaticFoam/chargedWire</a></li></ul><pre><code class="language-bash">mkdir -p &quot;$FOAM_RUN&quot;
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-decomposeParDict &lt;file&gt;</code></td><td>使用指定的 decomposeParDict 并行分解字典。</td></tr><tr><td><code>-dry-run</code></td><td>通过一个时间步检查算例设置。</td></tr><tr><td><code>-dry-run-write</code></td><td>用一个时间步检查算例设置，并写出结果。</td></tr><tr><td><code>-listFunctionObjects</code></td><td>列出可用的函数对象。</td></tr><tr><td><code>-listScalarBCs</code></td><td>列出标量场的边界条件类型，即 fvPatchField&lt;scalar&gt;。</td></tr><tr><td><code>-listVectorBCs</code></td><td>列出向量场的边界条件类型，即 fvPatchField&lt;vector&gt;。</td></tr><tr><td><code>-noFunctionObjects</code></td><td>跳过函数对象的执行。</td></tr><tr><td><code>-parallel</code></td><td>以并行模式运行，通常由 mpirun 启动。</td></tr><tr><td><code>-help</code></td><td>显示简要帮助并退出。</td></tr><tr><td><code>-help-full</code></td><td>显示完整帮助并退出。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-controldict/">controlDict</a> · <a href="/dictionaries/system-fvschemes/">fvSchemes</a> · <a href="/dictionaries/system-fvsolution/">fvSolution</a></p><h2>配套算例</h2><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/electromagnetics/electrostaticFoam/chargedWire">electromagnetics/electrostaticFoam/chargedWire</a></li></ul><pre><code class="language-bash">mkdir -p &quot;$FOAM_RUN&quot;
 cd &quot;$FOAM_RUN&quot;
 cp -r &quot;$FOAM_TUTORIALS/electromagnetics/electrostaticFoam/chargedWire&quot; electrostaticFoam-study
 cd electrostaticFoam-study
-ls</code></pre><p>使用一个新的目录名。算例中的 Allrun 列出网格、初始化和求解顺序；含多级网格或跨目录数据的教程，需要同时保留相邻文件。</p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: electrostaticFoam [OPTIONS]
-Options:
-  -case &lt;dir&gt;       Case directory (instead of current directory)
-  -debug-switch &lt;name=val&gt;
-                    Set named DebugSwitch (default value: 1).
-                    [Can be used multiple times]
-  -decomposeParDict &lt;file&gt;
-                    Alternative decomposePar dictionary file
-  -dry-run          Check case set-up only using a single time step
-  -dry-run-write    Check case set-up and write only using a single time step
-  -fileHandler &lt;handler&gt;
-                    Override the file handler type
-  -hostRoots &lt;((host1 dir1) .. (hostN dirN))&gt;
-                    Per-subprocess root directories for distributed running.
-                    The host specification can be a regex.
-  -info-switch &lt;name=val&gt;
-                    Set named InfoSwitch (default value: 1).
-                    [Can be used multiple times]
-  -lib &lt;name&gt;       Additional library or library list to load.
-                    [Can be used multiple times]
-  -listFunctionObjects
-                    List functionObjects
-  -listRegisteredSwitches
-                    List switches registered for run-time modification (see
-                    -listUnsetSwitches option)
-  -listScalarBCs    List scalar field boundary conditions (fvPatchField&lt;scalar&gt;)
-  -listSwitches     List switches declared in libraries (see -listUnsetSwitches
-                    option)
-  -listUnsetSwitches
-                    Modifies switch listing to display values not set in
-                    etc/controlDict
-  -listVectorBCs    List vector field boundary conditions (fvPatchField&lt;vector&gt;)
-  -mpi-no-comm-dup  Disable initial MPI_Comm_dup()
-  -mpi-split-by-appnum
-                    Split world communicator based on the APPNUM
-  -mpi-threads      Request use of MPI threads
-  -no-libs          Disable use of the controlDict &#x27;libs&#x27; entry
-  -noFunctionObjects
-                    Do not execute function objects
-  -opt-switch &lt;name=val&gt;
-                    Set named OptimisationSwitch (default value: 1).
-                    [Can be used multiple times]
-  -parallel         Run in parallel
-  -roots &lt;(dir1 .. dirN)&gt;
-                    Subprocess root directories for distributed running
-  -world &lt;name&gt;     Name of the local world for parallel communication
-  -doc              Display documentation in browser
-  -doc-source       Display source code in browser
-  -help             Display short help and exit
-  -help-man         Display full help (manpage format) and exit
-  -help-notes       Display help notes (description) and exit
-  -help-full        Display full help and exit
-
-Solver for electrostatics.
-
-Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
-Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/electromagnetics/electrostaticFoam/electrostaticFoam.C">源码与说明</a> · <a href="/assets/command-help/electrostaticfoam.txt">帮助文本</a></p>
+ls</code></pre><p>使用一个新的目录名。算例中的 Allrun 列出网格、初始化和求解顺序；含多级网格或跨目录数据的教程，需要同时保留相邻文件。</p><details class="command-more-options"><summary>更多参数（19 项）</summary><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-debug-switch &lt;name=val&gt;</code></td><td>设置指定的 DebugSwitch 调试开关，默认值为 1；可重复使用。</td></tr><tr><td><code>-fileHandler &lt;handler&gt;</code></td><td>指定文件读写处理器类型。</td></tr><tr><td><code>-hostRoots &lt;((host1 dir1) .. (hostN dirN))&gt;</code></td><td>为分布式运行的各子进程指定主机与根目录；主机名支持正则表达式。</td></tr><tr><td><code>-info-switch &lt;name=val&gt;</code></td><td>设置指定的 InfoSwitch 信息输出开关，默认值为 1；可重复使用。</td></tr><tr><td><code>-lib &lt;name&gt;</code></td><td>额外加载一个或一组共享库；可重复使用。</td></tr><tr><td><code>-listRegisteredSwitches</code></td><td>列出已注册、支持运行时修改的开关；可配合 -listUnsetSwitches。</td></tr><tr><td><code>-listSwitches</code></td><td>列出库中声明的开关；可配合 -listUnsetSwitches。</td></tr><tr><td><code>-listUnsetSwitches</code></td><td>将开关列表限定为 etc/controlDict 尚未设置的项。</td></tr><tr><td><code>-mpi-no-comm-dup</code></td><td>跳过初始化时的 MPI_Comm_dup() 调用。</td></tr><tr><td><code>-mpi-split-by-appnum</code></td><td>按 APPNUM 对全局通信器进行分组。</td></tr><tr><td><code>-mpi-threads</code></td><td>请求启用 MPI 线程支持。</td></tr><tr><td><code>-no-libs</code></td><td>跳过 controlDict 中 libs 条目指定的库。</td></tr><tr><td><code>-opt-switch &lt;name=val&gt;</code></td><td>设置指定的 OptimisationSwitch 优化开关，默认值为 1；可重复使用。</td></tr><tr><td><code>-roots &lt;(dir1 .. dirN)&gt;</code></td><td>为分布式运行的各子进程指定根目录。</td></tr><tr><td><code>-world &lt;name&gt;</code></td><td>指定并行通信使用的局部通信域名称。</td></tr><tr><td><code>-doc</code></td><td>在浏览器中打开文档。</td></tr><tr><td><code>-doc-source</code></td><td>在浏览器中打开源码。</td></tr><tr><td><code>-help-man</code></td><td>显示完整帮助，以 man 手册格式输出，然后退出。</td></tr><tr><td><code>-help-notes</code></td><td>显示程序功能说明并退出。</td></tr></tbody></table></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/electromagnetics/electrostaticFoam/electrostaticFoam.C">源码与说明</a> · <a href="/assets/command-help/electrostaticfoam.txt">帮助文本</a></p>

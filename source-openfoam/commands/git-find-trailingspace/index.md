@@ -27,10 +27,4 @@ cms_slug: "command-git-find-trailingspace"
 <pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/git-find-trailingspace" '*/Make/files' '*/Make/options'
 </code></pre>
 <p>同时检查源码清单和编译选项文件，输出每个问题文件的计数。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: git-find-trailingspace
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/git-find-trailingspace
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-Use git grep to find files with trailing whitespace</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/git-find-trailingspace">源码与说明</a> · <a href="/assets/command-help/git-find-trailingspace.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/git-find-trailingspace">源码与说明</a> · <a href="/assets/command-help/git-find-trailingspace.txt">帮助文本</a></p>

@@ -31,20 +31,4 @@ cms_slug: "command-foamruntutorials"
 <pre><code class="language-bash">foamRunTutorials -self -case tutorial-study
 </code></pre>
 <p>-self 跳过起点自己的 Allrun，防止外层脚本再次调用自身。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case=DIR</code></td><td>Specify starting directory, default is cwd</td></tr><tr><td><code>-serial</code></td><td>Prefer Allrun-serial if available</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-test</code></td><td>Prefer Alltest script, pass -test argument to scripts</td></tr><tr><td><code>-dry-run</code></td><td>Only report which script to run</td></tr><tr><td><code>-self</code></td><td>Avoid initial Allrun / Alltest scripts (prevent infinite recursion)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamRunTutorials [OPTION]
-options:
-  -case=DIR     Specify starting directory, default is cwd
-  -serial       Prefer Allrun-serial if available
-  -parallel     Prefer Allrun-parallel if available
-  -test         Prefer Alltest script, pass -test argument to scripts
-  -dry-run      Only report which script to run
-  -self         Avoid initial Allrun / Alltest scripts
-                (prevent infinite recursion)
-  -help         Print the usage
-
-Recursively run Alltest / Allrun / Allrun-parallel / Allrun-serial
-(or simply blockMesh + application)
-starting from the current directory or the specified -case directory.
-
-Equivalent options:
-  | -case=DIR  | -case DIR |</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamRunTutorials">源码与说明</a> · <a href="/assets/command-help/foamruntutorials.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case=DIR</code></td><td>指定起始目录，默认使用当前目录。</td></tr><tr><td><code>-serial</code></td><td>优先执行 Allrun-serial 脚本。</td></tr><tr><td><code>-parallel</code></td><td>优先执行 Allrun-parallel 脚本。</td></tr><tr><td><code>-test</code></td><td>优先执行 Alltest，并向脚本传入 -test 参数。</td></tr><tr><td><code>-dry-run</code></td><td>仅显示准备执行的脚本。</td></tr><tr><td><code>-self</code></td><td>跳过入口层的 Allrun、Alltest，避免脚本递归调用自身。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamRunTutorials">源码与说明</a> · <a href="/assets/command-help/foamruntutorials.txt">帮助文本</a></p>

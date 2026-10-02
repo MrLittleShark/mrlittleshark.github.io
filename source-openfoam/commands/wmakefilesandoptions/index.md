@@ -68,7 +68,4 @@ cms_slug: "command-wmakefilesandoptions"
 )
 </code></pre>
 <p>生成后把 EXE 输出路径改为 FOAM_USER_APPBIN，适合个人开发。 末行显示实际生成内容。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wmakeFilesAndOptions [-help]
-
-Scans current directory for directories and source files and constructs
-the &#x27;Make/files&#x27; and &#x27;Make/options&#x27; files.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmakeFilesAndOptions">源码与说明</a> · <a href="/assets/command-help/wmakefilesandoptions.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmakeFilesAndOptions">源码与说明</a> · <a href="/assets/command-help/wmakefilesandoptions.txt">帮助文本</a></p>

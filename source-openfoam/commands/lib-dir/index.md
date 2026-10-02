@@ -27,21 +27,4 @@ cms_slug: "command-lib-dir"
 <pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/lib-dir" -sh-verbose "$PWD/dependency" &gt; dependency-env.sh
 </code></pre>
 <p>标准输出保存赋值，详细信息写到标准错误，可阅读脚本后再选择是否加载。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-sh</code></td><td>Emit POSIX shell syntax (default)</td></tr><tr><td><code>-csh</code></td><td>Emit C-shell shell syntax</td></tr><tr><td><code>-sh-verbose</code></td><td>Like -sh,  with additional verbosity</td></tr><tr><td><code>-csh-verbose</code></td><td>Like -csh, with additional verbosity</td></tr><tr><td><code>-make</code></td><td>Emit content for a Makefile</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: lib-dir [OPTION] DIR [LIBEXT]
-
-options:
-  -sh               Emit POSIX shell syntax (default)
-  -csh              Emit C-shell shell syntax
-  -sh-verbose       Like -sh,  with additional verbosity
-  -csh-verbose      Like -csh, with additional verbosity
-  -make             Emit content for a Makefile
-  -help             Print the usage
-
-Resolves for the existence of DIR/lib64 and DIR/lib, or uses the fallback
-LIBEXT if these failed. A DIR ending in &quot;-none&quot; or &quot;-system&quot; is skipped.
-
-With -sh             LD_LIBRARY_PATH=dir/lib:\$LD_LIBRARY_PATH
-With -csh            setenv LD_LIBRARY_PATH dir/lib:\$LD_LIBRARY_PATH
-With -make           -Ldir/lib
-
-Exit status is zero (success) or non-zero (failure)</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/lib-dir">源码与说明</a> · <a href="/assets/command-help/lib-dir.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-sh</code></td><td>按 POSIX shell 语法输出，此项为默认设置。</td></tr><tr><td><code>-csh</code></td><td>按 C shell 语法输出。</td></tr><tr><td><code>-sh-verbose</code></td><td>按 sh 语法输出，并显示更多信息。</td></tr><tr><td><code>-csh-verbose</code></td><td>按 csh 语法输出，并显示更多信息。</td></tr><tr><td><code>-make</code></td><td>输出适用于 Makefile 的内容。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/lib-dir">源码与说明</a> · <a href="/assets/command-help/lib-dir.txt">帮助文本</a></p>

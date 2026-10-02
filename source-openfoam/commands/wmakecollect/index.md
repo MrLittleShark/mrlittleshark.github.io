@@ -33,27 +33,4 @@ wmakeLnIncludeAll
 wmake -queue
 </code></pre>
 <p>预先建立头文件链接，再由 wmake 自己生成正确依赖与编译命令，适用于多编译单元项目。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-clean</code></td><td>Cleanup before compilation (removes old makefiles)</td></tr><tr><td><code>-kill</code></td><td>Cleanup after termination (removes makefiles)</td></tr><tr><td><code>-h | -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wmakeCollect [OPTION] &lt;command&gt;
-
-options:
-  -clean        Cleanup before compilation (removes old makefiles)
-  -kill         Cleanup after termination (removes makefiles)
-  -h | -help    Print the usage
-
-A collecting scheduler for fast parallel compilation of large numbers of
-object files.
-
-When called with a compilation command it is written into a file in the
-directory \$WM_COLLECT_DIR.
-
-When called without a command the files in the \$WM_COLLECT_DIR directory are
-combined into a single Makefile which is passed to make to compile all of the
-object files efficiently in parallel.
-
-Typical usage for compiling OpenFOAM:
-
-  - Ensure all lnInclude directories are up-to-date:
-    wmakeLnIncludeAll
-
-  - Compile all with this scheduler:
-    wmake -queue</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmakeCollect">源码与说明</a> · <a href="/assets/command-help/wmakecollect.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-clean</code></td><td>编译前清理旧 Makefile。</td></tr><tr><td><code>-kill</code></td><td>程序终止后清理生成的 Makefile。</td></tr><tr><td><code>-h | -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmakeCollect">源码与说明</a> · <a href="/assets/command-help/wmakecollect.txt">帮助文本</a></p>

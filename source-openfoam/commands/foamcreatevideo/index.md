@@ -27,26 +27,4 @@ cms_slug: "command-foamcreatevideo"
 <pre><code class="language-bash">foamCreateVideo -tool=avconv -dir frames -start 100 -out late-stage
 </code></pre>
 <p>需要 avconv。v2512 脚本仅把 -start 传给 avconv 分支；从编号 100 起读取连续 PNG，生成 late-stage.mp4。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-d | -dir &lt;dir&gt;</code></td><td>input directory with png images  (default: &#x27;.&#x27;)</td></tr><tr><td><code>-f | -fps &lt;fps&gt;</code></td><td>frames per second  (default: 10)</td></tr><tr><td><code>-i | -image &lt;name&gt;</code></td><td>input image sequence prefix  (default: &#x27;image.&#x27;)</td></tr><tr><td><code>-o | -out &lt;name&gt;</code></td><td>output video name  (default: &#x27;video&#x27;)</td></tr><tr><td><code>-tool=NAME</code></td><td>Specify avconv, ffmpeg, mencoder...</td></tr><tr><td><code>-mask &lt;width&gt;</code></td><td>avconv input mask width (default: 4)</td></tr><tr><td><code>-start &lt;frame&gt;</code></td><td>avconv start frame number</td></tr><tr><td><code>-webm</code></td><td>WebM output video file format (avconv only)</td></tr><tr><td><code>-h | -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamCreateVideo [OPTIONS] ...
-options:
-  -d | -dir &lt;dir&gt;       input directory with png images  (default: &#x27;.&#x27;)
-  -f | -fps &lt;fps&gt;       frames per second  (default: 10)
-  -i | -image &lt;name&gt;    input image sequence prefix  (default: &#x27;image.&#x27;)
-  -o | -out &lt;name&gt;      output video name  (default: &#x27;video&#x27;)
-  -tool=NAME            Specify avconv, ffmpeg, mencoder...
-  -mask &lt;width&gt;         avconv input mask width (default: 4)
-  -start &lt;frame&gt;        avconv start frame number
-  -webm                 WebM output video file format (avconv only)
-  -h | -help            Print the usage
-
-Creates a video file from a sequence of PNG images.
-With the default prefix (&#x27;image.&#x27;), from image.0000.png, image.0001.png, ...
-- The output format is MPEG4
-- The output name (with mp4 format), is &quot;video.mp4&quot;
-- By default the video codec is high resolution
-
-MPEG4 output requires avconv, mencoder, ffmpeg, ...
-WebM  output requires avconv.
-
-By default will attempt avconv, ffmpeg, mencoder.
-Use the -tool option to specify a particular converter.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCreateVideo">源码与说明</a> · <a href="/assets/command-help/foamcreatevideo.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-d | -dir &lt;dir&gt;</code></td><td>指定 PNG 图片所在目录，默认为当前目录。</td></tr><tr><td><code>-f | -fps &lt;fps&gt;</code></td><td>设置每秒帧数，默认为 10。</td></tr><tr><td><code>-i | -image &lt;name&gt;</code></td><td>设置输入图片序列的文件名前缀，默认为 image.。</td></tr><tr><td><code>-o | -out &lt;name&gt;</code></td><td>设置输出视频名称，默认为 video。</td></tr><tr><td><code>-tool=NAME</code></td><td>指定视频工具，例如 avconv、ffmpeg 或 mencoder。</td></tr><tr><td><code>-mask &lt;width&gt;</code></td><td>设置 avconv 输入文件编号的位数，默认为 4。</td></tr><tr><td><code>-start &lt;frame&gt;</code></td><td>设置 avconv 的起始帧编号。</td></tr><tr><td><code>-webm</code></td><td>输出 WebM 视频，仅适用于 avconv。</td></tr><tr><td><code>-h | -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCreateVideo">源码与说明</a> · <a href="/assets/command-help/foamcreatevideo.txt">帮助文本</a></p>

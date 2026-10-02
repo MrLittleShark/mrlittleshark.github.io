@@ -27,17 +27,4 @@ cms_slug: "command-foammonitor"
 <pre><code class="language-bash">foamMonitor -idle 600 -refresh 10 -logscale caseA/postProcessing/residuals/0/residuals.dat
 </code></pre>
 <p>文件连续 600 秒无变化才停止，避免长时间步被默认超时中断。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-g | -grid</code></td><td>Draw grid lines</td></tr><tr><td><code>-i | -idle &lt;time&gt;</code></td><td>Stop if &lt;file&gt; unchanging for &lt;time&gt; sec (default = 60)</td></tr><tr><td><code>-l | -logscale</code></td><td>Plot y-axis data on log scale</td></tr><tr><td><code>-r | -refresh &lt;time&gt;</code></td><td>Refresh display every &lt;time&gt; sec (default = 10)</td></tr><tr><td><code>-x | -xrange &lt;range&gt;</code></td><td>Set &lt;range&gt; of x-axis data, format &quot;[0:1]&quot;</td></tr><tr><td><code>-y | -yrange &lt;range&gt;</code></td><td>Set &lt;range&gt; of y-axis data, format &quot;[0:1]&quot;</td></tr><tr><td><code>-h | -help</code></td><td>Display short help and exit</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamMonitor [OPTIONS] &lt;file&gt;
-Options:
-  -g | -grid            Draw grid lines
-  -i | -idle &lt;time&gt;     Stop if &lt;file&gt; unchanging for &lt;time&gt; sec (default = 60)
-  -l | -logscale        Plot y-axis data on log scale
-  -r | -refresh &lt;time&gt;  Refresh display every &lt;time&gt; sec (default = 10)
-  -x | -xrange &lt;range&gt;  Set &lt;range&gt; of x-axis data, format &quot;[0:1]&quot;
-  -y | -yrange &lt;range&gt;  Set &lt;range&gt; of y-axis data, format &quot;[0:1]&quot;
-  -h | -help            Display short help and exit
-
-Monitor data with Gnuplot from time-value(s) graphs written by OpenFOAM
-e.g. by functionObjects. For example,
-
-    foamMonitor -l postProcessing/residuals/0/residuals.dat</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamMonitor">源码与说明</a> · <a href="/assets/command-help/foammonitor.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-g | -grid</code></td><td>显示图中的网格线。</td></tr><tr><td><code>-i | -idle &lt;time&gt;</code></td><td>文件连续指定秒数未变化时停止监控，默认为 60 秒。</td></tr><tr><td><code>-l | -logscale</code></td><td>将 y 轴设为对数刻度。</td></tr><tr><td><code>-r | -refresh &lt;time&gt;</code></td><td>按指定秒数刷新图形，默认为 10 秒。</td></tr><tr><td><code>-x | -xrange &lt;range&gt;</code></td><td>设置 x 轴范围，例如 &#x27;[0:1]&#x27;。</td></tr><tr><td><code>-y | -yrange &lt;range&gt;</code></td><td>设置 y 轴范围，例如 &#x27;[0:1]&#x27;。</td></tr><tr><td><code>-h | -help</code></td><td>显示简要帮助并退出。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamMonitor">源码与说明</a> · <a href="/assets/command-help/foammonitor.txt">帮助文本</a></p>

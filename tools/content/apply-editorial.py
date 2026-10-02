@@ -6,6 +6,7 @@ the edited source; exact prose replacements preserve code and formula blocks.
 from pathlib import Path
 import json, re, sys
 from wolf_media import FIGURES, figure_html
+import runpy
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).parent
@@ -146,6 +147,7 @@ def main():
             if before != json.dumps(row, sort_keys=True, ensure_ascii=False): report.append(slug)
         path.write_text(json.dumps(rows, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({'updated':len(report), 'authored_chapters':len(list((HERE/'authored-lessons').glob('*.md')))}, ensure_ascii=False))
+    runpy.run_path(str(HERE/'localize-reference.py'))['main']()
 
 if __name__ == '__main__':
     main()

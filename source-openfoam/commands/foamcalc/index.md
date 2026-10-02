@@ -27,13 +27,4 @@ cms_slug: "command-foamcalc"
 <pre><code class="language-bash">foamCalc -precision 12 '0.1*(1 + 0.5*sin(6.283185307179586*0.25))'
 </code></pre>
 <p>对应平均速度 0.1、振幅系数 0.5、频率 1 Hz，在 t=0.25 s 时得到 0.15。sin 的参数使用弧度，可据此核对时变边界的数值。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 command reference
-Command: foamCalc
-Evidence: not-installed
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/tools/foamCalc/foamCalc.C
-
-未取得运行时帮助。
-
-源码路径：applications/tools/foamCalc/foamCalc.C
-
-A simple expression calculator using OpenFOAM string evaluation. Multiple arguments will be concatenated together.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/tools/foamCalc/foamCalc.C">源码与说明</a> · <a href="/assets/command-help/foamcalc.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/tools/foamCalc/foamCalc.C">源码与说明</a> · <a href="/assets/command-help/foamcalc.txt">帮助文本</a></p>

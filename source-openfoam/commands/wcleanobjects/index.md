@@ -42,23 +42,4 @@ mkdir -p "$demoProject/build/configA"
 (cd "$demoProject" &amp;&amp; WM_PROJECT_DIR="$demoProject" "$tool" all)
 </code></pre>
 <p>直接调用 wcleanObjects 默认目标是 build；all 移除整个演示 build。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-a | -all</code></td><td>Same as &#x27;all&#x27;</td></tr><tr><td><code>-curr | -current</code></td><td>Use \$WM_OPTIONS ($WM_OPTIONS)</td></tr><tr><td><code>-comp | -compiler</code></td><td>Use \$WM_ARCH\$WM_COMPILER*  ($WM_ARCH$WM_COMPILER)</td></tr><tr><td><code>-compiler=NAME</code></td><td>Use \$WM_ARCH&lt;NAME&gt;*  ($WM_ARCH&lt;NAME&gt;*)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wcleanObjects &lt;option | platform&gt; [.. &lt;option | platform&gt;]
-
-options:
-  -a | -all             Same as &#x27;all&#x27;
-  -curr | -current      Use \$WM_OPTIONS ($WM_OPTIONS)
-  -comp | -compiler     Use \$WM_ARCH\$WM_COMPILER*  ($WM_ARCH$WM_COMPILER)
-  -compiler=NAME        Use \$WM_ARCH&lt;NAME&gt;*  ($WM_ARCH&lt;NAME&gt;*)
-  -help                 Print the usage
-
-Deletes specified $targetDir object file directories from project top-level:
-Project:   $WM_PROJECT_DIR
-Directory: $targetDir/
-
-special platforms:
-  all           Remove all platforms$extraText
-  compiler      $WM_ARCH$WM_COMPILER  (ie, \$WM_ARCH\$WM_COMPILER)
-  current       $WM_OPTIONS  (ie, \$WM_OPTIONS)
-
-You must be in the project or the third-party top-level directory
-to run this script.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wcleanObjects">源码与说明</a> · <a href="/assets/command-help/wcleanobjects.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-a | -all</code></td><td>等同于 all，处理全部目标。</td></tr><tr><td><code>-curr | -current</code></td><td>使用当前 WM_OPTIONS 对应的构建配置。</td></tr><tr><td><code>-comp | -compiler</code></td><td>匹配 $WM_ARCH$WM_COMPILER* 对应的构建配置。</td></tr><tr><td><code>-compiler=NAME</code></td><td>匹配 $WM_ARCH 后接指定编译器名称的构建配置。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wcleanObjects">源码与说明</a> · <a href="/assets/command-help/wcleanobjects.txt">帮助文本</a></p>

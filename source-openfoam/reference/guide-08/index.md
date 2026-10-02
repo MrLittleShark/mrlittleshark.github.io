@@ -207,13 +207,13 @@ paraFoam -case ../run1</code></pre>
 <div class="table-scroll"><table>
 <tr><th>目的</th><th>操作</th></tr>
 <tr><td>看内部流场</td><td>Filters → Slice（切面），法向选 z</td></tr>
-<tr><td>看等值面</td><td>Filters → Contour（先 Cell Data to Point Data）</td></tr>
+<tr><td>看等值面</td><td>等值面：<code>Filters → Contour</code>（先用“单元数据转点数据”过滤器）</td></tr>
 <tr><td>看涡结构</td><td>先 postProcess -func Q，再 Contour 取 Q 的正值</td></tr>
 <tr><td>看矢量</td><td>Filters → Glyph，Scale Array 选 U，Scale Factor 调到合适</td></tr>
 <tr><td>取一条线的数据</td><td>Filters → Plot Over Line，右侧直接出曲线，可 Save Data 成 csv</td></tr>
 <tr><td>看流线</td><td>Filters → Stream Tracer</td></tr>
 </table></div>
-<p>使用 ParaView 过滤器前，应检查输入数组是单元数据还是点数据。对需要点数据的操作，可根据过滤器要求使用 Cell Data to Point Data，或检查 OpenFOAM 读取器的相关转换选项。转换会引入插值，分析结果时应明确其数据位置。</p>
+<p>使用 ParaView 过滤器前，应检查输入数组是单元数据还是点数据。对需要点数据的操作，可根据过滤器要求使用“单元数据转点数据”（<code>Cell Data to Point Data</code>），或检查 OpenFOAM 读取器的转换选项。转换会引入插值，分析结果时应明确其数据位置。</p>
 <p>导出动画：View → Animation，或者 File → Save Animation 存成 png 序列，再用</p>
 <pre><code class="language-bash">foamCreateVideo -dir images -image seq -out movie      # 需要 ffmpeg
 # 或者直接：

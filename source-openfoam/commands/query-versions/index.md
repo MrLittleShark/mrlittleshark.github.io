@@ -29,13 +29,4 @@ compiler=$(wmake -show-path-cxx)
 "$compiler" --version
 </code></pre>
 <p>前者显示打包/构建配置，后者由实际选中的编译器报告版本。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-compiler</code></td><td>Print clang,gcc compiler versions only</td></tr><tr><td><code>-clang</code></td><td>Print clang compiler versions only</td></tr><tr><td><code>-gcc</code></td><td>Print gcc compiler versions only</td></tr><tr><td><code>-h, -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: query-versions [OPTION]
-
-options:
-  -compiler         Print clang,gcc compiler versions only
-  -clang            Print clang compiler versions only
-  -gcc              Print gcc compiler versions only
-  -h, -help         Print the usage
-
-Query (ThirdParty) versions based on their etc/config.sh values.
-Uses OpenFOAM wmake/scripts/have_* scripts.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/query-versions">源码与说明</a> · <a href="/assets/command-help/query-versions.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-compiler</code></td><td>仅显示 Clang 与 GCC 编译器版本。</td></tr><tr><td><code>-clang</code></td><td>仅显示 Clang 编译器版本。</td></tr><tr><td><code>-gcc</code></td><td>仅显示 GCC 编译器版本。</td></tr><tr><td><code>-h, -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/query-versions">源码与说明</a> · <a href="/assets/command-help/query-versions.txt">帮助文本</a></p>

@@ -28,25 +28,4 @@ cms_slug: "command-surfacelambdamusmooth"
 surfaceCheck -checkSelfIntersection smooth.stl
 </code></pre>
 <p>查看自相交、开边和包围盒，判断平滑是否改善局部三角形而保留所需几何。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceLambdaMuSmooth [OPTIONS] &lt;input&gt; &lt;lambda&gt; &lt;mu&gt; &lt;iterations&gt; &lt;output&gt;
-Arguments:
-  &lt;input&gt;           The input surface file
-  &lt;lambda&gt;          On the interval [0,1]
-  &lt;mu&gt;              On the interval [0,1]
-  &lt;iterations&gt;      The number of iterations to perform
-  &lt;output&gt;          The output surface file
-Options:
-  -featureFile &lt;Fix points from a file containing feature points and edges&gt;
-  -doc              Display documentation in browser
-  -doc-source       Display source code in browser
-  -help             Display short help and exit
-  -help-man         Display full help (manpage format) and exit
-  -help-notes       Display help notes (description) and exit
-  -help-full        Display full help and exit
-
-Smooth a surface using lambda/mu smoothing.
-For laplacian smoothing, set lambda to the relaxation factor and mu to zero.
-
-Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
-Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceLambdaMuSmooth/surfaceLambdaMuSmooth.C">源码与说明</a> · <a href="/assets/command-help/surfacelambdamusmooth.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-help</code></td><td>显示简要帮助并退出。</td></tr><tr><td><code>-help-full</code></td><td>显示完整帮助并退出。</td></tr></tbody></table><details class="command-more-options"><summary>更多参数（4 项）</summary><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-doc</code></td><td>在浏览器中打开文档。</td></tr><tr><td><code>-doc-source</code></td><td>在浏览器中打开源码。</td></tr><tr><td><code>-help-man</code></td><td>显示完整帮助，以 man 手册格式输出，然后退出。</td></tr><tr><td><code>-help-notes</code></td><td>显示程序功能说明并退出。</td></tr></tbody></table></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceLambdaMuSmooth/surfaceLambdaMuSmooth.C">源码与说明</a> · <a href="/assets/command-help/surfacelambdamusmooth.txt">帮助文本</a></p>

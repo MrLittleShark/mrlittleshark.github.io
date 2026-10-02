@@ -30,10 +30,4 @@ printf '%s %s %s\n' "$baseCommit" "$targetCommit" refs/heads/review | "$WM_PROJE
 "$WM_PROJECT_DIR/bin/tools/pre-receive-hook" &lt; receive-check.txt
 </code></pre>
 <p>保存的清单使之后的检查指向同一提交范围，输出问题文件及行号。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: pre-receive-hook
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/pre-receive-hook
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-pre-receive hook for git. Copy or link this file as &quot;.git/hooks/pre-receive&quot; Eg, ( cd $WM_PROJECT_DIR/.git/hooks &amp;&amp; ln -sf ../../bin/tools/pre-receive-hook pre-receive ) Hook receives: &lt;old-sha1&gt; &lt;new-sha1&gt; &lt;ref-name&gt; Checks for - illegal code, e.g. &lt;TAB&gt; - columns greater than 80 for *.[CH] files</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/pre-receive-hook">源码与说明</a> · <a href="/assets/command-help/pre-receive-hook.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/pre-receive-hook">源码与说明</a> · <a href="/assets/command-help/pre-receive-hook.txt">帮助文本</a></p>

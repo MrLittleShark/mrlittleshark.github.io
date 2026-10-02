@@ -38,26 +38,4 @@ wrmdep modelA.H modelB.H
 <pre><code class="language-bash">wrmdep -old myUtility
 </code></pre>
 <p>查找没有对应源文件的依赖项；用于源码搬迁后的整理。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">Usage:
-
-wrmdep [-a | -all | all] [file1 [..fileN]]
-
-    Remove all .dep files or remove .dep files referring to &lt;file&gt;.
-    With the &#x27;all&#x27; option the .dep files are removed for all platforms
-    rather than just the current platform ($WM_OPTIONS).
-
-wrmdep [-o | -old] [dir1 [..dirN]]
-
-    Remove *.dep files that are without a corresponding .C or .L file.
-    This occurs when a directory has been moved.
-      - prints the questionable directory and *.dep file
-
-    Note: to remove empty directories, run: wclean empty
-
-wrmdep -update
-
-    Search &quot;src&quot; and &quot;application&quot; directories of the project for broken
-    symbolic links for source code files and remove all .dep files related
-    to files that no longer exist.
-    Must be executed in the project top-level directory:
-        $WM_PROJECT_DIR</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wrmdep">源码与说明</a> · <a href="/assets/command-help/wrmdep.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wrmdep">源码与说明</a> · <a href="/assets/command-help/wrmdep.txt">帮助文本</a></p>

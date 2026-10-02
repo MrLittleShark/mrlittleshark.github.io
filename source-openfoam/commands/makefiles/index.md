@@ -68,10 +68,4 @@ cms_slug: "command-makefiles"
 )
 </code></pre>
 <p>生成后把 EXE 输出路径改为 FOAM_USER_APPBIN，适合个人开发。 末行显示实际生成内容。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: makeFiles
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/makeFiles
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-Scan the current directory for source files and construct Make/files Usage : makeFiles</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/makeFiles">源码与说明</a> · <a href="/assets/command-help/makefiles.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/makeFiles">源码与说明</a> · <a href="/assets/command-help/makefiles.txt">帮助文本</a></p>

@@ -30,7 +30,4 @@ touch make-demo/Make/files
 "$WM_PROJECT_DIR/bin/tools/findEmptyMake" make-demo
 </code></pre>
 <p>只有 files、缺 options 的示例应被报告，便于理解检测标准。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: findEmptyMake [OPTION] [dir1 .. dirN]
-
-Find Make/ directories without a &#x27;files&#x27; or &#x27;options&#x27; file.
-This can occur when a directory has been moved.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/findEmptyMake">源码与说明</a> · <a href="/assets/command-help/findemptymake.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/findEmptyMake">源码与说明</a> · <a href="/assets/command-help/findemptymake.txt">帮助文本</a></p>

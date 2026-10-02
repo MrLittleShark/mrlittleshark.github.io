@@ -1,1 +1,6 @@
-<div class="page-wrap cms-page"><div class="eyebrow">FOAMLAB / ADMINISTRATION</div><div class="page-heading"><div class="cms-heading"><div><h1><%= page.section==='studio'?'作者工作台':'网站管理平台' %></h1><p>建立课程，维护资料，发布文章，管理公开讨论。</p></div><span class="pill" id="cms-role-label">正在验证身份</span></div></div><div id="cms-root"><div class="lab-loading"><span></span>正在连接工作区…</div></div></div><script src="/assets/cms.js" defer></script>
+<link rel="stylesheet" href="/assets/cms-workspace.css">
+<div class="page-wrap cms-page"><div class="page-heading"><div class="cms-heading"><div><h1><%= page.section==='studio'?'作者工作台':'网站管理' %></h1><p><%= page.section==='studio'?'撰写、发布和管理自己的文章。':'内容、社区与资源，按栏目统一管理。' %></p></div><span class="pill" id="cms-role-label">正在验证身份</span></div></div><div id="cms-root"><div class="lab-loading"><span></span>正在打开工作区…</div></div></div>
+<script src="/assets/cms-workspace.js" defer></script>
+<script src="/assets/cms-resources.js" defer></script>
+<script src="/assets/cms-moderation.js" defer></script>
+<script src="/assets/cms.js" defer></script>

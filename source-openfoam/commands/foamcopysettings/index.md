@@ -31,12 +31,4 @@ for target in settingA settingB; do foamCopySettings caseA "$target"; done
 diff -ru caseA/system caseB/system
 </code></pre>
 <p>比较结果可定位保留或覆盖的差异；rsync 未使用 --delete，目标独有文件仍可能存在。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamCopySettings srcDir dstDir
-
-    Copy OpenFOAM settings from one case to another, without copying
-    the mesh or results.
-    - requires rsync
-
-Note
-    The foamCopySettings.rc (found via foamEtcFile) can be used to add any
-    custom rsync options.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCopySettings">源码与说明</a> · <a href="/assets/command-help/foamcopysettings.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCopySettings">源码与说明</a> · <a href="/assets/command-help/foamcopysettings.txt">帮助文本</a></p>

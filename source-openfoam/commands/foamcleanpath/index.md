@@ -28,30 +28,4 @@ cms_slug: "command-foamcleanpath"
 cleaned=$(foamCleanPath -env=MY_TOOL_PATH) &amp;&amp; export MY_TOOL_PATH="$cleaned"
 </code></pre>
 <p>先捕获成功结果再更新变量，避免清理失败时覆盖旧值。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-env=NAME</code></td><td>Evaluate NAME to obtain initial content, Accepts &quot;-env=-path&quot;, &quot;-env=-lib&quot; shortcuts for PATH and LD_LIBRARY_PATH (FOAM_LD_LIBRARY_PATH on Darwin)</td></tr><tr><td><code>-sh=NAME</code></td><td>Produce &#x27;NAME=...&#x27; output for sh eval</td></tr><tr><td><code>-csh=NAME</code></td><td>Produce &#x27;setenv NAME ...&#x27; output for csh eval</td></tr><tr><td><code>-sh-env=NAME</code></td><td>Same as -sh=NAME -env=NAME</td></tr><tr><td><code>-csh-env=NAME</code></td><td>Same as -csh=NAME -env=NAME</td></tr><tr><td><code>-sh-path | -csh-path</code></td><td>Same as -[c]sh-env=PATH</td></tr><tr><td><code>-sh-lib</code></td><td>| -csh-lib   Same as -[c]sh-env=LD_LIBRARY_PATH (FOAM_LD_LIBRARY_PATH on Darwin)</td></tr><tr><td><code>-debug</code></td><td>Print debug information to stderr</td></tr><tr><td><code>-strip</code></td><td>Remove inaccessible directories</td></tr><tr><td><code>-verbose</code></td><td>Report some progress (input, output, ...)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamCleanPath [OPTION] ENVNAME [filter] .. [filter]
-       foamCleanPath [OPTION] -env=name [filter] .. [filter]
-options:
-  -env=NAME         Evaluate NAME to obtain initial content,
-                    Accepts &quot;-env=-path&quot;, &quot;-env=-lib&quot; shortcuts for PATH
-                    and LD_LIBRARY_PATH (FOAM_LD_LIBRARY_PATH on Darwin)
-  -sh=NAME          Produce &#x27;NAME=...&#x27; output for sh eval
-  -csh=NAME         Produce &#x27;setenv NAME ...&#x27; output for csh eval
-  -sh-env=NAME      Same as -sh=NAME -env=NAME
-  -csh-env=NAME     Same as -csh=NAME -env=NAME
-  -sh-path | -csh-path  Same as -[c]sh-env=PATH
-  -sh-lib  | -csh-lib   Same as -[c]sh-env=LD_LIBRARY_PATH
-                        (FOAM_LD_LIBRARY_PATH on Darwin)
-  -debug            Print debug information to stderr
-  -strip            Remove inaccessible directories
-  -verbose          Report some progress (input, output, ...)
-  -help             Print the usage
-
-Prints its argument (which should be a &#x27;:&#x27; separated list) cleansed from
-  * duplicate elements
-  * elements whose start matches one of the filters
-  * inaccessible directories (the -strip option)
-
-Exit status
-    0  on success
-    1  general error
-    2  initial value of ENVNAME is empty</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCleanPath">源码与说明</a> · <a href="/assets/command-help/foamcleanpath.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-env=NAME</code></td><td>从指定环境变量读取初始内容；-env=-path 和 -env=-lib 分别快捷选择 PATH 与 LD_LIBRARY_PATH，Darwin 系统使用 FOAM_LD_LIBRARY_PATH。</td></tr><tr><td><code>-sh=NAME</code></td><td>输出 NAME=... 形式的赋值语句，供 sh 的 eval 执行。</td></tr><tr><td><code>-csh=NAME</code></td><td>输出 setenv NAME ... 形式的语句，供 csh 的 eval 执行。</td></tr><tr><td><code>-sh-env=NAME</code></td><td>等同于同时使用 -sh=NAME 和 -env=NAME。</td></tr><tr><td><code>-csh-env=NAME</code></td><td>等同于同时使用 -csh=NAME 和 -env=NAME。</td></tr><tr><td><code>-sh-path | -csh-path</code></td><td>等同于 -sh-env=PATH 或 -csh-env=PATH。</td></tr><tr><td><code>-sh-lib  | -csh-lib</code></td><td>等同于 -sh-env=LD_LIBRARY_PATH 或 -csh-env=LD_LIBRARY_PATH；Darwin 系统使用 FOAM_LD_LIBRARY_PATH。</td></tr><tr><td><code>-debug</code></td><td>向标准错误输出调试信息。</td></tr><tr><td><code>-strip</code></td><td>移除无法访问的目录项。</td></tr><tr><td><code>-verbose</code></td><td>显示输入、输出等处理进度。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCleanPath">源码与说明</a> · <a href="/assets/command-help/foamcleanpath.txt">帮助文本</a></p>

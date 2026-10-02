@@ -28,18 +28,4 @@ cms_slug: "command-foamsequencevtkfiles"
 foamSequenceVTKFiles -case caseA -dir postProcessing/planeB -out sequence-planeB --
 </code></pre>
 <p>分别生成两组独立链接序列。末尾 -- 用于兼容此版本 -out 分支的额外 shift；各输出目录专门用于本工具，原有内容会先被清理。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-c | -case &lt;dir&gt;</code></td><td>specify case directory (default = local dir)</td></tr><tr><td><code>-d | -dir &lt;dir&gt;</code></td><td>post-processing directory &lt;dir&gt; (default = postProcessing)</td></tr><tr><td><code>-o | -out &lt;dir&gt;</code></td><td>output links directory &lt;dir&gt; (default = sequencedVTK)</td></tr><tr><td><code>-vtk</code></td><td>create sequence of vtk files (default)</td></tr><tr><td><code>-vtp</code></td><td>create sequence of vtp files</td></tr><tr><td><code>-vtu</code></td><td>create sequence of vtu files</td></tr><tr><td><code>-h | -help</code></td><td>help</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamSequenceVTKFiles [OPTIONS] ...
-options:
-  -c | -case &lt;dir&gt;    specify case directory (default = local dir)
-  -d | -dir &lt;dir&gt;     post-processing directory &lt;dir&gt; (default = postProcessing)
-  -o | -out &lt;dir&gt;     output links directory &lt;dir&gt; (default = sequencedVTK)
-  -vtk                create sequence of vtk files (default)
-  -vtp                create sequence of vtp files
-  -vtu                create sequence of vtu files
-  -h | -help          help
-
-Creates symbolic links to all VTK files in a post-processing directory
-Links form a sequence like name.0000.vtk, name.0001.vtk, etc.
-Paraview recognises the link names as a sequence which can be opened and played.
-The sequence of links to images can be used to create a video from the images.
-- Default directory name for VTK files is postProcessing</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamSequenceVTKFiles">源码与说明</a> · <a href="/assets/command-help/foamsequencevtkfiles.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-c | -case &lt;dir&gt;</code></td><td>指定算例目录，默认使用当前目录。</td></tr><tr><td><code>-d | -dir &lt;dir&gt;</code></td><td>指定后处理目录，默认为 postProcessing。</td></tr><tr><td><code>-o | -out &lt;dir&gt;</code></td><td>指定输出链接目录，默认为 sequencedVTK。</td></tr><tr><td><code>-vtk</code></td><td>生成 VTK 文件序列，此项为默认设置。</td></tr><tr><td><code>-vtp</code></td><td>生成 VTP 文件序列。</td></tr><tr><td><code>-vtu</code></td><td>生成 VTU 文件序列。</td></tr><tr><td><code>-h | -help</code></td><td>显示帮助。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamSequenceVTKFiles">源码与说明</a> · <a href="/assets/command-help/foamsequencevtkfiles.txt">帮助文本</a></p>

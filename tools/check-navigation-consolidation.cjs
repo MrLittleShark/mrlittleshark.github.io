@@ -81,7 +81,7 @@ async function catalog(p,url){await ready(p,url,'.lab-card');}
   await ready(m.page,'/account/','#account-name');await m.page.evaluate(()=>window.foamAuth.profileReady);
   assert.deepEqual(await m.page.locator('#account-shortcuts a').evaluateAll(a=>a.map(x=>x.getAttribute('href'))),['/sharing/','/resources/']);
   assert.equal(await m.page.locator('[name=shortcuts]:checked').count(),2);
-  await m.page.locator('#profile-form button[type=submit]').click();await m.page.getByText('个人资料已保存到账号。',{exact:true}).waitFor();
+  await m.page.locator('[data-account-tab=profile]').click();await m.page.locator('#profile-form button[type=submit]').click();await m.page.getByText('个人资料已保存到账号。',{exact:true}).waitFor();
   assert.deepEqual(m.db.foamlab_profiles[0].shortcuts.sort(),['resources','sharing']);
   await m.page.locator('#account-nav-label').click();await m.page.locator('#account-panel').waitFor();
   assert.equal(await m.page.locator('#account-panel-name').textContent(),'测试读者');

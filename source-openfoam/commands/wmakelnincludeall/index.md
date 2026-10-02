@@ -27,16 +27,4 @@ cms_slug: "command-wmakelnincludeall"
 <pre><code class="language-bash">wmakeLnIncludeAll -update user-models user-boundaries
 </code></pre>
 <p>分别扫描两个树，避免扫描整套官方源码。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-f | -force</code></td><td>Force remove of existing lnInclude before recreating</td></tr><tr><td><code>-u | -update</code></td><td>Update existing lnInclude directories</td></tr><tr><td><code>-j</code></td><td>Use all local cores/hyperthreads</td></tr><tr><td><code>-jN | -j N</code></td><td>Use N cores/hyperthreads</td></tr><tr><td><code>-extra</code></td><td>Also include all source files in lnInclude/</td></tr><tr><td><code>-no-extra</code></td><td>Do not include all source files in lnInclude/ [default]</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wmakeLnIncludeAll [OPTION] [dir1 .. dirN]
-
-options:
-  -f | -force       Force remove of existing lnInclude before recreating
-  -u | -update      Update existing lnInclude directories
-  -j                Use all local cores/hyperthreads
-  -jN | -j N        Use N cores/hyperthreads
-  -extra            Also include all source files in lnInclude/
-  -no-extra         Do not include all source files in lnInclude/ [default]
-  -help             Display short help and exit
-
-Find directories with a &#x27;Make/files&#x27; containing a &#x27;LIB =&#x27; directive
-and execute &#x27;wmakeLnInclude&#x27; for each.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmakeLnIncludeAll">源码与说明</a> · <a href="/assets/command-help/wmakelnincludeall.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-f | -force</code></td><td>删除已有 lnInclude 后重新创建。</td></tr><tr><td><code>-u | -update</code></td><td>更新已有 lnInclude 目录。</td></tr><tr><td><code>-j</code></td><td>使用本机全部处理器核心或硬件线程。</td></tr><tr><td><code>-jN | -j N</code></td><td>使用指定数量的处理器核心或硬件线程。</td></tr><tr><td><code>-extra</code></td><td>同时将所有源文件加入 lnInclude/。</td></tr><tr><td><code>-no-extra</code></td><td>仅包含默认类型的文件，省略其余源文件；此项为默认设置。</td></tr><tr><td><code>-help</code></td><td>显示简要帮助并退出。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmakeLnIncludeAll">源码与说明</a> · <a href="/assets/command-help/wmakelnincludeall.txt">帮助文本</a></p>

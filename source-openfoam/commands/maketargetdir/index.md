@@ -27,10 +27,4 @@ cms_slug: "command-maketargetdir"
 <pre><code class="language-bash">"$WM_PROJECT_DIR/wmake/scripts/makeTargetDir" exports/0/U.csv exports/0.5/U.csv exports/1/U.csv
 </code></pre>
 <p>虽然通常用于构建，该脚本同样可准备后处理导出的目录树。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: makeTargetDir
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/makeTargetDir
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-Makes a directory hierarchy for the given target file(s) Usage: makeTargetDir file1 [..fileN]</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/makeTargetDir">源码与说明</a> · <a href="/assets/command-help/maketargetdir.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/makeTargetDir">源码与说明</a> · <a href="/assets/command-help/maketargetdir.txt">帮助文本</a></p>

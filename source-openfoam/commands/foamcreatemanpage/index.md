@@ -27,20 +27,4 @@ cms_slug: "command-foamcreatemanpage"
 <pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamCreateManpage" -pdf -output=manuals-pdf checkMesh
 </code></pre>
 <p>把 man 内容经排版工具转换成 PDF，输出到独立目录。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-dir=DIR</code></td><td>Input directory to process</td></tr><tr><td><code>-output=DIR</code></td><td>Write to alternative output directory</td></tr><tr><td><code>-pdf</code></td><td>Process as nroff man content and pass to ps2pdf</td></tr><tr><td><code>-gz | -gzip</code></td><td>Compress manpage output</td></tr><tr><td><code>-version=VER</code></td><td>Specify an alternative version</td></tr><tr><td><code>-h | -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamCreateManpage [OPTION] [appName .. [appNameN]]
-options:
-  -dir=DIR          Input directory to process
-  -output=DIR       Write to alternative output directory
-  -pdf              Process as nroff man content and pass to ps2pdf
-  -gz | -gzip       Compress manpage output
-  -version=VER      Specify an alternative version
-  -h | -help        Print the usage
-
-Query OpenFOAM applications with -help-man for their manpage content
-and redirect to corresponding directory location.
-Default input:  \$FOAM_APPBIN only.
-Default output: $defaultOutputDir
-
-Uses the search directory if individual applications are specified.
-
-Copyright (C) 2018-2019 OpenCFD Ltd.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamCreateManpage">源码与说明</a> · <a href="/assets/command-help/foamcreatemanpage.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-dir=DIR</code></td><td>指定要处理的输入目录。</td></tr><tr><td><code>-output=DIR</code></td><td>指定输出目录。</td></tr><tr><td><code>-pdf</code></td><td>按 nroff 手册格式处理，再交给 ps2pdf 生成 PDF。</td></tr><tr><td><code>-gz | -gzip</code></td><td>压缩输出的 man 手册文件。</td></tr><tr><td><code>-version=VER</code></td><td>指定版本号。</td></tr><tr><td><code>-h | -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamCreateManpage">源码与说明</a> · <a href="/assets/command-help/foamcreatemanpage.txt">帮助文本</a></p>

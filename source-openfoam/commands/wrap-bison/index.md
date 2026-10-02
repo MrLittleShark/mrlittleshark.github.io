@@ -39,13 +39,4 @@ EOF
 <pre><code class="language-bash">"$WM_PROJECT_DIR/wmake/scripts/wrap-bison" -no-tmp -output=generated/parser.tab.cc parser.yy-m4
 </code></pre>
 <p>生成代码并移除展开后的临时 .yy 文件，输出文件保留。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-dry-run</code></td><td>Process m4 only (output on stdout)</td></tr><tr><td><code>-grammar</code></td><td>Output grammar tables (ignored)</td></tr><tr><td><code>-no-tmp</code></td><td>Do not retain temporary m4 processed files</td></tr><tr><td><code>-output=NAME</code></td><td>Request renaming actions</td></tr><tr><td><code>-h, -help</code></td><td>Print the usage</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wrap-bison [options] [bison args/options]
-
-options:
-  -dry-run          Process m4 only (output on stdout)
-  -grammar          Output grammar tables (ignored)
-  -no-tmp           Do not retain temporary m4 processed files
-  -output=NAME      Request renaming actions
-  -h, -help         Print the usage
-
-A bison wrapper with renaming of skeleton files</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wrap-bison">源码与说明</a> · <a href="/assets/command-help/wrap-bison.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-dry-run</code></td><td>仅处理 m4，并将结果输出到终端。</td></tr><tr><td><code>-grammar</code></td><td>语法表输出兼容选项，当前会被忽略。</td></tr><tr><td><code>-no-tmp</code></td><td>清理经过 m4 处理的临时文件。</td></tr><tr><td><code>-output=NAME</code></td><td>指定生成文件的目标名称，并执行相应重命名。</td></tr><tr><td><code>-h, -help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wrap-bison">源码与说明</a> · <a href="/assets/command-help/wrap-bison.txt">帮助文本</a></p>

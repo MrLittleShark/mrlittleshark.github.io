@@ -27,13 +27,4 @@ cms_slug: "command-foamtoccm"
 <pre><code class="language-bash">foamToCcm -latestTime -remap constant/remapping -name mappedCase
 </code></pre>
 <p>按准备好的 remapping 文件进行区域映射后导出。适合需要保持与外部软件区域命名约定一致的交换流程。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 command reference
-Command: foamToCcm
-Evidence: not-installed
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/ccm/foamToCcm/foamToCcm.C
-
-未取得运行时帮助。
-
-源码路径：applications/utilities/mesh/conversion/ccm/foamToCcm/foamToCcm.C
-
-Translates OPENFOAM mesh and/or results to CCM format</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/ccm/foamToCcm/foamToCcm.C">源码与说明</a> · <a href="/assets/command-help/foamtoccm.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/ccm/foamToCcm/foamToCcm.C">源码与说明</a> · <a href="/assets/command-help/foamtoccm.txt">帮助文本</a></p>

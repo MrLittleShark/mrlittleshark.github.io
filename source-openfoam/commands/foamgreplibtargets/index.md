@@ -27,17 +27,4 @@ cms_slug: "command-foamgreplibtargets"
 <pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamGrepLibTargets" -src -no-git | grep finiteVolume
 </code></pre>
 <p>按路径筛选，输出可直接进入阅读的源码目录。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-no-git</code></td><td>Disable use of git for obtaining information</td></tr><tr><td><code>-app</code></td><td>Search applications/solvers/ applications/utilities/</td></tr><tr><td><code>-src</code></td><td>Search src/</td></tr><tr><td><code>-no-git</code></td><td>Disable use of git for obtaining information</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: foamGrepLibTargets
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamGrepLibTargets
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-usage: foamGrepLibTargets
-  -no-git       Disable use of git for obtaining information
-  -app          Search applications/solvers/ applications/utilities/
-  -src          Search src/
-  -no-git       Disable use of git for obtaining information
-  -help         Print the usage
-
-List library targets (contains LIB_LIBS). Uses git when possible</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamGrepLibTargets">源码与说明</a> · <a href="/assets/command-help/foamgreplibtargets.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-no-git</code></td><td>直接扫描文件获取信息，跳过 Git 查询。</td></tr><tr><td><code>-app</code></td><td>搜索 applications/solvers/ 和 applications/utilities/。</td></tr><tr><td><code>-src</code></td><td>搜索 src/ 目录。</td></tr><tr><td><code>-no-git</code></td><td>直接扫描文件获取信息，跳过 Git 查询。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamGrepLibTargets">源码与说明</a> · <a href="/assets/command-help/foamgreplibtargets.txt">帮助文本</a></p>

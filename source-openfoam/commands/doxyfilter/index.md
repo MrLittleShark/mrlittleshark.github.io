@@ -27,10 +27,4 @@ cms_slug: "command-doxyfilter"
 <pre><code class="language-bash">printf 'INPUT_FILTER = "%s/bin/tools/doxyFilter"\n' "$WM_PROJECT_DIR" &gt; Doxyfile.filter
 </code></pre>
 <p>生成供 Doxyfile 合并使用的设置行；完整 Doxyfile 仍需指定 INPUT、输出目录等。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: doxyFilter
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/doxyFilter
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-pass-through filter for doxygen Special treatment for applications/{solvers,utilities}/*.C - only keep the first comment block of the C source file use @cond / @endcond to suppress documenting all classes/variables Special treatment for applications/{solvers,utilities}/*.H - use @cond / @endcond to suppress documenting all classes/variables</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/doxyFilter">源码与说明</a> · <a href="/assets/command-help/doxyfilter.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/doxyFilter">源码与说明</a> · <a href="/assets/command-help/doxyfilter.txt">帮助文本</a></p>

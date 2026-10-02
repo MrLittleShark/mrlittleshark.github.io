@@ -7,6 +7,7 @@ from pathlib import Path
 import html, json, re, subprocess, sys
 from bs4 import BeautifulSoup
 from wolf_media import figure_html
+from command_options import parse_options, parameter_sections
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).parent
@@ -58,14 +59,7 @@ def help_text(item):
     match = re.search(r'(?m)^Usage:', raw)
     return raw[match.start():] if match else raw
 def options(raw):
-    entries = []
-    for line in raw.splitlines():
-        match = re.match(r'^\s{1,8}(-[\w-]+[^\n]*?)\s{2,}(\S.*)$', line)
-        if match:
-            entries.append([match.group(1).strip(), match.group(2).strip()])
-        elif entries and re.match(r'^\s{12,}\S', line):
-            entries[-1][1] += ' '+line.strip()
-    return entries
+    return parse_options(raw)
 
 def command_body(item, old, guide):
     name = item['name']; raw = help_text(item)
@@ -80,15 +74,8 @@ def command_body(item, old, guide):
         if item.get('scope')=='core-solver':
             body += '<h2>运行计算</h2>'+code(name+' > log.'+name+' 2>&1\ntail -n 20 log.'+name, 'bash')
             body += p('在已经准备好网格、物性和初始场的算例目录运行。第一行把终端输出保存到日志，计算结束后，第二行显示日志最后 20 行。计算结果按 controlDict 的设置写入时间目录。')
-    opts = []
-    for flag, desc in options(raw):
-        key = flag.split()[0]
-        if key in NOISY: continue
-        opts.append([flag, OPTION_NOTES.get(key, desc)])
-    if opts:
-        parameter_table=table(['参数','作用'], opts[:14])
-        parameter_table=re.sub(r'<tr><td>([\s\S]*?)</td>', r'<tr><td><code>\1</code></td>', parameter_table)
-        body += '<h2>常用参数</h2>'+parameter_table
+    common, more = parameter_sections(raw)
+    body += common
     if item.get('configs'):
         body += '<h2>相关配置</h2><p>'+' · '.join(a(x['url'],x['name']) for x in item['configs'])+'</p>'
     old_soup = BeautifulSoup(old, 'html.parser')
@@ -102,8 +89,7 @@ def command_body(item, old, guide):
             rel = cases[0][0].split('/tutorials/',1)[1]
             body += code('mkdir -p "$FOAM_RUN"\ncd "$FOAM_RUN"\ncp -r "$FOAM_TUTORIALS/'+rel+'" '+name+'-study\ncd '+name+'-study\nls', 'bash')
             body += p('使用一个新的目录名。算例中的 Allrun 列出网格、初始化和求解顺序；含多级网格或跨目录数据的教程，需要同时保留相邻文件。')
-    if raw:
-        body += '<details><summary>完整命令帮助</summary>'+code(raw,'text')+'</details>'
+    body += more
     body += '<h2>参考</h2><p>'+a(item['source'],'源码与说明')
     if item.get('helpUrl'): body += ' · '+a(item['helpUrl'],'帮助文本')
     body += '</p>'

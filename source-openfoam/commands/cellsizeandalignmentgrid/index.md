@@ -30,11 +30,4 @@ cellSizeAndAlignmentGrid
 foamyHexMesh
 </code></pre>
 <p>先查看导出的控制场覆盖了几何细节，再用同一字典生成体网格；前者输出控制数据，后者生成实际单元。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 command reference
-Command: cellSizeAndAlignmentGrid
-Evidence: not-installed
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/foamyMesh/cellSizeAndAlignmentGrid/cellSizeAndAlignmentGrid.C
-
-未取得运行时帮助。
-
-源码路径：applications/utilities/mesh/generation/foamyMesh/cellSizeAndAlignmentGrid/cellSizeAndAlignmentGrid.C</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/foamyMesh/cellSizeAndAlignmentGrid/cellSizeAndAlignmentGrid.C">源码与说明</a> · <a href="/assets/command-help/cellsizeandalignmentgrid.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/foamyMesh/cellSizeAndAlignmentGrid/cellSizeAndAlignmentGrid.C">源码与说明</a> · <a href="/assets/command-help/cellsizeandalignmentgrid.txt">帮助文本</a></p>

@@ -28,23 +28,4 @@ cms_slug: "command-foamcreatemoduleinclude"
 "$WM_PROJECT_DIR/bin/tools/foamCreateModuleInclude" -tmpdir="$PWD/module-tmp" -debug -output=ModuleDebug.tcl "$WM_PROJECT_DIR"
 </code></pre>
 <p>使用独立临时目录，-debug 保留中间文件供比较环境变化。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-output=file</code></td><td>The output name (default: ModuleInclude.tcl)</td></tr><tr><td><code>-prefs=file</code></td><td>A preferences file (OpenFOAM) to load.</td></tr><tr><td><code>-preload=file</code></td><td>Specify a shell file to preload. Can use multiple times</td></tr><tr><td><code>-tmpdir=file</code></td><td>The tmp directory to use.</td></tr><tr><td><code>-aliases</code></td><td>Output aliases (use with caution)</td></tr><tr><td><code>-paraview</code></td><td>Retain paraview elements</td></tr><tr><td><code>-sh | -tcl</code></td><td>Output flavour (default: -tcl)</td></tr><tr><td><code>-debug</code></td><td>Retain intermediate files for debugging purposes</td></tr><tr><td><code>-reduce=NUM</code></td><td>Environment reduction level (experimental)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: foamCreateModuleInclude
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamCreateModuleInclude
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-usage: foamCreateModuleInclude [OPTION] projectDir
-options:
-  -output=file      The output name (default: ModuleInclude.tcl)
-  -prefs=file       A preferences file (OpenFOAM) to load.
-  -preload=file     Specify a shell file to preload. Can use multiple times
-  -tmpdir=file      The tmp directory to use.
-  -aliases          Output aliases (use with caution)
-  -paraview         Retain paraview elements
-  -sh | -tcl        Output flavour (default: -tcl)
-  -debug            Retain intermediate files for debugging purposes
-  -reduce=NUM       Environment reduction level (experimental)
-  -help             Print the usage
-
-Create module settings for inclusion in a top-level openfoam module.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamCreateModuleInclude">源码与说明</a> · <a href="/assets/command-help/foamcreatemoduleinclude.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-output=file</code></td><td>指定输出文件名，默认为 ModuleInclude.tcl。</td></tr><tr><td><code>-prefs=file</code></td><td>指定要加载的 OpenFOAM 偏好配置文件。</td></tr><tr><td><code>-preload=file</code></td><td>指定预先加载的 shell 文件；可重复使用。</td></tr><tr><td><code>-tmpdir=file</code></td><td>指定临时文件目录。</td></tr><tr><td><code>-aliases</code></td><td>同时输出命令别名；加载后会影响同名命令的调用。</td></tr><tr><td><code>-paraview</code></td><td>保留 ParaView 相关配置。</td></tr><tr><td><code>-sh | -tcl</code></td><td>指定输出格式为 sh 或 Tcl，默认为 Tcl。</td></tr><tr><td><code>-debug</code></td><td>保留中间文件，便于调试。</td></tr><tr><td><code>-reduce=NUM</code></td><td>设置环境变量精简级别，属于实验功能。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamCreateModuleInclude">源码与说明</a> · <a href="/assets/command-help/foamcreatemoduleinclude.txt">帮助文本</a></p>

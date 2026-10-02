@@ -31,18 +31,4 @@ cms_slug: "command-foamjob"
 <pre><code class="language-bash">foamJob -parallel -case caseA icoFoam
 </code></pre>
 <p>通过 MPI 启动，读取算例分区设置，结果写入相应子域。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-screen</code></td><td>also send output to screen</td></tr><tr><td><code>-append</code></td><td>append to existing log file instead of overwriting it</td></tr><tr><td><code>-log=FILE</code></td><td>specify the log file</td></tr><tr><td><code>-log-app</code></td><td>Use log.{appName} for the log file</td></tr><tr><td><code>-no-check</code></td><td>run without fewer checks (eg, processor dirs etc)</td></tr><tr><td><code>-no-log</code></td><td>run without log file</td></tr><tr><td><code>-wait</code></td><td>wait for execution to complete (when not using -screen)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamJob [OPTION] &lt;application&gt; ...
-options:
-  -case &lt;dir&gt;       specify alternative case directory, default is the cwd
-  -parallel         run in parallel (with mpirun)
-  -screen           also send output to screen
-  -append           append to existing log file instead of overwriting it
-  -log=FILE         specify the log file
-  -log-app          Use log.{appName} for the log file
-  -no-check         run without fewer checks (eg, processor dirs etc)
-  -no-log           run without log file
-  -wait             wait for execution to complete (when not using -screen)
-  -help             print the usage
-
-Run an OpenFOAM job in background, redirecting output to a &#x27;log&#x27; file
-in the case directory</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamJob">源码与说明</a> · <a href="/assets/command-help/foamjob.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；默认使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>通过 mpirun 并行运行。</td></tr><tr><td><code>-screen</code></td><td>同时在终端显示输出。</td></tr><tr><td><code>-append</code></td><td>将输出追加到已有日志末尾。</td></tr><tr><td><code>-log=FILE</code></td><td>指定日志文件。</td></tr><tr><td><code>-log-app</code></td><td>使用 log.{程序名} 作为日志文件名。</td></tr><tr><td><code>-no-check</code></td><td>跳过部分启动检查，例如 processor 目录检查。</td></tr><tr><td><code>-no-log</code></td><td>直接运行，省略日志文件。</td></tr><tr><td><code>-wait</code></td><td>等待程序运行结束；适用于未使用 -screen 的情况。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamJob">源码与说明</a> · <a href="/assets/command-help/foamjob.txt">帮助文本</a></p>

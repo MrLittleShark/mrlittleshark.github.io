@@ -35,7 +35,4 @@ wmake dep
 wdep myUtility.C
 </code></pre>
 <p>先创建依赖信息，再定位文件，适用于首次构建前检查。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wdep &lt;file&gt;
-
-Find the dep-file corresponding to &lt;file&gt; in the current directory
-and print the path.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wdep">源码与说明</a> · <a href="/assets/command-help/wdep.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wdep">源码与说明</a> · <a href="/assets/command-help/wdep.txt">帮助文本</a></p>

@@ -40,10 +40,4 @@ FOAM_USER_LIBBIN="$demoLib" "$WM_PROJECT_DIR/wmake/scripts/wmakeWindowsDlOpenLib
 "$WM_PROJECT_DIR/wmake/scripts/wmakeWindowsDlOpenLibs" options.missing
 </code></pre>
 <p>找不到对应 DLL 时不输出加载宏，便于核对打包遗漏。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: wmakeWindowsDlOpenLibs
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmakeWindowsDlOpenLibs
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-Extract library dependencies from the EXE_LIBS entry for Windows applications and emit as FOAM_DLOPEN_LIBS for use with setRootCase.H Forcibly dlOpen&#x27;ing these libraries ensures that they are truly loaded for the windows application binary. An alternative means is to define external entry points into particular libraries and linking with &#x27;-u symbol&#x27;, which would possibly have a lower overhead but is more code-intrusive and somewhat ad hoc.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmakeWindowsDlOpenLibs">源码与说明</a> · <a href="/assets/command-help/wmakewindowsdlopenlibs.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmakeWindowsDlOpenLibs">源码与说明</a> · <a href="/assets/command-help/wmakewindowsdlopenlibs.txt">帮助文本</a></p>

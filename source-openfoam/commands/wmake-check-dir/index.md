@@ -32,14 +32,4 @@ ln -s real-dir linked-dir
 ./Allwmake -j 2
 </code></pre>
 <p>用于项目根目录的构建脚本；目录不匹配时在编译前退出。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-q | -quiet</code></td><td>suppress all normal output</td></tr><tr><td><code>-h | -help</code></td><td>display short help and exit</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wmake-check-dir [OPTION] dir [dir2]
-
-options:
-  -q | -quiet       suppress all normal output
-  -h | -help        display short help and exit
-
-Check that two directories are identical after resolving the absolute paths.
-If only a single directory is specified, check against the working directory.
-
-Exit status 0 when directories are identical
-Exit status 1 on error</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmake-check-dir">源码与说明</a> · <a href="/assets/command-help/wmake-check-dir.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-q | -quiet</code></td><td>静默运行，省略常规输出。</td></tr><tr><td><code>-h | -help</code></td><td>显示简要帮助并退出。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmake-check-dir">源码与说明</a> · <a href="/assets/command-help/wmake-check-dir.txt">帮助文本</a></p>

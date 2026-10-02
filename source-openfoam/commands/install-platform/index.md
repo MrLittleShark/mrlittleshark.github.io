@@ -27,37 +27,4 @@ cms_slug: "command-install-platform"
 <pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/install-platform" -dry-run -bindir="$HOME/package/bin" -libdir="$HOME/package/lib" -mpi-libdir="$HOME/package/lib/mpi"
 </code></pre>
 <p>分别指定三类目标目录，便于制作其他布局的发行包。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-source=SOURCE</code></td><td>Source directory [\$WM_PROJECT_DIR ${WM_PROJECT_DIR:-&#x27;&#x27;}]</td></tr><tr><td><code>-platform=PLATFORM</code></td><td>OpenFOAM platform name [\$WM_OPTIONS ${WM_OPTIONS:-&#x27;&#x27;}]</td></tr><tr><td><code>-foam-mpi=FOAM_MPI</code></td><td>OpenFOAM mpi name [\$FOAM_MPI ${FOAM_MPI:-&#x27;&#x27;}]</td></tr><tr><td><code>-prefix=PREFIX</code></td><td>Top-level installation directory in PREFIX [&#x27;&#x27;]</td></tr><tr><td><code>-exec-prefix=EPREFIX</code></td><td>Architecture-dependent in EPREFIX [PREFIX/platforms/PLATFORM]</td></tr><tr><td><code>-bindir=DIR</code></td><td>bin directory [EPREFIX/bin]</td></tr><tr><td><code>-libdir=DIR</code></td><td>lib directory [EPREFIX/lib]</td></tr><tr><td><code>-mpi-libdir=DIR</code></td><td>mpi libdir [&lt;libdir&gt;/FOAM_MPI]</td></tr><tr><td><code>-no-bin</code></td><td>Do not install bin directory</td></tr><tr><td><code>-no-lib</code></td><td>Do not install lib directory</td></tr><tr><td><code>-no-mpi</code></td><td>Do not install mpi lib directory</td></tr><tr><td><code>-mpi-only</code></td><td>Only install mpi lib directory</td></tr><tr><td><code>-mpi-mkdir</code></td><td>Create foam-mpi directory within libdir</td></tr><tr><td><code>-dry-run, -n</code></td><td>Do not perform any operations</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: install-platform [OPTION]
-
-input options:
-  -source=SOURCE          Source directory
-                          [\$WM_PROJECT_DIR ${WM_PROJECT_DIR:-&#x27;&#x27;}]
-  -platform=PLATFORM      OpenFOAM platform name [\$WM_OPTIONS ${WM_OPTIONS:-&#x27;&#x27;}]
-  -foam-mpi=FOAM_MPI      OpenFOAM mpi name [\$FOAM_MPI ${FOAM_MPI:-&#x27;&#x27;}]
-
-target options:
-  -prefix=PREFIX          Top-level installation directory in PREFIX [&#x27;&#x27;]
-  -exec-prefix=EPREFIX    Architecture-dependent in EPREFIX
-                          [PREFIX/platforms/PLATFORM]
-  -bindir=DIR             bin directory [EPREFIX/bin]
-  -libdir=DIR             lib directory [EPREFIX/lib]
-  -mpi-libdir=DIR         mpi libdir [&lt;libdir&gt;/FOAM_MPI]
-
-tuning options:
-  -no-bin                 Do not install bin directory
-  -no-lib                 Do not install lib directory
-  -no-mpi                 Do not install mpi lib directory
-  -mpi-only               Only install mpi lib directory
-  -mpi-mkdir              Create foam-mpi directory within libdir
-
-general options:
-  -dry-run, -n            Do not perform any operations
-  -force, -f              Ignored
-  -verbose, -v            Additional verbosity
-  -help                   Print the help and exit
-
-
-Simple installer to copy OpenFOAM binary bin/, lib/ (platforms) directories.
-
-Example,
-    install-platform -prefix=/opt/openfoamVER</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/install-platform">源码与说明</a> · <a href="/assets/command-help/install-platform.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-source=SOURCE</code></td><td>指定源码目录，默认使用 $WM_PROJECT_DIR。</td></tr><tr><td><code>-platform=PLATFORM</code></td><td>指定 OpenFOAM 构建平台名称，默认使用 $WM_OPTIONS。</td></tr><tr><td><code>-foam-mpi=FOAM_MPI</code></td><td>指定 OpenFOAM MPI 名称，默认使用 $FOAM_MPI。</td></tr><tr><td><code>-prefix=PREFIX</code></td><td>指定顶层安装前缀，默认为空。</td></tr><tr><td><code>-exec-prefix=EPREFIX</code></td><td>指定与架构相关的安装目录，默认为 PREFIX/platforms/PLATFORM。</td></tr><tr><td><code>-bindir=DIR</code></td><td>指定可执行文件目录，默认为 EPREFIX/bin。</td></tr><tr><td><code>-libdir=DIR</code></td><td>指定库目录，默认为 EPREFIX/lib。</td></tr><tr><td><code>-mpi-libdir=DIR</code></td><td>指定 MPI 库目录，默认为库目录下的 FOAM_MPI 子目录。</td></tr><tr><td><code>-no-bin</code></td><td>安装时排除 bin 目录。</td></tr><tr><td><code>-no-lib</code></td><td>安装时排除 lib 目录。</td></tr><tr><td><code>-no-mpi</code></td><td>安装时排除 MPI 库目录。</td></tr><tr><td><code>-mpi-only</code></td><td>仅安装 MPI 库目录。</td></tr><tr><td><code>-mpi-mkdir</code></td><td>在库目录中创建 foam-mpi 子目录。</td></tr><tr><td><code>-dry-run, -n</code></td><td>仅预览操作。</td></tr></tbody></table><details class="command-more-options"><summary>更多参数（3 项）</summary><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-force, -f</code></td><td>为兼容性保留的选项，当前会被忽略。</td></tr><tr><td><code>-verbose, -v</code></td><td>显示更详细的输出。</td></tr><tr><td><code>-help</code></td><td>显示帮助并退出。</td></tr></tbody></table></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/install-platform">源码与说明</a> · <a href="/assets/command-help/install-platform.txt">帮助文本</a></p>

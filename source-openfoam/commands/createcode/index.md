@@ -31,19 +31,4 @@ diff -u scanner.before.cc scanner-demo/wmkdepend.cc
 WMAKE_BIN="$PWD/scanner-tools-bin" bash scanner-demo/Allmake
 </code></pre>
 <p>刷新扫描器后构建 wmake 工具，输出位于独立个人目录。</p>
-<details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: createCode
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/src/createCode
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-#!/bin/sh
-cd &quot;${0%/*}&quot; || exit                                # Run from this directory
-#------------------------------------------------------------------------------
-# Manually create ragel scanner
-
-&quot;${WM_PROJECT_DIR:?}/wmake/scripts/makeParser&quot; \
-    -scanner=wmkdepend.rl \
-    &quot;$@&quot;
-
-#------------------------------------------------------------------------------</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/src/createCode">源码与说明</a> · <a href="/assets/command-help/createcode.txt">帮助文本</a></p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/src/createCode">源码与说明</a> · <a href="/assets/command-help/createcode.txt">帮助文本</a></p>

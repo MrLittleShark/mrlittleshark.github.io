@@ -27,43 +27,4 @@ cms_slug: "command-install-dirs"
 <pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/install-dirs" -common -devel -prefix="$HOME/foam-package-new"
 </code></pre>
 <p>确认新目录用途后省略 dry-run，实际复制公共和开发文件。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-source=SOURCE</code></td><td>Source directory [\$WM_PROJECT_DIR ${WM_PROJECT_DIR:-&#x27;&#x27;}]</td></tr><tr><td><code>-platform=PLATFORM</code></td><td>OpenFOAM platform name [\$WM_OPTIONS ${WM_OPTIONS:-&#x27;&#x27;}]</td></tr><tr><td><code>-foam-mpi=FOAM_MPI</code></td><td>OpenFOAM mpi name [\$FOAM_MPI ${FOAM_MPI:-&#x27;&#x27;}]</td></tr><tr><td><code>-prefix=PREFIX</code></td><td>Top-level installation directory in PREFIX [&#x27;&#x27;]</td></tr><tr><td><code>-no-app, -no-apps</code></td><td>do not install (applications)</td></tr><tr><td><code>-no-src</code></td><td>do not install (src)</td></tr><tr><td><code>-no-wmake</code></td><td>do not install (wmake)</td></tr><tr><td><code>-core</code></td><td>Select: -common -devel</td></tr><tr><td><code>-default</code></td><td>Select: -common -devel -doc -tut</td></tr><tr><td><code>-collate</code></td><td>Collate modules (doc, tutorials)</td></tr><tr><td><code>-collate-doc</code></td><td>Collate modules (doc) into doc/modules</td></tr><tr><td><code>-collate-tut</code></td><td>Collate modules (tutorials) into tutorials/modules</td></tr><tr><td><code>-dry-run, -n</code></td><td>Do not perform any operations</td></tr><tr><td><code>-force, -f</code></td><td>Ignored</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: install-dirs [OPTION]
-
-input options:
-  -source=SOURCE          Source directory
-                          [\$WM_PROJECT_DIR ${WM_PROJECT_DIR:-&#x27;&#x27;}]
-  -platform=PLATFORM      OpenFOAM platform name [\$WM_OPTIONS ${WM_OPTIONS:-&#x27;&#x27;}]
-  -foam-mpi=FOAM_MPI      OpenFOAM mpi name [\$FOAM_MPI ${FOAM_MPI:-&#x27;&#x27;}]
-
-target options:
-  -prefix=PREFIX          Top-level installation directory in PREFIX [&#x27;&#x27;]
-
-selections:
-  -[no-]common            [do not] install (bin, etc, META-INFO)
-  -[no-]devel             [do not] install (applications, src, wmake)
-  -[no-]doc               [do not] install (doc)
-  -[no-]tut               [do not] install (tutorials)
-  -no-app, -no-apps       do not install (applications)
-  -no-src                 do not install (src)
-  -no-wmake               do not install (wmake)
-
-bundled selections:
-  -core                   Select: -common -devel
-  -default                Select: -common -devel -doc -tut
-
-tuning options:
-  -collate                Collate modules (doc, tutorials)
-  -collate-doc            Collate modules (doc) into doc/modules
-  -collate-tut            Collate modules (tutorials) into tutorials/modules
-
-general options:
-  -dry-run, -n            Do not perform any operations
-  -force, -f              Ignored
-  -verbose, -v            Additional verbosity
-  -help                   Print the help and exit
-
-
-Simple installer to copy OpenFOAM non-binary directories.
-
-Example,
-    install-dirs -prefix=/opt/openfoamVER</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/install-dirs">源码与说明</a> · <a href="/assets/command-help/install-dirs.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-source=SOURCE</code></td><td>指定源码目录，默认使用 $WM_PROJECT_DIR。</td></tr><tr><td><code>-platform=PLATFORM</code></td><td>指定 OpenFOAM 构建平台名称，默认使用 $WM_OPTIONS。</td></tr><tr><td><code>-foam-mpi=FOAM_MPI</code></td><td>指定 OpenFOAM MPI 名称，默认使用 $FOAM_MPI。</td></tr><tr><td><code>-prefix=PREFIX</code></td><td>指定顶层安装前缀，默认为空。</td></tr><tr><td><code>-no-app, -no-apps</code></td><td>安装时排除 applications。</td></tr><tr><td><code>-no-src</code></td><td>安装时排除 src。</td></tr><tr><td><code>-no-wmake</code></td><td>安装时排除 wmake。</td></tr><tr><td><code>-core</code></td><td>同时选择 -common 和 -devel。</td></tr><tr><td><code>-default</code></td><td>同时选择 -common、-devel、-doc 和 -tut。</td></tr><tr><td><code>-collate</code></td><td>汇总扩展模块的文档与教程。</td></tr><tr><td><code>-collate-doc</code></td><td>将扩展模块的文档汇总到 doc/modules。</td></tr><tr><td><code>-collate-tut</code></td><td>将扩展模块的教程汇总到 tutorials/modules。</td></tr><tr><td><code>-dry-run, -n</code></td><td>仅预览操作。</td></tr><tr><td><code>-force, -f</code></td><td>为兼容性保留的选项，当前会被忽略。</td></tr></tbody></table><details class="command-more-options"><summary>更多参数（2 项）</summary><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-verbose, -v</code></td><td>显示更详细的输出。</td></tr><tr><td><code>-help</code></td><td>显示帮助并退出。</td></tr></tbody></table></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/install-dirs">源码与说明</a> · <a href="/assets/command-help/install-dirs.txt">帮助文本</a></p>

@@ -28,42 +28,4 @@ cms_slug: "command-ensighttofoam"
 checkMesh -case ../ensightCase -constant -allTopology
 </code></pre>
 <p>在独立案例内同时处理单位和小接缝。通过连接检查确认各部分构成预期流体域，再继续设置边界条件。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-keepHandedness</code></td><td>Do not automatically flip inverted cells (default is to do a geometric test)</td></tr><tr><td><code>-scale &lt;factor&gt;</code></td><td>Geometry scaling factor - default is 1</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: ensightToFoam [OPTIONS] &lt;.geo file&gt;
-Arguments:
-  &lt;.geo file&gt;       The file containing the geometry
-Options:
-  -case &lt;dir&gt;       Case directory (instead of current directory)
-  -debug-switch &lt;name=val&gt;
-                    Set named DebugSwitch (default value: 1).
-                    [Can be used multiple times]
-  -fileHandler &lt;handler&gt;
-                    Override the file handler type
-  -info-switch &lt;name=val&gt;
-                    Set named InfoSwitch (default value: 1).
-                    [Can be used multiple times]
-  -keepHandedness   Do not automatically flip inverted cells (default is to do
-                    a geometric test)
-  -lib &lt;name&gt;       Additional library or library list to load.
-                    [Can be used multiple times]
-  -mergeTol &lt;factor&gt;
-                    Merge tolerance as a fraction of bounding box - 0 to
-                    disable merging
-  -no-libs          Disable use of the controlDict &#x27;libs&#x27; entry
-  -noFunctionObjects
-                    Do not execute function objects
-  -opt-switch &lt;name=val&gt;
-                    Set named OptimisationSwitch (default value: 1).
-                    [Can be used multiple times]
-  -scale &lt;factor&gt;   Geometry scaling factor - default is 1
-  -doc              Display documentation in browser
-  -doc-source       Display source code in browser
-  -help             Display short help and exit
-  -help-man         Display full help (manpage format) and exit
-  -help-notes       Display help notes (description) and exit
-  -help-full        Display full help and exit
-
-Convert Ensight mesh to OpenFOAM
-
-Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
-Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/ensightToFoam/ensightMeshReader.C">源码与说明</a> · <a href="/assets/command-help/ensighttofoam.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-keepHandedness</code></td><td>保留反向单元的原始朝向；默认会进行几何检查并翻转这类单元。</td></tr><tr><td><code>-mergeTol &lt;factor&gt;</code></td><td>设置点合并容差，以包围盒尺寸的比例表示；设为 0 时保留各点。</td></tr><tr><td><code>-noFunctionObjects</code></td><td>跳过函数对象的执行。</td></tr><tr><td><code>-scale &lt;factor&gt;</code></td><td>设置几何缩放系数，默认为 1。</td></tr><tr><td><code>-help</code></td><td>显示简要帮助并退出。</td></tr><tr><td><code>-help-full</code></td><td>显示完整帮助并退出。</td></tr></tbody></table><details class="command-more-options"><summary>更多参数（10 项）</summary><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-debug-switch &lt;name=val&gt;</code></td><td>设置指定的 DebugSwitch 调试开关，默认值为 1；可重复使用。</td></tr><tr><td><code>-fileHandler &lt;handler&gt;</code></td><td>指定文件读写处理器类型。</td></tr><tr><td><code>-info-switch &lt;name=val&gt;</code></td><td>设置指定的 InfoSwitch 信息输出开关，默认值为 1；可重复使用。</td></tr><tr><td><code>-lib &lt;name&gt;</code></td><td>额外加载一个或一组共享库；可重复使用。</td></tr><tr><td><code>-no-libs</code></td><td>跳过 controlDict 中 libs 条目指定的库。</td></tr><tr><td><code>-opt-switch &lt;name=val&gt;</code></td><td>设置指定的 OptimisationSwitch 优化开关，默认值为 1；可重复使用。</td></tr><tr><td><code>-doc</code></td><td>在浏览器中打开文档。</td></tr><tr><td><code>-doc-source</code></td><td>在浏览器中打开源码。</td></tr><tr><td><code>-help-man</code></td><td>显示完整帮助，以 man 手册格式输出，然后退出。</td></tr><tr><td><code>-help-notes</code></td><td>显示程序功能说明并退出。</td></tr></tbody></table></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/ensightToFoam/ensightMeshReader.C">源码与说明</a> · <a href="/assets/command-help/ensighttofoam.txt">帮助文本</a></p>

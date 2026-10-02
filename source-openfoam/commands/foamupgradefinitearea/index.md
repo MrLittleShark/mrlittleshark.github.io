@@ -28,18 +28,4 @@ cms_slug: "command-foamupgradefinitearea"
 git -C caseA diff --stat
 </code></pre>
 <p>算例须在 Git 工作树中，-git 使用 git mv，随后查看变更范围。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case=DIR</code></td><td>Specify starting directory, default is cwd</td></tr><tr><td><code>-dry-run | -n</code></td><td>Test without performing actions</td></tr><tr><td><code>-verbose | -v</code></td><td>Additional verbosity</td></tr><tr><td><code>-force</code></td><td>(currently ignored)</td></tr><tr><td><code>-link-back</code></td><td>Link back from new finite-area/ to old locations</td></tr><tr><td><code>-no-mesh</code></td><td>Do not move system/faMeshDefinition</td></tr><tr><td><code>-git</code></td><td>Use &#x27;git mv&#x27; when making changes</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamUpgradeFiniteArea [OPTION]
-options:
-  -case=DIR         Specify starting directory, default is cwd
-  -dry-run | -n     Test without performing actions
-  -verbose | -v     Additional verbosity
-  -force            (currently ignored)
-  -link-back        Link back from new finite-area/ to old locations
-  -no-mesh          Do not move system/faMeshDefinition
-  -git              Use &#x27;git mv&#x27; when making changes
-  -help             Print help and exit
-
-Relocate finite-area files to new sub-directory locations
-
-Equivalent options:
-  | -case=DIR  | -case DIR |</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamUpgradeFiniteArea">源码与说明</a> · <a href="/assets/command-help/foamupgradefinitearea.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case=DIR</code></td><td>指定起始目录，默认使用当前目录。</td></tr><tr><td><code>-dry-run | -n</code></td><td>仅预览操作。</td></tr><tr><td><code>-verbose | -v</code></td><td>显示更详细的输出。</td></tr><tr><td><code>-force</code></td><td>当前版本会忽略此选项。</td></tr><tr><td><code>-link-back</code></td><td>从新的 finite-area/ 目录向原位置建立回链。</td></tr><tr><td><code>-no-mesh</code></td><td>保留 system/faMeshDefinition 的原位置。</td></tr><tr><td><code>-git</code></td><td>使用 git mv 移动文件。</td></tr><tr><td><code>-help</code></td><td>显示帮助并退出。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamUpgradeFiniteArea">源码与说明</a> · <a href="/assets/command-help/foamupgradefinitearea.txt">帮助文本</a></p>

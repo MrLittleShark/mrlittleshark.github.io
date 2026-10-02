@@ -30,22 +30,4 @@ foamEndJob -case caseA "$solverPid"
 <pre><code class="language-bash">foamEndJob -clear -case caseA
 </code></pre>
 <p>清理该算例已有的 foamEndJob 等待状态；用于取消此前请求，字典恢复行为由脚本备份状态决定。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-clear</code></td><td>clear any outstanding foamEndJob for the case</td></tr><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-now</code></td><td>stop at next time step</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamEndJob [OPTION] &lt;pid&gt;
-Usage: foamEndJob [OPTION] -c
-
-options:
-  -clear            clear any outstanding foamEndJob for the case
-  -case &lt;dir&gt;       specify alternative case directory, default is the cwd
-  -now              stop at next time step
-  -help             print the usage
-
-Tries to end running OpenFOAM application at next write (or optionally
-at the next time step). It needs runTimeModifiable switched on in the
-controlDict. It changes stopAt in the controlDict and waits for the
-job to finish. Restores original controlDict if
-
-    - job has finished
-    - controlDict gets modified (by user)
-    - foamEndJob gets killed.
-
-The -clear option clears any outstanding foamEndJob for the case.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamEndJob">源码与说明</a> · <a href="/assets/command-help/foamendjob.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-clear</code></td><td>清除该算例尚未执行的 foamEndJob 停止请求。</td></tr><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；默认使用当前目录。</td></tr><tr><td><code>-now</code></td><td>在下一个时间步停止计算。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamEndJob">源码与说明</a> · <a href="/assets/command-help/foamendjob.txt">帮助文本</a></p>

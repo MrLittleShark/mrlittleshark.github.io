@@ -27,26 +27,4 @@ cms_slug: "command-createmingwruntime"
 <pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/createMingwRuntime" -no-compress -output=packages -name=foam-uncompressed
 </code></pre>
 <p>跳过压缩步骤，适合随后由其他打包流程压缩。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-name=NAME</code></td><td>Stem for tar-file (default: auto)</td></tr><tr><td><code>-output=DIR</code></td><td>Output directory (default: &quot;.&quot;)</td></tr><tr><td><code>-prefix=NAME</code></td><td>Prefix directory within tar-file (default: auto)</td></tr><tr><td><code>-no-tutorials</code></td><td>Exclude tutorials</td></tr><tr><td><code>-no-patch</code></td><td>Ignore &#x27;_patch&#x27; number for output tar-file</td></tr><tr><td><code>-no-prefix</code></td><td>Do not prefix subdirectory</td></tr><tr><td><code>-no-compress</code></td><td>Disable compression</td></tr><tr><td><code>-compress=TYPE</code></td><td>Use specified compression type</td></tr><tr><td><code>-sep=SEP</code></td><td>Change version/patch separator from &#x27;_&#x27; to SEP</td></tr><tr><td><code>-with-api=NUM</code></td><td>Specify alternative api value for packaging</td></tr><tr><td><code>-with-testbin</code></td><td>Include any Test-* files from user appbin (expert option)</td></tr><tr><td><code>-tgz, -xz, -zip</code></td><td>Alias for -compress=tgz, -compress=xz, -compress=zip</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
-Command: createMingwRuntime
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/createMingwRuntime
-
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-usage: createMingwRuntime [OPTION]
-options:
-  -name=NAME        Stem for tar-file (default: auto)
-  -output=DIR       Output directory (default: &quot;.&quot;)
-  -prefix=NAME      Prefix directory within tar-file (default: auto)
-  -no-tutorials     Exclude tutorials
-  -no-patch         Ignore &#x27;_patch&#x27; number for output tar-file
-  -no-prefix        Do not prefix subdirectory
-  -no-compress      Disable compression
-  -compress=TYPE    Use specified compression type
-  -sep=SEP          Change version/patch separator from &#x27;_&#x27; to SEP
-  -with-api=NUM     Specify alternative api value for packaging
-  -with-testbin     Include any Test-* files from user appbin (expert option)
-  -tgz, -xz, -zip   Alias for -compress=tgz, -compress=xz, -compress=zip
-  -help             Print help
-
-Pack OpenFOAM cross-compiled linux64Mingw -&gt; win64Mingw (run-time)</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/createMingwRuntime">源码与说明</a> · <a href="/assets/command-help/createmingwruntime.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-name=NAME</code></td><td>指定归档文件的基本名称，默认自动生成。</td></tr><tr><td><code>-output=DIR</code></td><td>指定输出目录，默认为当前目录。</td></tr><tr><td><code>-prefix=NAME</code></td><td>指定归档内部的顶层目录名，默认自动生成。</td></tr><tr><td><code>-no-tutorials</code></td><td>打包时排除教程。</td></tr><tr><td><code>-no-patch</code></td><td>输出归档名称中省略 _patch 补丁编号。</td></tr><tr><td><code>-no-prefix</code></td><td>打包时省略顶层子目录前缀。</td></tr><tr><td><code>-no-compress</code></td><td>生成未压缩归档。</td></tr><tr><td><code>-compress=TYPE</code></td><td>指定压缩格式。</td></tr><tr><td><code>-sep=SEP</code></td><td>将版本号与补丁号之间的分隔符从下划线改为指定字符。</td></tr><tr><td><code>-with-api=NUM</code></td><td>指定打包使用的 API 版本值。</td></tr><tr><td><code>-with-testbin</code></td><td>同时打包用户应用目录中的 Test-* 程序，适用于开发测试。</td></tr><tr><td><code>-tgz, -xz, -zip</code></td><td>分别等同于 -compress=tgz、-compress=xz、-compress=zip。</td></tr><tr><td><code>-help</code></td><td>显示帮助。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/createMingwRuntime">源码与说明</a> · <a href="/assets/command-help/createmingwruntime.txt">帮助文本</a></p>

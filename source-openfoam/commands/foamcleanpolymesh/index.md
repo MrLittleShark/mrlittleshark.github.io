@@ -29,13 +29,4 @@ foamCleanPolyMesh -case mesh-reset-copy
 foamCleanPolyMesh -region fluid -case region-reset-copy
 </code></pre>
 <p>只清理选定区域，其他区域网格保留。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-allRegions</code></td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-dry-run | -n</code></td><td>report actions but do not remove</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamCleanPolyMesh [OPTION]
-options:
-  -case &lt;dir&gt;           case directory, default is the cwd
-  -allRegions           all mesh regions
-  -region &lt;name&gt;        mesh region
-  -dry-run | -n         report actions but do not remove
-  -help                 print the usage
-
-Remove the contents of the constant/polyMesh directory as per the
-Foam::polyMesh::removeFiles() method.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCleanPolyMesh">源码与说明</a> · <a href="/assets/command-help/foamcleanpolymesh.txt">帮助文本</a></p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录，默认使用当前目录。</td></tr><tr><td><code>-allRegions</code></td><td>处理全部网格区域。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域。</td></tr><tr><td><code>-dry-run | -n</code></td><td>仅显示待删除的内容。</td></tr><tr><td><code>-help</code></td><td>显示用法。</td></tr></tbody></table><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamCleanPolyMesh">源码与说明</a> · <a href="/assets/command-help/foamcleanpolymesh.txt">帮助文本</a></p>
