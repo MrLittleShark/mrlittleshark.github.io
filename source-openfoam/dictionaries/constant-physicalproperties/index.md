@@ -1,11 +1,29 @@
 ---
-title: "constant/physicalProperties · physicalProperties"
+title: "physicalProperties"
 layout: reference
-description: "v2512 的 electrostaticFoam/chargedWire 教程使用此文件定义 epsilon0 和电荷输运参数 k。不能据此认为所有 v2512 流动求解器都改读 physicalProperties；应按具体应用核对物性读取链。"
+description: "v2512 的 electrostaticFoam/chargedWire 教程使用此文件定义 epsilon0 和电荷输运参数 k。"
 dictionary: true
+cms_slug: "dictionary-physicalproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>v2512 的 electrostaticFoam/chargedWire 教程使用此文件定义 epsilon0 和电荷输运参数 k。不能据此认为所有 v2512 流动求解器都改读 physicalProperties；应按具体应用核对物性读取链。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>epsilon0</td><td>真空介电常数，用于 electrostaticFoam 静电 Poisson 方程。</td></tr><tr><td>k</td><td>此处是电荷输运相关系数，不是湍动能场，也不是热导率；应结合 electrostaticFoam 方程及量纲理解。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>epsilon0</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 1 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><p>该文件族在本次固定版本源码中仅选到一份不同的完整配置；不重复同一个文件充当多个案例。</p><h3>示例 1 · electromagnetics/electrostaticFoam/chargedWire</h3><p>原始路径：<code>tutorials/electromagnetics/electrostaticFoam/chargedWire/constant/physicalProperties</code>；求解器：<code>electrostaticFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/electromagnetics/electrostaticFoam/chargedWire/constant/physicalProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/physicalproperties/1-physicalProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/electromagnetics/electrostaticFoam/chargedWire">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>v2512 的 electrostaticFoam/chargedWire 教程使用此文件定义 epsilon0 和电荷输运参数 k。</p><p>位置：<code>constant/physicalProperties</code></p><h2>配置实例</h2><p>electromagnetics/electrostaticFoam/chargedWire 中的 physicalProperties：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      physicalProperties;
+}
+
+epsilon0        8.85419e-12;
+
+k               0.00016;</code></pre><h2>参数说明</h2><table><thead><tr><th>条目</th><th>含义</th></tr></thead><tbody><tr><td>epsilon0</td><td>真空介电常数，用于 electrostaticFoam 静电 Poisson 方程。</td></tr><tr><td>k</td><td>此处是电荷输运相关系数，不是湍动能场，也不是热导率；应结合 electrostaticFoam 方程及量纲理解。</td></tr></tbody></table><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · electromagnetics/electrostaticFoam/chargedWire</summary><p>chargedWire 求解电势与空间电荷的输运。physicalProperties 给出介电常数和电荷迁移率。</p>
+<ul>
+<li><code>epsilon0 8.85419e-12</code> 是真空介电常数，单位 F/m；它把电荷密度与电势 Poisson 方程联系起来。</li>
+<li><code>k 0.00016</code> 是迁移率，单位 m²/(V·s)，电场驱动的漂移速度与 k 成正比。</li>
+<li>求解器从电势梯度得到电场，并通过 <code>rhoFlux = -k*magSf*snGrad(phi)</code> 构造输运通量。</li>
+</ul>
+<p>改变迁移率后比较相同边界电压下的电荷分布与迁移时间，电势 phi 的单位为 V。</p>
+<p><a href="/assets/examples/v2512/physicalproperties/1-physicalProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/electromagnetics/electrostaticFoam/chargedWire/constant/physicalProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/electromagnetics/electrostaticFoam/chargedWire">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -26,9 +44,4 @@ epsilon0        8.85419e-12;
 k               0.00016;
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/electrostaticfoam/">electrostaticFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/physicalProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/physicalProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/electrostaticfoam/">electrostaticFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

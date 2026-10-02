@@ -1,10 +1,11 @@
 ---
 title: "08 时间控制与数值求解设置"
 layout: reference
-description: "OpenCFD v2512 时间控制与数值求解设置；包含原理、示例与版本核对。"
+description: "时间控制与数值求解设置：用法与配置实例。"
+cms_slug: "reference-manual-08"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>8.1 system/controlDict</h3>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>8.1 system/controlDict</h3>
 <pre><code class="language-openfoam">FoamFile
 {
     version 2.0; format ascii;
@@ -98,7 +99,7 @@ solvers
         relTol 0.05;
         smoother GaussSeidel;
     }
-    pFinal { &#36;p; relTol 0; }
+    pFinal { $p; relTol 0; }
     U
     {
         solver smoothSolver;
@@ -174,4 +175,3 @@ simpleCoeffs
 <h3>8.5 system/renumberMeshDict 与文件处理器</h3>
 <p>renumberMethod 指定网格编号算法，如 CuthillMcKee；算法参数置于对应系数字典。运行 renumberMesh -list-renumber 可查询可用方法。重新编号用于调整稀疏矩阵带宽，网格几何分辨率保持不变。</p>
 <p>FOAM_FILEHANDLER 设置默认文件处理器，常用值为 uncollated 和 collated；命令行 -fileHandler 可覆盖该设置。collated 通过合并并行 I/O 减少文件数量，其性能取决于文件系统、MPI 和缓冲策略。结果读取及重分配应使用支持该格式的工具。</p>
-{% endraw %}

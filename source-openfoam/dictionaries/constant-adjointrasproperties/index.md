@@ -1,11 +1,29 @@
 ---
-title: "constant/adjointRASProperties · adjointRASProperties"
+title: "adjointRASProperties"
 layout: reference
-description: "伴随湍流模型的选择及其线性化控制。它描述目标函数对湍流闭合量的敏感性，不能替代正问题的 turbulenceProperties。先验证正问题收敛，再比较伴随灵敏度与有限差分结果。"
+description: "伴随湍流模型的选择及其线性化控制。"
 dictionary: true
+cms_slug: "dictionary-adjointrasproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>伴随湍流模型的选择及其线性化控制。它描述目标函数对湍流闭合量的敏感性，不能替代正问题的 turbulenceProperties。先验证正问题收敛，再比较伴随灵敏度与有限差分结果。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>adjointRASModel</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/adjointOptimisationFoam/shapeOptimisation/naca0012/kOmegaSST/lift</h3><p>原始路径：<code>tutorials/incompressible/adjointOptimisationFoam/shapeOptimisation/naca0012/kOmegaSST/lift/constant/adjointRASProperties</code>；求解器：<code>adjointOptimisationFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/shapeOptimisation/naca0012/kOmegaSST/lift/constant/adjointRASProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/adjointrasproperties/1-adjointRASProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/shapeOptimisation/naca0012/kOmegaSST/lift">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>伴随湍流模型的选择及其线性化控制。</p><p>位置：<code>constant/adjointRASProperties</code></p><h2>配置实例</h2><p>incompressible/adjointOptimisationFoam/shapeOptimisation/naca0012/kOmegaSST/lift 中的 adjointRASProperties：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      adjointTurbulenceProperties;
+}
+
+adjointRASModel adjointkOmegaSST;
+
+adjointTurbulence on;</code></pre><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/adjointOptimisationFoam/shapeOptimisation/naca0012/kOmegaSST/lift</summary><p>NACA0012 升力优化算例为 k–ω SST 流场选择对应的伴随湍流模型。伴随变量用于计算目标函数对设计变化的敏感度。</p>
+<ul>
+<li><code>adjointRASModel adjointkOmegaSST</code> 选择 SST 对应的伴随方程模型。</li>
+<li><code>adjointTurbulence on</code> 将湍流模型相关的伴随贡献纳入计算。</li>
+<li>该文件位于 lift 伴随问题的设置目录，应与同一工作点的原始流场模型及升力目标配置配套。</li>
+</ul>
+<p>切换原始湍流模型时同步选择匹配的伴随模型；先让原始流场收敛，再比较伴随残差和梯度分布。</p>
+<p><a href="/assets/examples/v2512/adjointrasproperties/1-adjointRASProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/shapeOptimisation/naca0012/kOmegaSST/lift/constant/adjointRASProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/shapeOptimisation/naca0012/kOmegaSST/lift">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -25,7 +43,14 @@ adjointRASModel adjointkOmegaSST;
 
 adjointTurbulence on;
 
-// ************************************************************************* //</code></pre><h3>示例 2 · incompressible/adjointOptimisationFoam/sensitivityMaps/naca0012/turbulent/liftMinimumSetup</h3><p>原始路径：<code>tutorials/incompressible/adjointOptimisationFoam/sensitivityMaps/naca0012/turbulent/liftMinimumSetup/constant/adjointRASProperties</code>；求解器：<code>adjointOptimisationFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/sensitivityMaps/naca0012/turbulent/liftMinimumSetup/constant/adjointRASProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/adjointrasproperties/2-adjointRASProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/sensitivityMaps/naca0012/turbulent/liftMinimumSetup">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · incompressible/adjointOptimisationFoam/sensitivityMaps/naca0012/turbulent/liftMinimumSetup</summary><p>这个 NACA0012 最小配置示例采用 Spalart–Allmaras 模型的伴随形式，用于升力相关的形状敏感度计算。</p>
+<ul>
+<li><code>adjointRASModel adjointSpalartAllmaras</code> 选择与原始 SA 湍流方程对应的伴随实现。</li>
+<li><code>adjointTurbulence on</code> 启用伴随湍流贡献。</li>
+<li>目标函数、工作点和优化更新分别由其他字典配置；这里负责模型的配对。</li>
+</ul>
+<p>改成 SST 时需要同时补齐原始 k、omega 场及对应伴随设置，避免只更换这一处名称而留下不匹配的场配置。</p>
+<p><a href="/assets/examples/v2512/adjointrasproperties/2-adjointRASProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/sensitivityMaps/naca0012/turbulent/liftMinimumSetup/constant/adjointRASProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/sensitivityMaps/naca0012/turbulent/liftMinimumSetup">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -46,7 +71,14 @@ adjointRASModel adjointSpalartAllmaras;
 adjointTurbulence on;
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/1_Inlet_2_Outlet/levelSet/R_05x_NB_01x</h3><p>原始路径：<code>tutorials/incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/1_Inlet_2_Outlet/levelSet/R_05x_NB_01x/constant/adjointRASProperties</code>；求解器：<code>adjointOptimisationFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/1_Inlet_2_Outlet/levelSet/R_05x_NB_01x/constant/adjointRASProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/adjointrasproperties/3-adjointRASProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/1_Inlet_2_Outlet/levelSet/R_05x_NB_01x">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/1_Inlet_2_Outlet/levelSet/R_05x_NB_01x</summary><p>层流拓扑优化算例仍通过统一的伴随湍流模型接口创建模型，因此这里使用 adjointLaminar。</p>
+<ul>
+<li><code>adjointRASModel adjointLaminar</code> 明确选择层流伴随实现。</li>
+<li><code>adjointTurbulence on</code> 是该接口的开关；最终创建的是上面指定的层流模型。</li>
+<li><code>printCoeffs off</code> 关闭模型系数打印，使优化日志更紧凑。</li>
+</ul>
+<p>扩展为湍流拓扑优化时，应同时处理原始湍流方程、伴随模型和近壁网格，不能只靠这个开关改变物理模型。</p>
+<p><a href="/assets/examples/v2512/adjointrasproperties/3-adjointRASProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/1_Inlet_2_Outlet/levelSet/R_05x_NB_01x/constant/adjointRASProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/1_Inlet_2_Outlet/levelSet/R_05x_NB_01x">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -68,9 +100,4 @@ adjointTurbulence      on;
 
 printCoeffs     off;
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/adjointoptimisationfoam/">adjointOptimisationFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/adjointRASProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/adjointRASProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/adjointoptimisationfoam/">adjointOptimisationFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

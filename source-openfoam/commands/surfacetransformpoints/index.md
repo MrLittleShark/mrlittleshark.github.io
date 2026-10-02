@@ -1,19 +1,11 @@
 ---
-title: "surfaceTransformPoints  对表面进行平移旋转和缩放"
+title: "surfaceTransformPoints · -read-scale 和 -write-scale 分别指定读取和写出时的缩放系数"
 layout: reference
 description: "-read-scale 和 -write-scale 分别指定读取和写出时的缩放系数。"
+cms_slug: "command-surfacetransformpoints"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>-read-scale 和 -write-scale 分别指定读取和写出时的缩放系数。</p><h2>v2512 源码中的用途</h2><p>Transform (scale/rotate) a surface. Like transformPoints but for surfaces. The rollPitchYaw and yawPitchRoll options take three angles (degrees) that describe the intrinsic Euler rotation. rollPitchYaw - roll (rotation about X) followed by - pitch (rotation about Y) followed by - yaw (rotation about Z) yawPitchRoll - yaw (rotation about Z) followed by - pitch (rotation about Y) followed by - roll (rotation about X)</p><h2>使用入口</h2><pre><code class="language-bash">surfaceTransformPoints -translate &#x27;(0 0 1)&#x27; body.stl bodyMoved.stl</code></pre><h2>使用条件与核对</h2><p>-read-scale 和 -write-scale 分别指定读取和写出时的缩放系数。 用法：surfaceTransformPoints [选项] 输入 输出 示例：surfaceTransformPoints -translate &#x27;(0 0 1)&#x27; body.stl bodyMoved.stl
-源码说明：Transform (scale/rotate) a surface. Like transformPoints but for surfaces. The rollPitchYaw and yawPitchRoll options take three angles (degrees) that describe the intrinsic Euler rotation. rollPitchYaw - roll (rotation about X) followed by - pitch (rotation about Y) followed by - yaw (rotation about Z) yawPitchRoll - yaw (rotation about Z) followed by - pitch (rotation about Y) followed by - roll (rotation about X)
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-auto-centre -case -centre -cylToCart -debug-switch -doc -doc-source -fileHandler -help -help-compat -help-full -help-man -help-notes -info-switch -lib -no-libs -noFunctionObjects -opt-switch -read-format -read-scale -recentre -rollPitchYaw -rotate -rotate-angle -rotate-x -rotate-y -rotate-z -translate -write-format -write-scale -yawPitchRoll</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/surfacetransformpoints.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: surfaceTransformPoints
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceTransformPoints/surfaceTransformPoints.C
 
-
-Usage: surfaceTransformPoints [OPTIONS] &lt;input&gt; &lt;output&gt;
+<p>-read-scale 和 -write-scale 分别指定读取和写出时的缩放系数。</p><h2>用法</h2><pre><code class="language-bash">surfaceTransformPoints -translate &#x27;(0 0 1)&#x27; body.stl bodyMoved.stl</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">surfaceTransformPoints -translate &#x27;(0 0 1)&#x27; body.stl bodyMoved.stl -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-auto-centre</td><td>Use bounding box centre as centre for rotations</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-centre &lt;point&gt;</td><td>Use specified &lt;point&gt; as centre for rotations Tranform cylindrical coordinates to cartesian coordinates Set named DebugSwitch (default value: 1). [Can be used multiple times] Override the file handler type Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-recentre</td><td>Recentre the bounding box before other operations Rotate by &#x27;(roll pitch yaw)&#x27; degrees Rotate from &lt;vectorA&gt; to &lt;vectorB&gt; - eg, &#x27;((1 0 0) (0 0 1))&#x27; Rotate &lt;angle&gt; degrees about &lt;vector&gt; - eg, &#x27;((1 0 0) 45)&#x27;</td></tr><tr><td>-rotate-x &lt;deg&gt;</td><td>Rotate (degrees) about x-axis</td></tr><tr><td>-rotate-y &lt;deg&gt;</td><td>Rotate (degrees) about y-axis</td></tr><tr><td>-rotate-z &lt;deg&gt;</td><td>Rotate (degrees) about z-axis Translate by specified &lt;vector&gt; before rotations Output format (default: use file extension) Uniform or non-uniform output scaling Rotate by &#x27;(yaw pitch roll)&#x27; degrees</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceTransformPoints [OPTIONS] &lt;input&gt; &lt;output&gt;
 Arguments:
   &lt;input&gt;           The input surface file
   &lt;output&gt;          The output surface file
@@ -75,5 +67,4 @@ Note: roll=rotate about x, pitch=rotate about y, yaw=rotate about z
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceTransformPoints/surfaceTransformPoints.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceTransformPoints/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceTransformPoints/surfaceTransformPoints.C">源码与说明</a> · <a href="/assets/command-help/surfacetransformpoints.txt">帮助文本</a></p>

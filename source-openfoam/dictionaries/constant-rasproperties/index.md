@@ -1,11 +1,31 @@
 ---
-title: "constant/RASProperties · RASProperties"
+title: "RASProperties"
 layout: reference
-description: "v2512 源码中保留的特定教程文件名。常规湍流配置以 turbulenceProperties 的 simulationType 与 RAS 子字典为主；先检查本例的引用位置，不把旧式文件名推广为当前统一规范。"
+description: "v2512 源码中保留的特定教程文件名。"
 dictionary: true
+cms_slug: "dictionary-rasproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>v2512 源码中保留的特定教程文件名。常规湍流配置以 turbulenceProperties 的 simulationType 与 RAS 子字典为主；先检查本例的引用位置，不把旧式文件名推广为当前统一规范。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>RASModel</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 1 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><p>该文件族在本次固定版本源码中仅选到一份不同的完整配置；不重复同一个文件充当多个案例。</p><h3>示例 1 · incompressible/overSimpleFoam/aeroFoil/background_overset</h3><p>原始路径：<code>tutorials/incompressible/overSimpleFoam/aeroFoil/background_overset/constant/RASProperties</code>；求解器：<code>overSimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/overSimpleFoam/aeroFoil/background_overset/constant/RASProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/rasproperties/1-RASProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/overSimpleFoam/aeroFoil/background_overset">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>v2512 源码中保留的特定教程文件名。</p><p>位置：<code>constant/RASProperties</code></p><h2>配置实例</h2><p>incompressible/overSimpleFoam/aeroFoil/background_overset 中的 RASProperties：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      RASProperties;
+}
+
+RASModel        kOmegaSST;
+
+turbulence      on;
+
+printCoeffs     on;</code></pre><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/overSimpleFoam/aeroFoil/background_overset</summary><p>翼型重叠网格算例的背景区域采用 k–ω SST 湍流模型。该模型组合近壁 k–ω 描述和外部剪切流处理。</p>
+<ul>
+<li><code>RASModel kOmegaSST</code> 选择模型，需要相应的 k、omega 和 nut 场。</li>
+<li><code>turbulence on</code> 启用湍流输运，<code>printCoeffs on</code> 在日志中打印使用的模型系数，便于与修改值核对。</li>
+<li>该字典属于 background_overset 区域；另一个网格区域的设置应与其物理模型协调。</li>
+</ul>
+<p>改变来流速度或湍流条件时同步修改 k、omega 的入口值，并检查壁面 y⁺ 与所用壁面处理是否匹配。</p>
+<p><a href="/assets/examples/v2512/rasproperties/1-RASProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/overSimpleFoam/aeroFoil/background_overset/constant/RASProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/overSimpleFoam/aeroFoil/background_overset">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -27,9 +47,4 @@ turbulence      on;
 
 printCoeffs     on;
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/foamdictionary/">foamDictionary</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/RASProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/RASProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/foamdictionary/">foamDictionary</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

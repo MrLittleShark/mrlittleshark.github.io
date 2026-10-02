@@ -1,11 +1,50 @@
 ---
-title: "system/extrudeToRegionMeshDict · extrudeToRegionMeshDict"
+title: "extrudeToRegionMeshDict"
 layout: reference
-description: "从已有网格的面或面区挤出独立区域，用于薄壁或液膜等区域耦合。指定源面、挤出模型、层数和区域名称，完成后应分别检查主网格与新区域网格。"
+description: "从已有网格的面或面区挤出独立区域，用于薄壁或液膜等区域耦合。"
 dictionary: true
+cms_slug: "dictionary-extrudetoregionmeshdict"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>从已有网格的面或面区挤出独立区域，用于薄壁或液膜等区域耦合。指定源面、挤出模型、层数和区域名称，完成后应分别检查主网格与新区域网格。</p><figure><img src="/assets/diagrams/reference-0.svg" alt="网格配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>region</td><td>目标网格区域名称；多区域场与网格路径中应保持一致。</td></tr><tr><td>extrudeModel</td><td>挤出几何模型，例如平移、旋转或法向挤出；各模型需要不同系数。</td></tr><tr><td>nLayers</td><td>挤出或边界层生成的层数；同时检查层厚与总厚度。</td></tr><tr><td>expansionRatio</td><td>相邻挤出层的厚度增长比例。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>adaptMesh</td><td>apply mapped to both regions</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · combustion/fireFoam/LES/simplePMMApanel</h3><p>原始路径：<code>tutorials/combustion/fireFoam/LES/simplePMMApanel/system/extrudeToRegionMeshDict</code>；求解器：<code>fireFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/simplePMMApanel/system/extrudeToRegionMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/extrudetoregionmeshdict/1-extrudeToRegionMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/simplePMMApanel">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>从已有网格的面或面区挤出独立区域，用于薄壁或液膜等区域耦合。</p><p>位置：<code>system/extrudeToRegionMeshDict</code></p><h2>配置实例</h2><p>combustion/fireFoam/LES/simplePMMApanel 中的 extrudeToRegionMeshDict：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      extrudeToRegionMeshDict;
+}
+
+region          panelRegion;
+
+faceZones       (panel);
+
+oneD            true;
+
+sampleMode      nearestPatchFace;
+
+extrudeModel    linearNormal;
+
+oneDPolyPatchType empty;
+
+nLayers         8;
+
+expansionRatio  1;
+
+adaptMesh       true;
+
+linearNormalCoeffs
+{
+    thickness       0.0234;
+}</code></pre><h2>参数说明</h2><table><thead><tr><th>条目</th><th>含义</th></tr></thead><tbody><tr><td>region</td><td>目标网格区域名称；多区域场与网格路径中应保持一致。</td></tr><tr><td>extrudeModel</td><td>挤出几何模型，例如平移、旋转或法向挤出；各模型需要不同系数。</td></tr><tr><td>nLayers</td><td>挤出或边界层生成的层数；同时检查层厚与总厚度。</td></tr><tr><td>expansionRatio</td><td>相邻挤出层的厚度增长比例。</td></tr></tbody></table><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · combustion/fireFoam/LES/simplePMMApanel</summary><p>PMMA 板燃烧算例从已有 panel 面区向厚度方向拉伸，建立固体板区域 panelRegion。</p>
+<ul>
+<li><code>faceZones (panel)</code> 选定起始面区，<code>region panelRegion</code> 给新网格命名。</li>
+<li><code>extrudeModel linearNormal</code> 沿局部法向拉伸，<code>thickness 0.0234</code> 给出板厚 23.4 mm。</li>
+<li><code>nLayers 8</code>、<code>expansionRatio 1</code> 使用 8 层等厚单元，每层约 2.925 mm。</li>
+<li><code>oneD true</code> 与 <code>oneDPolyPatchType empty</code> 将板内主要传热方向设为厚度方向；<code>sampleMode nearestPatchFace</code> 用于界面映射。</li>
+<li><code>adaptMesh true</code> 同步调整原始网格的相关边界。</li>
+</ul>
+<p>改变板厚时同时更新材料热物性与层数，比较板面温度和厚度方向温度梯度。</p>
+<p><a href="/assets/examples/v2512/extrudetoregionmeshdict/1-extrudeToRegionMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/simplePMMApanel/system/extrudeToRegionMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/simplePMMApanel">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -45,7 +84,15 @@ linearNormalCoeffs
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · lagrangian/reactingParcelFoam/cylinder</h3><p>原始路径：<code>tutorials/lagrangian/reactingParcelFoam/cylinder/system/extrudeToRegionMeshDict</code>；求解器：<code>reactingParcelFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/cylinder/system/extrudeToRegionMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/extrudetoregionmeshdict/2-extrudeToRegionMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/cylinder">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · lagrangian/reactingParcelFoam/cylinder</summary><p>cylinder 算例从 wallFilmFaces 面区生成 wallFilmRegion，为壁面液膜计算提供附着区域。</p>
+<ul>
+<li><code>faceZones (wallFilmFaces)</code> 选定壁面集合，<code>region wallFilmRegion</code> 是后续液膜模型查找的区域名称。</li>
+<li><code>linearNormal</code> 沿壁面法向拉伸，<code>thickness 0.01</code>、<code>nLayers 1</code> 生成 0.01 m 的单层区域。</li>
+<li><code>sampleMode nearestPatchFace</code> 选择界面采样映射方式，<code>adaptMesh yes</code> 更新原有网格的连接边界。</li>
+<li><code>oneD false</code> 保留该区域的多方向拓扑处理，<code>expansionRatio 1</code> 采用均匀层厚。</li>
+</ul>
+<p>修改壁面区域名称后同步修改 surfaceFilmProperties 中的 region，使液膜模型能找到对应网格。</p>
+<p><a href="/assets/examples/v2512/extrudetoregionmeshdict/2-extrudeToRegionMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/cylinder/system/extrudeToRegionMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/cylinder">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -83,7 +130,15 @@ linearNormalCoeffs
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · lagrangian/reactingParcelFoam/rivuletPanel</h3><p>原始路径：<code>tutorials/lagrangian/reactingParcelFoam/rivuletPanel/system/extrudeToRegionMeshDict</code>；求解器：<code>reactingParcelFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/rivuletPanel/system/extrudeToRegionMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/extrudetoregionmeshdict/3-extrudeToRegionMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/rivuletPanel">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · lagrangian/reactingParcelFoam/rivuletPanel</summary><p>rivuletPanel 从板面创建壁膜区域，随后在其上计算液膜沿板面的运动。</p>
+<ul>
+<li><code>wallFilmFaces</code> 指定要拉伸的面区，输出区域名称为 wallFilmRegion。</li>
+<li><code>linearNormal</code>、<code>thickness 0.01</code> 沿板法向生成厚 0.01 m 的网格区域，<code>nLayers 1</code> 只保留一层。</li>
+<li><code>nearestPatchFace</code> 用最近面映射连接壁膜区域与主流区域，<code>adaptMesh yes</code> 调整主网格相关边界。</li>
+<li><code>oneD false</code>、<code>expansionRatio 1</code> 给出区域生成方式和均匀层厚。</li>
+</ul>
+<p>这里的几何拉伸厚度与液膜场中的局部液膜厚度分别配置；查看液膜结果时应读取模型计算的厚度场。</p>
+<p><a href="/assets/examples/v2512/extrudetoregionmeshdict/3-extrudeToRegionMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/rivuletPanel/system/extrudeToRegionMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/rivuletPanel">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -121,9 +176,4 @@ linearNormalCoeffs
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/extrudetoregionmesh/">extrudeToRegionMesh</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/extrudeToRegionMeshDict&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/extrudeToRegionMeshDict&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>边界名称与字段不一致</td><td>修改拓扑后重新核对 constant/polyMesh/boundary 和所有 0/ 场文件，不能只修一个场。</td></tr><tr><td>单位或坐标方向错误</td><td>比较几何包围盒与预期物理尺寸；检查 scale、挤出法向和旋转轴。</td></tr><tr><td>网格生成成功但质量不足</td><td>运行 checkMesh -allTopology -allGeometry，再评估所选离散格式对非正交和扭曲的容忍度。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/extrudetoregionmesh/">extrudeToRegionMesh</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>边界名称与字段不一致</td><td>修改拓扑后重新核对 constant/polyMesh/boundary 和所有 0/ 场文件，不能只修一个场。</td></tr><tr><td>单位或坐标方向错误</td><td>比较几何包围盒与预期物理尺寸；检查 scale、挤出法向和旋转轴。</td></tr><tr><td>网格生成成功但质量不足</td><td>运行 checkMesh -allTopology -allGeometry，再评估所选离散格式对非正交和扭曲的容忍度。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

@@ -1,10 +1,11 @@
 ---
 title: "03 前处理命令"
 layout: reference
-description: "OpenCFD v2512 前处理命令；包含原理、示例与版本核对。"
+description: "前处理命令：用法与配置实例。"
+cms_slug: "reference-manual-03"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>前处理依次完成几何处理、网格生成或导入、质量检查、区域划分及初始场设置。改变网格拓扑后，应同步检查场文件中的边界和区域。配置方法见第 7 至 9 章。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>前处理依次完成几何处理、网格生成或导入、质量检查、区域划分及初始场设置。改变网格拓扑后，应同步检查场文件中的边界和区域。配置方法见第 7 至 9 章。</p>
 <h3>3.1 网格生成与检查</h3>
 <h2>checkFaMesh  检查有限面积网格  源码</h2>
 <p>检查对象为有限面积网格。</p>
@@ -530,4 +531,3 @@ description: "OpenCFD v2512 前处理命令；包含原理、示例与版本核�
 <p>由字典指定壁面模型及数据范围。</p>
 <p>用法：wallFunctionTable [选项]</p>
 <pre><code class="language-plaintext">示例：wallFunctionTable</code></pre>
-{% endraw %}

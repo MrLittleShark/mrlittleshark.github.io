@@ -1,19 +1,19 @@
 ---
-title: "reconstructParMesh  重构分区网格及处理器寻址"
+title: "reconstructParMesh · 将分区网格重新合成为完整网格"
 layout: reference
-description: "用于并行网格生成后的主网格及寻址重构。"
+description: "将分区网格重新合成为完整网格。"
+cms_slug: "command-reconstructparmesh"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>用于并行网格生成后的主网格及寻址重构。</p><h2>v2512 源码中的用途</h2><p>Reconstructs a mesh using geometric information only. Writes point/face/cell procAddressing so afterwards reconstructPar can be used to reconstruct fields.</p><h2>使用入口</h2><pre><code class="language-bash">reconstructParMesh -constant</code></pre><h2>使用条件与核对</h2><p>用于并行网格生成后的主网格及寻址重构。 用法：reconstructParMesh [选项] 示例：reconstructParMesh -constant
-源码说明：Reconstructs a mesh using geometric information only. Writes point/face/cell procAddressing so afterwards reconstructPar can be used to reconstruct fields.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-addressing-only -allAreas -allRegions -area-region -area-regions -case -cellDist -constant -debug-switch -doc -doc-source -fileHandler -fullMatch -help -help-compat -help-full -help-man -help-notes -info-switch -latestTime -lib -mergeTol -no-finite-area -no-libs -noFunctionObjects -noZero -opt-switch -procMatch -region -regions -time -verbose -withZero</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/reconstructparmesh.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: reconstructParMesh
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/reconstructParMesh/reconstructParMesh.C
 
-
-Usage: reconstructParMesh [OPTIONS]
+<p>将分区网格重新合成为完整网格。</p><h2>重建静态网格</h2>
+<pre><code class="language-bash">reconstructParMesh -constant
+</code></pre>
+<p>用于网格位于各分区 <code>constant/polyMesh</code> 的情况，常见于并行网格生成。</p>
+<h2>重建最近时刻网格</h2>
+<pre><code class="language-bash">reconstructParMesh -latestTime
+</code></pre>
+<p>选择最新时间的网格。网格重建完成后，再用 <code>reconstructPar</code> 合并相应场。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-addressing-only</td><td>Create procAddressing only without overwriting the mesh</td></tr><tr><td>-allAreas</td><td>Use all regions in finite-area regionProperties</td></tr><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-cellDist</td><td>写出单元所属子域，便于检查分区。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-fullMatch</td><td>Do (slower) geometric matching on all boundary faces Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-no-finite-area</td><td>Suppress finiteArea mesh reconstruction</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-procMatch</td><td>Do matching on processor faces only</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-verbose</td><td>Additional verbosity (can be used multiple times)</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: reconstructParMesh [OPTIONS]
 Options:
   -addressing-only  Create procAddressing only without overwriting the mesh
   -allAreas         Use all regions in finite-area regionProperties
@@ -73,5 +73,4 @@ Reconstruct a mesh using geometric/topological information only
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/reconstructParMesh/reconstructParMesh.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/reconstructParMesh/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/reconstructParMesh/reconstructParMesh.C">源码与说明</a> · <a href="/assets/command-help/reconstructparmesh.txt">帮助文本</a></p>

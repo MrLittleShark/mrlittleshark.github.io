@@ -1,11 +1,38 @@
 ---
-title: "constant/interfacialProperties · interfacialProperties"
+title: "interfacialProperties"
 layout: reference
-description: "multiphaseEulerFoam/mixerVessel2D 教程保留的相间阻力与换热配置，示例包含 SchillerNaumann、RanzMarshall、相间混合选择与小相分数控制。其文件组织属于具体教程，不是所有多相求解器通用的界面配置入口。"
+description: "multiphaseEulerFoam/mixerVessel2D 教程保留的相间阻力与换热配置，示例包含 SchillerNaumann、RanzMarshall、相间混合选择与小相分数控制。"
 dictionary: true
+cms_slug: "dictionary-interfacialproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>multiphaseEulerFoam/mixerVessel2D 教程保留的相间阻力与换热配置，示例包含 SchillerNaumann、RanzMarshall、相间混合选择与小相分数控制。其文件组织属于具体教程，不是所有多相求解器通用的界面配置入口。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>dragModel1</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 1 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><p>该文件族在本次固定版本源码中仅选到一份不同的完整配置；不重复同一个文件充当多个案例。</p><h3>示例 1 · multiphase/multiphaseEulerFoam/mixerVessel2D</h3><p>原始路径：<code>tutorials/multiphase/multiphaseEulerFoam/mixerVessel2D/constant/interfacialProperties</code>；求解器：<code>multiphaseEulerFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/multiphaseEulerFoam/mixerVessel2D/constant/interfacialProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/interfacialproperties/1-interfacialProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/multiphaseEulerFoam/mixerVessel2D">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>multiphaseEulerFoam/mixerVessel2D 教程保留的相间阻力与换热配置，示例包含 SchillerNaumann、RanzMarshall、相间混合选择与小相分数控制。</p><p>位置：<code>constant/interfacialProperties</code></p><h2>配置实例</h2><p>multiphase/multiphaseEulerFoam/mixerVessel2D 中的 interfacialProperties：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      interfacialProperties;
+}
+
+dragModel1          SchillerNaumann;
+dragModel2          SchillerNaumann;
+
+heatTransferModel1  RanzMarshall;
+heatTransferModel2  RanzMarshall;
+
+dispersedPhase      both;
+dragPhase           blended;
+
+residualSlip        1e-2;
+minInterfaceAlpha   1e-3;</code></pre><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · multiphase/multiphaseEulerFoam/mixerVessel2D</summary><p><code>mixerVessel2D</code> 的此文件保留了旧式两相接口写法。v2512 的配套 <code>multiphaseEulerFoam</code> 通过 <code>multiphaseSystem</code> 读取 <code>constant/transportProperties</code>；实际相间模型应在那个文件中的相对表里调整。</p>
+<ul>
+<li>这里的 <code>dragModel1/2 SchillerNaumann</code> 表达两侧分散相均采用球形分散物阻力关联式的意图；<code>dragPhase blended</code> 表达两种分散状态的混合处理。</li>
+<li><code>heatTransferModel1/2 RanzMarshall</code> 是分散颗粒换热关联式的名称。当前求解流程应以实际读取的模型字典为准，原文件适合用于理解旧式参数组织。</li>
+<li>配套 <code>transportProperties</code> 明确列出 <code>(air water)</code>、<code>(air oil)</code> 等相对，每组 <code>drag</code> 选择 <code>type blended</code>，其内部各相再选择 <code>SchillerNaumann</code>。</li>
+<li>在有效的 <code>drag</code> 子字典中，<code>residualSlip 1e-2</code> 是 0.01 m/s 的滑移速度下限，<code>residualPhaseFraction 1e-2</code> 是相分数正则化参数；原文件的 <code>minInterfaceAlpha</code> 没有对应到当前这条读取路径。</li>
+</ul>
+<p>要比较搅拌中空气与水的滑移，可进入 <code>transportProperties/drag</code> 修改该相对的阻力设置，并检查气泡直径模型。增加一种流体时，还要补齐它与其他相之间需要的模型配置。</p>
+<p><a href="/assets/examples/v2512/interfacialproperties/1-interfacialProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/multiphaseEulerFoam/mixerVessel2D/constant/interfacialProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/multiphaseEulerFoam/mixerVessel2D">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -34,9 +61,4 @@ residualSlip        1e-2;
 minInterfaceAlpha   1e-3;
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/multiphaseeulerfoam/">multiphaseEulerFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/interfacialProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/interfacialProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/multiphaseeulerfoam/">multiphaseEulerFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

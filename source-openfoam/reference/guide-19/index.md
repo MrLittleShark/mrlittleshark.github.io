@@ -1,10 +1,11 @@
 ---
 title: "第 19 章　0/ 目录与边界条件参考"
 layout: reference
-description: "OpenCFD v2512 0/ 目录与边界条件参考；包含原理、示例与版本核对。"
+description: "0/ 目录与边界条件参考：用法与配置实例。"
+cms_slug: "reference-guide-19"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>19.1 场文件的结构</h2>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>19.1 场文件的结构</h2>
 <pre><code class="language-openfoam">FoamFile { version 2.0; format ascii; class volVectorField; object U; }
 
 dimensions      [0 1 -1 0 0 0 0];        // 量纲
@@ -209,8 +210,6 @@ inlet
 <h2>19.9 边界条件查询方法</h2>
 <pre><code class="language-bash">foamHelp boundary -field U | less          # 本机所有可用类型
 pimpleFoam -listVectorBCs                  # 同上，另一个入口
-find &#36;FOAM_SRC -name "*inletOutlet*"       # 找源码
-grep -rl "inletOutlet" &#36;FOAM_TUTORIALS/incompressible --include=U | head   # 找用例</code></pre>
+find $FOAM_SRC -name "*inletOutlet*"       # 找源码
+grep -rl "inletOutlet" $FOAM_TUTORIALS/incompressible --include=U | head   # 找用例</code></pre>
 <p>最后一条最实用：先找到一个用了这个边界条件的官方算例，再照抄它的完整写法，包括那些你不确定要不要写的参数。</p>
-<h2>第四部分　常用 Linux 命令</h2>
-{% endraw %}

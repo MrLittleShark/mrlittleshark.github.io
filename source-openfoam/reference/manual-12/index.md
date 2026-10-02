@@ -1,16 +1,17 @@
 ---
 title: "12 常用 Linux 命令"
 layout: reference
-description: "OpenCFD v2512 常用 Linux 命令；包含原理、示例与版本核对。"
+description: "常用 Linux 命令：用法与配置实例。"
+cms_slug: "reference-manual-12"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>本章列出 GNU/Linux 和 Bash 常用命令。“文件”和“目录”等名称表示待替换参数。命令依据见 S5 至 S12。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>本章列出 GNU/Linux 和 Bash 常用命令。“文件”和“目录”等名称表示待替换参数。命令依据见 S5 至 S12。</p>
 <h3>12.1 文件管理与内容查看</h3>
 <div class="table-scroll"><table>
 <tr><th>命令</th><th>含义与语法</th><th>具体示例</th></tr>
 <tr><td>pwd</td><td>显示当前目录：pwd [-P]</td><td>pwd -P</td></tr>
 <tr><td>ls</td><td>列出目录：ls [选项] [路径]</td><td>ls -lah constant/polyMesh</td></tr>
-<tr><td>cd</td><td>切换目录：cd 路径</td><td>cd "&#36;FOAM_RUN"；cd ..；cd -</td></tr>
+<tr><td>cd</td><td>切换目录：cd 路径</td><td>cd "$FOAM_RUN"；cd ..；cd -</td></tr>
 <tr><td>mkdir</td><td>创建目录：mkdir [-p] 目录</td><td>mkdir -p cases/cavity</td></tr>
 <tr><td>cp</td><td>复制文件或目录：cp [选项] 源 目标</td><td>cp -a cavity cavity_backup</td></tr>
 <tr><td>mv</td><td>移动或重命名：mv [选项] 源 目标</td><td>mv log log.simpleFoam；-i 在覆盖前询问</td></tr>
@@ -35,7 +36,7 @@ description: "OpenCFD v2512 常用 Linux 命令；包含原理、示例与版本
 <h3>12.2 文本检索与处理</h3>
 <div class="table-scroll"><table>
 <tr><th>命令</th><th>含义与语法</th><th>具体示例</th></tr>
-<tr><td>find</td><td>按路径和属性查找：find 路径 条件</td><td>find "&#36;FOAM_TUTORIALS" -name blockMeshDict</td></tr>
+<tr><td>find</td><td>按路径和属性查找：find 路径 条件</td><td>find "$FOAM_TUTORIALS" -name blockMeshDict</td></tr>
 <tr><td>grep</td><td>匹配文本：grep [选项] 模式 文件</td><td>grep -n 'Courant Number' log.pimpleFoam</td></tr>
 <tr><td>rg</td><td>递归文本检索：rg [选项] 模式 路径，需安装 ripgrep</td><td>rg -n 'maxCo' system</td></tr>
 <tr><td>sort</td><td>排序：sort [选项] 文件</td><td>sort -n times.txt</td></tr>
@@ -57,7 +58,7 @@ simpleFoam 2&gt;&amp;1 | tee log.simpleFoam</code></pre>
 <h3>12.3 系统管理与帮助查询</h3>
 <div class="table-scroll"><table>
 <tr><th>命令</th><th>含义与语法</th><th>具体示例</th></tr>
-<tr><td>ps</td><td>查看进程：ps [选项]</td><td>ps -u "&#36;USER" -o pid,etime,cmd</td></tr>
+<tr><td>ps</td><td>查看进程：ps [选项]</td><td>ps -u "$USER" -o pid,etime,cmd</td></tr>
 <tr><td>pgrep</td><td>按名称查找进程：pgrep [选项] 模式</td><td>pgrep -af simpleFoam</td></tr>
 <tr><td>top</td><td>实时查看 CPU、内存及进程状态</td><td>top，q 退出</td></tr>
 <tr><td>htop</td><td>交互式资源监控，需安装</td><td>htop</td></tr>
@@ -67,13 +68,13 @@ simpleFoam 2&gt;&amp;1 | tee log.simpleFoam</code></pre>
 <tr><td>jobs</td><td>当前 shell 后台作业列表</td><td>jobs -l</td></tr>
 <tr><td>bg</td><td>在后台恢复当前 shell 的挂起作业</td><td>bg %1</td></tr>
 <tr><td>fg</td><td>将后台作业转至前台</td><td>fg %1</td></tr>
-<tr><td>wait</td><td>等待子进程并取得返回状态</td><td>wait "&#36;solver_pid"</td></tr>
+<tr><td>wait</td><td>等待子进程并取得返回状态</td><td>wait "$solver_pid"</td></tr>
 <tr><td>kill</td><td>向进程发送信号：kill [-信号] PID</td><td>kill -TERM 12345，PID 替换为实际进程号</td></tr>
 <tr><td>nohup</td><td>忽略挂断信号运行程序</td><td>nohup simpleFoam &gt; log.simpleFoam 2&gt;&amp;1 &amp;</td></tr>
 <tr><td>nice</td><td>以指定优先级启动：nice -n 增量 命令</td><td>nice -n 10 simpleFoam</td></tr>
 <tr><td>time</td><td>测量命令耗时</td><td>time blockMesh；/usr/bin/time -v simpleFoam 输出资源统计</td></tr>
 <tr><td>chmod</td><td>修改权限：chmod 模式 文件</td><td>chmod u+x Allrun</td></tr>
-<tr><td>chown</td><td>修改所有者：chown 用户:组 路径</td><td>sudo chown "&#36;USER:&#36;USER" ./ownedFile</td></tr>
+<tr><td>chown</td><td>修改所有者：chown 用户:组 路径</td><td>sudo chown "$USER:$USER" ./ownedFile</td></tr>
 <tr><td>umask</td><td>查看或设置新建权限掩码</td><td>umask 022；只影响此后新建对象</td></tr>
 <tr><td>sudo</td><td>以获授权身份执行命令</td><td>sudo apt install gnuplot</td></tr>
 <tr><td>man</td><td>查看手册：man 命令</td><td>man find</td></tr>
@@ -89,7 +90,7 @@ simpleFoam 2&gt;&amp;1 | tee log.simpleFoam</code></pre>
 <tr><td>history</td><td>查看命令历史</td><td>history 20</td></tr>
 <tr><td>sleep</td><td>暂停：sleep 秒数</td><td>sleep 2</td></tr>
 <tr><td>date</td><td>显示日期时间</td><td>date '+%F %T'</td></tr>
-<tr><td>printf</td><td>格式化输出</td><td>printf '%s\n' "&#36;FOAM_RUN"</td></tr>
+<tr><td>printf</td><td>格式化输出</td><td>printf '%s\n' "$FOAM_RUN"</td></tr>
 </table></div>
 <p>Ctrl+C 发送中断信号，Ctrl+Z 暂停进程。需要保存结果后停止求解时，使用 stopAt 或 foamEndJob。kill -9 强制结束进程，不执行结果写出及清理操作。</p>
 <h3>12.4 文件传输与远程管理</h3>
@@ -120,9 +121,9 @@ simpleFoam 2&gt;&amp;1 | tee log.simpleFoam</code></pre>
 <tr><td>&amp;</td><td>后台运行</td><td>simpleFoam &gt; log.simpleFoam 2&gt;&amp;1 &amp;</td></tr>
 <tr><td>&amp;&amp;</td><td>前一命令成功才继续</td><td>blockMesh &amp;&amp; checkMesh</td></tr>
 <tr><td>||</td><td>前一命令失败时执行后一命令</td><td>见下方错误分支示例</td></tr>
-<tr><td>单引号</td><td>保留字面文本</td><td>echo '&#36;FOAM_RUN' 输出变量名</td></tr>
-<tr><td>双引号</td><td>展开变量并保持路径整体</td><td>cd "&#36;FOAM_RUN"</td></tr>
-<tr><td>&#36;(命令)</td><td>命令替换</td><td><code>app=&#36;(getApplication)</code></td></tr>
+<tr><td>单引号</td><td>保留字面文本</td><td>echo '$FOAM_RUN' 输出变量名</td></tr>
+<tr><td>双引号</td><td>展开变量并保持路径整体</td><td>cd "$FOAM_RUN"</td></tr>
+<tr><td>$(命令)</td><td>命令替换</td><td><code>app=$(getApplication)</code></td></tr>
 <tr><td>$?</td><td>上一条命令退出状态</td><td>echo "$?"；0 通常表示成功</td></tr>
 <tr><td>$!</td><td>最近后台任务 PID</td><td><code>solver_pid=$!</code></td></tr>
 <tr><td>for</td><td>批量遍历</td><td>见下方多个算例循环</td></tr>
@@ -134,12 +135,11 @@ simpleFoam 2&gt;&amp;1 | tee log.simpleFoam
 blockMesh || { echo 'blockMesh failed' &gt;&amp;2; exit 1; }
 
 for case_dir in caseA caseB caseC; do
-    blockMesh -case "&#36;case_dir" &gt; "&#36;case_dir/log.blockMesh" 2&gt;&amp;1
+    blockMesh -case "$case_dir" &gt; "$case_dir/log.blockMesh" 2&gt;&amp;1
 done
 
 cat &gt; system/localSettings &lt;&lt;'EOF'
 // 保留字典引用
-pFinal { &#36;p; relTol 0; }
+pFinal { $p; relTol 0; }
 EOF</code></pre>
 <p>批量执行前建立各算例目录，并通过退出状态判断各步骤是否成功。</p>
-{% endraw %}

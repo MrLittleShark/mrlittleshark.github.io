@@ -1,10 +1,11 @@
 ---
 title: "第 9 章　并行计算与集群作业"
 layout: reference
-description: "OpenCFD v2512 并行计算与集群作业；包含原理、示例与版本核对。"
+description: "并行计算与集群作业：用法与配置实例。"
+cms_slug: "reference-guide-09"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>9.1 并行的三步骤</h2>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>9.1 并行的三步骤</h2>
 <p>OpenFOAM 的并行是区域分解：把网格切成 N 块，每块交给一个进程，进程之间在交界面上交换数据。所以流程固定为三步：</p>
 <pre><code class="language-bash">decomposePar                              # ① 切分：生成 processor0/ … processorN-1/
 mpirun -np 8 simpleFoam -parallel         # ② 并行求解（-parallel 不能漏）
@@ -68,15 +69,15 @@ foamListTimes -rm -processor                     # 清理 processor* 里的时�
 #SBATCH --time=24:00:00
 #SBATCH --output=slurm-%j.out
 
-source &#36;HOME/OpenFOAM/OpenFOAM-v2512/etc/bashrc
+source $HOME/OpenFOAM/OpenFOAM-v2512/etc/bashrc
 
-cd &#36;SLURM_SUBMIT_DIR
+cd $SLURM_SUBMIT_DIR
 decomposePar -force &gt; log.decomposePar 2&gt;&amp;1
 srun --mpi=pmi2 simpleFoam -parallel -fileHandler collated &gt; log.simpleFoam 2&gt;&amp;1
 reconstructPar -latestTime &gt; log.reconstructPar 2&gt;&amp;1</code></pre>
 <p>提交与查看：</p>
 <pre><code class="language-plaintext">sbatch job.sh          # 提交
-squeue -u &#36;USER        # 查看排队/运行状态
+squeue -u $USER        # 查看排队/运行状态
 scancel &lt;作业号&gt;       # 取消
 sacct -j &lt;作业号&gt;      # 查看资源使用</code></pre>
 <p>PBS / Torque</p>
@@ -86,10 +87,9 @@ sacct -j &lt;作业号&gt;      # 查看资源使用</code></pre>
 #PBS -l walltime=24:00:00
 #PBS -j oe
 
-source &#36;HOME/OpenFOAM/OpenFOAM-v2512/etc/bashrc
-cd &#36;PBS_O_WORKDIR
+source $HOME/OpenFOAM/OpenFOAM-v2512/etc/bashrc
+cd $PBS_O_WORKDIR
 decomposePar -force &gt; log.decomposePar 2&gt;&amp;1
 mpirun -np 64 simpleFoam -parallel &gt; log.simpleFoam 2&gt;&amp;1
-qsub job.sh      $ qstat -u &#36;USER      $ qdel &lt;作业号&gt;</code></pre>
+qsub job.sh      $ qstat -u $USER      $ qdel &lt;作业号&gt;</code></pre>
 <p>集群运行中常见的两类环境问题：① 计算节点没 source 环境 —— 脚本里必须显式 source .../etc/bashrc（或用 foamExec）；② 集群的 MPI 与编译 OpenFOAM 时用的 MPI 不是同一个 —— 表现为一跑就 mpirun 报符号错误，解决办法是用集群的 module load 加载与编译时一致的 MPI。</p>
-{% endraw %}

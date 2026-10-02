@@ -1,44 +1,115 @@
 ---
-title: "system/fvSchemes · fvSchemes"
+title: "fvSchemes"
 layout: reference
-description: "下例给出不可压缩非稳态层流的离散设置。采用湍流模型或求解能量方程时，应补充相应方程的对流项。"
+description: "选择时间导数、梯度、散度、拉普拉斯项和面插值的离散格式。"
 dictionary: true
+cms_slug: "dictionary-fvschemes"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>下例给出不可压缩非稳态层流的离散设置。采用湍流模型或求解能量方程时，应补充相应方程的对流项。</p><figure><img src="/assets/diagrams/reference-4.svg" alt="数值方法配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/fvSchemes</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>ddtSchemes</code> · <code>gradSchemes</code> · <code>divSchemes</code> · <code>laplacianSchemes</code> · <code>interpolationSchemes</code> · <code>snGradSchemes</code> · <code>fluxRequired</code> · <code>wallDist</code></p><h2>关联命令</h2><p><a href="/commands/?q=icoFoam">icoFoam</a> · <a href="/commands/?q=interFoam">interFoam</a> · <a href="/commands/?q=simpleFoam">simpleFoam</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/fvSchemes -keywords
-icoFoam -help</code></pre><h2>8.2 system/fvSchemes</h2><p>下例给出不可压缩非稳态层流的离散设置。采用湍流模型或求解能量方程时，应补充相应方程的对流项。</p>
-<pre><code class="language-openfoam">FoamFile
+
+<p>选择时间导数、梯度、散度、拉普拉斯项和面插值的离散格式。</p><p>位置：<code>system/fvSchemes</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-advection-profile-errors.png" alt="一维输运中的格式误差曲线" loading="lazy"><figcaption><strong>一维输运中的格式误差曲线</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module6.pdf，p. 157 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>fvSchemes 决定方程怎样离散</h2>
+<p><code>system/fvSchemes</code> 为时间导数、梯度、对流和扩散分别选择数值格式。求解器负责建立哪些方程，字典负责指定这些算子的离散方法。</p>
+<p>以下是均匀正交方腔可用的一组设置，放在 <code>FoamFile</code> 文件头之后：</p>
+<pre><code class="language-foam">ddtSchemes
 {
-    version 2.0; format ascii;
-    class dictionary; object fvSchemes;
+    default Euler;
 }
-ddtSchemes { default Euler; }
-gradSchemes { default Gauss linear; }
+gradSchemes
+{
+    default Gauss linear;
+}
 divSchemes
 {
     default none;
-    div(phi,U) Gauss linearUpwind grad(U);
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(phi,U) Gauss linear;
 }
-laplacianSchemes { default Gauss linear corrected; }
-interpolationSchemes { default linear; }
-snGradSchemes { default corrected; }
-wallDist { method meshWave; }</code></pre>
-<div class="table-scroll"><table>
-<tr><th>字典</th><th>控制对象</th><th>常用设置</th></tr>
-<tr><td>ddtSchemes</td><td>时间导数</td><td>Euler 为一阶；backward 为二阶；CrankNicolson 0.9 为混合格式；steadyState 用于稳态</td></tr>
-<tr><td>gradSchemes</td><td>梯度</td><td>Gauss linear、leastSquares、cellLimited Gauss linear 1</td></tr>
-<tr><td>divSchemes</td><td>对流及显式散度</td><td>Gauss upwind 耗散较强；linearUpwind 阶数较高；limitedLinear 等限制格式按字段类型选择</td></tr>
-<tr><td>laplacianSchemes</td><td>扩散项</td><td>常用 Gauss linear corrected；非正交程度较高时可采用 limited 修正</td></tr>
-<tr><td>interpolationSchemes</td><td>面插值</td><td>linear 等</td></tr>
-<tr><td>snGradSchemes</td><td>面法向梯度</td><td>corrected、uncorrected、limited 0.5 等</td></tr>
-<tr><td>fluxRequired</td><td>指定需保留通量的场</td><td>按求解器要求标记 p 等场</td></tr>
-<tr><td>wallDist</td><td>壁距算法</td><td>meshWave 等</td></tr>
-<tr><td>default none</td><td>无默认格式</td><td>所需离散项必须显式配置，缺失时报告错误</td></tr>
-</table></div>
-<p>湍流方程可采用 div(phi,k) Gauss upwind; 和 div(phi,omega) Gauss upwind;，字段名称随模型确定。VOF 求解器的 div(phi,alpha)、div(phirb,alpha) 等条目采用其配套教程的定义。rhoCentralFoam 还需设置 fluxScheme 及变量重构格式。</p>
-<h2>补充说明</h2><p>它管什么：每一项微分算子用什么数值格式离散。这是精度与稳定性的主要旋钮，也是初学者最容易被卡住的地方。</p><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>method</td><td>所采用的分区、插值或模型方法；含义由该字典的读取程序决定。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>ddtSchemes</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/icoFoam/cavity/cavity</h3><p>原始路径：<code>tutorials/incompressible/icoFoam/cavity/cavity/system/fvSchemes</code>；求解器：<code>icoFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity/system/fvSchemes">查看固定版本源码</a> · <a href="/assets/examples/v2512/fvschemes/1-fvSchemes.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+laplacianSchemes
+{
+    default Gauss linear orthogonal;
+}
+interpolationSchemes
+{
+    default linear;
+}
+snGradSchemes
+{
+    default orthogonal;
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>子字典</th>
+<th>对应计算</th>
+<th>本例的含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ddtSchemes</code></td>
+<td>时间导数</td>
+<td><code>Euler</code>：一阶隐式时间离散</td>
+</tr>
+<tr>
+<td><code>gradSchemes</code></td>
+<td>单元梯度</td>
+<td><code>Gauss linear</code>：面插值后进行 Gauss 求和</td>
+</tr>
+<tr>
+<td><code>divSchemes</code></td>
+<td>散度，常用于对流</td>
+<td><code>div(phi,U)</code>：速度对流项</td>
+</tr>
+<tr>
+<td><code>laplacianSchemes</code></td>
+<td>扩散型算子</td>
+<td>面系数线性插值，加正交法向梯度</td>
+</tr>
+<tr>
+<td><code>interpolationSchemes</code></td>
+<td>单元场到面场插值</td>
+<td>默认线性插值</td>
+</tr>
+<tr>
+<td><code>snGradSchemes</code></td>
+<td>面法向梯度</td>
+<td>使用正交中心差分</td>
+</tr>
+</tbody></table>
+<p><code>default</code> 指定该类算子的默认方法；写出 <code>grad(U)</code> 或 <code>div(phi,T)</code> 等专门条目后，对应算子使用专门设置。<code>divSchemes/default none</code> 让漏写的对流项显式报错，便于确认每个方程采用什么格式。</p>
+<h3>对流格式怎么替换</h3>
+<p>下面三行是可替换的选择，在同一个字典中保留其中一行：</p>
+<pre><code class="language-foam">// 迎风
+ div(phi,U) Gauss upwind;
+// 线性迎风
+ div(phi,U) Gauss linearUpwind grad(U);
+// 受限制的线性插值
+ div(phi,U) Gauss limitedLinearV 1;
+</code></pre>
+<p><code>upwind</code> 取上游值，通常较稳健但数值扩散明显。<code>linearUpwind</code> 利用上游梯度改善面值，<code>grad(U)</code> 指向梯度设置。<code>limitedLinearV</code> 对向量场施加限制；标量温度可使用 <code>div(phi,T) Gauss limitedLinear 1;</code>。</p>
+<p>修改键名时与求解器源码对应。例如 <code>fvm::div(phi,T)</code> 查找 <code>div(phi,T)</code>，修改 <code>div(phi,U)</code> 对这个标量方程没有作用。</p>
+<h3>非正交网格的扩散项</h3>
+<p>对于非正交网格，通常将两个法向梯度设置一起调整为：</p>
+<pre><code class="language-foam">laplacianSchemes
+{
+    default Gauss linear corrected;
+}
+snGradSchemes
+{
+    default corrected;
+}
+</code></pre>
+<p><code>corrected</code> 通过重建梯度补充中心连线与面法向之间的差别。修正项较大时，可以研究受限修正并改善网格。增加 <code>fvSolution</code> 的非正交校正次数，则让显式修正使用更新后的场。</p>
+<h3>稳态与瞬态</h3>
+<p>稳态求解使用 <code>steadyState</code>；瞬态可选择 <code>Euler</code>、<code>backward</code> 或带偏心参数的 <code>CrankNicolson</code>。对流格式、时间格式和步长分别影响误差。比较时保留其他参数，先看峰值、积分量和剖面，再决定是否需要进一步细化网格或减小时间步。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/icoFoam/cavity/cavity</summary><p>方腔使用单一、正交的六面体块网格。<code>fvSchemes</code> 把连续方程中的时间导数、对流项和扩散项分别对应到离散格式。</p>
+<ul>
+<li><code>ddtSchemes/default Euler</code> 使用一阶隐式时间离散，配合 <code>controlDict</code> 的 0.005 s 步长推进非定常流动。</li>
+<li><code>div(phi,U) Gauss linear</code> 用高斯积分与线性面插值离散速度对流；本例低 Reynolds 数且网格规整，适合观察中心插值的基本行为。</li>
+<li><code>gradSchemes</code> 中的 <code>Gauss linear</code> 计算压力等场的梯度，<code>interpolationSchemes/default linear</code> 提供默认面插值。</li>
+<li><code>laplacianSchemes/default Gauss linear orthogonal</code> 和 <code>snGradSchemes/default orthogonal</code> 使用正交网格对应的法向梯度处理。</li>
+<li><code>divSchemes/default none</code> 要求为实际使用的对流项明确给出格式，漏项时会报告缺少配置。</li>
+</ul>
+<p>若将网格改为明显非正交网格，应检查 Laplacian 与法向梯度修正方式。改变时间精度时，同时比较时间步；空间格式、时间格式和步长共同决定离散误差。</p>
+<p><a href="/assets/examples/v2512/fvschemes/1-fvSchemes.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity/system/fvSchemes">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -87,7 +158,16 @@ snGradSchemes
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · incompressible/simpleFoam/pitzDaily</h3><p>原始路径：<code>tutorials/incompressible/simpleFoam/pitzDaily/system/fvSchemes</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily/system/fvSchemes">查看固定版本源码</a> · <a href="/assets/examples/v2512/fvschemes/2-fvSchemes.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · incompressible/simpleFoam/pitzDaily</summary><p>后台阶流动包含剪切层与回流区，<code>pitzDaily</code> 为稳态速度和湍流输运选择不同的对流格式。</p>
+<ul>
+<li><code>ddtSchemes/default steadyState</code> 取消瞬态导数，配合 <code>simpleFoam</code> 求稳态解。</li>
+<li><code>div(phi,U) bounded Gauss linearUpwind grad(U)</code> 用带梯度重构的迎风格式求速度对流；<code>grad(U)</code> 指定重构所用的梯度条目。</li>
+<li><code>turbulence bounded Gauss limitedLinear 1</code> 为湍流变量提供受限格式，后面的 <code>div(phi,k)</code>、<code>div(phi,epsilon)</code> 等通过 <code>$turbulence</code> 复用它。</li>
+<li><code>laplacianSchemes/default Gauss linear corrected</code> 与 <code>snGradSchemes/default corrected</code> 对非正交性作修正，适应多块网格的几何特征。</li>
+<li><code>wallDist/method meshWave</code> 指定到壁面距离的计算方法，壁面距离会被有关湍流模型使用。</li>
+</ul>
+<p>加大入口速度或降低黏度后，剪切层会更难解析。可先比较网格细化和对流格式对回流长度的影响，再调整限制强度；求解残差很小仍可能伴随空间离散误差。</p>
+<p><a href="/assets/examples/v2512/fvschemes/2-fvSchemes.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily/system/fvSchemes">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -120,9 +200,9 @@ divSchemes
     div(phi,U)      bounded Gauss linearUpwind grad(U);
 
     turbulence      bounded Gauss limitedLinear 1;
-    div(phi,k)      &#36;turbulence;
-    div(phi,epsilon) &#36;turbulence;
-    div(phi,omega)  &#36;turbulence;
+    div(phi,k)      $turbulence;
+    div(phi,epsilon) $turbulence;
+    div(phi,omega)  $turbulence;
 
     div(nonlinearStress) Gauss linear;
     div((nuEff*dev2(T(grad(U))))) Gauss linear;
@@ -149,7 +229,16 @@ wallDist
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · multiphase/interFoam/laminar/damBreak/damBreak</h3><p>原始路径：<code>tutorials/multiphase/interFoam/laminar/damBreak/damBreak/system/fvSchemes</code>；求解器：<code>interFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/damBreak/damBreak/system/fvSchemes">查看固定版本源码</a> · <a href="/assets/examples/v2512/fvschemes/3-fvSchemes.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/damBreak/damBreak">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · multiphase/interFoam/laminar/damBreak/damBreak</summary><p>溃坝的相分数决定水和空气的分布，动量方程还要使用随相分数变化的密度。本文件因此同时配置了动量输运和界面输运。</p>
+<ul>
+<li><code>ddtSchemes/default Euler</code> 采用一阶隐式时间格式，步长由 <code>controlDict</code> 的 Courant 限制调整。</li>
+<li><code>div(rhoPhi,U) Gauss linearUpwind grad(U)</code> 用质量通量 <code>rhoPhi</code> 输运速度，体现两相密度不同。</li>
+<li><code>div(phi,alpha) Gauss vanLeer</code> 用 van Leer 限制插值处理体积分数的对流，兼顾界面分辨率与变化区域的稳定性。</li>
+<li><code>div(phirb,alpha) Gauss linear</code> 对应界面压缩通量项；压缩强度还由 <code>fvSolution</code> 中的 <code>cAlpha</code> 控制。</li>
+<li><code>laplacianSchemes/default Gauss linear corrected</code> 与 <code>snGradSchemes/default corrected</code> 配合处理扩散项的非正交修正。</li>
+</ul>
+<p>界面过于弥散时，同时检查网格、时间步与压缩设置。比较时固定其他条件，并观察水体积和 <code>alpha.water</code> 的范围；只更换一个格式名称不足以判断整个界面算法的表现。</p>
+<p><a href="/assets/examples/v2512/fvschemes/3-fvSchemes.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/damBreak/damBreak/system/fvSchemes">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/damBreak/damBreak">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -199,9 +288,4 @@ snGradSchemes
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/icofoam/">icoFoam</a> · <a href="/commands/interfoam/">interFoam</a> · <a href="/commands/simplefoam/">simpleFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/fvSchemes&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/fvSchemes&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>找不到离散项或场求解器</td><td>把错误中的完整键名与 fvSchemes / fvSolution 对照，注意 div(phi,U) 等键的精确拼写。</td></tr><tr><td>残差下降但目标量漂移</td><td>同时监测守恒误差、力或流量，并分别检查时间步与网格敏感性。</td></tr><tr><td>非正交修正导致成本增加</td><td>优先改善网格；增加修正次数不是无条件提高精度的办法。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/icofoam/">icoFoam</a> · <a href="/commands/interfoam/">interFoam</a> · <a href="/commands/simplefoam/">simpleFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>找不到离散项或场求解器</td><td>把错误中的完整键名与 fvSchemes / fvSolution 对照，注意 div(phi,U) 等键的精确拼写。</td></tr><tr><td>残差下降但目标量漂移</td><td>同时监测守恒误差、力或流量，并分别检查时间步与网格敏感性。</td></tr><tr><td>非正交修正导致成本增加</td><td>优先改善网格；增加修正次数其作用随网格质量和解的光滑程度变化，可通过细化对比评估。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

@@ -1,8 +1,21 @@
 ---
-title: "run"
+title: "run · 切换到个人算例目录"
 layout: reference
-description: "加载环境后切换到用户运行目录的别名。"
+description: "切换到个人算例目录。"
+cms_slug: "command-run"
 ---
-{% raw %}
-<div class="source-note">v2512 环境中的函数或别名；非独立可执行程序。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>加载环境后切换到用户运行目录的别名。</p><h2>使用入口</h2><pre><code class="language-bash">run</code></pre><h2>使用条件与核对</h2><p>加载环境后切换到用户运行目录的别名。 示例中的算例名、路径与主机名须按实际环境替换。</p><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/config.sh/aliases">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+
+<p>切换到个人算例目录。</p><h2>调用示例</h2>
+<pre><code class="language-bash">source "$WM_PROJECT_DIR/etc/config.sh/aliases"
+run
+pwd
+</code></pre>
+<p>这是 cd 的别名，对应目录为 <code>$FOAM_RUN</code>。先创建尚不存在的个人目录，再使用相应别名。</p>
+<h2>在脚本中查看定义</h2>
+<pre><code class="language-bash">type run
+</code></pre>
+<p><code>type</code> 显示函数定义或别名展开，可用于确认当前终端加载的实现。</p>
+<details><summary>v2512 实现</summary>
+<pre><code class="language-bash">alias run='cd ${FOAM_RUN:-${WM_PROJECT_USER_DIR:?}/run}'
+</code></pre>
+</details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/config.sh/aliases">源码与说明</a></p>

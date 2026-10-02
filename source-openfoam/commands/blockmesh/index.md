@@ -1,26 +1,29 @@
 ---
-title: "blockMesh  根据块拓扑生成六面体网格"
+title: "blockMesh · 读取 blockMeshDict，生成由六面体块组成的网格"
 layout: reference
-description: "读取 system/blockMeshDict，生成后使用 checkMesh 检查。"
+description: "读取 blockMeshDict，生成由六面体块组成的网格。"
+cms_slug: "command-blockmesh"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>读取 system/blockMeshDict，生成后使用 checkMesh 检查。</p><h2>v2512 源码中的用途</h2><p>A multi-block mesh generator. Uses the block mesh description found in - \c system/blockMeshDict - \c system/\&lt;region\&gt;/blockMeshDict - \c constant/polyMesh/blockMeshDict - \c constant/\&lt;region\&gt;/polyMesh/blockMeshDict</p><h2>使用入口</h2><pre><code class="language-bash">blockMesh</code></pre><h2>使用条件与核对</h2><p>读取 system/blockMeshDict，生成后使用 checkMesh 检查。 用法：blockMesh [-dict 文件] [-case 目录] 示例：blockMesh
-源码说明：A multi-block mesh generator. Uses the block mesh description found in - \c system/blockMeshDict - \c system/\&lt;region\&gt;/blockMeshDict - \c constant/polyMesh/blockMeshDict - \c constant/\&lt;region\&gt;/polyMesh/blockMeshDict
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-case -debug-switch -dict -doc -doc-source -fileHandler -help -help-compat -help-full -help-man -help-notes -info-switch -lib -merge-points -no-clean -no-libs -opt-switch -region -sets -time -verbose -write-obj -write-vtk</p><p>关联配置：<a href="/dictionaries/system-blockmeshdict/">blockMeshDict</a></p><h2>同版本官方教程</h2><p>以下链接直接指向 OpenFOAM-v2512 标签中的教程目录。先阅读 Allrun 确定网格生成、初始化和依赖，再在自己的工作目录运行。列出教程不表示本网站已执行它的全部计算。</p><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/blockMesh/sphere">mesh/blockMesh/sphere</a></li><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/blockMesh/sphere7">mesh/blockMesh/sphere7</a></li><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/blockMesh/mergePairs">mesh/blockMesh/mergePairs</a></li><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/blockMesh/spheroidProjected">mesh/blockMesh/spheroidProjected</a></li><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/blockMesh/spheroid7Projected">mesh/blockMesh/spheroid7Projected</a></li></ul><pre><code class="language-bash">mkdir -p &quot;&#36;FOAM_RUN&quot;
-cd &quot;&#36;FOAM_RUN&quot;
-# 先选择一个尚不存在的新目录；保留原教程
-cp -r &quot;&#36;FOAM_TUTORIALS/mesh/blockMesh/sphere&quot; ./blockMesh-study
-cd ./blockMesh-study
-ls
-# 查看运行流程后，再决定执行哪些步骤
-sed -n &#x27;1,200p&#x27; Allrun</code></pre><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/blockmesh.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: blockMesh
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/blockMesh/blockMesh.C
 
-
-Usage: blockMesh [OPTIONS]
+<p>读取 blockMeshDict，生成由六面体块组成的网格。</p><h2>生成并检查网格</h2>
+<pre><code class="language-bash">blockMesh
+checkMesh -allTopology -allGeometry
+</code></pre>
+<p><code>blockMesh</code> 读取 <code>system/blockMeshDict</code>，通常将网格写入 <code>constant/polyMesh</code>。随后检查单元数、包围盒和网格质量；长度单位由字典中的 <code>scale</code> 决定。</p>
+<h2>选择另一份网格配置</h2>
+<pre><code class="language-bash">blockMesh -dict system/blockMeshDict.fine
+</code></pre>
+<p>这里使用名为 <code>blockMeshDict.fine</code> 的配置。可保留粗、细两份字典，分别改变 <code>blocks</code> 中的单元数；运行会更新当前算例的网格。</p>
+<h2>从算例外运行</h2>
+<pre><code class="language-bash">blockMesh -case ../cavity-fine
+checkMesh -case ../cavity-fine
+</code></pre>
+<p><code>-case</code> 指定已有算例目录，命令仍使用该目录中的字典。它只改变工作对象，不会替你复制算例。</p>
+<h2>查看块的连接</h2>
+<pre><code class="language-bash">blockMesh -write-vtk
+</code></pre>
+<p>输出块拓扑的 VTK 文件并退出。用 ParaView 查看块连接和顶点方向，适合检查多块结构中的顶点编号。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-merge-points</td><td>Geometric point merging instead of topological merging [default for 1912 and earlier].</td></tr><tr><td>-no-clean</td><td>保留已有 polyMesh 文件；默认行为见完整帮助。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-sets</td><td>同时将 cellZone 写成 cellSet。</td></tr><tr><td>-time &lt;time&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-verbose</td><td>Force verbose output. (Can be used multiple times)</td></tr><tr><td>-write-obj</td><td>Write block edges and centres as obj files and exit</td></tr><tr><td>-write-vtk</td><td>输出块拓扑的 VTK 文件。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-blockmeshdict/">blockMeshDict</a></p><h2>配套算例</h2><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/blockMesh/sphere">mesh/blockMesh/sphere</a></li><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/blockMesh/sphere7">mesh/blockMesh/sphere7</a></li><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/blockMesh/mergePairs">mesh/blockMesh/mergePairs</a></li><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/blockMesh/spheroidProjected">mesh/blockMesh/spheroidProjected</a></li><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/blockMesh/spheroid7Projected">mesh/blockMesh/spheroid7Projected</a></li></ul><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: blockMesh [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;
@@ -76,5 +79,4 @@ Block mesh generator.
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/blockMesh/blockMesh.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/blockMesh/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/blockMesh/blockMesh.C">源码与说明</a> · <a href="/assets/command-help/blockmesh.txt">帮助文本</a></p>

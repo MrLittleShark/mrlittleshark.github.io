@@ -3,8 +3,8 @@
     "slug": "topic-turbulence",
     "kind": "module",
     "title": "湍流",
-    "summary": "把模型、入口条件和近壁网格放在一起考虑，理解 RANS 与 LES 各自需要解析什么，以及结果应该怎样检查。",
-    "body": "## 从要比较的物理量出发\n\n做湍流模拟时，可以先写下最终需要比较的量：平均压降、阻力、换热量，还是随时间变化的涡结构与载荷。这个选择会影响模型、网格和时间步的要求。例如，关心平均阻力时常先建立 RANS 基线；如果研究非定常大尺度结构，则需要进一步讨论 LES 的空间分辨率、时间分辨率和统计采样时间。\n\nRANS 对流动方程进行平均，用模型描述平均后新增的湍流关联项。LES 则在网格与滤波尺度允许的范围内解析较大的涡，用亚格子模型表示未解析尺度的影响。因此，同一个几何中选择 RANS 或 LES，意味着改变了需要由网格和时间推进直接解析的内容。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-turbulence-rans-les-fields.png\" alt=\"RANS 平均场与 LES 瞬时结构\" loading=\"lazy\"><figcaption><strong>RANS 平均场与 LES 瞬时结构。</strong>原讲义的两幅结果图分别展示平均化描述和瞬时流动结构。比较前应区分统计平均与瞬时样本；瞬时图中结构更多并不自动表示整体预测更准确。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 27 页（合并讲义 PDF 第 900 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n## 为什么模型选择要和近壁网格一起讨论\n\n壁面附近的速度梯度通常较大。第一层单元离壁面的距离，会影响数值网格落在黏性底层、缓冲层还是更外侧的区域。常用的无量纲距离是\n\n\\[\ny^+=\\frac{u_\\tau y}{\\nu},\\qquad u_\\tau=\\sqrt{\\tau_w/\\rho}.\n\\]\n\n这里的 \\(y\\) 是近壁采样位置到壁面的距离，\\(u_\\tau\\) 来自壁面切应力。由于切应力通常要经过求解才能得到，前处理阶段的第一层高度估计，需要在计算后结合实际 \\(y^+\\) 分布检查。不能只输入一个目标值，就认为所有壁面都满足要求。\n\n学习时建议先阅读“模型选择”和“近壁网格”两课，再打开下载包中的 pitzDaily 案例，逐一查看湍流模型、入口场和壁面边界。随后进入 motorBike，观察外流几何、边界层网格与阻力监测之间的联系。两个案例分别提供较简单和较复杂的场景，便于把新知识逐步加进去。\n\n## 计算完成后，怎样判断下一步\n\n先检查残差和整体流量，再查看压力降、力或其他目标量随迭代或时间的变化。对于需要统计的非定常计算，还要说明去掉了多长的初始过渡段、平均时间覆盖了多少个主要流动周期，以及统计量是否对采样时长敏感。\n\n若结果变化较大，应分别检查入口湍流量、网格分辨率、近壁处理和模型假设。每次保持其余条件不变，可以更容易判断变化来自哪里。本专题下面的课程和案例入口按这条顺序组织；完整案例中保留官方设置，修改前先阅读每个包的运行说明。",
+    "summary": "RANS、LES、入口湍流量和近壁网格。",
+    "body": "## RANS 与 LES\n\n计算平均压降、阻力或换热量时，RANS 是常见起点。它对流动方程作平均，用湍流模型计算雷诺应力等未知量。LES 则直接计算较大的涡，并用亚格子模型描述较小尺度的作用，需要更细的网格和时间步。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-turbulence-rans-les-fields.png\" alt=\"RANS 平均场与 LES 瞬时结构\" loading=\"lazy\"><figcaption><strong>RANS 平均场与 LES 瞬时结构</strong><small class=\"figure-source\">来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics</a> · module8.pdf，p. 27 · <a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>\n\n## 模型、入口与壁面\n\n在 `constant/turbulenceProperties` 中选择模型后，还要准备对应的场。`kEpsilon` 使用 `k`、`epsilon`，`kOmegaSST` 使用 `k`、`omega`；壁面条件与近壁网格一起设置。\n\n例如入口速度 $U=10\\,\\mathrm{m/s}$、湍流强度 $I=5\\%$ 时，\n\n\\[\nk=\\frac32(IU)^2=0.375\\,\\mathrm{m^2/s^2}.\n\\]\n\n耗散率还需要长度尺度。各参数的估算、量纲和边界例子见[湍流模型课程](/read/?slug=laminar-turbulence-model-choice)。\n\n壁面附近常用 $y^+=u_\\tau y/\\nu$ 衡量网格分辨率。第一层高度由目标 $y^+$ 初估，计算后再用实际分布调整。详细步骤见[近壁网格](/read/?slug=wall-resolution-yplus)。\n\n## 配套练习\n\n先使用 pitzDaily 比较入口湍流量和压降，再用 motorBike 练习外流网格、壁面分辨率与阻力监测。LES 结果还需选定统计时间段，比较平均值、脉动量和采样时长。\n\n[turbulenceProperties 配置](/dictionaries/constant-turbulenceproperties/) · [采样与时间平均](/read/?slug=sampling-functions-and-observables)\n",
     "track": "专题学习",
     "series": "OpenFOAM v2512 专题",
     "sort_order": 1,
@@ -17,15 +17,18 @@
       "version": "OpenCFD OpenFOAM v2512",
       "source": "Wolf Dynamics 基础培训；OpenCFD v2512 官方教程与源码",
       "figure_source": "Wolf 基础讲义 CC BY-SA 4.0；逐图署名",
-      "canonical_path": "/topics/turbulence/"
+      "canonical_path": "/topics/turbulence/",
+      "wolf_figures": [
+        "wolf-turbulence-rans-les-fields"
+      ]
     }
   },
   {
     "slug": "topic-multiphase",
     "kind": "module",
     "title": "多相流",
-    "summary": "从溃坝案例认识体积分数和界面输运，逐步理解初始场、接触边界、时间步与质量守恒之间的关系。",
-    "body": "## 先确定要描述哪一种多相问题\n\n多相流包含许多不同情形：水面与空气之间的清晰界面、液体中大量分散的小气泡、喷雾中的液滴，以及固体颗粒随流动迁移等。这些问题对相界面的描述方式不同，所以首先要说明相的组成、相的分布形式，以及关心的尺度。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-multiphase-morphology.png\" alt=\"分散相与分离界面的形态区别\" loading=\"lazy\"><figcaption><strong>分散相与分离界面的形态区别。</strong>左图是一种相以分散区域存在于连续相中的示意，右图是较清晰的分离界面。形态分类用于提出建模问题；是否采用 VOF、双流体或颗粒跟踪还取决于尺度分辨率与相间作用。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 65 页（合并讲义 PDF 第 938 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-multiphase-model-families.png\" alt=\"多相流计算框架的对照\" loading=\"lazy\"><figcaption><strong>多相流计算框架的对照。</strong>原图对照分离界面 VOF、Euler–Euler 分散相描述和 Euler–Lagrange 颗粒描述。阅读时辨认相的表示方式及所求方程，避免仅凭求解器名称选择模型。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 71 页（合并讲义 PDF 第 944 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n本专题先从 VOF 方法和溃坝案例开始。VOF 用体积分数记录每个网格单元中某一相所占的比例。以液体体积分数 \\(\\alpha\\) 为例，\\(\\alpha=1\\) 表示单元内为液体，\\(\\alpha=0\\) 表示另一相；介于两者之间的单元组成数值上的界面过渡区域。随着流动推进，这个分布随输运方程更新。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-vof-volume-fraction.png\" alt=\"相分数如何表示网格内的界面\" loading=\"lazy\"><figcaption><strong>相分数如何表示网格内的界面。</strong>单元相分数为 0 或 1 表示单一相占据，介于两者之间的数值表示该单元包含界面。图板同时给出原课程的混合物性示意关系；具体模型中的密度、黏度定义应以所用方程为准。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 78 页（合并讲义 PDF 第 951 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n## 为什么从初始场开始检查\n\n在溃坝案例中，几何和网格建立了容器，而初始化决定了水最初位于哪里。下载案例后，可以先生成网格，再运行包内规定的初始化步骤，在 ParaView 中显示体积分数。此时就能检查水柱的位置、高度和体积，而不必等到计算发散后再反查初始条件。\n\n接下来查看密度、黏度、重力和表面张力的单位，并确认压力变量的定义。涉及 \\(p\\) 与 \\(p_{rgh}\\) 时，要结合求解器和重力项理解它们的联系，不能直接复制另一类求解器的压力边界。正文中的 v2512 说明与案例包提供了具体文件对照。\n\n## 从界面形状走向定量检查\n\n界面图能帮助发现明显的破碎、穿壁或不合理振荡，但还需要检查液体总体积。对于没有相变的不可压缩两相问题，可用\n\n\\[\nV_\\mathrm{liquid}(t)\\approx\\sum_P\\alpha_P(t)V_P(t)\n\\]\n\n估算液体体积，并结合入口、出口的相通量判断变化是否合理。封闭容器中的体积漂移和开放边界中的净流出，含义并不相同。对两者分别记录，才能判断差异主要来自物理边界还是数值误差。\n\n随后再比较网格与时间步：界面移动距离应当与局部网格尺度相适应，表面张力较强时还可能出现额外的时间尺度限制。本专题从较简单的溃坝过程建立这套检查方法，再为以后扩展到更复杂的界面问题做准备。当前不包含电极气泡专题。\n\n",
+    "summary": "VOF、两流体模型、颗粒跟踪与界面计算。",
+    "body": "## 选择相的描述方法\n\n水面、气泡群和喷雾包含不同尺度的相分布。VOF 用体积分数表示网格能分辨的界面；Euler–Euler 方法将多相都描述为连续场；Euler–Lagrange 方法跟踪颗粒或液滴的运动。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-multiphase-morphology.png\" alt=\"分散相与分离界面的形态区别\" loading=\"lazy\"><figcaption><strong>分散相与分离界面的形态区别</strong><small class=\"figure-source\">来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics</a> · module8.pdf，p. 65 · <a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>\n\n左侧的气泡或液滴分散在连续相中，右侧的两相由连续界面分隔。选择模型时，先比较气泡、液滴或界面结构与网格的尺度，再确定是解析界面形状，还是描述相的平均分布与相间作用。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-multiphase-model-families.png\" alt=\"多相流计算框架的对照\" loading=\"lazy\"><figcaption><strong>多相流计算框架的对照</strong><small class=\"figure-source\">来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics</a> · module8.pdf，p. 71 · <a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>\n\n## 从溃坝算例认识 VOF\n\n水相体积分数 `alpha.water` 为 1 时，单元充满水；为 0 时，单元内为空气；中间值表示水占据了部分体积。`setFields` 根据初始水柱的几何范围写入这个场。\n\n```bash\nblockMesh\nsetFields\ninterFoam > log.interFoam 2>&1\n```\n\n这三步用于已经配置好的 damBreak 算例：建立网格、设置水柱、求解界面运动。先查看初始体积分数，确认水柱位置和高度，再比较后续水面变化。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-vof-volume-fraction.png\" alt=\"相分数如何表示网格内的界面\" loading=\"lazy\"><figcaption><strong>相分数如何表示网格内的界面</strong><small class=\"figure-source\">来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics</a> · module8.pdf，p. 78 · <a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>\n\n## 界面与体积\n\n液体总体积由每个单元的相分数与单元体积求和：\n\n\\[\nV_\\mathrm{water}=\\sum_P\\alpha_P V_P.\n\\]\n\n封闭容器中，这个量应随时间保持稳定；开放边界中则结合相通量计算流入和流出。对比不同网格和时间步时，同时记录体积变化、水面位置和压力。\n\n[VOF 课程与案例下载](/read/?slug=vof-interface-dambreak) · [alpha.water 配置](/dictionaries/0-alpha-water/)\n",
     "track": "专题学习",
     "series": "OpenFOAM v2512 专题",
     "sort_order": 2,
@@ -38,15 +41,20 @@
       "version": "OpenCFD OpenFOAM v2512",
       "source": "Wolf Dynamics 基础培训；OpenCFD v2512 官方教程与源码",
       "figure_source": "Wolf 基础讲义 CC BY-SA 4.0；逐图署名",
-      "canonical_path": "/topics/multiphase/"
+      "canonical_path": "/topics/multiphase/",
+      "wolf_figures": [
+        "wolf-multiphase-morphology",
+        "wolf-multiphase-model-families",
+        "wolf-vof-volume-fraction"
+      ]
     }
   },
   {
     "slug": "topic-meshing",
     "kind": "module",
     "title": "网格划分",
-    "summary": "从几何、单位和边界名称开始，用 blockMesh 与 snappyHexMesh 建立网格，再通过质量检查和细化对比评估它是否适合当前计算。",
-    "body": "## 网格工作从几何解释开始\n\n在生成网格前，先确认计算的流体区域在哪里、几何使用什么单位，以及每个边界承担什么物理作用。比如同一份外形文件，内部流动与外部流动需要保留的区域就不同。把这些问题确定下来，后面的区域选择、边界命名和局部加密才有明确依据。\n\n对于方腔、通道等可以分块描述的几何，blockMesh 适合用来建立第一批案例。顶点、块、网格数量和 grading 都能直接在字典中检查。进入复杂表面几何后，再学习 snappyHexMesh 的切割、贴合和边界层生成，可以更清楚地看出每个阶段改变了什么。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-snappy-layer-coverage.png\" alt=\"边界层厚度、层数与覆盖范围\" loading=\"lazy\"><figcaption><strong>边界层厚度、层数与覆盖范围。</strong>上排显示原算例的层厚和层数，下排显示壁面层覆盖区域。应将颜色分布与实际网格截面一起检查，区分未生成层、层数变化和厚度变化。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module3.pdf 第 148 页（合并讲义 PDF 第 470 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n## 把质量指标与具体位置联系起来\n\ncheckMesh 报告的非正交性、面心偏斜、体积和长宽比，分别反映不同的几何特征。出现异常时，可以先找到对应的单元或面，再观察它位于尖角、窄缝、过渡区还是边界层。这样才能判断应调整几何、加密区域、层厚增长，还是网格生成参数。\n\n质量指标需要结合所求方程和目标量解释。例如，高长宽比的近壁层状网格可能是有意设计的，但其方向、正交性和层厚过渡仍然需要检查。单一的最大值只能帮助定位问题；还应观察异常单元的数量和空间分布。\n\n## 建议怎样使用配套案例\n\n先用方腔熟悉块定义、边界名称和网格数量，再用 pitzDaily 观察局部加密与流动发展。随后打开 motorBike，对照表面几何、refinement 区域、贴合参数和边界层控制。每次只修改一类设置，保存前后切面，就能更容易解释网格为什么发生变化。\n\n网格生成通过之后，还需要做细化对比。选择压力降、阻力或其他与问题直接相关的量，在几组有计划的网格上比较。若只是增加总单元数，却同时大幅改变边界层、几何表示或边界位置，就很难把结果变化归因于单一的空间分辨率。\n\n下面的课程从基础生成逐步走向质量诊断和误差分析。案例包保留官方目录结构，说明文件会指出本节对应的具体子目录，便于下载后直接开始练习。",
+    "summary": "结构网格、贴体网格、局部细化与质量检查。",
+    "body": "## 网格工作从几何解释开始\n\n在生成网格前，先确认计算的流体区域在哪里、几何使用什么单位，以及每个边界承担什么物理作用。比如同一份外形文件，内部流动与外部流动需要保留的区域就不同。把这些问题确定下来，后面的区域选择、边界命名和局部加密才有明确依据。\n\n对于方腔、通道等可以分块描述的几何，blockMesh 适合用来建立第一批案例。顶点、块、网格数量和 grading 都能直接在字典中检查。进入复杂表面几何后，再学习 snappyHexMesh 的切割、贴合和边界层生成，可以更清楚地看出每个阶段改变了什么。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-snappy-layer-coverage.png\" alt=\"边界层厚度、层数与覆盖范围\" loading=\"lazy\"><figcaption><strong>边界层厚度、层数与覆盖范围</strong><small class=\"figure-source\">来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics</a> · module3.pdf，p. 148 · <a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>\n\n## 把质量指标与具体位置联系起来\n\ncheckMesh 报告的非正交性、面心偏斜、体积和长宽比，分别反映不同的几何特征。出现异常时，可以先找到对应的单元或面，再观察它位于尖角、窄缝、过渡区还是边界层。这样才能判断应调整几何、加密区域、层厚增长，还是网格生成参数。\n\n质量指标需要结合所求方程和目标量解释。例如，高长宽比的近壁层状网格可能是有意设计的，但其方向、正交性和层厚过渡仍然需要检查。单一的最大值只能帮助定位问题；还应观察异常单元的数量和空间分布。\n\n## 建议怎样使用配套案例\n\n先用方腔熟悉块定义、边界名称和网格数量，再用 pitzDaily 观察局部加密与流动发展。随后打开 motorBike，对照表面几何、refinement 区域、贴合参数和边界层控制。每次只修改一类设置，保存前后切面，就能更容易解释网格为什么发生变化。\n\n网格生成通过之后，还需要做细化对比。选择压力降、阻力或其他与问题直接相关的量，在几组有计划的网格上比较。若只是增加总单元数，却同时大幅改变边界层、几何表示或边界位置，就很难把结果变化归因于单一的空间分辨率。\n\n下面的课程从基础生成逐步走向质量诊断和误差分析。案例包保留官方目录结构，说明文件会指出本节对应的具体子目录，便于下载后直接开始练习。\n",
     "track": "专题学习",
     "series": "OpenFOAM v2512 专题",
     "sort_order": 3,
@@ -59,15 +67,18 @@
       "version": "OpenCFD OpenFOAM v2512",
       "source": "Wolf Dynamics 基础培训；OpenCFD v2512 官方教程与源码",
       "figure_source": "Wolf 基础讲义 CC BY-SA 4.0；逐图署名",
-      "canonical_path": "/topics/meshing/"
+      "canonical_path": "/topics/meshing/",
+      "wolf_figures": [
+        "wolf-snappy-layer-coverage"
+      ]
     }
   },
   {
     "slug": "topic-dynamic-mesh",
     "kind": "module",
     "title": "动网格",
-    "summary": "先分清网格真的在运动，还是只采用旋转参考系；再通过运动边界和 AMI 案例理解网格更新、边界速度与通量之间的联系。",
-    "body": "## 先把运动方式说清楚\n\n处理运动物体时，首先描述什么在运动：边界的位置是否随时间变化，整个网格区域是否刚体运动，还是局部网格需要变形或重新连接。运动方式决定了网格更新方法，也决定了边界条件和数值检查的重点。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-dynamic-floating-body.png\" alt=\"浮体运动曲线与自由液面耦合\" loading=\"lazy\"><figcaption><strong>浮体运动曲线与自由液面耦合。</strong>左侧保留原课程的运动时间曲线，右侧为浮体与计算网格示意。它连接刚体运动、自由液面和网格响应；PDF 中的图像帧不代表完整时间序列，也不属于本站新增计算。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 170 页（合并讲义 PDF 第 1043 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n旋转参考系、滑移接口和变形网格对应不同的建模方式。例如，MRF 在一个随区域旋转的参考系中表示相关项，常用于建立旋转机械的近似稳态模型；实际滑移网格则随时间改变区域之间的相对位置，需要处理运动接口的信息传递。选择方法时，应结合是否需要解析叶片通过等非定常过程。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-dynamic-cylinder-deformation.png\" alt=\"振荡圆柱附近的网格变形\" loading=\"lazy\"><figcaption><strong>振荡圆柱附近的网格变形。</strong>四幅网格画面展示原课程预设圆柱运动示例。观察物体附近与远场网格的变形分布，有助于理解运动边界、固定边界和网格位移的关联；网格质量仍需逐时刻检查。 <br><span>来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics，OpenFOAM Introductory Training</a>，module8.pdf 第 164 页（合并讲义 PDF 第 1037 页）。<a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>，裁剪提取；中文说明由本站编写。</span></figcaption></figure>\n\n## 为什么运动设置必须和通量一起检查\n\n固定网格中，控制体积的位置不变；当网格运动时，控制面的运动也会参与质量和动量的收支。因此，需要同时检查网格速度、相对通量和物理边界速度。物体已经移动而壁面速度仍按静止壁面处理，可能产生与预期不一致的流动。\n\n练习时可以先让网格单独运动，查看最容易压缩、拉伸或扭曲的位置。把这一检查放在完整流动求解之前，可以更快发现运动幅度、约束或网格变形策略的问题。具体命令应按下载包中的 Allrun 和说明执行，因为不同的运动方法需要的准备步骤并不完全相同。\n\n## 从 movingCone 到 AMI\n\nmovingCone 案例用于观察运动边界与周围网格变形。阅读时先找到 dynamicMeshDict，再对照运动对象、位移描述以及速度场的边界设置。随后进入 mixerVesselAMI2D，观察旋转区域与静止区域之间如何通过 AMI 交换信息。\n\nAMI 允许两侧接口采用不完全一致的面划分，但接口覆盖、方向和插值质量仍要检查。时间推进中还需要关注小单元、网格质量及相关 Courant 数的变化。若只看初始网格通过检查，就可能漏掉运动到某个位置后出现的问题。\n\n这个专题先建立运动、网格和流动三者的对应关系。配套资料会分别说明源码核对、网格检查和求解运行的范围，便于在已有证据上继续做自己的验证。\n\n",
+    "summary": "网格运动、区域接口与拓扑变化。",
+    "body": "## 先把运动方式说清楚\n\n处理运动物体时，首先描述什么在运动：边界的位置是否随时间变化，整个网格区域是否刚体运动，还是局部网格需要变形或重新连接。运动方式决定了网格更新方法，也决定了边界条件和数值检查的重点。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-dynamic-floating-body.png\" alt=\"浮体运动曲线与自由液面耦合\" loading=\"lazy\"><figcaption><strong>浮体运动曲线与自由液面耦合</strong><small class=\"figure-source\">来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics</a> · module8.pdf，p. 170 · <a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>\n\n旋转参考系、滑移接口和变形网格对应不同的建模方式。例如，MRF 在一个随区域旋转的参考系中表示相关项，常用于建立旋转机械的近似稳态模型；实际滑移网格则随时间改变区域之间的相对位置，需要处理运动接口的信息传递。选择方法时，应结合是否需要解析叶片通过等非定常过程。\n\n<figure class=\"wolf-figure\"><img src=\"/assets/wolf/wolf-dynamic-cylinder-deformation.png\" alt=\"振荡圆柱附近的网格变形\" loading=\"lazy\"><figcaption><strong>振荡圆柱附近的网格变形</strong><small class=\"figure-source\">来源：Joel Guerrero / <a href=\"https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit\">Wolf Dynamics</a> · module8.pdf，p. 164 · <a href=\"https://creativecommons.org/licenses/by-sa/4.0/\">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>\n\n## 为什么运动设置必须和通量一起检查\n\n固定网格中，控制体积的位置不变；当网格运动时，控制面的运动也会参与质量和动量的收支。因此，需要同时检查网格速度、相对通量和物理边界速度。物体已经移动而壁面速度仍按静止壁面处理，可能产生与预期不一致的流动。\n\n练习时可以先让网格单独运动，查看最容易压缩、拉伸或扭曲的位置。把这一检查放在完整流动求解之前，可以更快发现运动幅度、约束或网格变形策略的问题。具体命令应按下载包中的 Allrun 和说明执行，因为不同的运动方法需要的准备步骤并不完全相同。\n\n## 从 movingCone 到 AMI\n\nmovingCone 案例用于观察运动边界与周围网格变形。阅读时先找到 dynamicMeshDict，再对照运动对象、位移描述以及速度场的边界设置。随后进入 mixerVesselAMI2D，观察旋转区域与静止区域之间如何通过 AMI 交换信息。\n\nAMI 允许两侧接口采用不完全一致的面划分，但接口覆盖、方向和插值质量仍要检查。时间推进中还需要关注小单元、网格质量及相关 Courant 数的变化。若只看初始网格通过检查，就可能漏掉运动到某个位置后出现的问题。\n\n这个专题先建立运动、网格和流动三者的对应关系。配套资料会分别说明源码核对、网格检查和求解运行的范围，便于在已有证据上继续做自己的验证。\n",
     "track": "专题学习",
     "series": "OpenFOAM v2512 专题",
     "sort_order": 4,
@@ -80,7 +91,11 @@
       "version": "OpenCFD OpenFOAM v2512",
       "source": "Wolf Dynamics 基础培训；OpenCFD v2512 官方教程与源码",
       "figure_source": "Wolf 基础讲义 CC BY-SA 4.0；逐图署名",
-      "canonical_path": "/topics/dynamic-mesh/"
+      "canonical_path": "/topics/dynamic-mesh/",
+      "wolf_figures": [
+        "wolf-dynamic-cylinder-deformation",
+        "wolf-dynamic-floating-body"
+      ]
     }
   }
 ]

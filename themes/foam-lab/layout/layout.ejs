@@ -5,6 +5,7 @@
   <title><%= page.title || 'OpenFOAM 学习站' %> · FoamLab</title>
   <meta name="description" content="<%= page.description || 'OpenFOAM v2512 中文学习社区，系统课程、命令与配置参考、编程实例和公开讨论。' %>">
   <meta name="theme-color" content="#1d4874">
+  <% if(page.noindex || page.admin_only || page.section==='admin'){ %><meta name="robots" content="noindex, nofollow"><% } %>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <script src="/assets/appearance.js"></script>
   <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
@@ -18,6 +19,9 @@
   <link rel="stylesheet" href="/assets/typography.css">
   <link rel="stylesheet" href="/assets/courses.css">
   <link rel="stylesheet" href="/assets/topics.css">
+  <link rel="stylesheet" href="/assets/reader.css">
+  <link rel="stylesheet" href="/assets/page-outline.css">
+  <link rel="stylesheet" href="/assets/navigation.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -30,6 +34,7 @@
   <script src="/assets/refinements.js" defer></script>
   <script src="/assets/topics.js" defer></script>
   <script src="/assets/figure-viewer.js" defer></script>
+  <script src="/assets/page-outline.js" defer></script>
 </head>
 <body data-section="<%= page.section || page.layout || '' %>" data-lesson="<%= page.lesson_id || '' %>">
 <a class="skip" href="#main">跳到主要内容</a>
@@ -41,18 +46,19 @@
     <div class="nav-label">学习空间</div>
     <% const nav=[['/','home','学习概览'],['/courses/','book','系统学习'],['/topics/','grid','专题学习'],['/start/','arrow','快速开始'],['/commands/','terminal','命令查询'],['/dictionaries/','file','配置与字典'],['/algorithms/','grid','数值方法'],['/programming/','terminal','OpenFOAM 编程'],['/tools/','grid','工具生态']]; nav.forEach(([url,ico,label,badge])=>{ const active = url==='/' ? page.path==='index.html' : page.path && (page.path.startsWith(url.slice(1)) || (url==='/courses/' && page.path.startsWith('lessons/'))); %>
     <a href="<%= url %>" class="nav-item <%= active?'active':'' %>" <%- active?'aria-current="page"':'' %>><%- icon(ico) %><span><%= label %></span><% if(badge){ %><span class="nav-badge"><%= badge %></span><% } %></a>
+    <% if(url==='/programming/'){ %><div class="nav-subgroup" aria-label="OpenFOAM 编程基础"><% [['linux','terminal','Linux 入门'],['cpp','file','C++ 入门']].forEach(([key,ico,label])=>{ const current=page.section===key; %><a href="/<%= key %>/" class="nav-item nav-subitem <%= current?'active':'' %>" <%- current?'aria-current="page"':'' %>><%- icon(ico) %><span><%= label %></span></a><% }); %></div><% } %>
     <% }); %>
     <a href="/account/" class="nav-item <%= page.section==='account'?'active':'' %>"><%- icon('grid') %><span>个人中心</span></a>
     <div class="nav-label">资源与社区</div>
     <% [['resources','download','资料与算例'],['recommendations','grid','资源推荐'],['sharing','book','实践与分享'],['authors','file','作者专栏'],['community','chat','讨论中心'],['assignments','task','作业与实践'],['announcements','bell','网站公告']].forEach(([slug,ico,label])=>{ %>
     <a href="/<%= slug %>/" class="nav-item <%= page.section===slug?'active':'' %>" <%- page.section===slug?'aria-current="page"':'' %>><%- icon(ico) %><span><%= label %></span></a><% }); %>
   </nav>
-  <div class="sidebar-bottom"><div class="tiny-label">软件版本与课程范围</div><p>OpenCFD v2512<br>计算流体力学与数值方法</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
+  <div class="sidebar-bottom"><div class="tiny-label">软件版本</div><p>OpenFOAM v2512</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
 </aside>
 <div class="app-shell">
-  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><%- icon('menu') %></button><div class="breadcrumb">学习空间 <span>/</span> <strong><%= page.title || '学习概览' %></strong></div><button class="search-trigger" data-open-search><%- icon('search') %><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/foamlabshark/foamlabshark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><%- icon('github') %></a></header>
-  <main id="main"><%- body %></main>
-  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span><a href="/maintenance/">维护手册</a> <a href="/design/">设计规范</a> <a href="/read/?slug=sources-and-validation">资料来源</a> <a href="/support/">支持本站</a> <a href="/admin/">管理入口</a></span></footer>
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><%- icon('menu') %></button><% const parentPage=breadcrumb_parent(page); %><div class="breadcrumb"><a id="breadcrumb-parent" href="<%= parentPage.url %>"><%= parentPage.label %></a><% if(page.path!=='index.html'){ %> <span>/</span> <strong><%= page.title || '学习概览' %></strong><% } %></div><button class="search-trigger" data-open-search><%- icon('search') %><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><a class="account-nav" href="/account/" id="account-nav-label">登录 / 个人中心</a><a class="github-link" href="https://github.com/foamlabshark/foamlabshark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><%- icon('github') %></a></header>
+  <main id="main"><% if(page.path!=='index.html'){ %><div class="page-return"><a class="button secondary" id="page-back-link" href="<%= parentPage.url %>">← 返回<%= parentPage.label %></a></div><% } %><%- body %></main>
+  <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span><a href="/read/?slug=sources-and-validation">资料来源</a> <a href="/support/" data-support-open>支持作者</a> <a href="/admin/" data-management-link hidden>管理入口</a></span></footer>
 </div>
 <dialog id="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">搜索学习资料</h2><button class="icon-button" data-close-dialog aria-label="关闭搜索">×</button></div><label class="search-field"><%- icon('search') %><input id="global-search" type="search" placeholder="例如：blockMesh、压力边界、SIMPLE" autocomplete="off" aria-label="搜索关键词"></label><div id="search-results" aria-live="polite"><p class="muted">输入关键词，查找课程正文和参考手册。</p></div><div class="dialog-foot">支持中文与命令名称 <kbd>Esc</kbd> 关闭</div></dialog>
 <div class="toast" role="status" hidden></div>

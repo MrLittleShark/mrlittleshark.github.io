@@ -1,26 +1,28 @@
 ---
-title: "decomposePar  将网格和场分解为并行子域"
+title: "decomposePar · 按照 decomposeParDict 将网格与场分成并行子域"
 layout: reference
-description: "读取 decomposeParDict，-force 替换已有 processor 目录。"
+description: "按照 decomposeParDict 将网格与场分成并行子域。"
+cms_slug: "command-decomposepar"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>读取 decomposeParDict，-force 替换已有 processor 目录。</p><h2>v2512 源码中的用途</h2><p>Automatically decomposes a mesh and fields of a case for parallel execution of OpenFOAM.</p><h2>使用入口</h2><pre><code class="language-bash">decomposePar</code></pre><h2>使用条件与核对</h2><p>读取 decomposeParDict，-force 替换已有 processor 目录。 用法：decomposePar [选项] 示例：decomposePar
-源码说明：Automatically decomposes a mesh and fields of a case for parallel execution of OpenFOAM.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-allAreas -allRegions -area-region -area-regions -case -cellDist -constant -copyUniform -copyZero -debug-switch -decomposeParDict -doc -doc-source -domains -dry-run -fields -fileHandler -force -help -help-compat -help-full -help-man -help-notes -ifRequired -info-switch -latestTime -lib -method -no-fields -no-finite-area -no-lagrangian -no-libs -no-sets -noFunctionObjects -noZero -opt-switch -region -regions -time -verbose</p><p>关联配置：<a href="/dictionaries/system-decomposepardict/">decomposeParDict</a></p><h2>同版本官方教程</h2><p>以下链接直接指向 OpenFOAM-v2512 标签中的教程目录。先阅读 Allrun 确定网格生成、初始化和依赖，再在自己的工作目录运行。列出教程不表示本网站已执行它的全部计算。</p><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/preProcessing/decompositionConstraints/geometric">preProcessing/decompositionConstraints/geometric</a></li></ul><pre><code class="language-bash">mkdir -p &quot;&#36;FOAM_RUN&quot;
-cd &quot;&#36;FOAM_RUN&quot;
-# 先选择一个尚不存在的新目录；保留原教程
-cp -r &quot;&#36;FOAM_TUTORIALS/preProcessing/decompositionConstraints/geometric&quot; ./decomposePar-study
-cd ./decomposePar-study
-ls
-# 查看运行流程后，再决定执行哪些步骤
-sed -n &#x27;1,200p&#x27; Allrun</code></pre><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/decomposepar.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: decomposePar
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/decomposePar/decomposePar.C
 
-
-Usage: decomposePar [OPTIONS]
+<p>按照 decomposeParDict 将网格与场分成并行子域。</p><h2>分解算例</h2>
+<pre><code class="language-bash">decomposePar
+</code></pre>
+<p>读取 <code>numberOfSubdomains</code> 和 <code>method</code>，生成相应的分区数据。求解时的进程数应与分区数一致。</p>
+<h2>显示分区分布</h2>
+<pre><code class="language-bash">decomposePar -cellDist
+</code></pre>
+<p>同时写出分区分布，便于查看各子域的大小与形状。长条或狭窄子域可能增加通信，分区数也受单元总数约束。</p>
+<h2>重新建立四个分区</h2>
+<pre><code class="language-bash">foamDictionary system/decomposeParDict -entry numberOfSubdomains -set 4
+decomposePar -force
+</code></pre>
+<p>第一行修改分区数，第二行替换已有分区数据。已有 processor 结果需要保留时，先重建或另存。</p>
+<h2>分解后运行</h2>
+<pre><code class="language-bash">mpirun -np 4 simpleFoam -parallel &gt; log.simpleFoam 2&gt;&amp;1
+</code></pre>
+<p><code>-np 4</code> 启动 4 个进程，<code>-parallel</code> 让求解器读取分区网格。这里的物理和数值配置应当已经适用于 <code>simpleFoam</code>。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allAreas</td><td>Use all regions in finite-area regionProperties</td></tr><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-cellDist</td><td>写出单元所属子域，便于检查分区。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-copyUniform</td><td>Copy any uniform/ directories too</td></tr><tr><td>-copyZero</td><td>Copy 0/ directory to processor*/ rather than decompose the fields Set named DebugSwitch (default value: 1). [Can be used multiple times] Alternative decomposePar dictionary file</td></tr><tr><td>-domains &lt;N&gt;</td><td>Override numberOfSubdomains (-dry-run only)</td></tr><tr><td>-dry-run</td><td>Test without writing the decomposition. Changes -cellDist to only write VTK output.</td></tr><tr><td>-fields</td><td>按工具要求指定要处理的字段或仅处理字段。具体参数见完整帮助。</td></tr><tr><td>-force</td><td>Remove existing processor*/ subdirs before decomposing the geometry</td></tr><tr><td>-ifRequired</td><td>按已有分区和当前配置判断是否需要重新分解。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-method &lt;name&gt;</td><td>Override decomposition method (-dry-run only)</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-decomposepardict/">decomposeParDict</a></p><h2>配套算例</h2><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/preProcessing/decompositionConstraints/geometric">preProcessing/decompositionConstraints/geometric</a></li></ul><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: decomposePar [OPTIONS]
 Options:
   -allAreas         Use all regions in finite-area regionProperties
   -allRegions       Use all regions in regionProperties
@@ -89,5 +91,4 @@ Decompose a mesh and fields of a case for parallel execution
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/decomposePar/decomposePar.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/decomposePar/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/decomposePar/decomposePar.C">源码与说明</a> · <a href="/assets/command-help/decomposepar.txt">帮助文本</a></p>

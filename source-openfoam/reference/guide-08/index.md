@@ -1,10 +1,11 @@
 ---
 title: "第 8 章　后处理命令与 functionObject"
 layout: reference
-description: "OpenCFD v2512 后处理命令与 functionObject；包含原理、示例与版本核对。"
+description: "后处理命令与 functionObject：用法与配置实例。"
+cms_slug: "reference-guide-08"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>后处理有两条路：算完再处理（postProcess 等命令）和边算边处理（controlDict 里的 functionObject）。能用后者就用后者——因为很多量（比如受力时程、探针时间序列）需要每个时间步的数据，而你不可能把每个时间步的整场都写到硬盘上。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>后处理有两条路：算完再处理（postProcess 等命令）和边算边处理（controlDict 里的 functionObject）。能用后者就用后者——因为很多量（比如受力时程、探针时间序列）需要每个时间步的数据，而你不可能把每个时间步的整场都写到硬盘上。</p>
 <h2>8.1 postProcess —— 通用后处理命令</h2>
 <p>用法</p>
 <pre><code class="language-bash">postProcess -func &lt;功能名&gt; [-time &lt;范围&gt;] [-latestTime] [-fields '(U p)'] [-noZero] [-parallel]
@@ -46,7 +47,7 @@ simpleFoam -postProcess -func yPlus -latestTime</code></pre>
     #includeFunc  singleGraph
 }</code></pre>
 <p>预配置函数来自 etc/caseDicts/postProcessing；#includeFunc 按模板或本地文件展开配置。使用 foamGetDict 复制所需模板后，应明确场名、边界名称和执行/输出频率。postProcess -list 列出预配置入口，不等于所有已编译函数对象类型的全集。</p>
-<pre><code class="language-plaintext">ls &#36;FOAM_ETC/caseDicts/postProcessing/*        # 看看有哪些现成模板</code></pre>
+<pre><code class="language-plaintext">ls $FOAM_ETC/caseDicts/postProcessing/*        # 看看有哪些现成模板</code></pre>
 <h2>8.3 常用 functionObject 的写法</h2>
 <p>写在 system/controlDict 的 functions {} 里（也可以单独放文件再 #include）。所有 functionObject 都有这几个公共关键字：</p>
 <div class="table-scroll"><table>
@@ -228,4 +229,3 @@ ffmpeg -r 25 -i images/seq.%04d.png -pix_fmt yuv420p movie.mp4</code></pre>
 <tr><td>particleTracks</td><td>拉格朗日颗粒轨迹重建</td></tr>
 <tr><td>noise</td><td>声压级/频谱分析（气动噪声）</td></tr>
 </table></div><h2>v2512 的残差记录接口</h2><p>使用 <code>type solverInfo</code>，并加载 <code>utilityFunctionObjects</code>。<code>#includeFunc solverInfo</code> 的官方模板默认选择 p 和 U；如需其他字段，应复制模板并修改 fields。此功能读取求解过程中的 solverPerformance 数据，事后只读取已写出的 U、p 不能重建历史残差。</p><p><a href="/dictionaries/functions-solverinfo/">完整配置、字段解释与三个 v2512 示例</a></p>
-{% endraw %}

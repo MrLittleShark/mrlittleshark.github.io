@@ -1,0 +1,85 @@
+{
+  "finite-volume-conservation": {
+    "title": "11 · 有限体积法与守恒方程",
+    "summary": "从单元收支推导面通量和矩阵系数，对照标量输运代码理解时间项、对流项、扩散项与源项。",
+    "metadata": {
+      "editorial_revision": "numerics-rewrite-2026-10-02",
+      "version": "OpenFOAM v2512",
+      "wolf_figures": [
+        "wolf-fvm-convective-face-flux"
+      ]
+    }
+  },
+  "advection-schemes-boundedness": {
+    "title": "12 · 对流格式与数值误差",
+    "summary": "用一维脉冲比较迎风、线性插值和限制格式，修改配置、绘制剖面并计算误差。",
+    "metadata": {
+      "editorial_revision": "numerics-rewrite-2026-10-02",
+      "version": "OpenFOAM v2512",
+      "wolf_figures": [
+        "wolf-advection-profile-errors"
+      ]
+    }
+  },
+  "diffusion-gradients-laplacian": {
+    "title": "13 · 扩散、梯度与非正交修正",
+    "summary": "运行一维导热，计算温度与热流，理解正交离散、非正交修正及材料交界热阻。",
+    "metadata": {
+      "editorial_revision": "numerics-rewrite-2026-10-02",
+      "version": "OpenFOAM v2512",
+      "wolf_figures": [
+        "wolf-diffusion-orthogonal-comparison",
+        "wolf-diffusion-nonorthogonal-correction"
+      ]
+    }
+  },
+  "time-discretisation-courant": {
+    "title": "14 · 时间格式与 Courant 数",
+    "summary": "理解 Euler、backward 与 CrankNicolson，设置时间步和输出间隔，比较瞬态分辨率。",
+    "metadata": {
+      "editorial_revision": "numerics-rewrite-2026-10-02",
+      "version": "OpenFOAM v2512",
+      "wolf_figures": []
+    }
+  },
+  "simple-piso-pimple": {
+    "title": "15 · SIMPLE、PISO 与 PIMPLE",
+    "summary": "从连续性推导压力校正，说明三种算法的循环、参数及对应源码。",
+    "metadata": {
+      "editorial_revision": "numerics-rewrite-2026-10-02",
+      "version": "OpenFOAM v2512",
+      "wolf_figures": [
+        "wolf-simple-pressure-coupling",
+        "wolf-piso-pressure-coupling",
+        "wolf-pimple-pressure-coupling"
+      ]
+    }
+  },
+  "linear-solvers-residuals": {
+    "title": "16 · 线性求解器与残差",
+    "summary": "读懂求解日志，选择线性算法和容差，保存残差与物理监测量。",
+    "metadata": {
+      "editorial_revision": "numerics-rewrite-2026-10-02",
+      "version": "OpenFOAM v2512",
+      "wolf_figures": []
+    }
+  },
+  "relaxation-stability-diagnosis": {
+    "title": "17 · 松弛设置与发散排查",
+    "summary": "区分场松弛与方程松弛，通过实际配置、日志和量级分析排查计算异常。",
+    "metadata": {
+      "editorial_revision": "numerics-rewrite-2026-10-02",
+      "version": "OpenFOAM v2512",
+      "wolf_figures": []
+    }
+  },
+  "grid-time-verification": {
+    "title": "18 · 网格与时间步细化",
+    "summary": "建立三组方腔网格，统一采样，计算差值、观察阶与 Richardson 外推。",
+    "metadata": {
+      "editorial_revision": "numerics-rewrite-2026-10-02",
+      "version": "OpenFOAM v2512",
+      "wolf_figures": []
+    }
+  }
+}

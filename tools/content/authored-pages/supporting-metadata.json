@@ -1,0 +1,106 @@
+{
+  "sources-and-validation": {
+    "title": "资料来源",
+    "summary": "官方文档、培训讲义与示例源码的出处。"
+  },
+  "release-2026-10-rebuild": {
+    "title": "课程与参考库更新",
+    "summary": "课程重写，增加 Linux、C++ 和算法理论，补充字典与命令实例。"
+  },
+  "topic-turbulence": {
+    "title": "湍流",
+    "summary": "RANS、LES、入口湍流量和近壁网格。"
+  },
+  "topic-multiphase": {
+    "title": "多相流",
+    "summary": "VOF、两流体模型、颗粒跟踪与界面计算。"
+  },
+  "topic-meshing": {
+    "title": "网格划分",
+    "summary": "结构网格、贴体网格、局部细化与质量检查。"
+  },
+  "topic-dynamic-mesh": {
+    "title": "动网格",
+    "summary": "网格运动、区域接口与拓扑变化。"
+  },
+  "resource-basic-programming": {
+    "title": "BasicOFProgramming：17 个编程实例与源码",
+    "summary": "字典、场、类库、边界条件、源项和求解器的课程与下载。"
+  },
+  "resource-of-material-migration": {
+    "title": "OF_material：v2512 算例与适配记录",
+    "summary": "算例目录、使用方法和接口调整。"
+  },
+  "resource-of-material-catalog": {
+    "title": "OF_material 资料目录",
+    "summary": "按网格、模型、编程和后处理查找算例。"
+  },
+  "resource-coded-initialization": {
+    "title": "用 codeStream 设置椭圆初始场",
+    "summary": "根据单元坐标生成初值，解释几何判据、动态编译和网格误差。"
+  },
+  "resource-wolf-programming-pack": {
+    "title": "Wolf 编程实例：求解器、初值与边界",
+    "summary": "Laplace 求解器、codeStream 初值和自定义入口的配套源码。"
+  },
+  "recommend-openfoam-v2512-release": {
+    "title": "OpenFOAM v2512：版本发布与变更记录",
+    "summary": "v2512 新增功能、变更说明与下载入口。"
+  },
+  "recommend-openfoam-v2512-userguide": {
+    "title": "OpenFOAM v2512：用户手册",
+    "summary": "算例结构、网格、离散格式、求解设置与后处理的官方手册。"
+  },
+  "recommend-openfoam-v2512-source": {
+    "title": "OpenFOAM v2512：固定版本源代码",
+    "summary": "浏览 v2512 应用程序、C++ 库和教程源码。"
+  },
+  "recommend-openfoam-v2512-api": {
+    "title": "OpenFOAM v2512：C++ API 文档",
+    "summary": "查询类、成员函数、继承关系和对应源码。"
+  },
+  "recommend-openfoam-v2512-tutorials": {
+    "title": "OpenFOAM v2512：官方算例库",
+    "summary": "按物理模型查找完整算例与运行脚本。"
+  },
+  "recommend-wolf-introductory-training": {
+    "title": "Wolf Dynamics：OpenFOAM 入门培训资料",
+    "summary": "Linux、有限体积法、网格和 OpenFOAM 培训讲义。"
+  },
+  "recommend-paraview-documentation": {
+    "title": "ParaView：科学可视化与后处理文档",
+    "summary": "数据读取、切片、曲线、色标和批量出图。"
+  },
+  "recommend-gmsh-manual": {
+    "title": "Gmsh：几何建模与网格生成手册",
+    "summary": "几何建模、物理分组和网格尺寸控制。"
+  },
+  "recommend-salome-platform": {
+    "title": "SALOME：几何处理与网格工作平台",
+    "summary": "几何处理、分组和网格生成平台。"
+  },
+  "recommend-freecad-project": {
+    "title": "FreeCAD：参数化几何建模",
+    "summary": "参数化建模与几何导出。"
+  },
+  "recommend-pyvista-documentation": {
+    "title": "PyVista：Python 科学数据处理与绘图",
+    "summary": "用 Python 读取、采样和绘制科学数据。"
+  },
+  "recommend-pyfoam-package": {
+    "title": "PyFoam：OpenFOAM 工作流辅助工具",
+    "summary": "辅助组织算例、分析日志和开展参数计算的 Python 工具。"
+  },
+  "recommend-openfoamwiki": {
+    "title": "OpenFOAMwiki：社区经验与扩展索引",
+    "summary": "社区使用经验、扩展项目和工具索引。"
+  },
+  "recommend-cfd-online-openfoam": {
+    "title": "CFD Online：OpenFOAM 讨论论坛",
+    "summary": "安装、网格、求解和开发问题的社区讨论。"
+  },
+  "recommend-openfoam-journal": {
+    "title": "OpenFOAM Journal：论文与可复现研究",
+    "summary": "OpenFOAM 方法、模型与应用研究论文。"
+  }
+}

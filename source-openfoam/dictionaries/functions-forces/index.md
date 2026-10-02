@@ -1,27 +1,40 @@
 ---
-title: "system/controlDict → functions → forces · forces"
+title: "forces"
 layout: reference
-description: "下例使用参考密度处理不可压缩压力场。可压缩计算通常指定实际 rho 字段及对应压力形式。CofR 定义力矩参考中心，压力基准应与载荷积分采用的压力定义一致。"
+description: "对选定壁面积分压力和黏性作用，计算力与相对指定中心的力矩。"
 dictionary: true
+cms_slug: "dictionary-forces"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>下例使用参考密度处理不可压缩压力场。可压缩计算通常指定实际 rho 字段及对应压力形式。CofR 定义力矩参考中心，压力基准应与载荷积分采用的压力定义一致。</p><figure><img src="/assets/diagrams/reference-7.svg" alt="函数对象配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/controlDict → functions → forces</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>type</code> · <code>forces</code> · <code>patches</code> · <code>rho</code> · <code>rhoInf</code> · <code>CofR</code></p><h2>关联命令</h2><p><a href="/commands/?q=simpleFoam">simpleFoam</a> · <a href="/commands/?q=postProcess">postProcess</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/controlDict -entry functions -value
-simpleFoam -help</code></pre><h2>10.5 力与力系数</h2><pre><code class="language-openfoam">bodyForces
+
+<p>对选定壁面积分压力和黏性作用，计算力与相对指定中心的力矩。</p><p>位置：<code>system/controlDict → functions → forces</code></p><p><code>forces</code> 对选定壁面的压力与黏性应力积分，输出力和力矩。它适合计算物体阻力、升力以及相对给定点的力矩。输出力的单位为 N，力矩为 N·m。</p>
+<h3>示例：不可压缩绕流的受力</h3>
+<p>在具有壁面 patch <code>body</code> 的 <code>simpleFoam</code> 案例中，将以下对象加入 <code>system/controlDict/functions</code>：</p>
+<pre><code class="language-foam">bodyForces
 {
     type forces;
-    libs (&quot;libforces.so&quot;);
-    patches (walls);
+    libs (forces);
+    patches (body);
     p p;
     U U;
     rho rhoInf;
-    rhoInf 1000;
+    rhoInf 1.2;
     CofR (0 0 0);
     writeControl timeStep;
     writeInterval 1;
-}</code></pre>
-<p>下例使用参考密度处理不可压缩压力场。可压缩计算通常指定实际 rho 字段及对应压力形式。CofR 定义力矩参考中心，压力基准应与载荷积分采用的压力定义一致。</p>
-<p>计算力系数时，将 type 设为 forceCoeffs，并指定 liftDir、dragDir、pitchAxis、magUInf、lRef 和 Aref。若阻力沿 x 方向、升力沿 y 方向，可设置 dragDir (1 0 0); liftDir (0 1 0); pitchAxis (0 0 1);。lRef 和 Aref 分别为归一化参考长度和面积，二维算例的参考面积需计入所取厚度。</p><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>libs</td><td>额外加载的共享库。函数对象或自定义边界未注册时，应检查库名与编译版本。</td></tr><tr><td>writeControl</td><td>输出触发方式，其值决定 writeInterval 表示步数、物理时间或时钟时间。</td></tr><tr><td>writeInterval</td><td>输出间隔，需要结合 writeControl 理解单位与触发时刻。</td></tr><tr><td>patches</td><td>参与该操作的边界列表，必须对应网格中的实际 patch 名称。</td></tr><tr><td>rho</td><td>密度或密度场引用；是否为量纲标量、常量或场名由模型定义。</td></tr><tr><td>application</td><td>供运行脚本查询的求解器名称；直接在终端执行程序时，以执行的命令为准。</td></tr><tr><td>functions</td><td>函数对象实例集合，可以记录残差、采样、积分或计算派生量。</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/pimpleFoam/RAS/wingMotion/wingMotion2D_simpleFoam</h3><p>原始路径：<code>tutorials/incompressible/pimpleFoam/RAS/wingMotion/wingMotion2D_simpleFoam/system/forces</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/RAS/wingMotion/wingMotion2D_simpleFoam/system/forces">查看固定版本源码</a> · <a href="/assets/examples/v2512/forces/1-forces.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/RAS/wingMotion/wingMotion2D_simpleFoam">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+}
+</code></pre>
+<p><code>patches</code> 选择参与积分的表面，可以列出多个壁面。<code>rho rhoInf</code> 表示采用指定常密度，<code>rhoInf 1.2</code> 的单位是 kg/m³，用于把运动学压力等量转换成物理力。<code>CofR</code> 是力矩参考点，改变它会改变力矩，合力保持相同。</p>
+<p>压力积分与黏性积分分别输出，便于判断受力来源。数据保存在 <code>postProcessing/bodyForces/</code>，先读文件头确定列含义。可压缩案例通常读取实际 <code>rho</code> 字段，并采用相应压力单位。</p>
+<p>这个对象需要求解器中的输运或湍流模型来获得应力，适合在求解时执行，或在支持的求解器后处理环境中使用。二维网格积分包含实际厚度，转换为单位展长力时除以该厚度。多个离散物体可分别创建对象，保留各自 patch 与力矩中心。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/pimpleFoam/RAS/wingMotion/wingMotion2D_simpleFoam</summary><p>二维翼型预计算对 wing 边界积分压力与黏性力。</p>
+<ul>
+<li><code>type forces</code>、<code>libs (forces)</code> 启用力统计，<code>patches (wing)</code> 选择受力表面。</li>
+<li><code>rho rhoInf</code>、<code>rhoInf 1</code> 采用参考密度 1，把相关运动学压力转换为力所需形式。</li>
+<li><code>CofR (0.4974612746 -0.01671895744 0.125)</code> 给定力矩参考中心。</li>
+<li>每 10 个求解步写出，<code>log false</code> 减少终端打印。</li>
+</ul>
+<p>改变翼型厚度方向范围时按实际三维面积解释总力；力矩比较应使用同一个参考中心。</p>
+<p><a href="/assets/examples/v2512/forces/1-forces.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/RAS/wingMotion/wingMotion2D_simpleFoam/system/forces">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/RAS/wingMotion/wingMotion2D_simpleFoam">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -45,7 +58,15 @@ forces
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · multiphase/interFoam/RAS/DTCHull</h3><p>原始路径：<code>tutorials/multiphase/interFoam/RAS/DTCHull/system/controlDict</code>；求解器：<code>interFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/RAS/DTCHull/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/forces/2-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/RAS/DTCHull">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · multiphase/interFoam/RAS/DTCHull</summary><p>DTCHull 在每个求解步统计 hull 表面的载荷，用于观察船体阻力随迭代或时间的发展。</p>
+<ul>
+<li><code>patches (hull)</code> 限定船体受力表面。</li>
+<li><code>type forces</code> 和 forces 库计算压力力、黏性力及力矩。</li>
+<li><code>CofR (2.929541 0 0.2)</code> 指定力矩参考中心。</li>
+<li><code>writeControl timeStep</code>、<code>writeInterval 1</code> 每步记录载荷，<code>log on</code> 同时打印到日志；主场则每 100 步保存。</li>
+</ul>
+<p>更换船体或姿态后检查 patch 和参考中心，并结合求解器当前时间处理解释载荷曲线。</p>
+<p><a href="/assets/examples/v2512/forces/2-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/RAS/DTCHull/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/RAS/DTCHull">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -107,7 +128,15 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · incompressible/overSimpleFoam/aeroFoil/aeroFoil_overset</h3><p>原始路径：<code>tutorials/incompressible/overSimpleFoam/aeroFoil/aeroFoil_overset/system/controlDict</code>；求解器：<code>overSimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/overSimpleFoam/aeroFoil/aeroFoil_overset/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/forces/3-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/overSimpleFoam/aeroFoil/aeroFoil_overset">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · incompressible/overSimpleFoam/aeroFoil/aeroFoil_overset</summary><p>重叠网格翼型算例对 wing 表面输出力与力矩，便于与普通网格结果比较。</p>
+<ul>
+<li><code>type forces</code>、<code>patches (wing)</code> 选择积分对象。</li>
+<li><code>CofR (0.4974612746 -0.01671895744 0.125)</code> 保持明确的力矩中心。</li>
+<li>函数对象每 10 步写出，<code>log true</code> 在终端显示统计。</li>
+<li>主求解采用 <code>overSimpleFoam</code> 与 <code>startFrom latestTime</code>，从已有结果继续稳态迭代。</li>
+</ul>
+<p>比较不同重叠区域或网格分辨率时，保持来流、参考密度与积分表面一致。</p>
+<p><a href="/assets/examples/v2512/forces/3-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/overSimpleFoam/aeroFoil/aeroFoil_overset/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/overSimpleFoam/aeroFoil/aeroFoil_overset">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -172,9 +201,4 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/simplefoam/">simpleFoam</a> · <a href="/commands/postprocess/">postProcess</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/forces&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/forces&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/simplefoam/">simpleFoam</a> · <a href="/commands/postprocess/">postProcess</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

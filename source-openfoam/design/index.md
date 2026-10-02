@@ -1,45 +1,8 @@
 ---
 title: 字体与界面设计规范
-layout: page
-section: design
+layout: admin-redirect
+section: admin
+admin_target: /admin/design/
+admin_only: true
+noindex: true
 ---
-
-## 中文阅读与界面层级
-
-网站以课程阅读、命令查询和配置对照为主要使用场景。界面采用有限的字号层级、稳定的对齐关系和蓝色强调色。背景流线仅作装饰，正文和代码位于高不透明度面板中。
-
-| 内容 | 桌面 | 手机 | 字体与行距 |
-| --- | --- | --- | --- |
-| 课程正文 | 17 px | 16 px | Noto Sans SC，1.9 / 1.95 倍行距 |
-| 页面标题 | 34–40 px | 28–33 px | Noto Serif SC，600 字重 |
-| 章节二级标题 | 26 px | 23 px | Noto Serif SC，1.5 倍行距 |
-| 三级标题 | 21 px | 20 px | Noto Sans SC，600 字重 |
-| 导航、按钮与表单 | 13–15 px | 13–16 px | Noto Sans SC |
-| 代码 | 14 px | 13 px | Cascadia Code / Consolas 等宽字体，1.75 倍行距 |
-| 图注、辅助说明 | 12–13 px | 12–13 px | Noto Sans SC，避免低对比浅灰文字 |
-
-Noto Sans SC 和 Noto Serif SC 采用自托管 WOFF2 子集，保留 SIL Open Font License。字体加载期间使用苹方、微软雅黑等系统字体回退；不依赖境外字体 CDN。新的罕用字若不在当前子集中，会由系统字体显示。
-
-正文不通过额外字距制造稀疏效果。较长代码保持等宽排版，并提供横向滚动、换行和复制。数学公式使用 TeX 与 KaTeX 自有数学字体，不以中文字体代替数学字形。
-
-## 对比度与操作反馈
-
-正文、辅助说明与可操作标签采用足够清晰的文字颜色。普通文字以至少 4.5:1 的对比度为检查目标；大字号文字与必要图形采用对应规则。透明面板需要结合实际底色检查，不能只比较 CSS 中孤立的颜色值。
-
-悬停和选中状态通过边框、背景与细线区分。点击产生局部同心水波，不改变页面结构，也不拦截链接与表单操作。键盘焦点保持独立可见。开启系统“减少动态效果”时，不播放点击扩散动画。
-
-## 响应式规则
-
-- 首页桌面采用双栏信息结构；较窄窗口转为单栏。
-- 手机正文不缩小到界面辅助标签的字号。
-- 表格和代码允许局部横向滚动，页面本身不产生水平溢出。
-- 章节导航在手机上排成两列，操作目标保留足够高度。
-- 字体放大与用户自定义行距不应遮挡功能。WCAG 的文字间距条款要求布局能承受用户覆盖设置，并非要求所有页面默认使用同一行距。
-
-## 参考依据
-
-字体族、有限字号层级和数字对齐参考 [Ant Design 字体规范](https://ant.design/docs/spec/font/?locale=en-US)。本文的 17 px 长文正文是针对中文技术课程的具体选择，不是 Ant Design 的默认字号。
-
-对比度和自定义文字间距依据 [W3C WCAG 2.2 对比度说明](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)与[文字间距说明](https://www.w3.org/WAI/WCAG22/Understanding/text-spacing)。这里记录设计与检查目标，不以局部检查代替完整的无障碍合规评估。
-
-字体来源：[Noto CJK 官方项目](https://github.com/notofonts/noto-cjk)、[Google Fonts 字体源码](https://github.com/google/fonts)。对应许可与子集来源记录随网站静态字体文件提供。

@@ -1,19 +1,11 @@
 ---
-title: "redistributePar  并行重分区或重构网格和场"
+title: "redistributePar · 修改 decomposeParDict 后执行重分配，MPI 进程数取源分区数与目标分区数的较大"
 layout: reference
 description: "修改 decomposeParDict 后执行重分配，MPI 进程数取源分区数与目标分区数的较大值。"
+cms_slug: "command-redistributepar"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>修改 decomposeParDict 后执行重分配，MPI 进程数取源分区数与目标分区数的较大值。</p><h2>使用入口</h2><pre><code class="language-bash">mpirun -np 8 redistributePar -parallel -overwrite</code></pre><h2>使用条件与核对</h2><p>修改 decomposeParDict 后执行重分配，MPI 进程数取源分区数与目标分区数的较大值。 用法：redistributePar [选项] 示例：mpirun -np 8 redistributePar -parallel -overwrite MPI 程序采用 mpirun -np N 应用 -parallel 启动，其中 N 为进程数。例如，执行 mpirun -np 4 pimpleFoam -parallel 前，将 numberOfSubdomains 设为 4，并运行 decomposePar。
-源码说明：
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-allRegions -case -cellDist -constant -debug-switch -decompose -decomposeParDict -doc -doc-source -dry-run -fileHandler -help -help-compat -help-full -help-man -help-notes -hostRoots -info-switch -latestTime -lib -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -newTimes -no-finite-area -no-libs -noZero -opt-switch -overwrite -parallel -reconstruct -region -regions -roots -time -verbose -withZero -world</p><p>关联配置：<a href="/dictionaries/system-decomposepardict/">decomposeParDict</a></p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/redistributepar.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: redistributePar
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/redistributePar/loadOrCreateMesh.C
 
-
-Usage: redistributePar [OPTIONS]
+<p>修改 decomposeParDict 后执行重分配，MPI 进程数取源分区数与目标分区数的较大值。</p><h2>用法</h2><pre><code class="language-bash">mpirun -np 8 redistributePar -parallel -overwrite</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">mpirun -np 8 redistributePar -parallel -overwrite -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-cellDist</td><td>写出单元所属子域，便于检查分区。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-decompose</td><td>Decompose case Alternative decomposePar dictionary file</td></tr><tr><td>-dry-run</td><td>Test without writing the decomposition. Changes -cellDist to only write volScalarField. Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-newTimes</td><td>Only reconstruct new times (i.e. that do not exist already)</td></tr><tr><td>-no-finite-area</td><td>Suppress finiteArea mesh/field handling</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-reconstruct</td><td>Reconstruct case</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-decomposepardict/">decomposeParDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: redistributePar [OPTIONS]
 Options:
   -allRegions       Use all regions in regionProperties
   -case &lt;dir&gt;       Case directory (instead of current directory)
@@ -79,5 +71,4 @@ Optionally run in decompose/reconstruct mode
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/redistributePar/loadOrCreateMesh.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/redistributePar/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/redistributePar/loadOrCreateMesh.C">源码与说明</a> · <a href="/assets/command-help/redistributepar.txt">帮助文本</a></p>

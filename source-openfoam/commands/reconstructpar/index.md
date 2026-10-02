@@ -1,19 +1,23 @@
 ---
-title: "reconstructPar  将并行场重构为串行结果"
+title: "reconstructPar · 将并行子域中的场重建到完整网格上"
 layout: reference
-description: "-fields 指定场。动网格结果按需先重构网格。"
+description: "将并行子域中的场重建到完整网格上。"
+cms_slug: "command-reconstructpar"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>-fields 指定场。动网格结果按需先重构网格。</p><h2>v2512 源码中的用途</h2><p>Reconstructs fields of a case that is decomposed for parallel execution of OpenFOAM.</p><h2>使用入口</h2><pre><code class="language-bash">reconstructPar -latestTime</code></pre><h2>使用条件与核对</h2><p>-fields 指定场。动网格结果按需先重构网格。 用法：reconstructPar [选项] 示例：reconstructPar -latestTime
-源码说明：Reconstructs fields of a case that is decomposed for parallel execution of OpenFOAM.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-allAreas -allRegions -area-region -area-regions -case -constant -debug-switch -doc -doc-source -fields -fileHandler -help -help-compat -help-full -help-man -help-notes -info-switch -lagrangianFields -latestTime -lib -newTimes -no-fields -no-lagrangian -no-libs -no-sets -noFunctionObjects -noZero -opt-switch -region -regions -time -verbose -withZero</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/reconstructpar.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: reconstructPar
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/reconstructPar/reconstructPar.C
 
-
-Usage: reconstructPar [OPTIONS]
+<p>将并行子域中的场重建到完整网格上。</p><h2>重建最新结果</h2>
+<pre><code class="language-bash">reconstructPar -latestTime
+</code></pre>
+<p>读取最近时刻的分区场，将完整场写到主算例时间目录。</p>
+<h2>只重建部分场</h2>
+<pre><code class="language-bash">reconstructPar -latestTime -fields "(U p)"
+</code></pre>
+<p>仅合并速度和压力，可减少读写量。字段名使用实际求解器输出的名称。</p>
+<h2>选择时间范围</h2>
+<pre><code class="language-bash">reconstructPar -time "0.1:0.5"
+</code></pre>
+<p>合并 0.1 至 0.5 范围内已存在的时刻。动态网格或拓扑变化算例还需处理各时刻的网格。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allAreas</td><td>Use all regions in finite-area regionProperties</td></tr><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-newTimes</td><td>Only reconstruct new times (i.e. that do not exist already)</td></tr><tr><td>-no-fields</td><td>Skip reconstructing fields</td></tr><tr><td>-no-lagrangian</td><td>Skip reconstructing lagrangian positions and fields</td></tr><tr><td>-no-sets</td><td>Skip reconstructing cellSets, faceSets, pointSets Do not execute function objects</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-verbose</td><td>Additional verbosity (can be used multiple times)</td></tr><tr><td>-withZero</td><td>Include &#x27;0/&#x27; dir in the times list</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: reconstructPar [OPTIONS]
 Options:
   -allAreas         Use all regions in finite-area regionProperties
   -allRegions       Use all regions in regionProperties
@@ -74,5 +78,4 @@ Reconstruct fields of a parallel case
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/reconstructPar/reconstructPar.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/reconstructPar/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/parallelProcessing/reconstructPar/reconstructPar.C">源码与说明</a> · <a href="/assets/command-help/reconstructpar.txt">帮助文本</a></p>

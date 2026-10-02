@@ -1,9 +1,46 @@
 ---
-title: "getNumberOfProcessors · 已加载脚本中的 shell 函数"
+title: "getNumberOfProcessors · 读取 decomposeParDict 中的 numberOfSubdomains"
 layout: reference
-description: "定义于 bin/tools/RunFunctions；需要先 source 对应脚本。它不是独立的 OpenFOAM 可执行程序。"
+description: "读取 decomposeParDict 中的 numberOfSubdomains。"
+cms_slug: "command-getnumberofprocessors"
 ---
-{% raw %}
-<div class="source-note">源码中定义；未执行函数。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>定义于 bin/tools/RunFunctions；需要先 source 对应脚本。它不是独立的 OpenFOAM 可执行程序。</p><h2>使用入口</h2><pre><code class="language-bash">. &quot;&#36;WM_PROJECT_DIR/bin/tools/RunFunctions&quot;
-type getNumberOfProcessors</code></pre><h2>使用条件与核对</h2><p>这是 v2512 源码中的函数或别名入口。使用前先检查 type 输出，参数应以源码定义与官方 Allrun 调用为准。</p><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/RunFunctions">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+
+<p>读取 decomposeParDict 中的 numberOfSubdomains。</p><h2>调用示例</h2>
+<pre><code class="language-bash">source "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+getNumberOfProcessors
+getNumberOfProcessors system/decomposeParDict
+</code></pre>
+<p>省略参数时使用 system/decomposeParDict。输出可用作 mpirun 的进程数。</p>
+<h2>在脚本中查看定义</h2>
+<pre><code class="language-bash">type getNumberOfProcessors
+</code></pre>
+<p><code>type</code> 显示函数定义或别名展开，可用于确认当前终端加载的实现。</p>
+<details><summary>v2512 实现</summary>
+<pre><code class="language-bash">getNumberOfProcessors()
+{
+    local dict="${1:-system/decomposeParDict}"
+
+    case "$dict" in
+    (system/*)  # Already qualified
+        ;;
+    (*)
+        # If it does not exist, assume it refers to location in system/
+        [ -f "$dict" ] || dict="system/$dict"
+        ;;
+    esac
+
+
+    # Re-use positional parameters for automatic whitespace elimination
+    set -- $(foamDictionary -entry numberOfSubdomains -value "$dict" 2&gt;/dev/null)
+
+    if [ "$#" -eq 1 ]
+    then
+        echo "$1"
+    else
+        echo "Error getting 'numberOfSubdomains' from '$dict'" 1&gt;&amp;2
+        echo 1      # Fallback is 1 proc (serial)
+        return 1
+    fi
+}
+</code></pre>
+</details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/RunFunctions">源码与说明</a></p>

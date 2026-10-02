@@ -1,14 +1,12 @@
 ---
-title: "foamConfigurePaths · 构建或开发辅助脚本"
+title: "foamConfigurePaths · 修改环境配置中的安装版本和硬编码路径"
 layout: reference
-description: "Adjust hardcoded installation versions and paths in etc/{bashrc,cshrc} and etc/config.{sh,csh}/ Requires - sed - bin/foamEtcFile"
+description: "修改环境配置中的安装版本和硬编码路径。"
+cms_slug: "command-foamconfigurepaths"
 ---
-{% raw %}
-<div class="source-note">v2512 脚本源码已收录；未执行脚本。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>Adjust hardcoded installation versions and paths in etc/{bashrc,cshrc} and etc/config.{sh,csh}/ Requires - sed - bin/foamEtcFile</p><h2>v2512 源码中的用途</h2><p>Adjust hardcoded installation versions and paths in etc/{bashrc,cshrc} and etc/config.{sh,csh}/ Requires - sed - bin/foamEtcFile</p><h2>使用入口</h2><pre><code class="language-bash"># 查看安装中的脚本；这条命令不会执行脚本
-sed -n &#x27;1,180p&#x27; &quot;&#36;WM_PROJECT_DIR/bin/tools/foamConfigurePaths&quot;</code></pre><p>该条属于内部构建或开发辅助入口，可能依赖调用方预先设置变量、工作目录和参数。正常使用应优先从 wmake、Allwmake 或相应公开脚本进入。</p><h2>使用条件与核对</h2><p>
-Adjust hardcoded installation versions and paths in etc/{bashrc,cshrc} and etc/config.{sh,csh}/ Requires - sed - bin/foamEtcFile
-辅助脚本不一定加入 PATH；不要把内部调用接口当作稳定的用户命令。
-源码帮助选项：-adios -adios-brew -adios-path -archOption -boost -boost-path -cgal -cgal-path -clang -cmake -cmake-path -dp -etc -fftw -fftw-path -foamInstall -gcc -gmp-brew -gmp-path -h -hdf5 -hdf5-brew -hdf5-path -help-compat -help-full -int32 -kahip -kahip-path -llvm -llvm-path -mesa -mesa-path -metis -metis-path -mpfr-brew -mpfr-path -mpi -openmpi -paraview -paraview-path -paraview-qt -petsc -petsc-brew -petsc-path -project-path -projectName -readline-path -scotch -scotch-path -sigfpe -sp -spdp -sys-openmpi -system-compiler -third -third-compiler -version -vtk -vtk-path -with-homebrew</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/foamconfigurepaths.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 script source evidence
+
+<p>修改环境配置中的安装版本和硬编码路径。</p><h2>用法</h2><pre><code class="language-bash"># 查看安装中的脚本；这条命令不会执行脚本
+sed -n &#x27;1,180p&#x27; &quot;$WM_PROJECT_DIR/bin/tools/foamConfigurePaths&quot;</code></pre><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-foamInstall DIR</td><td>[obsolete]</td></tr><tr><td>-projectName NAME</td><td>[obsolete]</td></tr><tr><td>-sigfpe|-no-sigfpe</td><td>[obsolete] now under etc/controlDict</td></tr><tr><td>-archOption 32|64</td><td>[obsolete] now edit WM_ARCH_OPTION manually</td></tr><tr><td>-version</td><td>--projectVersion | -foamVersion</td></tr><tr><td>-archOption</td><td>--archOption</td></tr><tr><td>-third</td><td>-ThirdParty</td></tr><tr><td>-paraview</td><td>--paraviewVersion | -paraviewVersion</td></tr><tr><td>-paraview-path</td><td>--paraviewInstall | -paraviewInstall</td></tr><tr><td>-scotch</td><td>--scotchVersion | -scotchVersion</td></tr><tr><td>-scotch-path</td><td>--scotchArchPath | -scotchArchPath</td></tr><tr><td>-system-compiler</td><td>-system</td></tr><tr><td>-third-compiler</td><td>-third</td></tr><tr><td>-sys-openmpi</td><td>-openmpi-system</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
 Command: foamConfigurePaths
 Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamConfigurePaths
 
@@ -34,7 +32,7 @@ Equivalent options:
   -openmpi              -openmpi-third
 
 
-usage: &#36;0 options
+usage: $0 options
 
 Options
   -h | -help          Display short help and exit
@@ -115,5 +113,4 @@ Graphics
   -vtk-path DIR       Path for &#x27;VTK_DIR&#x27;          (overrides -vtk)
 
 Adjusts hardcoded versions and installation paths (POSIX and C-shell)
-for OpenFOAM.</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamConfigurePaths">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+for OpenFOAM.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamConfigurePaths">源码与说明</a> · <a href="/assets/command-help/foamconfigurepaths.txt">帮助文本</a></p>

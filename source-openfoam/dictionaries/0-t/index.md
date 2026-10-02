@@ -1,15 +1,46 @@
 ---
-title: "0/T · T"
+title: "T"
 layout: reference
-description: "温度场 T 采用温度量纲，初值示例为 internalField uniform 300;。等温壁面使用 fixedValue，绝热壁面通常使用 zeroGradient。externalWallHeatFluxTemperature 可指定热通量或功率，并通过 mode、kappaMethod 等参数定义施加方式和导热率来源。"
+description: "温度场，以 K 为单位，包含内部初始温度和温度边界条件。"
 dictionary: true
+cms_slug: "dictionary-t"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>温度场 T 采用温度量纲，初值示例为 internalField uniform 300;。等温壁面使用 fixedValue，绝热壁面通常使用 zeroGradient。externalWallHeatFluxTemperature 可指定热通量或功率，并通过 mode、kappaMethod 等参数定义施加方式和导热率来源。</p><figure><img src="/assets/diagrams/reference-2.svg" alt="初始场配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>0/T</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>dimensions</code> · <code>internalField</code> · <code>boundaryField</code> · <code>externalWallHeatFluxTemperature</code> · <code>fixedValue</code> · <code>zeroGradient</code></p><h2>关联命令</h2><p><a href="/commands/?q=laplacianFoam">laplacianFoam</a> · <a href="/commands/?q=chtMultiRegionFoam">chtMultiRegionFoam</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary 0/T -keywords
-laplacianFoam -help</code></pre><h2>9.3 温度场与多相流场</h2><p>温度场 T 采用温度量纲，初值示例为 internalField uniform 300;。等温壁面使用 fixedValue，绝热壁面通常使用 zeroGradient。externalWallHeatFluxTemperature 可指定热通量或功率，并通过 mode、kappaMethod 等参数定义施加方式和导热率来源。</p>
-<p>p_rgh 表示扣除静水压项后的压力，常见定义为 \(p_{\mathrm{rgh}}=p-\rho gh\)。参考高度和量纲由求解器确定，不可压缩 Boussinesq 模型可采用归一化形式。恢复实际压力时，应按该求解器的定义还原静水压项。</p>
-<p>alpha.water 表示水相体积分数，为无量纲量，取值范围为 [0,1]；多相体系中各相体积分数之和为 1。入口可指定相分数，开放边界可采用 inletOutlet，壁面可采用 zeroGradient 或接触角条件。字段后缀 water 与 phases 中的相名对应。</p><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>dimensions</td><td>七个指数依次表示质量、长度、时间、温度、物质量、电流、发光强度。量纲错误常在矩阵组装或赋值时暴露。</td></tr><tr><td>internalField</td><td>初始内部场，可使用 uniform 或 nonuniform。uniform 不表示求解过程始终空间均匀。</td></tr><tr><td>boundaryField</td><td>按网格 patch 名称设置边界条件；名称必须与 polyMesh/boundary 一致，类型还受网格边界类型约束。</td></tr><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common</h3><p>原始路径：<code>tutorials/verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common/constant/boundaryData/p1/0/T</code>；求解器：<code>buoyantBoussinesqSimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common/constant/boundaryData/p1/0/T">查看固定版本源码</a> · <a href="/assets/examples/v2512/t/1-T.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common">查看配套目录</a></p><pre><code class="language-openfoam">(
+
+<p>温度场，以 K 为单位，包含内部初始温度和温度边界条件。</p><p>位置：<code>0/T</code></p><p><code>T</code> 是温度标量场，单位为 K。它常由能量方程与热物性关系共同确定；在共轭传热中，各 region 分别保存自己的温度，例如 <code>0/fluid/T</code> 和 <code>0/solid/T</code>。</p>
+<h3>示例：热流体入口与绝热壁面</h3>
+<p>在已有 <code>0/T</code> 中保留标准场文件头，设置以下内容。网格包含 <code>inlet</code>、<code>outlet</code> 和 <code>walls</code> 三个 patch。</p>
+<pre><code class="language-foam">dimensions [0 0 0 1 0 0 0];
+internalField uniform 300;
+boundaryField
+{
+    inlet
+    {
+        type fixedValue;
+        value uniform 350;
+    }
+    outlet
+    {
+        type inletOutlet;
+        inletValue uniform 300;
+        value uniform 300;
+    }
+    walls
+    {
+        type zeroGradient;
+    }
+}
+</code></pre>
+<p>入口固定 350 K，内部初始为 300 K；出口正常流出时外推内部温度，回流时带入 300 K 的外界流体。对于此处的普通导热边界，<code>zeroGradient</code> 表示法向温度梯度为零，对应绝热壁面。</p>
+<p>固定壁温可将壁面改为 <code>fixedValue</code>；给定功率、热流或外部换热时，可以研究 <code>externalWallHeatFluxTemperature</code>。流固界面则使用温度耦合条件，并从两侧热物性读取导热系数。</p>
+<p>温度输入采用 K，摄氏度转换为 \(T_K=T_{\mathrm C}+273.15\)。若温度异常，除了边界值，还需检查能量变量、比热容、导热系数和发热源单位。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common</summary><p>这是大气边界层入口 boundaryData 中的温度采样表，数据与同目录体系中的采样点一一对应。</p>
+<ul>
+<li>表中温度值全部为 <code>300</code>，给定 300 K 的均匀入口温度分布。</li>
+<li>外层括号保存标量列表；位置由配套 points 文件提供，而不是由列表本身给出。</li>
+<li>路径中的时间目录 <code>0</code> 表示这一组边界采样数据的时刻，后续可增加其他时刻供时间插值。</li>
+</ul>
+<p>引入温度廓线时保持点数和顺序相容，并按采样点高度填写对应温度。</p>
+<p><a href="/assets/examples/v2512/t/1-T.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common/constant/boundaryData/p1/0/T">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common">案例目录</a></p><pre><code class="language-foam">(
 300
 300
 300
@@ -170,7 +201,15 @@ laplacianFoam -help</code></pre><h2>9.3 温度场与多相流场</h2><p>温度�
 300
 300
 300
-)</code></pre><h3>示例 2 · multiphase/interFoam/laminar/vofToLagrangian/lagrangianDistributionInjection</h3><p>原始路径：<code>tutorials/multiphase/interFoam/laminar/vofToLagrangian/lagrangianDistributionInjection/0.orig/T</code>；求解器：<code>sprayFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/vofToLagrangian/lagrangianDistributionInjection/0.orig/T">查看固定版本源码</a> · <a href="/assets/examples/v2512/t/2-T.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/vofToLagrangian/lagrangianDistributionInjection">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+)</code></pre></details><details class="reference-example"><summary>示例 2 · multiphase/interFoam/laminar/vofToLagrangian/lagrangianDistributionInjection</summary><p>VOF 转拉格朗日液滴示例提供 293 K 的温度字段，供相关相或颗粒热量设置使用。</p>
+<ul>
+<li><code>dimensions [0 0 0 1 0 0 0]</code> 表示 K。</li>
+<li><code>internalField uniform 293</code> 给全域统一初温。</li>
+<li><code>walls/zeroGradient</code> 使用零法向温度梯度。</li>
+<li>具体温度如何参与计算还由所选连续相与云热模型决定。</li>
+</ul>
+<p>需要冷热液滴交换时同步设置连续相初温、注入温度和传热模型。</p>
+<p><a href="/assets/examples/v2512/t/2-T.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/vofToLagrangian/lagrangianDistributionInjection/0.orig/T">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/vofToLagrangian/lagrangianDistributionInjection">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -199,7 +238,14 @@ boundaryField
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · lagrangian/sprayFoam/aachenBomb</h3><p>原始路径：<code>tutorials/lagrangian/sprayFoam/aachenBomb/0.orig/T</code>；求解器：<code>sprayFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/sprayFoam/aachenBomb/0.orig/T">查看固定版本源码</a> · <a href="/assets/examples/v2512/t/3-T.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/sprayFoam/aachenBomb">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · lagrangian/sprayFoam/aachenBomb</summary><p>aachenBomb 模拟向高温环境喷雾，初始气体温度在这里给定。</p>
+<ul>
+<li><code>internalField uniform 800</code> 表示环境温度 800 K。</li>
+<li>温度量纲为 K；壁面采用 <code>zeroGradient</code>。</li>
+<li>这组温度与箱内压力、气体组分共同决定环境密度和液滴蒸发条件。</li>
+</ul>
+<p>改变环境温度时同步检查热物性有效范围，并比较液滴蒸发、穿透和温度变化。</p>
+<p><a href="/assets/examples/v2512/t/3-T.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/sprayFoam/aachenBomb/0.orig/T">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/sprayFoam/aachenBomb">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -227,9 +273,4 @@ boundaryField
     }
 }
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/laplacianfoam/">laplacianFoam</a> · <a href="/commands/chtmultiregionfoam/">chtMultiRegionFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/boundaryData/p1/0/T&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/boundaryData/p1/0/T&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown patchField / patch type mismatch</td><td>同时检查网格 patch 类型与场边界类型，例如 empty 网格面应使用相容的场条件。</td></tr><tr><td>速度与压力约束不相容</td><td>在入口、出口和封闭壁面共同考虑通量约束与压力参考。</td></tr><tr><td>湍流场出现非法值</td><td>检查 k、epsilon、omega 等场的正性及壁面函数适用范围，不能以截断代替模型诊断。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/laplacianfoam/">laplacianFoam</a> · <a href="/commands/chtmultiregionfoam/">chtMultiRegionFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown patchField / patch type mismatch</td><td>同时检查网格 patch 类型与场边界类型，例如 empty 网格面应使用相容的场条件。</td></tr><tr><td>速度与压力约束不相容</td><td>在入口、出口和封闭壁面共同考虑通量约束与压力参考。</td></tr><tr><td>湍流场出现非法值</td><td>检查 k、epsilon、omega 等场的正性及壁面函数适用范围，不能以截断代替模型诊断。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

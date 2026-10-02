@@ -1,43 +1,38 @@
 ---
-title: "system/controlDict → functions → volFieldValue · volFieldValue"
+title: "volFieldValue"
 layout: reference
-description: "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。"
+description: "在体区域内计算场的求和、平均、极值或体积积分。"
 dictionary: true
+cms_slug: "dictionary-volfieldvalue"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。</p><figure><img src="/assets/diagrams/reference-7.svg" alt="函数对象配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/controlDict → functions → volFieldValue</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>type</code> · <code>volFieldValue</code> · <code>operation</code> · <code>regionType</code> · <code>fields</code></p><h2>关联命令</h2><p><a href="/commands/?q=postProcess">postProcess</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/controlDict -entry functions -value
-postProcess -help</code></pre><h2>10.6 统计量与派生场</h2><div class="table-scroll"><table>
-<tr><th>类型</th><th>主要参数</th><th>配置与调用示例</th></tr>
-<tr><td>fieldAverage</td><td>fields 下每场的 mean、prime2Mean、base</td><td>U { mean on; prime2Mean on; base time; }；生成 UMean 等</td></tr>
-<tr><td>fieldMinMax</td><td>fields、location、mode</td><td>fields (p U); location true;，输出极值及位置</td></tr>
-<tr><td>volFieldValue</td><td>regionType、name、operation、fields</td><td>regionType all; operation volAverage; fields (T);</td></tr>
-<tr><td>surfaceFieldValue</td><td>regionType patch、name、operation、fields</td><td>name outlet; operation sum; fields (phi);，输出带法向符号的通量</td></tr>
-<tr><td>solverInfo</td><td>fields</td><td>fields (p U);，记录各方程初始残差</td></tr>
-<tr><td>yPlus</td><td>湍流模型及壁面量</td><td>simpleFoam -postProcess -func yPlus -latestTime</td></tr>
-<tr><td>wallShearStress</td><td>patches、writeControl</td><td>simpleFoam -postProcess -func wallShearStress -latestTime</td></tr>
-<tr><td>wallHeatFlux</td><td>热模型和壁面</td><td>通过相应传热求解器 -postProcess -func wallHeatFlux</td></tr>
-<tr><td>CourantNo</td><td>通量及密度条件</td><td>postProcess -func CourantNo -latestTime，读取所需通量等场</td></tr>
-<tr><td>mag、grad、div</td><td>操作字段</td><td>postProcess -func &#x27;mag(U)&#x27; -latestTime</td></tr>
-<tr><td>vorticity、Q</td><td>速度梯度派生量</td><td>postProcess -func vorticity -latestTime</td></tr>
-<tr><td>MachNo</td><td>速度和热物性声速</td><td>通过可压缩求解器 -postProcess -func MachNo</td></tr>
-<tr><td>streamLine</td><td>seedSampleSet、direction、lifeTime、trackLength 等</td><td>foamGetDict streamlines 获取模板，随后配置种子点</td></tr>
-</table></div>
-<p>表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。</p>
-<pre><code class="language-openfoam">statistics
+
+<p>在体区域内计算场的求和、平均、极值或体积积分。</p><p>位置：<code>system/controlDict → functions → volFieldValue</code></p><p><code>volFieldValue</code> 对整个网格或指定 cellZone 中的单元场求平均、极值或体积分。温度适合体积平均，体积分数适合体积积分，二者对应不同操作。</p>
+<h3>示例：计算水相体积</h3>
+<p>在具有 <code>alpha.water</code> 的案例中加入 <code>system/controlDict/functions</code>：</p>
+<pre><code class="language-foam">waterVolume
 {
-    type fieldAverage;
-    libs (&quot;libfieldFunctionObjects.so&quot;);
-    timeStart 0.2;
-    executeControl timeStep;
-    executeInterval 1;
-    writeControl writeTime;
-    fields
-    (
-        U { mean on; prime2Mean on; base time; }
-        p { mean on; prime2Mean off; base time; }
-    );
-}</code></pre><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>application</td><td>供运行脚本查询的求解器名称；直接在终端执行程序时，以执行的命令为准。</td></tr><tr><td>writeControl</td><td>输出触发方式，其值决定 writeInterval 表示步数、物理时间或时钟时间。</td></tr><tr><td>writeInterval</td><td>输出间隔，需要结合 writeControl 理解单位与触发时刻。</td></tr><tr><td>functions</td><td>函数对象实例集合，可以记录残差、采样、积分或计算派生量。</td></tr><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>libs</td><td>额外加载的共享库。函数对象或自定义边界未注册时，应检查库名与编译版本。</td></tr><tr><td>fields</td><td>目标场列表。场名、数据类型和计算时刻必须满足相应函数对象的要求。</td></tr><tr><td>interpolationScheme</td><td>把离散场插值到采样位置的方式；不同插值可能影响局部峰值。</td></tr><tr><td>patches</td><td>参与该操作的边界列表，必须对应网格中的实际 patch 名称。</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · multiphase/icoReactingMultiphaseInterFoam/oxideFormation</h3><p>原始路径：<code>tutorials/multiphase/icoReactingMultiphaseInterFoam/oxideFormation/system/controlDict</code>；求解器：<code>icoReactingMultiphaseInterFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/icoReactingMultiphaseInterFoam/oxideFormation/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/volfieldvalue/1-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/icoReactingMultiphaseInterFoam/oxideFormation">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+    type volFieldValue;
+    libs (fieldFunctionObjects);
+    regionType all;
+    operation volIntegrate;
+    fields (alpha.water);
+    writeFields false;
+    writeControl timeStep;
+    writeInterval 1;
+}
+</code></pre>
+<p><code>regionType all</code> 选择全部单元，<code>volIntegrate</code> 计算 \(\sum_i\alpha_iV_i\)，结果单位是 m³。<code>writeFields false</code> 只保存统计结果，减少重复字段输出。文本位于 <code>postProcessing/waterVolume/</code>。</p>
+<p>将 <code>operation</code> 改为 <code>volAverage</code>、<code>fields</code> 改为 <code>(T)</code>，可以计算 \(\sum_iT_iV_i/\sum_iV_i\)。普通 <code>average</code> 按单元数平均，在大小不一的网格上与体积平均不同。</p>
+<p>局部区域使用 <code>regionType cellZone</code> 并设置 <code>name heater</code> 等实际 cellZone 名称。若希望计算水相中的平均温度，可采用 <code>weightedVolAverage</code>，并以 <code>alpha.water</code> 作为 <code>weightField</code>；这种平均对应相体积权重，质量或焓权重需按目标量另外构造。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · multiphase/icoReactingMultiphaseInterFoam/oxideFormation</summary><p>氧化形成算例对液体转为氧化物的质量源作体积积分，得到整个域的相变速率监测。</p>
+<ul>
+<li><code>operation volIntegrate</code> 对字段乘单元体积后求和。</li>
+<li><code>fields (dmdt.liquidToOxide)</code> 指定相间质量传递率场，积分结果对应总传质速率。</li>
+<li>每 10 个求解步输出，<code>log true</code> 同时打印，<code>writeFields false</code> 避免另外写完整场。</li>
+<li>主计算采用自动步长，所以每 10 步的物理时间间隔可能变化。</li>
+</ul>
+<p>更换相名称或传质模型后核对实际生成的字段名与量纲。</p>
+<p><a href="/assets/examples/v2512/volfieldvalue/1-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/icoReactingMultiphaseInterFoam/oxideFormation/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/icoReactingMultiphaseInterFoam/oxideFormation">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -113,7 +108,15 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · multiphase/overInterDyMFoam/twoSquaresOutDomain</h3><p>原始路径：<code>tutorials/multiphase/overInterDyMFoam/twoSquaresOutDomain/system/controlDict</code>；求解器：<code>overInterDyMFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/overInterDyMFoam/twoSquaresOutDomain/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/volfieldvalue/2-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/overInterDyMFoam/twoSquaresOutDomain">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · multiphase/overInterDyMFoam/twoSquaresOutDomain</summary><p>双方块重叠网格算例统计网格内水相体积分，并在指定位置记录压力和速度。</p>
+<ul>
+<li><code>alphaVol/type volFieldValue</code>、<code>operation volIntegrate</code> 积分 alpha.water，结果具有体积单位。</li>
+<li><code>regionType all</code> 对当前网格全域求和，<code>postOperation none</code> 保留积分值。</li>
+<li>每步记录，<code>writeFields false</code> 仅输出汇总数据。</li>
+<li>另一个 probes 位于 <code>(0.0009999 0.0015 0.003)</code>，采样 p、U。</li>
+</ul>
+<p>该项直接输出当前网格的 Σalpha.water·V。统计重叠网格的物理总体积时，应另行指定不重复覆盖的统计区域或合适权重，并处理孔洞单元。</p>
+<p><a href="/assets/examples/v2512/volfieldvalue/2-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/overInterDyMFoam/twoSquaresOutDomain/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/overInterDyMFoam/twoSquaresOutDomain">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -203,7 +206,15 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · multiphase/icoReactingMultiphaseInterFoam/poolEvaporation</h3><p>原始路径：<code>tutorials/multiphase/icoReactingMultiphaseInterFoam/poolEvaporation/system/controlDict</code>；求解器：<code>icoReactingMultiphaseInterFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/icoReactingMultiphaseInterFoam/poolEvaporation/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/volfieldvalue/3-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/icoReactingMultiphaseInterFoam/poolEvaporation">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · multiphase/icoReactingMultiphaseInterFoam/poolEvaporation</summary><p>poolEvaporation 同时监测总蒸发速率、底部换热系数和壁面热流。</p>
+<ul>
+<li>mass 对 <code>dmdt.liquidToGas</code> 作 <code>volIntegrate</code>，每 10 步输出总传质速率。</li>
+<li>htc 使用 <code>multiphaseInterHtcModel</code>，目标温度场 T，底部 patch 为 <code>bottom</code>。</li>
+<li><code>fixedReferenceTemperature</code>、<code>TRef 373</code> 用 373 K 作为换热系数参考温度。</li>
+<li>wallHeatFlux 也作用于 bottom，并随主场写出。</li>
+</ul>
+<p>改变加热温度时区分壁温与参考温度，再检查热流和蒸发潜热收支。</p>
+<p><a href="/assets/examples/v2512/volfieldvalue/3-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/icoReactingMultiphaseInterFoam/poolEvaporation/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/icoReactingMultiphaseInterFoam/poolEvaporation">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -301,9 +312,4 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/postprocess/">postProcess</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/controlDict&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/controlDict&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/postprocess/">postProcess</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

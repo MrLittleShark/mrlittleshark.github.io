@@ -1,20 +1,12 @@
 ---
-title: "wmake-build-info · 构建或开发辅助脚本"
+title: "wmake-build-info · 显示项目版本和编译信息"
 layout: reference
-description: "Print the api/version and other build information for the project."
+description: "显示项目版本和编译信息。"
+cms_slug: "command-wmake-build-info"
 ---
-{% raw %}
-<div class="source-note">v2512 脚本源码已收录；未执行脚本。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>Print the api/version and other build information for the project.</p><h2>v2512 源码中的用途</h2><p>Print the api/version and other build information for the project.</p><h2>使用入口</h2><pre><code class="language-bash"># 查看安装中的脚本；这条命令不会执行脚本
-sed -n &#x27;1,180p&#x27; &quot;&#36;WM_PROJECT_DIR/wmake/scripts/wmake-build-info&quot;</code></pre><p>该条属于内部构建或开发辅助入口，可能依赖调用方预先设置变量、工作目录和参数。正常使用应优先从 wmake、Allwmake 或相应公开脚本进入。</p><h2>使用条件与核对</h2><p>
-Print the api/version and other build information for the project.
-辅助脚本不一定加入 PATH；不要把内部调用接口当作稳定的用户命令。
-源码帮助选项：-cmp -diff -dry-run -filter -help -no-git -query -query-make -query-meta -remove -show-api -show-patch -update</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/wmake-build-info.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 script source evidence
-Command: wmake-build-info
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmake-build-info
 
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-Usage: wmake-build-info [OPTION]
+<p>显示项目版本和编译信息。</p><h2>用法</h2><pre><code class="language-bash"># 查看安装中的脚本；这条命令不会执行脚本
+sed -n &#x27;1,180p&#x27; &quot;$WM_PROJECT_DIR/wmake/scripts/wmake-build-info&quot;</code></pre><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-cmp, -check</td><td>Compare make and meta information (exit 0 for no changes)</td></tr><tr><td>-diff</td><td>Display differences between make and meta information (exit code 0 for no changes)</td></tr><tr><td>-dry-run</td><td>In combination with -update</td></tr><tr><td>-filter FILE</td><td>Filter @API@, @BUILD@ tags in file with make information</td></tr><tr><td>-no-git</td><td>Disable use of git for obtaining information</td></tr><tr><td>-remove</td><td>Remove meta-info build information and exit</td></tr><tr><td>-update</td><td>Update meta-info from make information</td></tr><tr><td>-query</td><td>Report make-info and meta-info</td></tr><tr><td>-query-make</td><td>Report make-info values (api, branch, build)</td></tr><tr><td>-query-meta</td><td>Report meta-info values (api, branch, build)</td></tr><tr><td>-show-api</td><td>Print api value from wmake/rules, or meta-info and exit</td></tr><tr><td>-show-patch</td><td>Print patch value from meta-info and exit</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wmake-build-info [OPTION]
        wmake-build-info [-update] -filter FILE
 options:
   -cmp, -check  Compare make and meta information (exit 0 for no changes)
@@ -33,5 +25,4 @@ options:
   -help         Print the usage
 
 Query/manage status of {api,branch,build} information.
-Default without any arguments is the same as &#x27;-query-make&#x27;.</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmake-build-info">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Default without any arguments is the same as &#x27;-query-make&#x27;.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmake-build-info">源码与说明</a> · <a href="/assets/command-help/wmake-build-info.txt">帮助文本</a></p>

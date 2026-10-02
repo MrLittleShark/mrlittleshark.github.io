@@ -1,19 +1,11 @@
 ---
-title: "lumpedPointMovement  测试集中点运动及响应文件"
+title: "lumpedPointMovement · 采用对应耦合模型配置"
 layout: reference
 description: "采用对应耦合模型配置。"
+cms_slug: "command-lumpedpointmovement"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>采用对应耦合模型配置。</p><h2>v2512 源码中的用途</h2><p>This utility can be used to produce VTK files to visualize the response points/rotations and the corresponding movement of the building surfaces. Uses the tabulated responses from the specified file. Optionally, it can also be used to a dummy responder for the externalFileCoupler logic, which makes it useful as a debugging facility as well demonstrating how an external application could communicate with the lumpedPointMovement point-patch boundary condition.</p><h2>使用入口</h2><pre><code class="language-bash">lumpedPointMovement response.dat</code></pre><h2>使用条件与核对</h2><p>采用对应耦合模型配置。 用法：lumpedPointMovement 响应文件 [选项] 示例：lumpedPointMovement response.dat
-源码说明：This utility can be used to produce VTK files to visualize the response points/rotations and the corresponding movement of the building surfaces. Uses the tabulated responses from the specified file. Optionally, it can also be used to a dummy responder for the externalFileCoupler logic, which makes it useful as a debugging facility as well demonstrating how an external application could communicate with the lumpedPointMovement point-patch boundary condition.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-case -debug-switch -decomposeParDict -doc -doc-source -dry-run -fileHandler -help -help-compat -help-full -help-man -help-notes -hostRoots -info-switch -lib -max -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-libs -opt-switch -parallel -removeLock -roots -scale -slave -span -visual-length -world</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/lumpedpointmovement.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: lumpedPointMovement
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/lumped/lumpedPointMovement/lumpedPointMovement.C
 
-
-Usage: lumpedPointMovement [OPTIONS] &lt;responseFile&gt;
+<p>采用对应耦合模型配置。</p><h2>用法</h2><pre><code class="language-bash">lumpedPointMovement response.dat</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">lumpedPointMovement response.dat -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dry-run</td><td>Test movement without a mesh Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-max &lt;N&gt;</td><td>Maximum number of outputs</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-removeLock</td><td>Remove lock-file on termination of slave Subprocess root directories for distributed running</td></tr><tr><td>-scale &lt;factor&gt;</td><td>Relaxation/scaling factor for movement (default: 1)</td></tr><tr><td>-slave</td><td>Invoke as a slave responder for testing</td></tr><tr><td>-span &lt;N&gt;</td><td>Increment each input by N (default: 1) Visualization length for planes (visualized as triangles)</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: lumpedPointMovement [OPTIONS] &lt;responseFile&gt;
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;
@@ -64,5 +56,4 @@ purposes.
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/lumped/lumpedPointMovement/lumpedPointMovement.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/lumped/lumpedPointMovement/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/lumped/lumpedPointMovement/lumpedPointMovement.C">源码与说明</a> · <a href="/assets/command-help/lumpedpointmovement.txt">帮助文本</a></p>

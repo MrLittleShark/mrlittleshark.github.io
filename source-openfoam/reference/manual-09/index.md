@@ -1,10 +1,11 @@
 ---
 title: "09 场文件与物理模型配置"
 layout: reference
-description: "OpenCFD v2512 场文件与物理模型配置；包含原理、示例与版本核对。"
+description: "场文件与物理模型配置：用法与配置实例。"
+cms_slug: "reference-manual-09"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>9.1 速度场与压力场</h3>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>9.1 速度场与压力场</h3>
 <p>下例给出与第 7 章二维通道网格对应的速度和压力场。内部初始速度等于入口速度，壁面采用无滑移条件，出口速度采用零梯度条件。</p>
 <pre><code class="language-openfoam">FoamFile
 {
@@ -242,7 +243,7 @@ regions
 <tr><td>system/finite-area/faMeshDefinition</td><td>有限面积网格生成</td><td>polyMeshPatches、boundary、面选取和边界命名</td></tr>
 <tr><td>system/optimisationDict</td><td>伴随优化</td><td>优化类型、设计变量、目标函数、约束和更新算法</td></tr>
 </table></div>
-<p>专用模型的配置项随物种机理、粒子模型、燃烧模型和优化算法变化。可通过 find "&#36;FOAM_TUTORIALS" -name 文件名 查找对应求解器算例，并据模型源码确定条目层级及参数。</p>
+<p>专用模型的配置项随物种机理、粒子模型、燃烧模型和优化算法变化。可通过 find "$FOAM_TUTORIALS" -name 文件名 查找对应求解器算例，并据模型源码确定条目层级及参数。</p>
 <h3>9.13 运行时编译与字典扩展</h3>
 <p>下例在温度场 T 的 inlet 边界中定义随时间变化的温度。codedFixedValue 在运行时编译代码，需配置编译器和动态库搜索路径。</p>
 <pre><code class="language-cpp">inlet
@@ -261,13 +262,12 @@ regions
 <pre><code class="language-makefile"># Make/files
 myScalarFoam.C
 
-EXE = &#36;(FOAM_USER_APPBIN)/myScalarFoam
+EXE = $(FOAM_USER_APPBIN)/myScalarFoam
 EXE_INC = \
-    -I&#36;(LIB_SRC)/finiteVolume/lnInclude \
-    -I&#36;(LIB_SRC)/meshTools/lnInclude
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
     -lfiniteVolume \
     -lmeshTools</code></pre>
-<p>在源码目录运行 wmake 编译应用。编译共享库时，在 Make/files 中设置 <code>LIB = &#36;(FOAM_USER_LIBBIN)/libMyModel</code>，在 Make/options 中设置 LIB_LIBS，并运行 wmake libso。Make 变量采用 &#36;(FOAM_USER_APPBIN) 形式，Bash 变量采用 &#36;{FOAM_USER_APPBIN} 形式。</p>
-{% endraw %}
+<p>在源码目录运行 wmake 编译应用。编译共享库时，在 Make/files 中设置 <code>LIB = $(FOAM_USER_LIBBIN)/libMyModel</code>，在 Make/options 中设置 LIB_LIBS，并运行 wmake libso。Make 变量采用 $(FOAM_USER_APPBIN) 形式，Bash 变量采用 ${FOAM_USER_APPBIN} 形式。</p>

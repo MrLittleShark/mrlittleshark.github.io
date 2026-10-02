@@ -1,0 +1,47 @@
+{
+  "slug": "programming-14",
+  "body": "SIMPLE 用压力方程修正速度与面通量，使稳态流动同时满足动量方程和质量守恒。本课编写一个二维通道层流求解器，直接观察动量矩阵、压力方程和通量修正之间的关系。\n\n## 算例与控制方程\n\n通道长 $0.5\\,\\mathrm{m}$、高 $0.1\\,\\mathrm{m}$，厚度为 $0.01\\,\\mathrm{m}$。入口速度为 $(1,0,0)\\,\\mathrm{m/s}$，上下壁面采用无滑移条件，出口运动学压力设为零，前后面为 `empty`。运动黏度 $\\nu=0.01\\,\\mathrm{m^2/s}$。\n\n稳态不可压缩层流满足\n\n$$\\nabla\\cdot\\mathbf U=0,\\qquad\n\\nabla\\cdot(\\mathbf U\\mathbf U)-\\nabla\\cdot(\\nu\\nabla\\mathbf U)=-\\nabla p.$$\n\n这里的 $p$ 为运动学压力，即物理压力除以密度，量纲为 $L^2T^{-2}$。入口平均速度和通道高度给出的 Reynolds 数为 $Re=10$。本例采用静止、正交网格，共 $100\\times20\\times1=2000$ 个单元。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/science/programming-14-corrected-v2512.png\" alt=\"通道速度分布与出口速度剖面\" loading=\"lazy\"><figcaption><strong>通道速度分布与出口速度剖面</strong><small class=\"figure-source\">FoamLab · OpenFOAM v2512 · 本课配套算例，500 次迭代</small></figcaption></figure>\n\n入口均匀速度在壁面黏性作用下逐渐形成抛物线分布。充分发展平行板层流的解析剖面为\n\n$$U_x(y)=6\\bar U\\frac{y}{h}\\left(1-\\frac{y}{h}\\right).$$\n\n其中 $h=0.1\\,\\mathrm{m}$，$\\bar U=1\\,\\mathrm{m/s}$。图中圆点取出口相邻单元中心的计算值，实线为解析剖面。\n\n## 动量矩阵为什么要单独保留\n\n把离散动量方程写成\n\n$$A_P\\mathbf U_P=\\mathbf H_P-(\\nabla p)_P,$$\n\n$A_P$ 是主对角系数，$\\mathbf H_P$ 汇总邻居单元和显式源项的贡献。定义 $r_A=1/A_P$ 后，速度可写为 $\\mathbf U=r_A\\mathbf H-r_A\\nabla p$。压力方程正是把这个关系代入连续性方程得到的。\n\n主循环先组装动量矩阵，再用当前压力求一次预测速度：\n\n```cpp\nfvVectorMatrix UEqn\n(\n    fvm::div(phi, U) - fvm::laplacian(nu, U)\n);\nUEqn.relax(alphaU);\nsolve(UEqn == -fvc::grad(p));\n```\n\n`fvm::div` 和 `fvm::laplacian` 生成隐式矩阵。`UEqn.relax(alphaU)` 对速度方程做欠松弛，减小相邻外迭代的变化。`solve(UEqn == -fvc::grad(p))` 构造带压力右端的临时方程并求解；保留的 `UEqn` 仍用于后续读取压力项以外的系数。\n\n这个分法很关键：`UEqn.H()` 会包含矩阵已有的显式源。如果在创建 `UEqn` 时就把 `-grad(p)` 存进右端，后续再用 `HbyA-rAU*grad(p)` 便会重复计入压力贡献。下载包采用上面的分开组装方式。\n\n## 从预测速度得到压力方程\n\n以下代码紧接动量预测：\n\n```cpp\nvolScalarField rAU(1.0/UEqn.A());\nvolVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));\nsurfaceScalarField phiHbyA(\"phiHbyA\", fvc::flux(HbyA));\nadjustPhi(phiHbyA, U, p);\nconstrainPressure(p, U, phiHbyA, rAU);\n```\n\n`UEqn.A()` 返回按单元体积归一化的对角系数场；它与原始矩阵的 `diag()` 数组具有不同量纲。`rAU*UEqn.H()` 得到暂时去除压力梯度的速度表达式，`constrainHbyA` 使其边界与速度、压力设置相容。\n\n`fvc::flux(HbyA)` 将预测速度转换为面通量，单位为 $\\mathrm{m^3/s}$。`adjustPhi` 按边界类型处理整体流量平衡；`constrainPressure` 根据通量关系更新压力边界约束。把边界处理放在压力求解之前，才能使用相容的输入求解压力。\n\n压力方程为\n\n$$\\nabla\\cdot(r_A\\nabla p)=\\nabla\\cdot\\mathbf H_{byA}.$$\n\n代码使用预测面通量计算右端：\n\n```cpp\nfor (label corr = 0; corr <= nNonOrthogonalCorrectors; ++corr)\n{\n    fvScalarMatrix pEqn\n    (\n        fvm::laplacian(rAU, p) == fvc::div(phiHbyA)\n    );\n    pEqn.setReference(pRefCell, pRefValue);\n    pEqn.solve();\n    if (corr == nNonOrthogonalCorrectors)\n    {\n        phi = phiHbyA - pEqn.flux();\n    }\n}\n```\n\n`nNonOrthogonalCorrectors=0` 表示每个外迭代求解一次压力；设为 1 时再增加一次求解。配套网格正交，取 0 即可。非正交网格还需要配合带相应修正的 Laplacian 和法向梯度格式。\n\n`pEqn.flux()` 返回压力矩阵对应的面通量修正。使用它更新 `phi`，压力方程与质量守恒检查就使用同一套离散通量。`setReference` 为需要压力基准的系统提供参考值；本例出口已经给定压力，绝对基准由出口条件确定。\n\n## 为什么先修正通量，再松弛压力\n\n压力方程求解完成后，面通量已经满足当前离散连续性方程。随后松弛压力，用于单元速度修正和下一次外迭代：\n\n```cpp\np = alpha*p + (1.0 - alpha)*p_old;\np.correctBoundaryConditions();\nU = HbyA - rAU*fvc::grad(p);\nU.correctBoundaryConditions();\np_old = p;\n```\n\n`alpha` 控制压力更新比例。例如旧值为 1、新求解值为 2，`alpha=0.3` 时松弛后为 1.3。`p_old` 在每轮末尾保存这个值，供下一轮使用。\n\n面通量 `phi` 保留压力方程给出的守恒修正。单元速度 `U` 用松弛后的压力更新，两者通过各自离散表达式配合；直接重新插值 `U` 来覆盖 `phi`，会丢失刚得到的压力通量修正。\n\n## 场、参数与运行顺序\n\n`createFields.H` 读取 `U`、`p` 和 `constant/transportProperties` 中的 `nu`，创建 `phi`，并用初始压力建立 `p_old`。主程序从 `system/fvSolution` 读取下面这些顶层条目：\n\n```foam\nalpha 0.3;\nalphaU 0.7;\nnNonOrthogonalCorrectors 0;\npRefCell 99;\npRefValue 0;\n```\n\n`alpha` 是压力场松弛系数，`alphaU` 是动量方程松弛系数，两者允许范围为 $(0,1]$。`nNonOrthogonalCorrectors` 为非负整数。程序在初始化时检查这些范围，并调用 `mesh.setFluxRequired(p.name())` 启用压力方程的通量提取。\n\n线性求解器使用以下配置。它们放在同一个 `fvSolution` 的 `solvers` 子字典中：\n\n```foam\nsolvers\n{\n    p\n    {\n        solver PCG;\n        preconditioner DIC;\n        tolerance 1e-10;\n        relTol 0;\n    }\n    U\n    {\n        solver smoothSolver;\n        smoother symGaussSeidel;\n        tolerance 1e-8;\n        relTol 0;\n    }\n}\n```\n\n`relTol 0` 要求每次线性求解达到绝对容差。压力方程较紧的容差便于观察连续性误差。本例通过 `runTime.loop()` 执行外迭代，`endTime=500`、`deltaT=1` 表示 500 次迭代；定常方程中没有瞬态导数，这些编号用作迭代与写出控制。\n\n## 编译与运行\n\n解压本课源码包，在已经加载 OpenFOAM 环境的终端中执行：\n\n```bash\ncd OFtutorial14_SIMPLE_algorithm\nbash Allwmake\ncd testCase\nbash Allrun > log.ofTutorial14 2>&1\ntail -n 12 log.ofTutorial14\n```\n\n`Allwmake` 生成 `ofTutorial14`，`Allrun` 先运行 `blockMesh`，再运行求解器。结果写入 `500` 目录；`U`、`p` 和 `phi` 分别保存速度、运动学压力和面通量。\n\n程序每轮输出速度与压力线性残差，并增加局部连续性检查：\n\n```cpp\nconst volScalarField divPhi(fvc::div(phi));\nInfo << \"max |div(phi)| = \" << gMax(mag(divPhi.primitiveField()))\n     << \" [1/s]\" << nl;\n```\n\n`div(phi)` 是每个单元的净流出量除以体积，单位为 $\\mathrm{s^{-1}}$。`gMax` 取全域最大值，避免正负误差在全域求和时相互抵消。线性残差说明方程求解程度，连续性误差说明面通量的质量平衡，两者各有用途。\n\n配套设置运行 500 次后，`max |div(phi)|` 约为 $3.3\\times10^{-9}\\,\\mathrm{s^{-1}}$。入口总通量为 $-0.001\\,\\mathrm{m^3/s}$，出口约为 $0.001\\,\\mathrm{m^3/s}$；符号按边界外法向定义。出口相邻单元的速度与充分发展解析剖面的最大差值约为 $0.0037\\,\\mathrm{m/s}$。\n\n## 常见问题\n\n| 现象 | 检查位置与处理 |\n| --- | --- |\n| `flux requested but ... not specified` | 确认初始化处调用 `mesh.setFluxRequired(p.name())` |\n| 速度残差下降，连续性仍较差 | 检查 `phi` 是否由 `phiHbyA-pEqn.flux()` 更新，以及后面是否又被覆盖 |\n| 改变松弛系数后震荡 | 在相同初场下比较较小的 `alpha`、`alphaU`，同时检查网格和边界 |\n| 所有压力边界采用梯度条件时矩阵奇异 | 为需要参考的系统设置有效的 `pRefCell`、`pRefValue` |\n| 与解析剖面差异集中在入口 | 均匀入口包含发展段；在下游截面比较充分发展剖面 |\n\n## 练习\n\n1. 在独立算例副本中，把 `alpha` 改为 0.1，保持其他设置相同，比较达到稳定速度剖面所需的迭代数。松弛系数改变收敛过程，充分收敛后的离散解应接近。\n2. 将高度方向网格从 20 增至 40，保持通道尺寸与物性不变。按各自单元中心位置计算解析速度，比较出口剖面误差。两个网格的采样位置不同，先对应坐标再计算误差。\n3. 增加入口和出口 `phi` 的面积积分检查。`phi` 本身已是每个面的体积流量，直接对相应 patch 求和即可。\n\n继续阅读标准 `simpleFoam` 的 `UEqn.H` 与 `pEqn.H`，可以看到同样的矩阵分离和压力通量修正顺序，以及湍流、旋转区域、源项和迭代控制等扩展。\n\n## 参考资料\n\n源码：Artur K. Lidtke 及 Basic OpenFOAM Programming Tutorials 贡献者，GPL-3.0-or-later。本站配套版本修订了压力组装与通量修正，原作者信息保留在下载包中。\n\n接口与算法对照：OpenFOAM v2512，`applications/solvers/incompressible/simpleFoam/UEqn.H`、`pEqn.H`；`src/finiteVolume/fvMatrices/fvMatrix/fvMatrix.C`。\n",
+  "body_replacements": [
+    {
+      "scope": "body",
+      "replace_entire_body": true,
+      "reason": "Synchronize the lesson with the corrected and executed downloadable solver."
+    }
+  ],
+  "summary": "编写稳态通道层流求解器，理解动量矩阵、压力方程、守恒通量修正与松弛。",
+  "metadata": {
+    "download": "/downloads/programming/OFtutorial14_SIMPLE_algorithm-v2512.zip",
+    "verification": "OpenFOAM v2512 编译通过；配套通道算例完成 500 次迭代。",
+    "downloads": [
+      {
+        "label": "编程 14 配套源码与算例（ZIP）",
+        "url": "/downloads/programming/OFtutorial14_SIMPLE_algorithm-v2512.zip",
+        "description": "SIMPLE 层流教学求解器、通道算例与修订说明。默认运行 500 次迭代。",
+        "size_bytes": 233010,
+        "sha256": "1341adaa7d573074632ceaf73392f6403135b369a1a8375d93d63960a825106a",
+        "kind": "case",
+        "verification": "OpenFOAM v2512 编译通过；配套通道算例完成 500 次迭代。"
+      }
+    ]
+  },
+  "code_explanation": "动量矩阵中不存入压力梯度；预测求解使用临时方程。HbyA 与边界通量相容后求压力，以 pEqn.flux() 更新 phi，再松弛压力并修正 U。",
+  "validation": {
+    "cells": 2000,
+    "iterations": 500,
+    "final_max_div_phi_s_inverse": 3.26667e-09,
+    "inlet_volume_flux_m3_s": -0.001,
+    "outlet_volume_flux_m3_s": 0.00099999998,
+    "relative_flux_imbalance_from_written_fields": 1.9999999920083944e-08,
+    "outlet_profile_max_abs_error_m_s": 0.003710000000000102,
+    "outlet_profile_max_error_over_analytic_peak": 0.0024733333333334015,
+    "finite_fields": true
+  },
+  "validation_logs": "F:\\UbuntuShareFolder\\.foamlab-build\\programming14-correction",
+  "patch": "F:\\UbuntuShareFolder\\.foamlab-build\\programming14-correction\\source\\OFtutorial14_SIMPLE_algorithm\\MIGRATION.patch",
+  "source_basis": [
+    "OpenFOAM v2512 simpleFoam/UEqn.H",
+    "OpenFOAM v2512 simpleFoam/pEqn.H",
+    "OpenFOAM v2512 fvMatrix::H()",
+    "OpenFOAM v2512 fvCFD.H"
+  ]
+}

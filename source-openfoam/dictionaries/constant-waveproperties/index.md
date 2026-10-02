@@ -1,11 +1,34 @@
 ---
-title: "constant/waveProperties · waveProperties"
+title: "waveProperties"
 layout: reference
-description: "定义造波或吸波边界使用的波浪模型、周期、波高、水深和方向。这里的波速、周期与波长必须满足所选波理论的色散关系；以静水、线性小振幅波和反射率评估逐级验证。"
+description: "定义造波或吸波边界使用的波浪模型、周期、波高、水深和方向。"
 dictionary: true
+cms_slug: "dictionary-waveproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>定义造波或吸波边界使用的波浪模型、周期、波高、水深和方向。这里的波速、周期与波长必须满足所选波理论的色散关系；以静水、线性小振幅波和反射率评估逐级验证。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>waveModel</td><td>采用的波浪理论或造波模型，决定色散关系和所需波参数。</td></tr><tr><td>waveHeight</td><td>波峰到波谷的高度，一般为振幅的两倍。</td></tr><tr><td>waveAngle</td><td>波浪传播方向角，其单位与参考方向由模型定义。</td></tr><tr><td>rampTime</td><td>造波信号逐渐增长到目标幅值的时间，用于减小启动瞬态。</td></tr><tr><td>wavePeriod</td><td>波浪周期。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>outlet</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr><tr><td>inlet</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr><tr><td>rightwall</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · multiphase/interFoam/laminar/waves/waveMakerSolitary</h3><p>原始路径：<code>tutorials/multiphase/interFoam/laminar/waves/waveMakerSolitary/constant/waveProperties</code>；求解器：<code>interFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/waves/waveMakerSolitary/constant/waveProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/waveproperties/1-waveProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/waves/waveMakerSolitary">查看配套目录</a></p><pre><code class="language-openfoam">/*---------------------------------------------------------------------------*\
+
+<p>定义造波或吸波边界使用的波浪模型、周期、波高、水深和方向。</p><p>位置：<code>constant/waveProperties</code></p><h2>配置实例</h2><p>multiphase/interFoam/laminar/waves/waveMakerSolitary 中的 waveProperties：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      wavesProperties;
+}
+
+outlet
+{
+    alpha           alpha.water;
+
+    waveModel       shallowWaterAbsorption;
+
+    nPaddle         1;
+}</code></pre><h2>参数说明</h2><table><thead><tr><th>条目</th><th>含义</th></tr></thead><tbody><tr><td>waveModel</td><td>采用的波浪理论或造波模型，决定色散关系和所需波参数。</td></tr><tr><td>waveHeight</td><td>波峰到波谷的高度，一般为振幅的两倍。</td></tr><tr><td>waveAngle</td><td>波浪传播方向角，其单位与参考方向由模型定义。</td></tr><tr><td>rampTime</td><td>造波信号逐渐增长到目标幅值的时间，用于减小启动瞬态。</td></tr><tr><td>wavePeriod</td><td>波浪周期。</td></tr></tbody></table><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · multiphase/interFoam/laminar/waves/waveMakerSolitary</summary><p>waveMakerSolitary 的 waveProperties 配置出口消波，使传播到出口的长波尽量平顺地离开计算域。</p>
+<ul>
+<li><code>outlet</code> 是实际出口边界名称，<code>alpha alpha.water</code> 指定用于识别水面的体积分数字段。</li>
+<li><code>waveModel shallowWaterAbsorption</code> 根据浅水波关系构造吸收处理。</li>
+<li><code>nPaddle 1</code> 使用一个横向控制分段，适合该演示中的简单波面。</li>
+</ul>
+<p>孤立波的产生还由算例其他初始或运动设置给出；调整出口后比较入射波离开时的水位时序和反射波幅。</p>
+<p><a href="/assets/examples/v2512/waveproperties/1-waveProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/waves/waveMakerSolitary/constant/waveProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/waves/waveMakerSolitary">案例目录</a></p><pre><code class="language-foam">/*---------------------------------------------------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -31,7 +54,16 @@ outlet
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · multiphase/interIsoFoam/waveExampleStreamFunction</h3><p>原始路径：<code>tutorials/multiphase/interIsoFoam/waveExampleStreamFunction/constant/waveProperties</code>；求解器：<code>interIsoFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/waveExampleStreamFunction/constant/waveProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/waveproperties/2-waveProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/waveExampleStreamFunction">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · multiphase/interIsoFoam/waveExampleStreamFunction</summary><p>waveExampleStreamFunction 在入口使用流函数波浪理论生成非线性规则波，在出口吸收传播过来的波。</p>
+<ul>
+<li>入口 <code>waveHeight 0.1517</code> m、<code>wavePeriod 3.017</code> s、<code>waveLength 6.2832</code> m 分别给出波高、周期和波长。</li>
+<li><code>waveAngle 0</code> 设置传播方向，<code>uMean 2.0825</code> 提供流函数波解中的平均速度参数，应与所用理论解配套。</li>
+<li><code>Bjs</code>、<code>Ejs</code> 是该波解的级数系数，改变波高、水深或周期时应重新求解这些系数。</li>
+<li><code>rampTime 3.017</code> 使造波在一个周期内逐步建立，<code>activeAbsorption yes</code> 启用入口的主动吸收处理。</li>
+<li>出口使用 shallowWaterAbsorption，<code>nPaddle 1</code> 对整个边界采用单个控制分段。</li>
+</ul>
+<p>通过入口下游的水位探针检查实际周期和波高，再逐步分析反射与耗散。</p>
+<p><a href="/assets/examples/v2512/waveproperties/2-waveProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/waveExampleStreamFunction/constant/waveProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/waveExampleStreamFunction">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -108,7 +140,14 @@ outlet
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · multiphase/interFoam/laminar/waves/waveMakerFlap</h3><p>原始路径：<code>tutorials/multiphase/interFoam/laminar/waves/waveMakerFlap/constant/waveProperties</code>；求解器：<code>interFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/waves/waveMakerFlap/constant/waveProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/waveproperties/3-waveProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/waves/waveMakerFlap">查看配套目录</a></p><pre><code class="language-openfoam">/*---------------------------------------------------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · multiphase/interFoam/laminar/waves/waveMakerFlap</summary><p>waveMakerFlap 的这个文件负责右侧边界的波浪吸收，翻板自身的运动由其他运动配置提供。</p>
+<ul>
+<li><code>rightwall</code> 是吸收边界名称，应与网格和场文件中的 patch 一致。</li>
+<li><code>alpha alpha.water</code> 读取水相体积分数来识别自由表面。</li>
+<li><code>waveModel shallowWaterAbsorption</code> 采用浅水波吸收关系，<code>nPaddle 1</code> 使用一个边界控制分段。</li>
+</ul>
+<p>改变水深或造波频率后，可在不同位置设置水位探针，比较入射与反射波幅，判断出口吸收效果。</p>
+<p><a href="/assets/examples/v2512/waveproperties/3-waveProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/waves/waveMakerFlap/constant/waveProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/waves/waveMakerFlap">案例目录</a></p><pre><code class="language-foam">/*---------------------------------------------------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -134,9 +173,4 @@ rightwall
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/interfoam/">interFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/waveProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/waveProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/interfoam/">interFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

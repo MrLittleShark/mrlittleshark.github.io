@@ -1,10 +1,11 @@
 ---
 title: "第 15 章　system/blockMeshDict"
 layout: reference
-description: "OpenCFD v2512 system/blockMeshDict；包含原理、示例与版本核对。"
+description: "system/blockMeshDict：用法与配置实例。"
+cms_slug: "reference-guide-15"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>15.1 完整结构与一个可运行的例子</h2>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>15.1 完整结构与一个可运行的例子</h2>
 <p>下面是标准方腔算例（cavity）的字典，每一行都加了注释：</p>
 <pre><code class="language-openfoam">FoamFile { version 2.0; format ascii; class dictionary; object blockMeshDict; }
 
@@ -126,4 +127,3 @@ left
 paraFoam -block              # ★ 直接可视化块结构与顶点编号，找错最快
 checkMesh -allGeometry</code></pre>
 <p>配置了相容的 blockReader 插件时，paraFoam -block 可用于检查块结构。若插件缺失，可先运行 blockMesh，再用 paraFoam -vtk 查看生成的网格；这两种显示对象不同。</p>
-{% endraw %}

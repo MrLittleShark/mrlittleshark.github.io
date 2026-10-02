@@ -1,11 +1,26 @@
 ---
-title: "constant/porosityProperties · porosityProperties"
+title: "porosityProperties"
 layout: reference
-description: "部分专用求解器或教程中的多孔介质属性。多孔阻力所作用的区域、阻力系数与坐标系必须匹配；常规流动求解器的 explicitPorositySource 配置通常位于 fvOptions，因此应先检查实际读取位置。"
+description: "部分专用求解器或教程中的多孔介质属性。"
 dictionary: true
+cms_slug: "dictionary-porosityproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>部分专用求解器或教程中的多孔介质属性。多孔阻力所作用的区域、阻力系数与坐标系必须匹配；常规流动求解器的 explicitPorositySource 配置通常位于 fvOptions，因此应先检查实际读取位置。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>cellZone</td><td>源项、运动或材料区域所引用的单元区名称。</td></tr><tr><td>origin</td><td>局部坐标系、旋转或几何操作的参考原点。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>porosityEnabled</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr><tr><td>porosityModel</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr><tr><td>porosity1</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · multiphase/interIsoFoam/discInConstantPorousFlow</h3><p>原始路径：<code>tutorials/multiphase/interIsoFoam/discInConstantPorousFlow/constant/porosityProperties</code>；求解器：<code>interIsoFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/discInConstantPorousFlow/constant/porosityProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/porosityproperties/1-porosityProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/discInConstantPorousFlow">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>部分专用求解器或教程中的多孔介质属性。</p><p>位置：<code>constant/porosityProperties</code></p><h2>配置实例</h2><p>multiphase/interIsoFoam/discInConstantPorousFlow 中的 porosityProperties：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      porosityProperties;
+}
+
+porosityEnabled true;</code></pre><h2>参数说明</h2><table><thead><tr><th>条目</th><th>含义</th></tr></thead><tbody><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>cellZone</td><td>源项、运动或材料区域所引用的单元区名称。</td></tr><tr><td>origin</td><td>局部坐标系、旋转或几何操作的参考原点。</td></tr></tbody></table><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · multiphase/interIsoFoam/discInConstantPorousFlow</summary><p>discInConstantPorousFlow 用固定孔隙率分布测试界面随流动的输运。这个文件只有一个总开关。</p>
+<ul>
+<li><code>porosityEnabled true</code> 开启该算例使用的孔隙率处理。</li>
+<li>空间分布由算例的孔隙率场及配套初始化提供；这里没有给出完整的 Darcy–Forchheimer 阻力系数。</li>
+</ul>
+<p>复用时连同场文件、初始化步骤和实际调用的求解流程一起复制，并查看固体占比变化是否与几何设置一致。</p>
+<p><a href="/assets/examples/v2512/porosityproperties/1-porosityProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/discInConstantPorousFlow/constant/porosityProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/discInConstantPorousFlow">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -24,7 +39,15 @@ FoamFile
 porosityEnabled true;
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · verificationAndValidation/multiphase/interIsoFoam/porousDamBreak</h3><p>原始路径：<code>tutorials/verificationAndValidation/multiphase/interIsoFoam/porousDamBreak/constant/porosityProperties</code>；求解器：<code>interIsoFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/verificationAndValidation/multiphase/interIsoFoam/porousDamBreak/constant/porosityProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/porosityproperties/2-porosityProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/verificationAndValidation/multiphase/interIsoFoam/porousDamBreak">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · verificationAndValidation/multiphase/interIsoFoam/porousDamBreak</summary><p>porousDamBreak 研究水体冲入多孔材料后的阻滞与惯性效应，interIsoFoam 将相应项加入动量方程。</p>
+<ul>
+<li><code>porosityEnabled true</code> 启用多孔处理，JensenEtAl2014Coeffs 提供本实现使用的参数。</li>
+<li><code>alpha 500</code> 控制与黏度和速度相关的 Darcy 阻力部分；<code>beta 2</code> 控制随速度幅值增加的 Forchheimer 阻力部分。</li>
+<li><code>d50 0.0159</code> 表示 15.9 mm 的代表性粒径。阻力公式包含粒径的一次、二次倒数，因此粒径变化会明显改变阻力。</li>
+<li><code>KC 128</code> 进入惯性阻力修正因子 <code>1 + 7.5/KC</code>，<code>gamma_p 0.34</code> 通过 <code>Cm = gamma_p*(1 - porosity)</code> 设置附加质量项。</li>
+</ul>
+<p>孔隙率由空间场提供，材料系数与孔隙率应配套设定；比较迎水面水位、透水量与压力可以观察参数影响。</p>
+<p><a href="/assets/examples/v2512/porosityproperties/2-porosityProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/verificationAndValidation/multiphase/interIsoFoam/porousDamBreak/constant/porosityProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/verificationAndValidation/multiphase/interIsoFoam/porousDamBreak">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -54,7 +77,15 @@ JensenEtAl2014Coeffs
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · incompressible/porousSimpleFoam/straightDuctImplicit</h3><p>原始路径：<code>tutorials/incompressible/porousSimpleFoam/straightDuctImplicit/constant/porosityProperties</code>；求解器：<code>porousSimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/porousSimpleFoam/straightDuctImplicit/constant/porosityProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/porosityproperties/3-porosityProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/porousSimpleFoam/straightDuctImplicit">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · incompressible/porousSimpleFoam/straightDuctImplicit</summary><p>straightDuctImplicit 用 Darcy–Forchheimer 模型表示管道中的各向异性多孔阻力。</p>
+<ul>
+<li><code>cellZone porosity</code> 将阻力限定在名为 porosity 的单元区。</li>
+<li><code>d (5e7 -1000 -1000)</code> 的 x 分量是 5×10⁷ m⁻²；负分量采用“最大正分量的倍数”写法，因此 y、z 对应 5×10¹⁰ m⁻²，强烈抑制横向运动。</li>
+<li><code>f (0 0 0)</code> 关闭二次速度阻力项，保留线性 Darcy 项。</li>
+<li>局部坐标的 e1、e2 分别沿 x、y，决定这些阻力主方向在网格中的方向。</li>
+</ul>
+<p>旋转多孔介质时修改局部坐标方向；拟合实验压降时同时检查长度、黏度、流速和阻力单位。</p>
+<p><a href="/assets/examples/v2512/porosityproperties/3-porosityProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/porousSimpleFoam/straightDuctImplicit/constant/porosityProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/porousSimpleFoam/straightDuctImplicit">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -88,9 +119,4 @@ porosity1
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/poroussimplefoam/">porousSimpleFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/porosityProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/porosityProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/poroussimplefoam/">porousSimpleFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

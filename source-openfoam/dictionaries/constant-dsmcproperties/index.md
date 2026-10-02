@@ -1,11 +1,76 @@
 ---
-title: "constant/dsmcProperties · dsmcProperties"
+title: "dsmcProperties"
 layout: reference
-description: "DSMC 模拟的分子物种、碰撞和壁面相互作用模型。DSMC 的统计粒子数、单元尺寸和时间步需与平均自由程、碰撞时间及统计误差一起评估；它不是连续介质湍流模型。"
+description: "DSMC 模拟的分子物种、碰撞和壁面相互作用模型。"
 dictionary: true
+cms_slug: "dictionary-dsmcproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>DSMC 模拟的分子物种、碰撞和壁面相互作用模型。DSMC 的统计粒子数、单元尺寸和时间步需与平均自由程、碰撞时间及统计误差一起评估；它不是连续介质湍流模型。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>omega</td><td>角速度参数或湍流比耗散率场名，二者物理意义与量纲不同。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>nEquivalentParticles</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * // General Properties ~~~~~~~~~~~~~~~~~~</td></tr><tr><td>WallInteractionModel</td><td>Wall Interaction Model ~~~~~~~~~~~~~~~~~~~~~~</td></tr><tr><td>BinaryCollisionModel</td><td>Binary Collision Model ~~~~~~~~~~~~~~~~~~~~~~</td></tr><tr><td>InflowBoundaryModel</td><td>Inflow Boundary Model ~~~~~~~~~~~~~~~~~~~~~</td></tr><tr><td>typeIdList</td><td>Molecular species ~~~~~~~~~~~~~~~~~</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · discreteMethods/dsmcFoam/supersonicCorner</h3><p>原始路径：<code>tutorials/discreteMethods/dsmcFoam/supersonicCorner/constant/dsmcProperties</code>；求解器：<code>dsmcFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/supersonicCorner/constant/dsmcProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/dsmcproperties/1-dsmcProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/supersonicCorner">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>DSMC 模拟的分子物种、碰撞和壁面相互作用模型。</p><p>位置：<code>constant/dsmcProperties</code></p><h2>配置实例</h2><p>discreteMethods/dsmcFoam/supersonicCorner 中的 dsmcProperties：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dsmcProperties;
+}
+
+// General Properties
+// ~~~~~~~~~~~~~~~~~~
+
+nEquivalentParticles            1.2e12;
+
+// Wall Interaction Model
+// ~~~~~~~~~~~~~~~~~~~~~~
+
+WallInteractionModel            MaxwellianThermal;
+
+// Binary Collision Model
+// ~~~~~~~~~~~~~~~~~~~~~~
+
+BinaryCollisionModel            VariableHardSphere;
+
+VariableHardSphereCoeffs
+{
+    Tref        273;
+}
+
+// Inflow Boundary Model
+// ~~~~~~~~~~~~~~~~~~~~~
+
+InflowBoundaryModel             FreeStream;
+
+FreeStreamCoeffs
+{
+    numberDensities
+    {
+        Ar      1.0e20;
+    };
+}
+
+// Molecular species
+// ~~~~~~~~~~~~~~~~~
+
+typeIdList                      (Ar);
+
+moleculeProperties
+{
+    Ar
+    {
+        mass                            66.3e-27;
+        diameter                        4.17e-10;
+        internalDegreesOfFreedom        0;
+        omega                           0.81;
+    }
+}</code></pre><h2>参数说明</h2><table><thead><tr><th>条目</th><th>含义</th></tr></thead><tbody><tr><td>omega</td><td>角速度参数或湍流比耗散率场名，二者物理意义与量纲不同。</td></tr></tbody></table><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · discreteMethods/dsmcFoam/supersonicCorner</summary><p><code>supersonicCorner</code> 的工作气体为单原子氩。这个文件定义模拟粒子的统计权重、分子碰撞规律以及壁面与入口模型。</p>
+<ul>
+<li><code>nEquivalentParticles 1.2e12</code> 使一个计算粒子代表 \(1.2\times10^{12}\) 个氩原子；降低该值会增加抽样粒子数量。</li>
+<li><code>VariableHardSphere</code> 使用可变硬球碰撞模型，<code>Tref 273</code> 是碰撞参考温度；<code>omega 0.81</code> 控制碰撞截面随相对速度变化的规律。</li>
+<li><code>mass 66.3e-27</code> kg 与 <code>diameter 4.17e-10</code> m 描述氩原子的质量和参考碰撞直径。<code>internalDegreesOfFreedom 0</code> 与单原子气体相符。</li>
+<li><code>MaxwellianThermal</code> 按壁面温度重新抽样反射速度，体现与壁面热交换；墙温来自配套边界场。</li>
+<li><code>FreeStream</code> 配合 <code>Ar 1e20</code> 持续补充来流，和初始化文件中的物种及数密度一致。</li>
+</ul>
+<p>要比较壁面热适应效应，可与镜面反射模型对照；要降低统计噪声，可增加粒子数和采样时长。改变碰撞直径后，平均自由程会随之改变，网格尺度也应重新检查。</p>
+<p><a href="/assets/examples/v2512/dsmcproperties/1-dsmcProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/supersonicCorner/constant/dsmcProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/supersonicCorner">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -76,7 +141,16 @@ moleculeProperties
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · discreteMethods/dsmcFoam/freeSpacePeriodic</h3><p>原始路径：<code>tutorials/discreteMethods/dsmcFoam/freeSpacePeriodic/constant/dsmcProperties</code>；求解器：<code>dsmcFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/freeSpacePeriodic/constant/dsmcProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/dsmcproperties/2-dsmcProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/freeSpacePeriodic">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · discreteMethods/dsmcFoam/freeSpacePeriodic</summary><p><code>freeSpacePeriodic</code> 使用氮氧双原子混合气，在周期区域中观察碰撞与能量分配。</p>
+<ul>
+<li><code>nEquivalentParticles 1e12</code> 给出统计权重；<code>typeIdList (N2 O2)</code> 定义可出现的两种分子。</li>
+<li>两种分子的 <code>internalDegreesOfFreedom</code> 均为 2，对应这里采用的转动内能自由度。质量分别为 <code>46.5e-27</code>、<code>53.12e-27</code> kg。</li>
+<li><code>LarsenBorgnakkeVariableHardSphere</code> 在可变硬球碰撞基础上加入平动与内能再分配。<code>relaxationCollisionNumber 5.0</code> 对应模型中 \(1/5\) 的内能再分配抽样概率。</li>
+<li><code>Tref 273</code>、氮气 <code>omega 0.74</code> 和氧气 <code>omega 0.77</code> 决定各物种的碰撞温度依赖。</li>
+<li><code>InflowBoundaryModel none</code> 与周期体系配合；<code>SpecularReflection</code> 是遇到实体壁面时使用的镜面反射模型，周期面继续按周期拓扑处理。</li>
+</ul>
+<p>可改变 <code>relaxationCollisionNumber</code> 比较内能向平衡状态靠近的速度。调整模拟粒子权重时，保持真实数密度和分子物性不变，以单独评估统计分辨率。</p>
+<p><a href="/assets/examples/v2512/dsmcproperties/2-dsmcProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/freeSpacePeriodic/constant/dsmcProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/freeSpacePeriodic">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -147,7 +221,16 @@ moleculeProperties
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · discreteMethods/dsmcFoam/freeSpaceStream</h3><p>原始路径：<code>tutorials/discreteMethods/dsmcFoam/freeSpaceStream/constant/dsmcProperties</code>；求解器：<code>dsmcFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/freeSpaceStream/constant/dsmcProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/dsmcproperties/3-dsmcProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/freeSpaceStream">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · discreteMethods/dsmcFoam/freeSpaceStream</summary><p><code>freeSpaceStream</code> 把氮氧混合气持续送入计算域，适合检查入口统计与下游流场是否保持一致。</p>
+<ul>
+<li><code>FreeStreamCoeffs/numberDensities</code> 给出氮气 <code>0.777e20</code>、氧气 <code>0.223e20</code> m⁻³；入口速度和温度还需与配套边界场一致。</li>
+<li><code>nEquivalentParticles 1e12</code> 将真实分子流率转化为有限数量的模拟粒子注入事件。</li>
+<li><code>LarsenBorgnakkeVariableHardSphere</code> 处理碰撞及内能交换，<code>relaxationCollisionNumber 5.0</code> 设置内能交换的统计频率。</li>
+<li><code>internalDegreesOfFreedom 2</code> 给两种双原子分子分配转动自由度。<code>mass</code>、<code>diameter</code>、<code>omega</code> 分别控制惯性、参考碰撞尺度和速度依赖。</li>
+<li><code>MaxwellianThermal</code> 指定实体壁面的热反射处理。开放入口与出口由对应边界类型决定。</li>
+</ul>
+<p>增大入口数密度后，应同时比较入口与出口的分子数流率。延长统计时段可减小抽样噪声；提高流速后则应重新选择粒子跟踪时间步。</p>
+<p><a href="/assets/examples/v2512/dsmcproperties/3-dsmcProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/freeSpaceStream/constant/dsmcProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/discreteMethods/dsmcFoam/freeSpaceStream">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -228,9 +311,4 @@ moleculeProperties
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/dsmcfoam/">dsmcFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/dsmcProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/dsmcProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/dsmcfoam/">dsmcFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

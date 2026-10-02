@@ -1,75 +1,153 @@
 ---
-title: "constant/fvOptions · fvOptions"
+title: "fvOptions"
 layout: reference
-description: "fvOptions 用于配置源项和约束，文件位置由求解器的读取路径确定，常见于 constant 或 system。下例在指定 cellZone 内施加速度方程源项，采用 sources 条目。"
+description: "为方程添加源项、约束或求解后修正，例如动量源、多孔阻力和固定温度区。"
 dictionary: true
+cms_slug: "dictionary-fvoptions"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>fvOptions 用于配置源项和约束，文件位置由求解器的读取路径确定，常见于 constant 或 system。下例在指定 cellZone 内施加速度方程源项，采用 sources 条目。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>constant/fvOptions</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>type</code> · <code>active</code> · <code>selectionMode</code> · <code>cellZone</code> · <code>semiImplicitSource</code> · <code>scalarSemiImplicitSource</code> · <code>vectorSemiImplicitSource</code></p><h2>关联命令</h2><p><a href="/commands/?q=simpleFoam">simpleFoam</a> · <a href="/commands/?q=pimpleFoam">pimpleFoam</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary constant/fvOptions -keywords
-simpleFoam -help</code></pre><h2>9.9 constant/fvOptions</h2><p>fvOptions 用于配置源项和约束，文件位置由求解器的读取路径确定，常见于 constant 或 system。下例在指定 cellZone 内施加速度方程源项，采用 sources 条目。</p>
-<pre><code class="language-openfoam">FoamFile
+
+<p>为方程添加源项、约束或求解后修正，例如动量源、多孔阻力和固定温度区。</p><p>位置：<code>constant/fvOptions</code></p><h2>fvOptions 添加源项、约束和场修正</h2>
+<p><code>fvOptions</code> 让支持该接口的求解器增加体积力、热源、多孔阻力或区域约束。它既描述采用什么模型，也描述模型作用于哪些单元。文件常位于 <code>constant/fvOptions</code>，也有教程放在 <code>system/fvOptions</code>；沿用所选完整算例的位置即可。</p>
+<h3>周期通道中维持平均速度</h3>
+<p>在周期通道中，可以通过动量源驱动流动。以下是 <code>meanVelocityForce</code> 的最小配置主体，放在标准文件头之后：</p>
+<pre><code class="language-foam">momentumSource
 {
-    version 2.0; format ascii;
-    class dictionary; object fvOptions;
+    type          meanVelocityForce;
+    active        yes;
+    selectionMode all;
+    fields        (U);
+    Ubar          (1 0 0);
 }
-drive
+</code></pre>
+<p><code>momentumSource</code> 是用户自定名称。<code>type</code> 选择模型；<code>selectionMode all</code> 作用于全部单元；<code>fields (U)</code> 指定速度场；<code>Ubar</code> 给出目标平均速度及方向，单位为 m/s。</p>
+<p>程序根据当前区域平均速度与目标值之间的差别，调整驱动力。它适合周期流动中控制整体流速，局部速度仍由流动方程和壁面条件决定。若通道有明确入口和出口，通常先按边界条件确定流量，再判断是否确实需要额外驱动力。</p>
+<p>若只选定一组单元，可替换选择部分：</p>
+<pre><code class="language-foam">selectionMode cellZone;
+cellZone      inletCellZone;
+</code></pre>
+<p><code>inletCellZone</code> 必须是网格中已有的单元区域，可由 <code>topoSet</code>、网格生成或导入步骤建立。它是一个体积单元集合，与边界面的 patch 名称不同。</p>
+<h3>多孔介质阻力</h3>
+<p>以下是另一个独立对象，可加入同一文件，用于已有的 <code>porosity</code> 单元区：</p>
+<pre><code class="language-foam">porousResistance
 {
-    type vectorSemiImplicitSource;
-    active true;
-    selectionMode cellZone;
-    cellZone heater;
-    volumeMode specific;
-    sources
+    type explicitPorositySource;
+    explicitPorositySourceCoeffs
     {
-        U ((0.1 0 0) 0);
+        selectionMode cellZone;
+        cellZone porosity;
+        type DarcyForchheimer;
+        d (1e7 1e7 1e7);
+        f (100 100 100);
+        coordinateSystem
+        {
+            origin (0 0 0);
+            e1 (1 0 0);
+            e3 (0 0 1);
+        }
     }
-}</code></pre>
-<p>半隐式源项写为 Su + Sp*字段，括号内依次给出显式项和隐式系数。specific 按单位体积定义，absolute 按所选体积的总量定义。源项量纲取决于控制方程；速度、动量以及以 h、e 或 T 为变量的能量方程应分别确定量纲和密度因子。</p>
-<p>selectionMode 指定作用范围，可选 all、cellZone、cellSet 等；timeStart 和 duration 指定作用时间。常用类型包括 scalarSemiImplicitSource、vectorSemiImplicitSource、meanVelocityForce、explicitPorositySource、scalarFixedValueConstraint、limitTemperature 和 codedSource，其参数按对应模型设置。</p>
-<h2>17.4 fvOptions（源项与区域模型）</h2><p>放在 system/fvOptions（或 constant/fvOptions）。它让你不改求解器就能加源项。</p>
-<pre><code class="language-openfoam">momentumSource
-{
-    type            meanVelocityForce;      // 恒定流量驱动（周期性槽道流必用）
-    active          yes;
-    selectionMode   all;
-    fields          (U);
-    Ubar            (0.1335 0 0);
 }
-
-heatSource
+</code></pre>
+<p><code>d</code> 表示黏性阻力系数，单位为 \(\mathrm{m^{-2}}\)；<code>f</code> 表示惯性阻力系数，单位为 \(\mathrm{m^{-1}}\)。三个分量对应局部坐标轴方向；此处设置相同值表示各向同性。<code>e1</code> 和 <code>e3</code> 定义局部第一、第三方向，程序据此构造正交坐标系。</p>
+<p>典型阻力项可写成 \(\mathbf S=-\left(\mu\mathbf D+\rho|\mathbf U|\mathbf F/2\right)\mathbf U\)。增大 <code>d</code> 主要加强线性黏性阻力，增大 <code>f</code> 加强随流速增长的非线性阻力。参数应由材料渗透率或压降—流量关系确定。</p>
+<h3>求解器中的调用位置</h3>
+<p><code>simpleFoam</code>、<code>pimpleFoam</code> 等在方程组装中调用源项，并在求解前后调用约束和修正。使用基础 <code>icoFoam</code> 扩展源项时，需要在自定义程序中加入对应接口；也可以直接选用已经支持该模型的求解器。</p>
+<p>启用后检查日志中选中的单元数、区域体积和模型名称。对于热源，再计算体积积分对应的总功率；对于阻力，比较源区两侧压降。这样可以直接确认源项的位置、方向和量级。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/pimpleFoam/LES/periodicHill/steadyState</summary><p>周期丘陵的 steadyState 阶段用体积动量源维持目标平均流速，避免在周期方向人为设置入口出口压差。</p>
+<ul>
+<li><code>type meanVelocityForce</code> 根据平均速度误差调节驱动力。</li>
+<li><code>selectionMode cellZone</code>、<code>cellZone inletCellZone</code> 指定统计与作用的单元区。</li>
+<li><code>fields (U)</code> 表示作用于速度方程，<code>Ubar (1 0 0)</code> 给定沿 x 的目标平均速度 1 m/s。</li>
+</ul>
+<p>改变目标流量时修改 Ubar；更改统计区域时同步检查 cellZone 的几何范围与场平均方式。</p>
+<p><a href="/assets/examples/v2512/fvoptions/authored-periodicHill-meanVelocityForce-fvOptions.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/periodicHill/steadyState/system/fvOptions">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/periodicHill/steadyState">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2512                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
 {
-    type            scalarSemiImplicitSource;
-    active          yes;
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+momentumSource
+{
+    type            meanVelocityForce;
+
     selectionMode   cellZone;
-    cellZone        heater;
-    volumeMode      absolute;               // absolute / specific
-    sources         { h (500 0); }          // (显式部分 隐式部分)
+    cellZone        inletCellZone;
+
+    fields          (U);
+    Ubar            (1 0 0);
 }
 
-porous
+
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · incompressible/pisoFoam/laminar/porousBlockage</summary><p>porousBlockage 在选定区域添加多孔阻力，以等效连续介质代替逐个解析细孔。</p>
+<ul>
+<li><code>explicitPorositySource</code> 把阻力加入动量方程，<code>cellZone porousBlockage</code> 限定作用区域。</li>
+<li><code>DarcyForchheimer</code> 包含线性黏性阻力和二次惯性阻力。</li>
+<li><code>D 1000</code> 经 <code>$D</code> 展开为各向同性 <code>d (1000 1000 1000)</code>，Darcy 系数的单位为 m⁻²。</li>
+<li><code>f (0 0 0)</code> 关闭本例的二次阻力，<code>rotation none</code> 使系数方向与给定坐标系保持一致。</li>
+</ul>
+<p>更换多孔材料时根据压降与流速关系拟合 d、f；各向异性材料还需设置正确的主方向。</p>
+<p><a href="/assets/examples/v2512/fvoptions/authored-porousBlockage-DarcyForchheimer-fvOptions.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pisoFoam/laminar/porousBlockage/constant/fvOptions">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pisoFoam/laminar/porousBlockage">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2512                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+porosity1
 {
     type            explicitPorositySource;
-    active          yes;
-    selectionMode   cellZone;
-    cellZone        porousZone;
-    type            DarcyForchheimer;
-    d   (5e7 -1000 -1000);
-    f   (0 0 0);
-    coordinateSystem { ... }
+
+    explicitPorositySourceCoeffs
+    {
+        selectionMode   cellZone;
+
+        cellZone        porousBlockage;
+
+        type            DarcyForchheimer;
+
+        // D 100;  // Very little blockage
+        // D 200;  // Some blockage but steady flow
+        // D 500;  // Slight waviness in the far wake
+        D 1000; // Fully shedding behavior
+
+        d   ($D $D $D);
+        f   (0 0 0);
+
+        coordinateSystem
+        {
+            origin  (0 0 0);
+            rotation none;
+        }
+    }
 }
 
-MRF1
-{
-    type            MRFSource;             // 旋转参考系（风机、搅拌器）
-    selectionMode   cellZone;
-    cellZone        rotor;
-    origin          (0 0 0);
-    axis            (0 0 1);
-    omega           constant 104.72;       // rad/s
-}</code></pre>
-<p>常用类型还有：limitTemperature（限温，防发散）、limitVelocity、fixedTemperatureConstraint、buoyancyEnergy、radiation、solidificationMeltingSource（相变）、atmAmbientTurbSource（大气边界层）。</p>
-<p>为什么它重要：初学者遇到”我要在某个区域加个热源/阻力/旋转”，第一反应常是去改求解器源码。用 fvOptions 一个字典就能解决，且不影响可维护性。</p><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>radiation</td><td>辐射计算开关，需与模型、壁面辐射条件及能量方程配合。</td></tr><tr><td>libs</td><td>额外加载的共享库。函数对象或自定义边界未注册时，应检查库名与编译版本。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>viscousDissipation</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/3DBox/losses</h3><p>原始路径：<code>tutorials/incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/3DBox/losses/system/fvOptions</code>；求解器：<code>adjointOptimisationFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/3DBox/losses/system/fvOptions">查看固定版本源码</a> · <a href="/assets/examples/v2512/fvoptions/1-fvOptions.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/3DBox/losses">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/3DBox/losses</summary><p>三维拓扑优化把设计变量转化为动量阻力，用来逐步区分流体与受阻区域。</p>
+<ul>
+<li><code>type topOSource</code> 选择拓扑优化源项，<code>names (U Ua)</code> 指向原始速度与伴随速度变量。</li>
+<li><code>function BorrvallPetersson</code> 指定设计量到源项的插值关系。</li>
+<li><code>interpolationField beta</code> 使用 beta 设计场，<code>b 100</code> 是该插值函数的参数。</li>
+</ul>
+<p>改变惩罚程度时观察中间密度区、压降和优化目标的变化，并保证原始与伴随设置一致。</p>
+<p><a href="/assets/examples/v2512/fvoptions/1-fvOptions.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/3DBox/losses/system/fvOptions">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/adjointOptimisationFoam/topologyOptimisation/monoFluidAero/laminar/3DBox/losses">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -90,7 +168,14 @@ momSource
     function BorrvallPetersson;
     b 100;
     interpolationField beta;
-}</code></pre><h3>示例 2 · combustion/reactingFoam/RAS/SandiaD_LTS</h3><p>原始路径：<code>tutorials/combustion/reactingFoam/RAS/SandiaD_LTS/constant/fvOptions</code>；求解器：<code>reactingFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/combustion/reactingFoam/RAS/SandiaD_LTS/constant/fvOptions">查看固定版本源码</a> · <a href="/assets/examples/v2512/fvoptions/2-fvOptions.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/reactingFoam/RAS/SandiaD_LTS">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+}</code></pre></details><details class="reference-example"><summary>示例 4 · combustion/reactingFoam/RAS/SandiaD_LTS</summary><p>SandiaD_LTS 的能量方程通过 fvOptions 接入辐射源项。</p>
+<ul>
+<li><code>type radiation</code> 创建辐射选项。</li>
+<li><code>libs (radiationModels)</code> 加载实现所需的库。</li>
+<li>本字典负责把辐射作用接到方程，辐射模型和介质参数由配套 radiationProperties 定义。</li>
+</ul>
+<p>更改燃烧或辐射条件时同时检查这两个文件及温度、组分字段。</p>
+<p><a href="/assets/examples/v2512/fvoptions/2-fvOptions.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/combustion/reactingFoam/RAS/SandiaD_LTS/constant/fvOptions">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/reactingFoam/RAS/SandiaD_LTS">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -113,7 +198,14 @@ radiation
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · compressible/rhoPimpleFoam/RAS/TJunction</h3><p>原始路径：<code>tutorials/compressible/rhoPimpleFoam/RAS/TJunction/constant/fvOptions</code>；求解器：<code>rhoPimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/compressible/rhoPimpleFoam/RAS/TJunction/constant/fvOptions">查看固定版本源码</a> · <a href="/assets/examples/v2512/fvoptions/3-fvOptions.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/compressible/rhoPimpleFoam/RAS/TJunction">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 5 · compressible/rhoPimpleFoam/RAS/TJunction</summary><p>T 形管可压缩热流动启用黏性耗散，将黏性作用产生的能量变化加入相应能量方程。</p>
+<ul>
+<li><code>type viscousDissipation</code> 选择该源项。</li>
+<li>这个 fvOption 的开关是 <code>active</code>，省略时默认为 true。需要关闭时设置 <code>active false</code>；文件中的 <code>enabled true</code> 是保留条目，当前接口读取 active。</li>
+<li>它使用已有流场及输运性质，重要程度取决于速度梯度、黏度和热量尺度。</li>
+</ul>
+<p>比较有无耗散时保持其他设置相同，并观察温升与整体能量收支。</p>
+<p><a href="/assets/examples/v2512/fvoptions/3-fvOptions.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/compressible/rhoPimpleFoam/RAS/TJunction/constant/fvOptions">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/compressible/rhoPimpleFoam/RAS/TJunction">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -136,9 +228,4 @@ viscousDissipation
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/simplefoam/">simpleFoam</a> · <a href="/commands/pimplefoam/">pimpleFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/fvOptions&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/fvOptions&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/simplefoam/">simpleFoam</a> · <a href="/commands/pimplefoam/">pimpleFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

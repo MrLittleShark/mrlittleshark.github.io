@@ -1,19 +1,19 @@
 ---
-title: "surfaceFeatureExtract  提取几何表面特征线"
+title: "surfaceFeatureExtract · 从表面提取特征线，供 snappyHexMesh 控制棱边细化"
 layout: reference
-description: "读取 surfaceFeatureExtractDict，生成 eMesh 等特征文件。"
+description: "从表面提取特征线，供 snappyHexMesh 控制棱边细化。"
+cms_slug: "command-surfacefeatureextract"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>读取 surfaceFeatureExtractDict，生成 eMesh 等特征文件。</p><h2>v2512 源码中的用途</h2><p>Extracts and writes surface features to file. All but the basic feature extraction is a work-in-progress. The extraction process is driven by the \a system/surfaceFeatureExtractDict dictionary, but the \a -dict option can be used to define an alternative location. The \a system/surfaceFeatureExtractDict dictionary contains entries for each extraction process. The name of the individual dictionary is used to load the input surface (found under \a constant/triSurface) and also as the basename for the output. If the \c surfaces entry is present in a sub-dictionary, it has absolute precedence over a surface name deduced from the dictionary name. If the dictionary name itself does not have an extension, the \c surfaces entry becomes mandatory since in this case the dictionary name cannot represent an input surface file (ie, there is no file extension). The \c surfaces entry is a wordRe list, which allows loading and combining of multiple surfaces. Any exactly specified surface names must exist, but surfaces selected via regular expressions need not exist. The selection mechanism preserves order and is without duplicates. For example,</p><h2>使用入口</h2><pre><code class="language-bash">surfaceFeatureExtract</code></pre><h2>使用条件与核对</h2><p>读取 surfaceFeatureExtractDict，生成 eMesh 等特征文件。 用法：surfaceFeatureExtract [-dict 文件] 示例：surfaceFeatureExtract
-源码说明：Extracts and writes surface features to file. All but the basic feature extraction is a work-in-progress. The extraction process is driven by the \a system/surfaceFeatureExtractDict dictionary, but the \a -dict option can be used to define an alternative location. The \a system/surfaceFeatureExtractDict dictionary contains entries for each extraction process. The name of the individual dictionary is used to load the input surface (found under \a constant/triSurface) and also as the basename for the output. If the \c surfaces entry is present in a sub-dictionary, it has absolute precedence over a surface name deduced from the dictionary name. If the dictionary name itself does not have an extension, the \c surfaces entry becomes mandatory since in this case the dictionary name cannot represent an input surface file (ie, there is no file extension). The \c surfaces entry is a wordRe list, which allows loading and combining of multiple surfaces. Any exactly specified surface names must exist, but surfaces selected via regular expressions need not exist. The selection mechanism preserves order and is without duplicates. For example,
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-case -debug-switch -dict -doc -doc-source -fileHandler -help -help-compat -help-full -help-man -help-notes -info-switch -lib -no-libs -opt-switch</p><p>关联配置：<a href="/dictionaries/system-surfacefeatureextractdict/">surfaceFeatureExtractDict</a></p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/surfacefeatureextract.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: surfaceFeatureExtract
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceFeatureExtract/surfaceFeatureExtract.C
 
-
-Usage: surfaceFeatureExtract [OPTIONS]
+<p>从表面提取特征线，供 snappyHexMesh 控制棱边细化。</p><h2>提取特征线</h2>
+<pre><code class="language-bash">surfaceFeatureExtract
+</code></pre>
+<p>读取 <code>system/surfaceFeatureExtractDict</code>。表面通常位于 <code>constant/triSurface</code>，生成的 eMesh 由 <code>snappyHexMeshDict/features</code> 引用。</p>
+<h2>使用另一份提取配置</h2>
+<pre><code class="language-bash">surfaceFeatureExtract -dict system/features-fineDict
+</code></pre>
+<p>配置文件应包含待处理表面名称和提取角度。比较不同 <code>includedAngle</code> 下的特征线数量和位置，再选择能保留关键棱边的设置。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-surfacefeatureextractdict/">surfaceFeatureExtractDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceFeatureExtract [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;
@@ -44,5 +44,4 @@ Feature line extraction only valid on closed manifold surfaces.
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceFeatureExtract/surfaceFeatureExtract.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceFeatureExtract/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceFeatureExtract/surfaceFeatureExtract.C">源码与说明</a> · <a href="/assets/command-help/surfacefeatureextract.txt">帮助文本</a></p>

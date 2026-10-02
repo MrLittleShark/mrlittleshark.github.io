@@ -1,0 +1,36 @@
+{
+  "version": "OpenFOAM v2512",
+  "serial_steps": 1000,
+  "cells": 1600,
+  "mean_speed_max_abs_error": 4.9960036108132044e-14,
+  "inlet_flux_max_abs_error": 4.997494388800372e-19,
+  "flux_balance_max_abs_m3s": 1.069999547542418e-16,
+  "parallel_vs_serial_U_max_abs": 2.3000018556373902e-11,
+  "inlet_profile_errors": {
+    "0.25": 3.7087000137603354e-13,
+    "0.5": 4.71955807768154e-13,
+    "0.75": 4.829470157119431e-14,
+    "1": 4.719419299803462e-13
+  },
+  "restart_time": 1.25,
+  "restart_inlet_mean": 0.15,
+  "shared_workspace": "F:\\UbuntuShareFolder\\.foamlab-build\\boundary-development",
+  "guest_workspace": "/home/shark/foamlab-boundary-development-v2",
+  "build_log": "build.log",
+  "serial_log": "log.icoFoam",
+  "restart_log": "restart.log",
+  "parallel_log": "parallel.log",
+  "amplitude_zero_log": "amplitude-zero-run.log",
+  "invalid_amplitude_log": "invalid-amplitude.log",
+  "invalid_amplitude_exit": 1,
+  "zip_sha256": "5f31568e98cafca020941afdbbbe600d6b95c74de12e14daf09ba9f63914987a",
+  "zip_size": 34103,
+  "source_paths": [
+    "src/finiteVolume/fields/fvPatchFields/basic/fixedValue/fixedValueFvPatchField.H",
+    "src/finiteVolume/fields/fvPatchFields/fvPatchField/fvPatchField.H",
+    "src/finiteVolume/fields/fvPatchFields/derived/uniformFixedValue/uniformFixedValueFvPatchField.H"
+  ],
+  "amplitude_zero_steps": 250,
+  "amplitude_zero_mean_max_abs_error": 0.0,
+  "all_checks_passed": true
+}

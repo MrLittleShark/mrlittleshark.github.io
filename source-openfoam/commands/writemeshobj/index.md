@@ -1,19 +1,11 @@
 ---
-title: "writeMeshObj  将网格几何信息导出为 OBJ"
+title: "writeMeshObj · -cell、-face、-point 和 -cellSet 等选项指定诊断对象"
 layout: reference
 description: "-cell、-face、-point 和 -cellSet 等选项指定诊断对象。"
+cms_slug: "command-writemeshobj"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>-cell、-face、-point 和 -cellSet 等选项指定诊断对象。</p><h2>v2512 源码中的用途</h2><p>For mesh debugging: writes mesh as three separate OBJ files. meshPoints_XXX.obj : all points and edges as lines. meshFaceCentres_XXX.obj : all face centres. meshCellCentres_XXX.obj : all cell centres. patch_YYY_XXX.obj : all face centres of patch YYY Optional: - patch faces (as polygons) : patchFaces_YYY_XXX.obj - non-manifold edges : patchEdges_YYY_XXX.obj</p><h2>使用入口</h2><pre><code class="language-bash">writeMeshObj -cell 10</code></pre><h2>使用条件与核对</h2><p>-cell、-face、-point 和 -cellSet 等选项指定诊断对象。 用法：writeMeshObj [选项] 示例：writeMeshObj -cell 10
-源码说明：For mesh debugging: writes mesh as three separate OBJ files. meshPoints_XXX.obj : all points and edges as lines. meshFaceCentres_XXX.obj : all face centres. meshCellCentres_XXX.obj : all cell centres. patch_YYY_XXX.obj : all face centres of patch YYY Optional: - patch faces (as polygons) : patchFaces_YYY_XXX.obj - non-manifold edges : patchEdges_YYY_XXX.obj
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-case -cell -cellSet -constant -debug-switch -decomposeParDict -doc -doc-source -face -faceSet -fileHandler -help -help-compat -help-full -help-man -help-notes -hostRoots -info-switch -latestTime -lib -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-libs -noZero -opt-switch -parallel -patchEdges -patchFaces -point -region -roots -time -world</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/writemeshobj.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: writeMeshObj
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/writeMeshObj/writeMeshObj.C
 
-
-Usage: writeMeshObj [OPTIONS]
+<p>-cell、-face、-point 和 -cellSet 等选项指定诊断对象。</p><h2>用法</h2><pre><code class="language-bash">writeMeshObj -cell 10</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">writeMeshObj -cell 10 -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-cell &lt;cellId&gt;</td><td>Write points for the specified cell</td></tr><tr><td>-cellSet &lt;name&gt;</td><td>Write points for specified cellSet</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-face &lt;faceId&gt;</td><td>Write specified face</td></tr><tr><td>-faceSet &lt;name&gt;</td><td>Write points for specified faceSet Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-patchEdges</td><td>Write patch boundary edges</td></tr><tr><td>-patchFaces</td><td>Write patch faces edges</td></tr><tr><td>-point &lt;pointId&gt;</td><td>Write specified point</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: writeMeshObj [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -cell &lt;cellId&gt;    Write points for the specified cell
@@ -67,5 +59,4 @@ For mesh debugging: write mesh as separate OBJ files
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/writeMeshObj/writeMeshObj.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/writeMeshObj/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/conversion/writeMeshObj/writeMeshObj.C">源码与说明</a> · <a href="/assets/command-help/writemeshobj.txt">帮助文本</a></p>

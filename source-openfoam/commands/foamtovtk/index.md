@@ -1,19 +1,23 @@
 ---
-title: "foamToVTK  将网格与场导出为 VTK"
+title: "foamToVTK · 将 OpenFOAM 网格和场转换为 VTK 数据"
 layout: reference
-description: "支持 XML VTK 输出，-legacy 选择旧式格式，-ascii 选择文本格式。"
+description: "将 OpenFOAM 网格和场转换为 VTK 数据。"
+cms_slug: "command-foamtovtk"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>支持 XML VTK 输出，-legacy 选择旧式格式，-ascii 选择文本格式。</p><h2>v2512 源码中的用途</h2><p>General OpenFOAM to VTK file writer. Other bits - Handles volFields, pointFields, surfaceScalarField, surfaceVectorField fields. - Mesh topo changes. - Output legacy or xml VTK format in ascii or binary. - Single time step writing. - Write subset only. - Optional decomposition of cells.</p><h2>使用入口</h2><pre><code class="language-bash">foamToVTK -latestTime -fields &#x27;(U p)&#x27;</code></pre><h2>使用条件与核对</h2><p>支持 XML VTK 输出，-legacy 选择旧式格式，-ascii 选择文本格式。 用法：foamToVTK [选项] 示例：foamToVTK -latestTime -fields &#x27;(U p)&#x27;
-源码说明：General OpenFOAM to VTK file writer. Other bits - Handles volFields, pointFields, surfaceScalarField, surfaceVectorField fields. - Mesh topo changes. - Output legacy or xml VTK format in ascii or binary. - Single time step writing. - Write subset only. - Optional decomposition of cells.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-allAreas -allRegions -area-region -area-regions -ascii -case -cellSet -cellZone -constant -debug-switch -decomposeParDict -doc -doc-source -exclude-fields -exclude-patches -faceSet -faceZones -fields -fileHandler -help -help-compat -help-full -help-man -help-notes -hostRoots -info-switch -latestTime -legacy -lib -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -name -nearCellValue -no-boundary -no-fields -no-finite-area -no-internal -no-lagrangian -no-libs -no-point-data -noFunctionObjects -noZero -one-boundary -opt-switch -overwrite -parallel -patches -pointSet -poly-decomp -processor-fields -region -regions -roots -surfaceFields -time -verbose -with-ids -with-point-ids -world</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/foamtovtk.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: foamToVTK
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToVTK/foamToVTK.C
 
-
-Usage: foamToVTK [OPTIONS]
+<p>将 OpenFOAM 网格和场转换为 VTK 数据。</p><h2>导出最新时刻</h2>
+<pre><code class="language-bash">foamToVTK -latestTime
+</code></pre>
+<p>结果写入 VTK 输出目录，便于在其他后处理工具中打开。</p>
+<h2>只导出速度和压力</h2>
+<pre><code class="language-bash">foamToVTK -latestTime -fields "(U p)"
+</code></pre>
+<p>限制导出字段可以减少文件大小。点数据和单元数据含义不同，绘图时保留所选数据关联。</p>
+<h2>导出一段时间</h2>
+<pre><code class="language-bash">foamToVTK -time "0.1:0.5"
+</code></pre>
+<p>只导出指定时间范围中已有的结果，适合制作短时间段动画。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allAreas</td><td>Use all regions in finite-area regionProperties</td></tr><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-ascii</td><td>Write in ASCII format instead of binary</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-cellSet &lt;name&gt;</td><td>Convert mesh subset corresponding to specified cellSet</td></tr><tr><td>-cellZone &lt;name&gt;</td><td>Convert mesh subset corresponding to specified cellZone</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-faceSet &lt;name&gt;</td><td>Convert specified faceSet only Specify single or multiple faceZones to write Eg, &#x27;cells&#x27; or &#x27;( slice &quot;mfp-.*&quot; )&#x27;. Specify single or multiple fields to write (all by default) Eg, &#x27;T&#x27; or &#x27;(p T U &quot;alpha.*&quot;)&#x27; Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-legacy</td><td>Write legacy format instead of xml</td></tr><tr><td>-name &lt;subdir&gt;</td><td>Directory name for VTK output (default: &#x27;VTK&#x27;)</td></tr><tr><td>-nearCellValue</td><td>Use cell value on patches instead of patch value itself</td></tr><tr><td>-no-boundary</td><td>Suppress output for boundary patches</td></tr><tr><td>-no-fields</td><td>Suppress conversion of fields</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamToVTK [OPTIONS]
 Options:
   -allAreas         Use all regions in finite-area regionProperties
   -allRegions       Use all regions in regionProperties
@@ -111,5 +115,4 @@ General OpenFOAM to VTK file writer
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToVTK/foamToVTK.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToVTK/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToVTK/foamToVTK.C">源码与说明</a> · <a href="/assets/command-help/foamtovtk.txt">帮助文本</a></p>

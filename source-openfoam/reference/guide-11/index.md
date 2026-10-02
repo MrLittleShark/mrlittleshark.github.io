@@ -1,10 +1,11 @@
 ---
 title: "第 11 章　字典文件的通用语法"
 layout: reference
-description: "OpenCFD v2512 字典文件的通用语法；包含原理、示例与版本核对。"
+description: "字典文件的通用语法：用法与配置实例。"
+cms_slug: "reference-guide-11"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>OpenFOAM 的所有设置文件（叫”字典”，dictionary）用的是同一套语法。先花十分钟学会这套语法，后面所有文件都只是”填什么”的问题，而不是”怎么写”的问题。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>OpenFOAM 的所有设置文件（叫”字典”，dictionary）用的是同一套语法。先花十分钟学会这套语法，后面所有文件都只是”填什么”的问题，而不是”怎么写”的问题。</p>
 <h2>11.1 文件头 FoamFile</h2>
 <p>每个字典文件开头都有这一段，缺了会直接报错：</p>
 <pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
@@ -99,14 +100,14 @@ internalField   nonuniform List&lt;vector&gt;       // 逐单元给值（一般�
 <pre><code class="language-openfoam">flowVelocity     (10 0 0);
 pressure         0;
 
-internalField    uniform &#36;flowVelocity;      // 用 $ 引用</code></pre>
+internalField    uniform $flowVelocity;      // 用 $ 引用</code></pre>
 <p>② 引用嵌套条目</p>
 <pre><code class="language-plaintext">$..solvers/p/tolerance      // .. 表示上一层
 $:solvers.p.tolerance       // 从文件根部开始的绝对路径</code></pre>
 <p>③ 包含另一个文件（最有用的技巧）</p>
 <pre><code class="language-openfoam">#include        "initialConditions"          // 相对本文件的路径
 #includeIfPresent "myOverrides"              // 存在才包含，不存在不报错
-#includeEtc     "caseDicts/setConstraintTypes"   // 从 &#36;FOAM_ETC 里包含
+#includeEtc     "caseDicts/setConstraintTypes"   // 从 $FOAM_ETC 里包含
 #includeFunc solverInfo               // 引入官方 functionObject 模板</code></pre>
 <p>典型用法：在算例根目录建一个 initialConditions 文件</p>
 <pre><code class="language-plaintext">// &lt;算例&gt;/initialConditions
@@ -114,13 +115,13 @@ flowVelocity        (10 0 0);
 pressure            0;
 turbulentKE         0.375;
 turbulentEpsilon    14.855;</code></pre>
-<p>然后 0/U、0/p、0/k、0/epsilon 全都 #include "../initialConditions" 并用 &#36;flowVelocity 这样引用。好处：改工况只改一个文件，不会出现”U 改了 k 忘了改”的错误。做参数扫描时这更是必须的。</p>
+<p>然后 0/U、0/p、0/k、0/epsilon 全都 #include "../initialConditions" 并用 $flowVelocity 这样引用。好处：改工况只改一个文件，不会出现”U 改了 k 忘了改”的错误。做参数扫描时这更是必须的。</p>
 <p>④ 表达式计算</p>
 <pre><code class="language-openfoam">#include "initialConditions"
 
 // 用 #calc 写一段 C++ 表达式（会动态编译）
-nu              #calc "1.0/&#36;Re";
-endTime         #calc "10.0*&#36;period";
+nu              #calc "1.0/$Re";
+endTime         #calc "10.0*$period";
 
 // v2012 起也可以用更轻量的 #eval（不需要编译，速度快）
 deltaT          #eval "1e-3/2";</code></pre>
@@ -141,8 +142,7 @@ foamDictionary 0/U -expand -entry boundaryField/inlet</code></pre>
 <tr><td>tableFile { file "..."; }</td><td>从文件读表</td></tr>
 <tr><td>polynomial ((c0 0)(c1 1))</td><td>多项式</td></tr>
 <tr><td>expression "..."</td><td>表达式（v2012+ 的 exprValue 类边界条件）</td></tr>
-<tr><td>&#36;internalField</td><td>用内部场的值（边界 value 里常见）</td></tr>
+<tr><td>$internalField</td><td>用内部场的值（边界 value 里常见）</td></tr>
 <tr><td>#include "..."</td><td>包含文件</td></tr>
 <tr><td>yes/no、true/false、on/off</td><td>开关都通用</td></tr>
 </table></div><h2>v2512 的残差记录接口</h2><p>使用 <code>type solverInfo</code>，并加载 <code>utilityFunctionObjects</code>。<code>#includeFunc solverInfo</code> 的官方模板默认选择 p 和 U；如需其他字段，应复制模板并修改 fields。此功能读取求解过程中的 solverPerformance 数据，事后只读取已写出的 U、p 不能重建历史残差。</p><p><a href="/dictionaries/functions-solverinfo/">完整配置、字段解释与三个 v2512 示例</a></p>
-{% endraw %}

@@ -1,26 +1,11 @@
 ---
-title: "extrudeMesh  沿指定模型挤出网格或表面"
+title: "extrudeMesh · 读取 extrudeMeshDict"
 layout: reference
 description: "读取 extrudeMeshDict。"
+cms_slug: "command-extrudemesh"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>读取 extrudeMeshDict。</p><h2>使用入口</h2><pre><code class="language-bash">extrudeMesh</code></pre><h2>使用条件与核对</h2><p>读取 extrudeMeshDict。 用法：extrudeMesh [-dict 文件] 示例：extrudeMesh
-源码说明：
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-case -debug-switch -decomposeParDict -dict -doc -doc-source -fileHandler -help -help-full -help-man -help-notes -hostRoots -info-switch -lib -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-libs -noFunctionObjects -opt-switch -parallel -region -roots -world</p><p>关联配置：<a href="/dictionaries/system-extrudemeshdict/">extrudeMeshDict</a></p><h2>同版本官方教程</h2><p>以下链接直接指向 OpenFOAM-v2512 标签中的教程目录。先阅读 Allrun 确定网格生成、初始化和依赖，再在自己的工作目录运行。列出教程不表示本网站已执行它的全部计算。</p><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/extrudeMesh/polyline">mesh/extrudeMesh/polyline</a></li></ul><pre><code class="language-bash">mkdir -p &quot;&#36;FOAM_RUN&quot;
-cd &quot;&#36;FOAM_RUN&quot;
-# 先选择一个尚不存在的新目录；保留原教程
-cp -r &quot;&#36;FOAM_TUTORIALS/mesh/extrudeMesh/polyline&quot; ./extrudeMesh-study
-cd ./extrudeMesh-study
-ls
-# 查看运行流程后，再决定执行哪些步骤
-sed -n &#x27;1,200p&#x27; Allrun</code></pre><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/extrudemesh.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: extrudeMesh
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/extrude/extrudeMesh/extrudedMesh/extrudedMesh.C
 
-
-Usage: extrudeMesh [OPTIONS]
+<p>读取 extrudeMeshDict。</p><h2>用法</h2><pre><code class="language-bash">extrudeMesh</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">extrudeMesh -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-extrudemeshdict/">extrudeMeshDict</a></p><h2>配套算例</h2><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/extrudeMesh/polyline">mesh/extrudeMesh/polyline</a></li></ul><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: extrudeMesh [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;
@@ -65,5 +50,4 @@ Extrude mesh from existing patch.
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/extrude/extrudeMesh/extrudedMesh/extrudedMesh.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/extrude/extrudeMesh/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/extrude/extrudeMesh/extrudedMesh/extrudedMesh.C">源码与说明</a> · <a href="/assets/command-help/extrudemesh.txt">帮助文本</a></p>

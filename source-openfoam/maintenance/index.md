@@ -1,7 +1,12 @@
 ---
-title: 网站维护手册
-layout: page
-section: maintenance
+title: "网站维护手册"
+layout: admin-redirect
+section: admin
+admin_target: /admin/maintenance/
+admin_only: true
+noindex: true
+description: "课程、资料、推荐、社区、角色权限与 Hexo 发布的维护方法。"
+cms_slug: "site-maintenance"
 ---
 
 ## 日常维护：使用站内管理平台

@@ -1,12 +1,13 @@
 ---
 title: "第 7 章　求解器与运行控制"
 layout: reference
-description: "OpenCFD v2512 求解器与运行控制；包含原理、示例与版本核对。"
+description: "求解器与运行控制：用法与配置实例。"
+cms_slug: "reference-guide-07"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>7.1 跑一个算例的标准流程</h2>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>7.1 跑一个算例的标准流程</h2>
 <pre><code class="language-bash">run                                     # 去工作目录
-cp -r &#36;FOAM_TUTORIALS/incompressible/simpleFoam/pitzDaily .
+cp -r $FOAM_TUTORIALS/incompressible/simpleFoam/pitzDaily .
 cd pitzDaily
 blockMesh              &gt; log.blockMesh  2&gt;&amp;1    # ① 建网格
 checkMesh              &gt; log.checkMesh  2&gt;&amp;1    # ② 查网格
@@ -95,8 +96,8 @@ paraFoam                                        # ⑥ 可视化</code></pre>
 <tr><td>overPimpleDyMFoam / overInterDyMFoam</td><td>重叠网格版本</td></tr>
 </table></div>
 <p>怎么确认本机到底有哪些：</p>
-<pre><code class="language-plaintext">ls &#36;FOAM_APPBIN | grep -i foam | sort | less
-ls &#36;FOAM_SOLVERS/*                      # 按类别看源码目录</code></pre>
+<pre><code class="language-plaintext">ls $FOAM_APPBIN | grep -i foam | sort | less
+ls $FOAM_SOLVERS/*                      # 按类别看源码目录</code></pre>
 <h2>7.4 求解器的运行选项</h2>
 <pre><code class="language-bash">simpleFoam [-case &lt;dir&gt;] [-parallel] [-postProcess] [-dry-run] [-noFunctionObjects]
            [-fileHandler collated] [-libs '("libMyBC.so")'] [-region &lt;name&gt;]</code></pre>
@@ -140,4 +141,3 @@ maxDeltaT       1e-3;       // 时间步上限，防止流速很低时步长失�
 <pre><code class="language-plaintext">Courant Number mean: 0.0132 max: 0.847
 deltaT = 0.000123</code></pre>
 <p>max 长期贴着你设的上限是正常的（说明自适应在起作用）；如果 deltaT 越缩越小到 1e-12，说明局部有问题（网格坏点或场发散），该去查网格而不是继续等。</p>
-{% endraw %}

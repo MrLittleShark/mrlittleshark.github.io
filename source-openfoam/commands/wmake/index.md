@@ -1,19 +1,23 @@
 ---
-title: "wmake"
+title: "wmake · 读取 Make/files 和 Make/options，编译 OpenFOAM 应用或共享库"
 layout: reference
-description: "编译应用程序或用户库，读取 Make/files 与 Make/options。"
+description: "读取 Make/files 和 Make/options，编译 OpenFOAM 应用或共享库。"
+cms_slug: "command-wmake"
 ---
-{% raw %}
-<div class="source-note">v2512 脚本源码已收录；未执行脚本。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>编译应用程序或用户库，读取 Make/files 与 Make/options。</p><h2>v2512 源码中的用途</h2><p>General, wrapped make system for multi-platform development. Intermediate object and dependency files retain the tree structure of the original source files, with its location depending on the build context. 1. Building within the OpenFOAM project: The tree is located under &#36;WM_PROJECT_DIR/build/&#36;WM_OPTIONS/ 2. Building applications or libraries outside the OpenFOAM project: The tree is located under its local Make/&#36;WM_OPTIONS/ The `wdep` script can be used to locate the dependency file corresponding to a given source file. When `wmake -all` is used, the following rules are applied: 1. If `Allwmake.override` exists, use it. 2. (OR) If `Allwmake` exists, use it. 3. (OR) descend into each sub-directory and repeat.</p><h2>使用入口</h2><pre><code class="language-bash">wmake</code></pre><h2>使用条件与核对</h2><p>编译应用程序或用户库，读取 Make/files 与 Make/options。 示例中的算例名、路径与主机名须按实际环境替换。
-General, wrapped make system for multi-platform development. Intermediate object and dependency files retain the tree structure of the original source files, with its location depending on the build context. 1. Building within the OpenFOAM project: The tree is located under &#36;WM_PROJECT_DIR/build/&#36;WM_OPTIONS/ 2. Building applications or libraries outside the OpenFOAM project: The tree is located under its local Make/&#36;WM_OPTIONS/ The `wdep` script can be used to locate the dependency file corresponding to a given source file. When `wmake -all` is used, the following rules are applied: 1. If `Allwmake.override` exists, use it. 2. (OR) If `Allwmake` exists, use it. 3. (OR) descend into each sub-directory and repeat.
-本条基于固定版本脚本源码，运行前检查帮助与依赖。
-源码帮助选项：-a -all -build-info -build-root -check-dir -debug -debug-O -j -k -module-prefix -no-openfoam -no-openmp -no-scheduler -openmp -q -s -show-api -show-c -show-cflags -show-cflags-arch -show-compile-c -show-compile-cxx -show-cxx -show-cxxflags -show-cxxflags-arch -show-ext-so -show-mpi-compile -show-mpi-link -show-openmp-compile -show-openmp-link -show-path-c -show-path-cxx -strict -update -with-bear</p><p>关联配置：<a href="/dictionaries/make-files/">files</a> · <a href="/dictionaries/make-options/">options</a></p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/wmake.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 script source evidence
-Command: wmake
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmake
 
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-Usage: wmake [OPTION] [dir]
+<p>读取 Make/files 和 Make/options，编译 OpenFOAM 应用或共享库。</p><h2>编译应用程序</h2>
+<pre><code class="language-bash">wmake
+</code></pre>
+<p>在含 <code>Make</code> 目录的源码目录执行。<code>Make/files</code> 的 <code>EXE</code> 决定程序输出位置，<code>Make/options</code> 提供头文件路径和链接库。</p>
+<h2>编译共享库</h2>
+<pre><code class="language-bash">wmake libso
+</code></pre>
+<p><code>Make/files</code> 使用 <code>LIB</code> 指定目标，<code>Make/options</code> 使用 <code>LIB_LIBS</code> 指定依赖。计算时通过 <code>controlDict/libs</code> 或程序链接加载生成的库。</p>
+<h2>并行编译</h2>
+<pre><code class="language-bash">wmake -j 4
+</code></pre>
+<p>最多并行执行 4 个编译任务。源码修改后再次执行 wmake，会根据依赖重新编译受影响的文件。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-s | -silent</td><td>Silent mode (do not echo commands)</td></tr><tr><td>-a | -all</td><td>wmake all sub-directories, runs Allwmake if present</td></tr><tr><td>-q | -queue</td><td>Collect as single Makefile, runs Allwmake if present</td></tr><tr><td>-k | -keep-going</td><td>Keep going even when errors occur (-non-stop)</td></tr><tr><td>-j | -jN | -j N</td><td>Compile using all or specified N cores/hyperthreads</td></tr><tr><td>-update</td><td>Update lnInclude, dep files, remove deprecated files/dirs</td></tr><tr><td>-all=FILE</td><td>Runs specified file (in pwd) instead of Allwmake</td></tr><tr><td>-debug</td><td>Add &#x27;-g -DFULLDEBUG&#x27; flags</td></tr><tr><td>-debug-O[g0123]</td><td>Add &#x27;-g -DFULLDEBUG&#x27; flags and optimization level</td></tr><tr><td>-strict</td><td>More deprecation warnings (&#x27;+strict&#x27; WM_COMPILE_CONTROL)</td></tr><tr><td>-build-root=PATH</td><td>Specify FOAM_BUILDROOT for compilation intermediates</td></tr><tr><td>-module-prefix=PATH</td><td>Specify FOAM_MODULE_PREFIX as absolute/relative path</td></tr><tr><td>-module-prefix=TYPE</td><td>Specify FOAM_MODULE_PREFIX as predefined type (u,user | g,group | o,openfoam)</td></tr><tr><td>-no-openfoam</td><td>Disable OpenFOAM linking (&#x27;~openfoam&#x27; WM_COMPILE_CONTROL)</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/make-files/">files</a> · <a href="/dictionaries/make-options/">options</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wmake [OPTION] [dir]
        wmake [OPTION] target [dir [MakeDir]]
        wmake -subcommand ...
 
@@ -86,5 +90,4 @@ Environment
 Some special targets (see -help-full for details):
   all | queue       Same as -all | -queue options
   exe               Executable
-  lib libo libso    Libraries (.a .o .so)</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmake">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+  lib libo libso    Libraries (.a .o .so)</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmake">源码与说明</a> · <a href="/assets/command-help/wmake.txt">帮助文本</a></p>

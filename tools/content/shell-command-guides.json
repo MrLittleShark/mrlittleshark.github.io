@@ -1,0 +1,852 @@
+{
+  "tut": {
+    "summary": "切换到官方教程目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\ntut\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\ntut\npwd\n```\n\n这是 cd 的别名，对应目录为 `$FOAM_TUTORIALS`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype tut\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias tut='cd ${FOAM_TUTORIALS:-${WM_PROJECT_DIR:?}/tutorials}'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\ntut\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$FOAM_TUTORIALS`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type tut",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "run": {
+    "summary": "切换到个人算例目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nrun\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nrun\npwd\n```\n\n这是 cd 的别名，对应目录为 `$FOAM_RUN`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype run\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias run='cd ${FOAM_RUN:-${WM_PROJECT_USER_DIR:?}/run}'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nrun\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$FOAM_RUN`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type run",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "sol": {
+    "summary": "切换到求解器源码目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nsol\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nsol\npwd\n```\n\n这是 cd 的别名，对应目录为 `$WM_PROJECT_DIR/applications/solvers`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype sol\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias sol='cd ${WM_PROJECT_DIR:?}/applications/solvers'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nsol\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$WM_PROJECT_DIR/applications/solvers`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type sol",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "foam": {
+    "summary": "切换到OpenFOAM 安装根目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nfoam\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nfoam\npwd\n```\n\n这是 cd 的别名，对应目录为 `$WM_PROJECT_DIR`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype foam\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias foam='cd ${WM_PROJECT_DIR:?}'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nfoam\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$WM_PROJECT_DIR`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type foam",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "src": {
+    "summary": "切换到C++ 库源码目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nsrc\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nsrc\npwd\n```\n\n这是 cd 的别名，对应目录为 `$WM_PROJECT_DIR/src`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype src\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias src='cd ${WM_PROJECT_DIR:?}/src'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nsrc\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$WM_PROJECT_DIR/src`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type src",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "canCompile": {
+    "summary": "检查 make、wmake 和 C++ 编译器是否可用。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncanCompile\necho $?",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncanCompile\necho $?\n```\n\n退出码 0 表示检查通过。缺少工具时，函数在错误输出中说明缺项。\n\n## 在脚本中查看定义\n\n```bash\ntype canCompile\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncanCompile()\n{\n    # system\n    if ! command -v make >/dev/null\n    then\n        echo \"No system 'make' command found ... cannot compile\" 1>&2\n        return 1\n    fi\n\n    # OpenFOAM-specific\n    if ! command -v wmake >/dev/null\n    then\n        echo \"No openfoam 'wmake' command found ... cannot compile\" 1>&2\n        return 1\n    fi\n\n    local cxx_compiler\n    cxx_compiler=\"$(wmake -show-cxx 2>/dev/null)\"\n\n    if [ -z \"$cxx_compiler\" ]\n    then\n        echo \"No wmake rule for C++ compiler ... cannot compile\" 1>&2\n        return 1\n    elif ! command -v \"$cxx_compiler\"  >/dev/null\n    then\n        echo \"No path to C++ compiler ($cxx_compiler) ... cannot compile\" 1>&2\n        return 1\n    fi\n\n    return 0\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncanCompile\necho $?",
+        "explanation": "退出码 0 表示检查通过。缺少工具时，函数在错误输出中说明缺项。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type canCompile",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cloneCase": {
+    "summary": "复制算例的 constant、system 和初始场目录。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncloneCase cavity cavity-study",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncloneCase cavity cavity-study\n```\n\n第一个参数是源算例，第二个是尚不存在的目标目录。已有目标目录时函数返回错误，便于脚本避免混合两套输入。\n\n## 在脚本中查看定义\n\n```bash\ntype cloneCase\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncloneCase()\n{\n    local src=$1\n    local dst=$2\n    shift 2\n\n    if [ -e \"$dst\" ]\n    then\n        echo \"Case already cloned: remove case directory $dst prior to cloning\"\n        return 1\n    elif [ ! -d \"$src\" ]\n    then\n        echo \"Error: no directory to clone:  $src\"\n        return 1\n    fi\n\n    echo \"Cloning $dst case from $src\"\n    mkdir $dst\n    # These must exist, so do not hide error messages\n    for f in constant system\n    do\n        \\cp -r $src/$f $dst\n    done\n\n    # Either (or both) may exist, so error messages may be spurious\n    for f in 0 0.orig\n    do\n        \\cp -r $src/$f $dst 2>/dev/null\n    done\n    return 0\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncloneCase cavity cavity-study",
+        "explanation": "第一个参数是源算例，第二个是尚不存在的目标目录。已有目标目录时函数返回错误，便于脚本避免混合两套输入。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cloneCase",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cloneParallelCase": {
+    "summary": "复制已分区的算例及选定时间数据。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncloneParallelCase sourceCase parallel-copy 0.5",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncloneParallelCase sourceCase parallel-copy 0.5\n```\n\n两个目录参数之后可给出要复制的时间；省略时间时复制完整 processor 目录。\n\n## 在脚本中查看定义\n\n```bash\ntype cloneParallelCase\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncloneParallelCase()\n{\n    local src=$1\n    local dst=$2\n    shift 2\n\n    if [ -e \"$dst\" ]\n    then\n        echo \"Case already cloned: remove case directory $dst prior to cloning\"\n        return 1\n    fi\n\n    [ -d \"$src\" ] || {\n        echo \"Error: no directory to clone: $src\"\n        return 1\n    }\n\n    echo \"Cloning $dst parallel case from $src\"\n    mkdir $dst\n    # These must exist, so do not hide error messages\n    for f in constant system\n    do\n        \\cp -r $src/$f $dst\n    done\n\n    [ -d $src/processor0 ] || {\n        echo \"Does not appear to be a parallel case\"\n        return 1\n    }\n\n    if [ \"$#\" -eq 0 ]\n    then\n        # Copy all processor directories\n        echo \"    clone processor* directories\"\n        \\cp -r $src/processor* $dst\n    else\n        # Only copy some time directories\n        echo \"    clone processor directories with $# times: $@\"\n\n        for proc in $(\\cd $src && \\ls -d processor*)\n        do\n            srcProc=$src/$proc\n            dstProc=$dst/$proc\n\n            mkdir $dstProc\n            \\cp -r $srcProc/constant $dstProc/\n\n            for time\n            do\n                [ -d $srcProc/$time ] && \\cp -r $srcProc/$time $dstProc/\n            done\n\n        done\n    fi\n\n    return 0\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncloneParallelCase sourceCase parallel-copy 0.5",
+        "explanation": "两个目录参数之后可给出要复制的时间；省略时间时复制完整 processor 目录。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cloneParallelCase",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "compileApplication": {
+    "summary": "通过 wmake 编译指定目录中的应用程序。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncompileApplication ./mySolver",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncompileApplication ./mySolver\n```\n\n目标目录包含 Make/files 与 Make/options。函数打印目标名称，再把目录传给 wmake。\n\n## 在脚本中查看定义\n\n```bash\ntype compileApplication\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncompileApplication()\n{\n    echo \"Compiling $1 application\"\n    wmake $1\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ncompileApplication ./mySolver",
+        "explanation": "目标目录包含 Make/files 与 Make/options。函数打印目标名称，再把目录传给 wmake。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type compileApplication",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "getApplication": {
+    "summary": "读取 controlDict 中的 application。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ngetApplication",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ngetApplication\n```\n\n返回求解器名称，常与 runApplication 的命令替换配合。\n\n## 在脚本中查看定义\n\n```bash\ntype getApplication\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ngetApplication()\n{\n    # Re-use positional parameters for automatic whitespace elimination\n    set -- $(foamDictionary -entry application -value system/controlDict 2>/dev/null)\n\n    if [ \"$#\" -eq 1 ]\n    then\n        echo \"$1\"\n    else\n        echo \"Error getting 'application' from system/controlDict\" 1>&2\n        echo false  # Fallback\n        return 1\n    fi\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ngetApplication",
+        "explanation": "返回求解器名称，常与 runApplication 的命令替换配合。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type getApplication",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "getNumberOfPatchFaces": {
+    "summary": "读取指定网格边界的面数。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ngetNumberOfPatchFaces movingWall",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ngetNumberOfPatchFaces movingWall\n```\n\n读取 constant/polyMesh/boundary。第二个位置参数可指定多区域网格的区域名称。\n\n## 在脚本中查看定义\n\n```bash\ntype getNumberOfPatchFaces\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ngetNumberOfPatchFaces()\n{\n    local patch=\"${1:-}\"\n    local file=\"${2:-}\"\n\n    file=\"constant/$file${file:+/}polyMesh/boundary\"\n\n    [ -n \"$patch\" ] || {\n        echo \"No patch name given\" 1>&2\n        return 1\n    }\n\n    [ -f \"$file\" ] || {\n        echo \"No such file: $file\" 1>&2\n        return 2\n    }\n\n    local nFaces\n    nFaces=$(sed -ne \\\n        '/^ *'\"$patch\"' *$/,/}/{s/^ *nFaces  *\\([0-9][0-9]*\\) *;.*$/\\1/p}' \\\n        \"$file\")\n\n    if [ -n \"$nFaces\" ]\n    then\n        echo \"$nFaces\"\n    else\n        echo \"No patch entry found for '$patch' in $file\" 1>&2\n        echo 0      # Report as 0\n        return 2\n    fi\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ngetNumberOfPatchFaces movingWall",
+        "explanation": "读取 constant/polyMesh/boundary。第二个位置参数可指定多区域网格的区域名称。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type getNumberOfPatchFaces",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "getNumberOfProcessors": {
+    "summary": "读取 decomposeParDict 中的 numberOfSubdomains。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ngetNumberOfProcessors\ngetNumberOfProcessors system/decomposeParDict",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ngetNumberOfProcessors\ngetNumberOfProcessors system/decomposeParDict\n```\n\n省略参数时使用 system/decomposeParDict。输出可用作 mpirun 的进程数。\n\n## 在脚本中查看定义\n\n```bash\ntype getNumberOfProcessors\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ngetNumberOfProcessors()\n{\n    local dict=\"${1:-system/decomposeParDict}\"\n\n    case \"$dict\" in\n    (system/*)  # Already qualified\n        ;;\n    (*)\n        # If it does not exist, assume it refers to location in system/\n        [ -f \"$dict\" ] || dict=\"system/$dict\"\n        ;;\n    esac\n\n\n    # Re-use positional parameters for automatic whitespace elimination\n    set -- $(foamDictionary -entry numberOfSubdomains -value \"$dict\" 2>/dev/null)\n\n    if [ \"$#\" -eq 1 ]\n    then\n        echo \"$1\"\n    else\n        echo \"Error getting 'numberOfSubdomains' from '$dict'\" 1>&2\n        echo 1      # Fallback is 1 proc (serial)\n        return 1\n    fi\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\ngetNumberOfProcessors\ngetNumberOfProcessors system/decomposeParDict",
+        "explanation": "省略参数时使用 system/decomposeParDict。输出可用作 mpirun 的进程数。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type getNumberOfProcessors",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "isParallel": {
+    "summary": "检查参数列表是否包含 -parallel。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nisParallel -parallel\necho $?",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nisParallel -parallel\necho $?\n```\n\n匹配到 -parallel 时返回 0，否则返回 1；用于脚本条件判断。\n\n## 在脚本中查看定义\n\n```bash\ntype isParallel\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nisParallel()\n{\n    for i; do [ \"$i\" = \"-parallel\" ] && return 0; done\n    return 1\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nisParallel -parallel\necho $?",
+        "explanation": "匹配到 -parallel 时返回 0，否则返回 1；用于脚本条件判断。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type isParallel",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "isTest": {
+    "summary": "检查参数列表是否包含 -test。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nisTest -test\necho $?",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nisTest -test\necho $?\n```\n\n返回码表示是否启用测试模式。\n\n## 在脚本中查看定义\n\n```bash\ntype isTest\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nisTest()\n{\n    for i; do [ \"$i\" = \"-test\" ] && return 0; done\n    return 1\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nisTest -test\necho $?",
+        "explanation": "返回码表示是否启用测试模式。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type isTest",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "isTrue": {
+    "summary": "把 on、yes、true 等开关值转换为 shell 返回码。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nisTrue on\necho $?\nisTrue -dict system/controlDict -entry runTimeModifiable",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nisTrue on\necho $?\nisTrue -dict system/controlDict -entry runTimeModifiable\n```\n\n真值返回 0，假值返回 1，无法识别的值返回 2。-dict 方式通过 foamDictionary 读取条目。\n\n## 在脚本中查看定义\n\n```bash\ntype isTrue\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nisTrue()\n{\n    local value=\"$1\"\n\n    if [ \"$value\" = \"-dict\" ]\n    then\n        shift\n        value=\"$(foamDictionary -value $@ 2>/dev/null)\" || return 2\n    fi\n\n    case \"$value\" in\n        (t | y | true | yes | on)  return 0 ;;\n        (f | n | false | no | off) return 1 ;;\n    esac\n    return 2\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nisTrue on\necho $?\nisTrue -dict system/controlDict -entry runTimeModifiable",
+        "explanation": "真值返回 0，假值返回 1，无法识别的值返回 2。-dict 方式通过 foamDictionary 读取条目。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type isTrue",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "notTest": {
+    "summary": "检查参数列表是否省略 -test。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nnotTest -parallel\necho $?",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nnotTest -parallel\necho $?\n```\n\n参数中没有 -test 时返回 0，可用于选择正常运行分支。\n\n## 在脚本中查看定义\n\n```bash\ntype notTest\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nnotTest()\n{\n    for i; do [ \"$i\" = \"-test\" ] && return 1; done\n    return 0\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nnotTest -parallel\necho $?",
+        "explanation": "参数中没有 -test 时返回 0，可用于选择正常运行分支。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type notTest",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "remove0DirFields": {
+    "summary": "删除 0 目录中指定名称的场文件。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nremove0DirFields Ux Uy Uz",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nremove0DirFields Ux Uy Uz\n```\n\n仅用于准备好的练习副本；三个参数分别指定场名。多区域场可使用 -region 区域名。\n\n## 在脚本中查看定义\n\n```bash\ntype remove0DirFields\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nremove0DirFields()\n{\n    local region\n\n    # Parse options\n    while [ \"$#\" -gt 0 ]\n    do\n        case \"$1\" in\n        ('')  ;;                # Ignore empty option\n        (--)  shift; break ;;   # Stop option parsing\n\n        (-region)   region=\"$2\"; shift ;;\n        (*) break ;;\n        esac\n        shift\n    done\n\n    # safety\n    if [ \"$region\" = \"--\" ]; then unset region; fi\n\n    if [ \"$#\" -eq 0 ]\n    then\n        echo \"No fields specified for ${region:+region=$region }\" 1>&2\n        return 0\n    fi\n\n    echo \"Remove 0/ fields${region:+ [$region]} : $@\" 1>&2\n\n    local subdir\n    for subdir in 0/\"$region\" processor*/0/\"$region\"\n    do\n        if [ -d \"$subdir\" ]\n        then\n            for field in $@  ## unquoted for IFS splitting [SIC]\n            do\n                # Cautious with removal\n                if [ -f \"$subdir/$field\" ]\n                then\n                    rm -f -- \"$subdir/$field\"\n                fi\n            done\n        fi\n    done\n    return 0\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nremove0DirFields Ux Uy Uz",
+        "explanation": "仅用于准备好的练习副本；三个参数分别指定场名。多区域场可使用 -region 区域名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type remove0DirFields",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "restore0Dir": {
+    "summary": "从 0.orig 恢复初始场目录。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrestore0Dir",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrestore0Dir\n```\n\n已有 0 目录会由模板替换。-processor 作用于分区，-all 同时处理主算例和分区。\n\n## 在脚本中查看定义\n\n```bash\ntype restore0Dir\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nrestore0Dir()\n{\n    if [ ! -d 0.orig ]\n    then\n        echo \"No 0.orig/ to restore...\" 1>&2\n        return 0\n    fi\n\n    case \"$1\" in\n    (-all | -proc | -processor*)\n        if [ \"$1\" = \"-all\" ]\n        then\n            echo \"Restore 0/ from 0.orig/  [serial/processor dirs]\" 1>&2\n            \\rm -rf 0\n            \\cp -r 0.orig 0 2>/dev/null\n        else\n            echo \"Restore 0/ from 0.orig/  [processor dirs]\" 1>&2\n        fi\n\n        \\ls -d processor* | xargs -I {} \\rm -rf ./{}/0\n        \\ls -d processor* | xargs -I {} \\cp -r 0.orig ./{}/0 > /dev/null 2>&1\n        ;;\n\n    (*)\n        echo \"Restore 0/ from 0.orig/\" 1>&2\n        \\rm -rf 0\n        \\cp -r 0.orig 0 2>/dev/null\n        ;;\n    esac\n    return 0\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrestore0Dir",
+        "explanation": "已有 0 目录会由模板替换。-processor 作用于分区，-all 同时处理主算例和分区。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type restore0Dir",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanAdiosOutput": {
+    "summary": "清理算例中的 adiosData 输出。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanAdiosOutput",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanAdiosOutput\n```\n\n函数同时检查 adiosData 与 system 目录是否存在。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanAdiosOutput\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanAdiosOutput()\n{\n    if [ -d adiosData ] && [ -d system ]\n    then\n        rm -rf adiosData\n    fi\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanAdiosOutput",
+        "explanation": "函数同时检查 adiosData 与 system 目录是否存在。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanAdiosOutput",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanApplication": {
+    "summary": "调用 wclean 清理当前应用的编译中间文件。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanApplication",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanApplication\n```\n\n在应用源码目录调用；后续可重新运行 wmake。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanApplication\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanApplication()\n{\n    echo \"Cleaning application $PWD\"\n    wclean\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanApplication",
+        "explanation": "在应用源码目录调用；后续可重新运行 wmake。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanApplication",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanAuxiliary": {
+    "summary": "清理求解日志、ParaView 入口和辅助输出。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanAuxiliary",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanAuxiliary\n```\n\n本函数会删除 log.*、*.foam 等匹配文件，适合已保存所需日志的算例副本。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanAuxiliary\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanAuxiliary()\n{\n    rm -rf \\\n        ./mpirun.files \\\n        ./log ./log.* ./log-* ./logSummary.* \\\n        ./.fxLock ./*.xml ./ParaView* ./paraFoam* \\\n        ./*.blockMesh ./*.foam ./*.OpenFOAM \\\n        ./.setSet\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanAuxiliary",
+        "explanation": "本函数会删除 log.*、*.foam 等匹配文件，适合已保存所需日志的算例副本。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanAuxiliary",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanCase": {
+    "summary": "清理时间结果、网格、分区和后处理输出，保留主要输入配置。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanCase",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanCase\n```\n\n会删除生成的 polyMesh 和 processor 数据。适合从网格生成步骤重新开始的练习副本。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanCase\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanCase()\n{\n    cleanTimeDirectories\n    cleanAdiosOutput\n    cleanAuxiliary\n    cleanDynamicCode\n    cleanOptimisation\n    cleanPostProcessing\n\n    cleanFaMesh\n    cleanPolyMesh\n    cleanSnappyFiles\n\n    rm -rf processor*\n    rm -rf TDAC\n    rm -rf probes*\n    rm -rf forces*\n    rm -rf graphs*\n    rm -rf sets\n    rm -rf system/machines\n\n    # Debug output (blockMesh, decomposePar)\n    rm -f \\\n        blockTopology.vtu blockFaces.vtp blockTopology.obj blockCentres.obj \\\n        cellDist.vtu decomposePar.vtu renumberMesh.vtu \\\n        0/cellDist\n\n    # From mpirunDebug\n    rm -f gdbCommands mpirun.schema\n\n    (\n        cd constant 2>/dev/null || exit 0\n\n        rm -rf \\\n          cellDecomposition cellToRegion cellLevel* pointLevel* \\\n          tetDualMesh \\\n          ;\n    )\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanCase",
+        "explanation": "会删除生成的 polyMesh 和 processor 数据。适合从网格生成步骤重新开始的练习副本。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanCase",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanCase0": {
+    "summary": "清理算例结果，并删除 0 目录。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanCase0",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanCase0\n```\n\n通常与 0.orig 模板配合，随后用 restore0Dir 重建初始场。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanCase0\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanCase0()\n{\n    cleanCase\n    rm -rf 0\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanCase0",
+        "explanation": "通常与 0.orig 模板配合，随后用 restore0Dir 重建初始场。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanCase0",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanDynamicCode": {
+    "summary": "清理动态编译生成的 dynamicCode 目录。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanDynamicCode",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanDynamicCode\n```\n\n后续读到相应 coded 条目时会重新生成和编译动态代码。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanDynamicCode\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanDynamicCode()\n{\n    if [ -d dynamicCode ] && [ -d system ]\n    then\n        rm -rf dynamicCode\n    fi\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanDynamicCode",
+        "explanation": "后续读到相应 coded 条目时会重新生成和编译动态代码。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanDynamicCode",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanFaMesh": {
+    "summary": "清理有限面积网格 faMesh。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanFaMesh -region film",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanFaMesh -region film\n```\n\n区域名称决定 constant/finite-area 下的目标位置。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanFaMesh\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanFaMesh()\n{\n    local region\n\n    # Parse options\n    while [ \"$#\" -gt 0 ]\n    do\n        case \"$1\" in\n        ('')  ;;                # Ignore empty option\n        (--)  shift; break ;;   # Stop option parsing\n\n        (-region=*) region=\"${1#*=}\" ;;\n        (-region)   region=\"$2\"; shift ;;\n        (*) break ;;\n        esac\n        shift\n    done\n\n    # safety\n    if [ \"$region\" = \"--\" ]; then unset region; fi\n\n    local meshDir=\"constant/finite-area/${region}${region:+/}faMesh\"\n\n    if [ -e \"$meshDir\" ]\n    then\n        [ -n \"$region\" ] && echo \"Clearing $meshDir\" 1>&2\n        rm -rf -- \"$meshDir\"\n    fi\n\n    # Legacy location <constant/faMesh>\n    # - may still have remnant <constant/faMesh/faMeshDefinition>\n\n    meshDir=\"constant/faMesh\"\n    if [ -e \"$meshDir\" ] && [ -z \"$region\" ]\n    then\n        if [ -e \"$meshDir\"/faMeshDefinition ]\n        then\n            # VERY OLD LOCATION\n            echo\n            echo \"WARNING: not removing $meshDir/\"\n            echo \"    It contains a 'faMeshDefinition' file\"\n            echo \"    Please relocate file(s) to system/finite-area/ !!\"\n            echo\n        else\n            # Can remove constant/faMesh/ entirely (no faMeshDefinition)\n            echo \"Clearing $meshDir\" 1>&2\n            rm -rf -- \"$meshDir\"\n        fi\n    fi\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanFaMesh -region film",
+        "explanation": "区域名称决定 constant/finite-area 下的目标位置。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanFaMesh",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanOptimisation": {
+    "summary": "清理优化结果和控制点输出。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanOptimisation",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanOptimisation\n```\n\n清理 optimisation 与 constant/controlPoints，重新计算前保留所需的优化历史。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanOptimisation\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanOptimisation()\n{\n    rm -rf optimisation\n    rm -rf constant/controlPoints\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanOptimisation",
+        "explanation": "清理 optimisation 与 constant/controlPoints，重新计算前保留所需的优化历史。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanOptimisation",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanPolyMesh": {
+    "summary": "清理体网格 polyMesh。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanPolyMesh -region fluid",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanPolyMesh -region fluid\n```\n\n省略 -region 时处理 constant/polyMesh；给出区域时处理该区域的网格。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanPolyMesh\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanPolyMesh()\n{\n    local region\n\n    # Parse options\n    while [ \"$#\" -gt 0 ]\n    do\n        case \"$1\" in\n        ('')  ;;                # Ignore empty option\n        (--)  shift; break ;;   # Stop option parsing\n\n        (-region=*) region=\"${1#*=}\" ;;\n        (-region)   region=\"$2\"; shift ;;\n        (*) break ;;\n        esac\n        shift\n    done\n\n    # safety\n    if [ \"$region\" = \"--\" ]; then unset region; fi\n\n    local meshDir=\"constant/${region}${region:+/}polyMesh\"\n\n    if [ -e \"$meshDir\" ]\n    then\n        [ -n \"$region\" ] && echo \"Clearing $meshDir\" 1>&2\n\n        if [ -e \"$meshDir\"/blockMeshDict ] \\\n        || [ -e \"$meshDir\"/blockMeshDict.m4 ]\n        then\n            # VERY OLD LOCATION\n            echo\n            echo \"WARNING: not removing $meshDir/\"\n            echo \"    It contains a 'blockMeshDict' or 'blockMeshDict.m4' file\"\n            echo \"    Please relocate file(s) to system/ !!\"\n            echo\n        else\n            # Can remove constant/polyMesh/ entirely (no blockMeshDict)\n            rm -rf -- \"$meshDir\"\n        fi\n    fi\n\n    meshDir=\"system${region:+/}${region}\"\n    if [ -e \"$meshDir\"/blockMeshDict.m4 ]\n    then\n        rm -f -- \"$meshDir\"/blockMeshDict\n    fi\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanPolyMesh -region fluid",
+        "explanation": "省略 -region 时处理 constant/polyMesh；给出区域时处理该区域的网格。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanPolyMesh",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanPostProcessing": {
+    "summary": "清理后处理、VTK 和表面采样输出。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanPostProcessing",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanPostProcessing\n```\n\n包括 postProcessing、VTK、EnSight 等目录，随后可重新执行后处理。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanPostProcessing\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanPostProcessing()\n{\n    rm -rf Ensight EnSight ensightWrite insitu VTK\n    rm -rf postProcessing\n    rm -rf postProcessing-*\n    rm -rf cuttingPlane\n    rm -rf surfaceSampling\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanPostProcessing",
+        "explanation": "包括 postProcessing、VTK、EnSight 等目录，随后可重新执行后处理。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanPostProcessing",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanSamples": {
+    "summary": "清理 sets、samples 和 sampleSurfaces 采样结果。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanSamples",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanSamples\n```\n\n适合更改采样设置后重新输出，避免旧文件与新文件混合。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanSamples\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanSamples()\n{\n    rm -rf sets samples sampleSurfaces\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanSamples",
+        "explanation": "适合更改采样设置后重新输出，避免旧文件与新文件混合。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanSamples",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanSnappyFiles": {
+    "summary": "清理 snappyHexMesh 的细化历史和辅助字段。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanSnappyFiles",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanSnappyFiles\n```\n\n包含 cellLevel、pointLevel 和 refinementHistory 等数据；需要继续自适应细化时应保留这些文件。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanSnappyFiles\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanSnappyFiles()\n{\n    rm -f \\\n        constant/polyMesh/cellLevel \\\n        constant/polyMesh/pointLevel \\\n        constant/polyMesh/refinementHistory \\\n        constant/polyMesh/level0Edge \\\n        constant/polyMesh/surfaceIndex\n    rm -f \\\n        processor*/constant/polyMesh/cellLevel \\\n        processor*/constant/polyMesh/pointLevel \\\n        processor*/constant/polyMesh/refinementHistory \\\n        processor*/constant/polyMesh/level0Edge \\\n        processor*/constant/polyMesh/surfaceIndex\n    rm -f \\\n        constant/cellLevel \\\n        constant/pointLevel \\\n        0/cellLevel \\\n        0/pointLevel\n    rm -f \\\n        processor*/constant/cellLevel \\\n        processor*/constant/pointLevel \\\n        processor*/0/cellLevel \\\n        processor*/0/pointLevel\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanSnappyFiles",
+        "explanation": "包含 cellLevel、pointLevel 和 refinementHistory 等数据；需要继续自适应细化时应保留这些文件。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanSnappyFiles",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanTimeDirectories": {
+    "summary": "清理非零数值时间目录。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanTimeDirectories",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanTimeDirectories\n```\n\n运行前在练习副本中用 ls 查看时间目录，并保存需要比较的结果。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanTimeDirectories\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanTimeDirectories()\n{\n    echo \"Cleaning case $PWD\"\n    zeros=\"\"\n    while [ ${#zeros} -lt 8 ]\n    do\n        rm -rf ./\"0.$zeros\"[1-9]* ./\"-0.$zeros\"[1-9]*\n        zeros=\"0$zeros\"\n    done\n    rm -rf ./[1-9]* ./-[1-9]*\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanTimeDirectories",
+        "explanation": "运行前在练习副本中用 ls 查看时间目录，并保存需要比较的结果。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanTimeDirectories",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "cleanUcomponents": {
+    "summary": "删除 0/Ux、0/Uy 和 0/Uz 三个速度分量文件。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanUcomponents",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanUcomponents\n```\n\n完整速度矢量场 0/U 保持原样。\n\n## 在脚本中查看定义\n\n```bash\ntype cleanUcomponents\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\ncleanUcomponents()\n{\n    rm -rf 0/Ux 0/Uy 0/Uz\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\ncleanUcomponents",
+        "explanation": "完整速度矢量场 0/U 保持原样。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type cleanUcomponents",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "removeCase": {
+    "summary": "删除参数指定的整个算例目录。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\nremoveCase ./discarded-practice",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\nremoveCase ./discarded-practice\n```\n\n参数应指向已确认可以删除的练习副本。该函数递归删除整个目标目录。\n\n## 在脚本中查看定义\n\n```bash\ntype removeCase\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nremoveCase()\n{\n    echo \"Removing case ${1:-unknown}\"\n    [ \"$#\" -ge 1 ] && rm -rf -- \"$1\"\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/CleanFunctions\"\nremoveCase ./discarded-practice",
+        "explanation": "参数应指向已确认可以删除的练习副本。该函数递归删除整个目标目录。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type removeCase",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "app": {
+    "summary": "切换到应用程序源码目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\napp\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\napp\npwd\n```\n\n这是 cd 的别名，对应目录为 `$WM_PROJECT_DIR/applications`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype app\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias app='cd ${WM_PROJECT_DIR:?}/applications'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\napp\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$WM_PROJECT_DIR/applications`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type app",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "foamPV": {
+    "summary": "重新加载 ParaView 版本配置。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nfoamPV",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nfoamPV\n```\n\n读取当前 OpenFOAM 的 ParaView 环境设置；指定版本时会按安装配置寻找相应程序。\n\n## 在脚本中查看定义\n\n```bash\ntype foamPV\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nfoamPV()\n{\n    . \"$WM_PROJECT_DIR/etc/config.sh/paraview\" \"${@+ParaView_VERSION=$@}\"\n    # If not already reported\n    if [ -z \"$FOAM_VERBOSE\" ]\n    then\n        echo \"paraview=${ParaView_DIR##*/}\" 1>&2\n    fi\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nfoamPV",
+        "explanation": "读取当前 OpenFOAM 的 ParaView 环境设置；指定版本时会按安装配置寻找相应程序。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type foamPV",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "foamPwd": {
+    "summary": "用 OpenFOAM 环境变量缩写显示当前路径。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nfoamPwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nfoamPwd\n```\n\n例如把用户算例路径的公共前缀显示为 $FOAM_RUN，便于写入说明和日志。\n\n## 在脚本中查看定义\n\n```bash\ntype foamPwd\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nfoamPwd()\n{\n    if [ -n \"$WM_PROJECT_DIR\" ]\n    then\n        echo \"$PWD/\" | sed \\\n        -e \"s#^${FOAM_RUN}/#\\$FOAM_RUN/#\" \\\n        -e \"s#^${WM_PROJECT_DIR}/#\\$WM_PROJECT_DIR/#\" \\\n        -e \"s#^${WM_PROJECT_USER_DIR}/#\\$WM_PROJECT_USER_DIR/#\" \\\n        -e \"s#^${HOME}/#~/#\" \\\n        ;\n    else\n        echo \"$PWD/\" | sed -e \"s#^${HOME}/#~/#\";\n    fi\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nfoamPwd",
+        "explanation": "例如把用户算例路径的公共前缀显示为 $FOAM_RUN，便于写入说明和日志。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type foamPwd",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "lib": {
+    "summary": "切换到已编译的库目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nlib\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nlib\npwd\n```\n\n这是 cd 的别名，对应目录为 `$FOAM_LIBBIN`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype lib\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias lib='cd ${FOAM_LIBBIN:?}'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nlib\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$FOAM_LIBBIN`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type lib",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "uapp": {
+    "summary": "切换到个人应用源码目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nuapp\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nuapp\npwd\n```\n\n这是 cd 的别名，对应目录为 `$WM_PROJECT_USER_DIR/applications`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype uapp\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias uapp='cd ${WM_PROJECT_USER_DIR:?}/applications'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nuapp\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$WM_PROJECT_USER_DIR/applications`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type uapp",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "ufoam": {
+    "summary": "切换到个人 OpenFOAM 工作目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nufoam\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nufoam\npwd\n```\n\n这是 cd 的别名，对应目录为 `$WM_PROJECT_USER_DIR`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype ufoam\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias ufoam='cd ${WM_PROJECT_USER_DIR:?}'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nufoam\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$WM_PROJECT_USER_DIR`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type ufoam",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "usol": {
+    "summary": "切换到个人求解器源码目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nusol\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nusol\npwd\n```\n\n这是 cd 的别名，对应目录为 `$WM_PROJECT_USER_DIR/applications/solvers`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype usol\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias usol='cd ${WM_PROJECT_USER_DIR:?}/applications/solvers'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nusol\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$WM_PROJECT_USER_DIR/applications/solvers`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type usol",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "util": {
+    "summary": "切换到工具程序源码目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nutil\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nutil\npwd\n```\n\n这是 cd 的别名，对应目录为 `$WM_PROJECT_DIR/applications/utilities`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype util\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias util='cd ${WM_PROJECT_DIR:?}/applications/utilities'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nutil\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$WM_PROJECT_DIR/applications/utilities`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type util",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "uutil": {
+    "summary": "切换到个人工具源码目录。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nuutil\npwd",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nuutil\npwd\n```\n\n这是 cd 的别名，对应目录为 `$WM_PROJECT_USER_DIR/applications/utilities`。先创建尚不存在的个人目录，再使用相应别名。\n\n## 在脚本中查看定义\n\n```bash\ntype uutil\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias uutil='cd ${WM_PROJECT_USER_DIR:?}/applications/utilities'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nuutil\npwd",
+        "explanation": "这是 cd 的别名，对应目录为 `$WM_PROJECT_USER_DIR/applications/utilities`。先创建尚不存在的个人目录，再使用相应别名。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type uutil",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "wmDP": {
+    "summary": "重新加载环境并设置 WM_PRECISION_OPTION=DP。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmDP\necho \"$WM_OPTIONS\"",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmDP\necho \"$WM_OPTIONS\"\n```\n\n这会选择对应的精度或标签长度环境。该配置需要匹配的程序与库，可从源码构建。\n\n## 在脚本中查看定义\n\n```bash\ntype wmDP\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias wmDP='wmSet WM_PRECISION_OPTION=DP'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmDP\necho \"$WM_OPTIONS\"",
+        "explanation": "这会选择对应的精度或标签长度环境。该配置需要匹配的程序与库，可从源码构建。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type wmDP",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "wmInt32": {
+    "summary": "重新加载环境并设置 WM_LABEL_SIZE=32。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmInt32\necho \"$WM_OPTIONS\"",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmInt32\necho \"$WM_OPTIONS\"\n```\n\n这会选择对应的精度或标签长度环境。该配置需要匹配的程序与库，可从源码构建。\n\n## 在脚本中查看定义\n\n```bash\ntype wmInt32\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias wmInt32='wmSet WM_LABEL_SIZE=32'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmInt32\necho \"$WM_OPTIONS\"",
+        "explanation": "这会选择对应的精度或标签长度环境。该配置需要匹配的程序与库，可从源码构建。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type wmInt32",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "wmInt64": {
+    "summary": "重新加载环境并设置 WM_LABEL_SIZE=64。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmInt64\necho \"$WM_OPTIONS\"",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmInt64\necho \"$WM_OPTIONS\"\n```\n\n这会选择对应的精度或标签长度环境。该配置需要匹配的程序与库，可从源码构建。\n\n## 在脚本中查看定义\n\n```bash\ntype wmInt64\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias wmInt64='wmSet WM_LABEL_SIZE=64'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmInt64\necho \"$WM_OPTIONS\"",
+        "explanation": "这会选择对应的精度或标签长度环境。该配置需要匹配的程序与库，可从源码构建。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type wmInt64",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "wmRefresh": {
+    "summary": "按当前设置重新加载 OpenFOAM 环境。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmRefresh",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmRefresh\n```\n\n先清理旧环境变量，再读取同一项目的 etc/bashrc。\n\n## 在脚本中查看定义\n\n```bash\ntype wmRefresh\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nwmRefresh()\n{\n    local projectDir=\"$WM_PROJECT_DIR\"\n    local foamSettings=\"$FOAM_SETTINGS\"\n    . \"$projectDir/etc/config.sh/unset\"  2>/dev/null\n    . \"$projectDir/etc/bashrc\" \"$foamSettings\"\n}\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmRefresh",
+        "explanation": "先清理旧环境变量，再读取同一项目的 etc/bashrc。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type wmRefresh",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "wmSP": {
+    "summary": "重新加载环境并设置 WM_PRECISION_OPTION=SP。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmSP\necho \"$WM_OPTIONS\"",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmSP\necho \"$WM_OPTIONS\"\n```\n\n这会选择对应的精度或标签长度环境。该配置需要匹配的程序与库，可从源码构建。\n\n## 在脚本中查看定义\n\n```bash\ntype wmSP\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias wmSP='wmSet WM_PRECISION_OPTION=SP'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmSP\necho \"$WM_OPTIONS\"",
+        "explanation": "这会选择对应的精度或标签长度环境。该配置需要匹配的程序与库，可从源码构建。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type wmSP",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "wmSPDP": {
+    "summary": "重新加载环境并设置 WM_PRECISION_OPTION=SPDP。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmSPDP\necho \"$WM_OPTIONS\"",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmSPDP\necho \"$WM_OPTIONS\"\n```\n\n这会选择对应的精度或标签长度环境。该配置需要匹配的程序与库，可从源码构建。\n\n## 在脚本中查看定义\n\n```bash\ntype wmSPDP\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias wmSPDP='wmSet WM_PRECISION_OPTION=SPDP'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmSPDP\necho \"$WM_OPTIONS\"",
+        "explanation": "这会选择对应的精度或标签长度环境。该配置需要匹配的程序与库，可从源码构建。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type wmSPDP",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "wmSet": {
+    "summary": "按给定变量重新加载 OpenFOAM 环境。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmSet WM_LABEL_SIZE=64",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmSet WM_LABEL_SIZE=64\n```\n\n参数传给 etc/bashrc，用于选择编译和运行配置。\n\n## 在脚本中查看定义\n\n```bash\ntype wmSet\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias wmSet='. ${WM_PROJECT_DIR:?}/etc/bashrc'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmSet WM_LABEL_SIZE=64",
+        "explanation": "参数传给 etc/bashrc，用于选择编译和运行配置。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type wmSet",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  },
+  "wmUnset": {
+    "summary": "清除当前 shell 中的 OpenFOAM 环境设置。",
+    "example": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmUnset",
+    "body": "## 调用示例\n\n```bash\nsource \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmUnset\n```\n\n随后可重新 source 所需版本的 etc/bashrc。\n\n## 在脚本中查看定义\n\n```bash\ntype wmUnset\n```\n\n`type` 显示函数定义或别名展开，可用于确认当前终端加载的实现。\n\n<details><summary>v2512 实现</summary>\n\n```bash\nalias wmUnset='. ${WM_PROJECT_DIR:?}/etc/config.sh/unset'\n```\n\n</details>",
+    "examples": [
+      {
+        "title": "调用示例",
+        "code": "source \"$WM_PROJECT_DIR/etc/config.sh/aliases\"\nwmUnset",
+        "explanation": "随后可重新 source 所需版本的 etc/bashrc。"
+      },
+      {
+        "title": "查看定义",
+        "code": "type wmUnset",
+        "explanation": "查看当前终端中的函数或别名定义。"
+      }
+    ]
+  }
+}

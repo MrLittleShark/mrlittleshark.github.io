@@ -1,13 +1,11 @@
 ---
-title: "foamSolverSweeps  统计求解迭代次数及耗时"
+title: "foamSolverSweeps · 启动后交互输入日志名，如 log.simpleFoam"
 layout: reference
 description: "启动后交互输入日志名，如 log.simpleFoam。脚本按预设的旧式日志行格式提取统计量。"
+cms_slug: "command-foamsolversweeps"
 ---
-{% raw %}
-<div class="source-note">v2512 脚本源码已收录；未执行脚本。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>启动后交互输入日志名，如 log.simpleFoam。脚本按预设的旧式日志行格式提取统计量。</p><h2>使用入口</h2><pre><code class="language-bash">foamSolverSweeps</code></pre><h2>使用条件与核对</h2><p>启动后交互输入日志名，如 log.simpleFoam。脚本按预设的旧式日志行格式提取统计量。 用法：foamSolverSweeps 随后输入日志文件名 示例：foamSolverSweeps
 
-本条基于固定版本脚本源码，运行前检查帮助与依赖。
-源码帮助选项：</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/foamsolversweeps.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 script source evidence
+<p>启动后交互输入日志名，如 log.simpleFoam。脚本按预设的旧式日志行格式提取统计量。</p><h2>用法</h2><pre><code class="language-bash">foamSolverSweeps</code></pre><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
 Command: foamSolverSweeps
 Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamSolverSweeps
 
@@ -39,10 +37,10 @@ runTimeFile=/tmp/FOAM_iters.rtime
 piterFile=/tmp/FOAM_iters.piters
 uiterFile=/tmp/FOAM_iters.uiters
 
-echo &quot;timeFile=&#36;timeFile&quot;
-echo &quot;runTimeFile=&#36;runTimeFile&quot;
-echo &quot;piterFile=&#36;piterFile&quot;
-echo &quot;uiterFile=&#36;uiterFile&quot;
+echo &quot;timeFile=$timeFile&quot;
+echo &quot;runTimeFile=$runTimeFile&quot;
+echo &quot;piterFile=$piterFile&quot;
+echo &quot;uiterFile=$uiterFile&quot;
 echo &quot;&quot;
 
 
@@ -51,13 +49,12 @@ echo &quot;&quot;
 # prints sum of all numbers in file
 sumFile () {
   sum=0
-  for num in `cat &#36;1`
+  for num in `cat $1`
   do
-    sum=`expr &#36;sum + &#36;num`
+    sum=`expr $sum + $num`
   done
-  echo &#36;sum
+  echo $sum
 }
-
 
 
 # Main
@@ -65,42 +62,41 @@ sumFile () {
 
 echo &quot;Name of log file (LOG) : \c&quot;
 read logFile
-logFile=&#36;{logFile:-LOG}
+logFile=${logFile:-LOG}
 
 
-foamProgram=`grep &#x27;&lt; .* &gt;&#x27; &#36;{logFile} | awk &#x27;{print &#36;2}&#x27;`
+foamProgram=`grep &#x27;&lt; .* &gt;&#x27; ${logFile} | awk &#x27;{print $2}&#x27;`
 echo &quot;&quot;
-echo &quot;Program: &#36;{foamProgram}&quot;
+echo &quot;Program: ${foamProgram}&quot;
 
 
-grep &#x27;ExecutionTime =&#x27; &#36;{logFile} &gt; &#36;{runTimeFile}
+grep &#x27;ExecutionTime =&#x27; ${logFile} &gt; ${runTimeFile}
 echo &quot;&quot;
 echo &quot;Runtime:&quot;
-echo &quot;  1st iter  : &quot;`head -1 &#36;{runTimeFile}`
-echo &quot;  overall   : &quot;`tail -1 &#36;{runTimeFile}`
+echo &quot;  1st iter  : &quot;`head -1 ${runTimeFile}`
+echo &quot;  overall   : &quot;`tail -1 ${runTimeFile}`
 
-grep &#x27;^Time =&#x27; &#36;{logFile} &gt; &#36;{timeFile}
+grep &#x27;^Time =&#x27; ${logFile} &gt; ${timeFile}
 echo &quot;&quot;
 echo &quot;Simulation:&quot;
-echo &quot;  steps: &quot;`wc -l &#36;{timeFile} | awk &#x27;{print &#36;1}&#x27;`
-echo &quot;  from : &quot;`head -1 &#36;{timeFile}`
-echo &quot;  to   : &quot;`tail -1 &#36;{timeFile}`
+echo &quot;  steps: &quot;`wc -l ${timeFile} | awk &#x27;{print $1}&#x27;`
+echo &quot;  from : &quot;`head -1 ${timeFile}`
+echo &quot;  to   : &quot;`tail -1 ${timeFile}`
 echo &quot;&quot;
 
-grep &#x27;Solving for p,&#x27; &#36;{logFile} | awk &#x27;{print &#36;15}&#x27; &gt; &#36;{piterFile}
-grep &#x27;Solving for U&#x27; &#36;{logFile} | awk &#x27;{print &#36;15}&#x27; &gt; &#36;{uiterFile}
+grep &#x27;Solving for p,&#x27; ${logFile} | awk &#x27;{print $15}&#x27; &gt; ${piterFile}
+grep &#x27;Solving for U&#x27; ${logFile} | awk &#x27;{print $15}&#x27; &gt; ${uiterFile}
 
 
 echo &quot;Solver sweeps:&quot;
-echo &quot;  p           : &quot;`sumFile &#36;{piterFile}`
-echo &quot;  U(U0,U1,U2) : &quot;`sumFile &#36;{uiterFile}`
+echo &quot;  p           : &quot;`sumFile ${piterFile}`
+echo &quot;  U(U0,U1,U2) : &quot;`sumFile ${uiterFile}`
 echo &quot;&quot;
 
 
-rm &#36;{timeFile}
-rm &#36;{runTimeFile}
-rm &#36;{piterFile}
-rm &#36;{uiterFile}
+rm ${timeFile}
+rm ${runTimeFile}
+rm ${piterFile}
+rm ${uiterFile}
 
-#------------------------------------------------------------------------------</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamSolverSweeps">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+#------------------------------------------------------------------------------</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamSolverSweeps">源码与说明</a> · <a href="/assets/command-help/foamsolversweeps.txt">帮助文本</a></p>

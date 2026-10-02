@@ -1,18 +1,11 @@
 ---
-title: "addr2line  将程序地址映射到源码行"
+title: "addr2line · 源码包提供 macOS 兼容实现；Linux 通常使用 GNU Binutils 同名工具"
 layout: reference
 description: "源码包提供 macOS 兼容实现；Linux 通常使用 GNU Binutils 同名工具。地址解析需具备调试符号。"
+cms_slug: "command-addr2line"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>源码包提供 macOS 兼容实现；Linux 通常使用 GNU Binutils 同名工具。地址解析需具备调试符号。</p><h2>使用入口</h2><pre><code class="language-bash">addr2line -e mySolver 0x1234</code></pre><h2>使用条件与核对</h2><p>源码包提供 macOS 兼容实现；Linux 通常使用 GNU Binutils 同名工具。地址解析需具备调试符号。 用法：addr2line -e 可执行文件 地址 示例：addr2line -e mySolver 0x1234
-源码说明：
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-C -R -a -b -e -f -h -i -j -p -r -s -v</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/addr2line.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: addr2line
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/OSspecific/addr2line/Make/files
 
-Usage: /usr/bin/addr2line [option(s)] [addr(s)]
+<p>源码包提供 macOS 兼容实现；Linux 通常使用 GNU Binutils 同名工具。地址解析需具备调试符号。</p><h2>用法</h2><pre><code class="language-bash">addr2line -e mySolver 0x1234</code></pre><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-a --addresses</td><td>Show addresses</td></tr><tr><td>-b --target=&lt;bfdname&gt;</td><td>Set the binary file format</td></tr><tr><td>-e --exe=&lt;executable&gt;</td><td>Set the input file name (default is a.out)</td></tr><tr><td>-i --inlines</td><td>Unwind inlined functions</td></tr><tr><td>-j --section=&lt;name&gt;</td><td>Read section-relative offsets instead of addresses</td></tr><tr><td>-p --pretty-print</td><td>Make the output easier to read for humans</td></tr><tr><td>-s --basenames</td><td>Strip directory names</td></tr><tr><td>-f --functions</td><td>Show function names</td></tr><tr><td>-C --demangle[=style]</td><td>Demangle function names</td></tr><tr><td>-R --recurse-limit</td><td>Enable a limit on recursion whilst demangling.  [Default]</td></tr><tr><td>-r --no-recurse-limit</td><td>Disable a limit on recursion whilst demangling</td></tr><tr><td>-h --help</td><td>Display this information</td></tr><tr><td>-v --version</td><td>Display the program&#x27;s version</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: /usr/bin/addr2line [option(s)] [addr(s)]
  Convert addresses into line number/file name pairs.
  If no addresses are specified on the command line, they will be read from stdin
  The options are:
@@ -32,5 +25,4 @@ Usage: /usr/bin/addr2line [option(s)] [addr(s)]
   -v --version           Display the program&#x27;s version
 
 /usr/bin/addr2line: supported targets: elf64-x86-64 elf32-i386 elf32-iamcu elf32-x86-64 pei-i386 pe-x86-64 pei-x86-64 elf64-little elf64-big elf32-little elf32-big pe-bigobj-x86-64 pe-i386 pe-bigobj-i386 pdb srec symbolsrec verilog tekhex binary ihex plugin
-Report bugs to &lt;https://sourceware.org/bugzilla/&gt;</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/OSspecific/addr2line/Make/files">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/OSspecific/addr2line/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Report bugs to &lt;https://sourceware.org/bugzilla/&gt;</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/OSspecific/addr2line/Make/files">源码与说明</a> · <a href="/assets/command-help/addr2line.txt">帮助文本</a></p>

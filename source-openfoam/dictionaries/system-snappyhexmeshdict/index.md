@@ -1,13 +1,12 @@
 ---
-title: "system/snappyHexMeshDict · snappyHexMeshDict"
+title: "snappyHexMeshDict"
 layout: reference
-description: "snappyHexMesh 包括切割细化、表面贴合和边界层生成三个阶段。运行 foamGetDict snappyHexMeshDict 获取带注释模板，在已建立的背景网格上配置几何和各阶段参数。"
+description: "设置表面几何、局部细化、表面贴合和边界层，供 snappyHexMesh 生成贴体网格。"
 dictionary: true
+cms_slug: "dictionary-snappyhexmeshdict"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>snappyHexMesh 包括切割细化、表面贴合和边界层生成三个阶段。运行 foamGetDict snappyHexMeshDict 获取带注释模板，在已建立的背景网格上配置几何和各阶段参数。</p><figure><img src="/assets/diagrams/reference-0.svg" alt="网格配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/snappyHexMeshDict</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>castellatedMesh</code> · <code>snap</code> · <code>addLayers</code> · <code>geometry</code> · <code>refinementSurfaces</code> · <code>refinementRegions</code> · <code>locationInMesh</code> · <code>nCellsBetweenLevels</code></p><h2>关联命令</h2><p><a href="/commands/?q=snappyHexMesh">snappyHexMesh</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/snappyHexMeshDict -keywords
-snappyHexMesh -help</code></pre><h2>7.2 system/snappyHexMeshDict</h2><p>snappyHexMesh 包括切割细化、表面贴合和边界层生成三个阶段。运行 foamGetDict snappyHexMeshDict 获取带注释模板，在已建立的背景网格上配置几何和各阶段参数。</p>
+
+<p>设置表面几何、局部细化、表面贴合和边界层，供 snappyHexMesh 生成贴体网格。</p><p>位置：<code>system/snappyHexMeshDict</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-snappy-workflow.png" alt="snappyHexMesh 的几何与背景网格输入" loading="lazy"><figcaption><strong>snappyHexMesh 的几何与背景网格输入</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module3.pdf，p. 71 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>配置实例</h2><p>snappyHexMesh 包括切割细化、表面贴合和边界层生成三个阶段。运行 foamGetDict snappyHexMeshDict 获取带注释模板，在已建立的背景网格上配置几何和各阶段参数。</p>
 <div class="table-scroll"><table>
 <tr><th>参数</th><th>含义</th><th>设置方法</th></tr>
 <tr><td>castellatedMesh、snap、addLayers</td><td>分别控制切割细化、贴体和边界层生成</td><td>先检查切割细化和贴体，再配置边界层</td></tr>
@@ -15,7 +14,7 @@ snappyHexMesh -help</code></pre><h2>7.2 system/snappyHexMeshDict</h2><p>snappyHe
 <tr><td>maxLocalCells、maxGlobalCells</td><td>局部及全局细化控制限额</td><td>根据可用内存设置单元数量上限</td></tr>
 <tr><td>minRefinementCells</td><td>停止继续细化的候选单元阈值</td><td>设为 0 时继续处理剩余细化单元，计算量相应增加</td></tr>
 <tr><td>nCellsBetweenLevels</td><td>相邻细化级别间的过渡层数</td><td>例如 3</td></tr>
-<tr><td>features</td><td>显式特征文件和细化等级</td><td>({ file &quot;body.eMesh&quot;; level 2; })</td></tr>
+<tr><td>features</td><td>显式特征文件和细化等级</td><td>({ file "body.eMesh"; level 2; })</td></tr>
 <tr><td>refinementSurfaces</td><td>表面的最小最大细化等级</td><td>body { level (2 3); patchInfo { type wall; } }</td></tr>
 <tr><td>resolveFeatureAngle</td><td>区分尖锐表面特征的角度</td><td>示例为 30，按表面几何特征确定</td></tr>
 <tr><td>refinementRegions</td><td>体积或距离带细化</td><td>mode inside、outside 或 distance；levels 定义等级</td></tr>
@@ -23,7 +22,7 @@ snappyHexMesh -help</code></pre><h2>7.2 system/snappyHexMeshDict</h2><p>snappyHe
 <tr><td>allowFreeStandingZoneFaces</td><td>是否允许独立区域面</td><td>与 zone 生成方式匹配</td></tr>
 <tr><td>snapControls</td><td>贴体松弛和迭代</td><td>nSmoothPatch、tolerance、nSolveIter、nRelaxIter</td></tr>
 <tr><td>显式特征贴合</td><td>explicitFeatureSnap 与 nFeatureSnapIter</td><td>与 features 中的 eMesh 配合</td></tr>
-<tr><td>layers</td><td>各 patch 的层数</td><td>&quot;body.*&quot; { nSurfaceLayers 3; }</td></tr>
+<tr><td>layers</td><td>各 patch 的层数</td><td>"body.*" { nSurfaceLayers 3; }</td></tr>
 <tr><td>relativeSizes</td><td>层厚是否相对外层网格尺寸</td><td>true 相对尺寸；false 绝对长度</td></tr>
 <tr><td>expansionRatio</td><td>层间厚度增长比</td><td>例如 1.2</td></tr>
 <tr><td>finalLayerThickness、firstLayerThickness、thickness</td><td>不同的层厚约束</td><td>按层厚参数关系选取相容组合</td></tr>
@@ -51,7 +50,7 @@ castellatedMeshControls
     maxGlobalCells 3000000;
     minRefinementCells 0;
     nCellsBetweenLevels 3;
-    features ({ file &quot;body.eMesh&quot;; level 2; });
+    features ({ file "body.eMesh"; level 2; });
     refinementSurfaces
     {
         body { level (2 3); patchInfo { type wall; } }
@@ -99,10 +98,19 @@ addLayersControls
 }
 meshQualityControls
 {
-    #includeEtc &quot;caseDicts/meshQualityDict&quot;
+    #includeEtc "caseDicts/meshQualityDict"
 }
 mergeTolerance 1e-6;</code></pre>
-<h2>补充说明</h2><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>expansionRatio</td><td>相邻挤出层的厚度增长比例。</td></tr><tr><td>regions</td><td>几何选择区域或多区域列表；在不同字典中结构不同，不能只复制键名。</td></tr><tr><td>cellZone</td><td>源项、运动或材料区域所引用的单元区名称。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>castellatedMesh</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * // Which of the steps to run</td></tr><tr><td>geometry</td><td>to specify refinement for any mesh cell intersecting it to specify refinement for any mesh cell inside/outside/near to &#x27;snap&#x27; the mesh boundary to the surface</td></tr><tr><td>castellatedMeshControls</td><td>Settings for the castellatedMesh generation.</td></tr><tr><td>maxLocalCells</td><td>If local number of cells is &gt;= maxLocalCells on any processor switches from from refinement followed by balancing (current method) to (weighted) balancing before refinement.</td></tr><tr><td>maxGlobalCells</td><td>Note that this is the number of cells before removing the part which is not &#x27;visible&#x27; from the keepPoint. The final number of cells might actually be a lot less.</td></tr><tr><td>minRefinementCells</td><td>few cells. This setting will cause refinement to stop if &lt;= minimumRefine are selected for refinement. Note: it will at least do one iteration (unless the number of cells to refine is 0)</td></tr><tr><td>maxLoadUnbalance</td><td>(since balancing is quite expensive) Expressed as fraction of perfect balance (= overall number of cells / nProcs). 0=balance always.</td></tr><tr><td>nCellsBetweenLevels</td><td>Number of buffer layers between different levels. 1 means normal 2:1 refinement restriction, larger means slower refinement.</td></tr><tr><td>features</td><td>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Specifies a level for any cell intersected by its edges. This is a featureEdgeMesh, read from constant/triSurface for now.</td></tr><tr><td>level</td><td>Surface-wise min and max refinement level</td></tr><tr><td>refinementSurfaces</td><td>The second level is the maximum level. Cells that &#x27;see&#x27; multiple intersections where the intersections make an angle &gt; resolveFeatureAngle get refined up to the maximum level.</td></tr><tr><td>patchInfo</td><td>Optional specification of patch type (default is wall). No constraint types (cyclic, symmetry) etc. are allowed.</td></tr><tr><td>resolveFeatureAngle</td><td>Resolve sharp angles</td></tr><tr><td>refinementRegions</td><td>cells inside the surface get refined up to the level. The surface needs to be closed for this to be possible. outside. Same but cells outside.</td></tr><tr><td>levels</td><td>Dummy base level</td></tr><tr><td>locationInMesh</td><td>section reachable from the locationInMesh is kept. NOTE: This point should never be on a face, always inside a cell, even after refinement.</td></tr><tr><td>allowFreeStandingZoneFaces</td><td>Whether any faceZones (as specified in the refinementSurfaces) are only on the boundary of corresponding cellZones or also allow free-standing zone faces. Not used if there are no faceZones.</td></tr><tr><td>snapControls</td><td>Settings for the snapping.</td></tr><tr><td>nSmoothPatch</td><td>Number of patch smoothing iterations before finding correspondence to surface</td></tr><tr><td>tolerance</td><td>Relative distance for points to be attracted by surface feature point or edge. True distance is this factor times local maximum edge length.</td></tr><tr><td>nSolveIter</td><td>Number of mesh displacement relaxation iterations.</td></tr><tr><td>nRelaxIter</td><td>Maximum number of snapping relaxation iterations. Should stop before upon reaching a correct mesh.</td></tr><tr><td>nFeatureSnapIter</td><td>Feature snapping Number of feature edge snapping iterations. Leave out altogether to disable.</td></tr><tr><td>implicitFeatureSnap</td><td>Detect (geometric only) features by sampling the surface (default=false).</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/simpleFoam/motorBike</h3><p>原始路径：<code>tutorials/incompressible/simpleFoam/motorBike/system/snappyHexMeshDict</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/motorBike/system/snappyHexMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/snappyhexmeshdict/1-snappyHexMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/motorBike">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+<h2>参数说明</h2><table><thead><tr><th>条目</th><th>含义</th></tr></thead><tbody><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>expansionRatio</td><td>相邻挤出层的厚度增长比例。</td></tr><tr><td>regions</td><td>几何选择区域或多区域列表；在不同字典中结构不同，不能只复制键名。</td></tr><tr><td>cellZone</td><td>源项、运动或材料区域所引用的单元区名称。</td></tr></tbody></table><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/simpleFoam/motorBike</summary><p>motorBike 用 snappyHexMesh 把背景网格贴合摩托车表面，并在尾迹与近壁区域增加分辨率。</p>
+<ul>
+<li><code>castellatedMesh true</code>、<code>snap true</code>、<code>addLayers true</code> 分别启用切割加密、表面贴合和层网格。</li>
+<li><code>motorBike.obj</code> 提供表面；表面 <code>level (5 6)</code> 与 <code>motorBike.eMesh</code> 的 <code>level 6</code> 加密几何和特征边。</li>
+<li><code>refinementBox</code> 从 (−1,−0.7,0) 到 (8,0.7,2.5)，其内部使用 level 4，使尾迹附近保持较细网格。</li>
+<li><code>locationInMesh (3.0001 3.0001 0.43)</code> 标记要保留的流体连通域。</li>
+<li><code>nSurfaceLayers 1</code>、<code>relativeSizes true</code>、<code>finalLayerThickness 0.3</code> 给指定壁面加一层相对厚度网格。</li>
+</ul>
+<p>目标 y⁺ 变化时，应联动背景分辨率与层厚；修改几何后重新检查保留点、层覆盖率和质量。</p>
+<p><a href="/assets/examples/v2512/snappyhexmeshdict/1-snappyHexMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/motorBike/system/snappyHexMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/motorBike">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -185,7 +193,6 @@ castellatedMeshControls
     nCellsBetweenLevels 3;
 
 
-
     // Explicit feature edge refinement
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -198,7 +205,6 @@ castellatedMeshControls
             level 6;
         }
     );
-
 
 
     // Surface based refinement
@@ -272,7 +278,6 @@ castellatedMeshControls
 }
 
 
-
 // Settings for the snapping.
 snapControls
 {
@@ -308,7 +313,6 @@ snapControls
         //- Detect points on multiple surfaces (only for explicitFeatureSnap)
         multiRegionFeatureSnap false;
 }
-
 
 
 // Settings for the layer addition.
@@ -394,7 +398,6 @@ addLayersControls
 }
 
 
-
 // Generic mesh quality settings. At any undoable phase these determine
 // where to undo.
 meshQualityControls
@@ -427,7 +430,16 @@ writeFlags
 mergeTolerance 1e-6;
 
 
-// ************************************************************************* //</code></pre><p>本例包含外部引用：&quot;meshQualityDict&quot;。下载单个文件不会自动取得这些依赖。</p><h3>示例 2 · mesh/snappyHexMesh/faceZoneRegions</h3><p>原始路径：<code>tutorials/mesh/snappyHexMesh/faceZoneRegions/system/snappyHexMeshDict</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/mesh/snappyHexMesh/faceZoneRegions/system/snappyHexMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/snappyhexmeshdict/2-snappyHexMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/snappyHexMesh/faceZoneRegions">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · mesh/snappyHexMesh/faceZoneRegions</summary><p>这个网格示例演示表面区域命名与 faceZone/cellZone 的生成，便于后续把旋转区与固定区分开。</p>
+<ul>
+<li>开头 <code>#includeEtc</code> 引入 snappyHexMesh 的公共默认配置，本地条目作具体覆盖。</li>
+<li><code>castellatedMesh on</code>、<code>snap on</code>、<code>addLayers off</code> 表示生成并贴合网格，本次不长层。</li>
+<li><code>fixed.obj/regions</code> 将原始区域映射为 <code>slipWall</code>、<code>outlet</code>、<code>inlet</code>，同时可以指定各区加密级别。</li>
+<li><code>rotatingZone</code> 的 <code>cellZoneInside inside</code> 选取内部单元，<code>faceZoneNaming region</code> 按区域命名相关面区。</li>
+<li><code>strictRegionSnap true</code> 强调贴合时的区域对应，<code>locationInMesh</code> 决定保留连通域。</li>
+</ul>
+<p>更换表面文件时逐项对应 region 名称；区域正确后再设置旋转或耦合边界。</p>
+<p><a href="/assets/examples/v2512/snappyhexmeshdict/2-snappyHexMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/mesh/snappyHexMesh/faceZoneRegions/system/snappyHexMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/snappyHexMesh/faceZoneRegions">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -593,7 +605,15 @@ meshQualityControls
 mergeTolerance 1e-6;
 
 
-// ************************************************************************* //</code></pre><p>本例包含外部引用：&quot;caseDicts/mesh/generation/snappyHexMeshDict.cfg&quot;。下载单个文件不会自动取得这些依赖。</p><h3>示例 3 · mesh/snappyHexMesh/gap_detection</h3><p>原始路径：<code>tutorials/mesh/snappyHexMesh/gap_detection/system/snappyHexMeshDict</code>；求解器：<code>snappyHexMesh</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/mesh/snappyHexMesh/gap_detection/system/snappyHexMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/snappyhexmeshdict/3-snappyHexMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/snappyHexMesh/gap_detection">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · mesh/snappyHexMesh/gap_detection</summary><p>gap_detection 主要检查窄间隙加密，配置只执行切割加密阶段。</p>
+<ul>
+<li><code>castellatedMesh true</code>、<code>snap false</code>、<code>addLayers false</code> 将测试集中在间隙识别。</li>
+<li><code>mech_test.obj</code> 提供几何；普通表面级别 <code>(0 0)</code>，间隙细化另由 <code>gapLevel (4 0 10)</code> 控制。</li>
+<li><code>gapMode outside</code> 指定间隙检测所考虑的一侧，<code>nCellsBetweenLevels 1</code> 使级别过渡较紧凑。</li>
+<li><code>locationInMesh (-100 -5 -300)</code> 选择需要保留的流体连通区域；<code>maxGlobalCells 2000000</code> 限制规模。</li>
+</ul>
+<p>细小间隙可能迅速增加单元数，先检查间隙内实际网格层数，再调整 gapLevel 和总体单元上限。</p>
+<p><a href="/assets/examples/v2512/snappyhexmeshdict/3-snappyHexMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/mesh/snappyHexMesh/gap_detection/system/snappyHexMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/snappyHexMesh/gap_detection">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -667,7 +687,6 @@ castellatedMeshControls
     nCellsBetweenLevels 1;
 
 
-
     // Explicit feature edge refinement
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -676,7 +695,6 @@ castellatedMeshControls
     features
     (
     );
-
 
 
     // Surface based refinement
@@ -753,7 +771,6 @@ castellatedMeshControls
 }
 
 
-
 // Settings for the snapping.
 snapControls
 {
@@ -786,7 +803,6 @@ snapControls
         //- Use castellatedMeshControls::features (default = true)
         explicitFeatureSnap false;
 }
-
 
 
 // Settings for the layer addition.
@@ -865,7 +881,6 @@ addLayersControls
 }
 
 
-
 // Generic mesh quality settings. At any undoable phase these determine
 // where to undo.
 meshQualityControls
@@ -888,9 +903,4 @@ meshQualityControls
 mergeTolerance 1e-6;
 
 
-// ************************************************************************* //</code></pre><p>本例包含外部引用：&quot;meshQualityDict&quot;。下载单个文件不会自动取得这些依赖。</p><h2>配套命令与验证次序</h2><p><a href="/commands/snappyhexmesh/">snappyHexMesh</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/snappyHexMeshDict&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/snappyHexMeshDict&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>边界名称与字段不一致</td><td>修改拓扑后重新核对 constant/polyMesh/boundary 和所有 0/ 场文件，不能只修一个场。</td></tr><tr><td>单位或坐标方向错误</td><td>比较几何包围盒与预期物理尺寸；检查 scale、挤出法向和旋转轴。</td></tr><tr><td>网格生成成功但质量不足</td><td>运行 checkMesh -allTopology -allGeometry，再评估所选离散格式对非正交和扭曲的容忍度。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/snappyhexmesh/">snappyHexMesh</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>边界名称与字段不一致</td><td>修改拓扑后重新核对 constant/polyMesh/boundary 和所有 0/ 场文件，不能只修一个场。</td></tr><tr><td>单位或坐标方向错误</td><td>比较几何包围盒与预期物理尺寸；检查 scale、挤出法向和旋转轴。</td></tr><tr><td>网格生成成功但质量不足</td><td>运行 checkMesh -allTopology -allGeometry，再评估所选离散格式对非正交和扭曲的容忍度。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

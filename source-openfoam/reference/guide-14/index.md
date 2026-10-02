@@ -1,10 +1,11 @@
 ---
 title: "第 14 章　system/fvSolution（线性求解器与算法控制）"
 layout: reference
-description: "OpenCFD v2512 system/fvSolution（线性求解器与算法控制）；包含原理、示例与版本核对。"
+description: "system/fvSolution（线性求解器与算法控制）：用法与配置实例。"
+cms_slug: "reference-guide-14"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>它管什么：每个方程用什么线性代数求解器、迭代到什么精度、外层算法（SIMPLE/PISO/PIMPLE）怎么循环、松弛因子多少。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>它管什么：每个方程用什么线性代数求解器、迭代到什么精度、外层算法（SIMPLE/PISO/PIMPLE）怎么循环、松弛因子多少。</p>
 <h2>14.1 solvers 子字典</h2>
 <pre><code class="language-openfoam">solvers
 {
@@ -19,7 +20,7 @@ description: "OpenCFD v2512 system/fvSolution（线性求解器与算法控制�
 
     pFinal
     {
-        &#36;p;                                // 继承 p 的所有设置
+        $p;                                // 继承 p 的所有设置
         relTol          0;                 // 最后一次外迭代要求解到底
     }
 
@@ -107,4 +108,3 @@ description: "OpenCFD v2512 system/fvSolution（线性求解器与算法控制�
 }</code></pre>
 <h2>14.4 cache 与其他</h2>
 <pre><code class="language-plaintext">cache { grad(U); }        // 缓存梯度，省重复计算</code></pre>
-{% endraw %}

@@ -1,19 +1,11 @@
 ---
-title: "foamHasLibrary  检查共享库能否加载"
+title: "foamHasLibrary · -detail 输出详细信息"
 layout: reference
 description: "-detail 输出详细信息。"
+cms_slug: "command-foamhaslibrary"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>-detail 输出详细信息。</p><h2>v2512 源码中的用途</h2><p>Test if given libraries can be loaded.</p><h2>使用入口</h2><pre><code class="language-bash">foamHasLibrary libfieldFunctionObjects.so</code></pre><h2>使用条件与核对</h2><p>-detail 输出详细信息。 用法：foamHasLibrary 库名列表 [选项] 示例：foamHasLibrary libfieldFunctionObjects.so
-源码说明：Test if given libraries can be loaded.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-debug-switch -detail -doc -doc-source -fileHandler -help -help-compat -help-full -help-man -help-notes -info-switch -lib -no-libs -opt-switch -or -verbose</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/foamhaslibrary.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: foamHasLibrary
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/foamHasLibrary/foamHasLibrary.C
 
-
-Usage: foamHasLibrary [OPTIONS] [&lt;lib...&gt;]
+<p>-detail 输出详细信息。</p><h2>用法</h2><pre><code class="language-bash">foamHasLibrary libfieldFunctionObjects.so</code></pre><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-detail</td><td>Additional detail Override the file handler type Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-or</td><td>Success if any of the libraries can be loaded (does not short-circuit)</td></tr><tr><td>-verbose</td><td>Additional verbosity (can be used multiple times)</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamHasLibrary [OPTIONS] [&lt;lib...&gt;]
 Options:
   -debug-switch &lt;name=val&gt;
                     Set named DebugSwitch (default value: 1).
@@ -45,5 +37,4 @@ Test if given libraries can be loaded
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/foamHasLibrary/foamHasLibrary.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/foamHasLibrary/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/foamHasLibrary/foamHasLibrary.C">源码与说明</a> · <a href="/assets/command-help/foamhaslibrary.txt">帮助文本</a></p>

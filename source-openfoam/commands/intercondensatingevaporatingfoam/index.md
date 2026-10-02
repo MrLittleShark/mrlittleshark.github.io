@@ -1,26 +1,16 @@
 ---
 title: "interCondensatingEvaporatingFoam · 液体与蒸气的蒸发凝结界面输运"
 layout: reference
-description: "液体与蒸气的蒸发凝结界面输运。具体方程、物理假设和所需字段见下方源码与教程。"
+description: "液体与蒸气的蒸发凝结界面输运。"
+cms_slug: "command-intercondensatingevaporatingfoam"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>液体与蒸气的蒸发凝结界面输运。具体方程、物理假设和所需字段见下方源码与教程。</p><h2>v2512 源码中的用途</h2><p>Solver for two incompressible, non-isothermal immiscible fluids with phase-change (evaporation-condensation) between a fluid and its vapour. Uses a VOF (volume of fluid) phase-fraction based interface capturing approach. The momentum, energy and other fluid properties are of the &quot;mixture&quot; and a single momentum equation is solved. Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.</p><h2>使用入口</h2><pre><code class="language-bash">interCondensatingEvaporatingFoam -help-full</code></pre><h2>使用条件与核对</h2><p>
-源码说明：Solver for two incompressible, non-isothermal immiscible fluids with phase-change (evaporation-condensation) between a fluid and its vapour. Uses a VOF (volume of fluid) phase-fraction based interface capturing approach. The momentum, energy and other fluid properties are of the &quot;mixture&quot; and a single momentum equation is solved. Turbulence modelling is generic, i.e. laminar, RAS or LES may be selected.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-case -debug-switch -decomposeParDict -doc -doc-source -dry-run -dry-run-write -fileHandler -help -help-full -help-man -help-notes -hostRoots -info-switch -lib -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-libs -noFunctionObjects -opt-switch -parallel -postProcess -roots -world</p><p>关联配置：<a href="/dictionaries/system-controldict/">controlDict</a> · <a href="/dictionaries/system-fvschemes/">fvSchemes</a> · <a href="/dictionaries/system-fvsolution/">fvSolution</a></p><h2>同版本官方教程</h2><p>以下链接直接指向 OpenFOAM-v2512 标签中的教程目录。先阅读 Allrun 确定网格生成、初始化和依赖，再在自己的工作目录运行。列出教程不表示本网站已执行它的全部计算。</p><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel">multiphase/interCondensatingEvaporatingFoam/condensatingVessel</a></li><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam">verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam</a></li></ul><pre><code class="language-bash">mkdir -p &quot;&#36;FOAM_RUN&quot;
-cd &quot;&#36;FOAM_RUN&quot;
-# 先选择一个尚不存在的新目录；保留原教程
-cp -r &quot;&#36;FOAM_TUTORIALS/multiphase/interCondensatingEvaporatingFoam/condensatingVessel&quot; ./interCondensatingEvaporatingFoam-study
-cd ./interCondensatingEvaporatingFoam-study
-ls
-# 查看运行流程后，再决定执行哪些步骤
-sed -n &#x27;1,200p&#x27; Allrun</code></pre><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/intercondensatingevaporatingfoam.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: interCondensatingEvaporatingFoam
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interCondensatingEvaporatingFoam/interCondensatingEvaporatingFoam.C
 
-
-Usage: interCondensatingEvaporatingFoam [OPTIONS]
+<p>液体与蒸气的蒸发凝结界面输运。</p><h2>用法</h2><pre><code class="language-bash">interCondensatingEvaporatingFoam -help-full</code></pre><h2>运行计算</h2><pre><code class="language-bash">interCondensatingEvaporatingFoam &gt; log.interCondensatingEvaporatingFoam 2&gt;&amp;1
+tail -n 20 log.interCondensatingEvaporatingFoam</code></pre><p>在已经准备好网格、物性和初始场的算例目录运行。第一行把终端输出保存到日志，计算结束后，第二行显示日志最后 20 行。计算结果按 controlDict 的设置写入时间目录。</p><h2>指定算例目录</h2><pre><code class="language-bash">interCondensatingEvaporatingFoam -help-full -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dry-run</td><td>Check case set-up only using a single time step</td></tr><tr><td>-dry-run-write</td><td>Check case set-up and write only using a single time step Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-listFvOptions</td><td>List fvOptions List switches registered for run-time modification (see -listUnsetSwitches option)</td></tr><tr><td>-listScalarBCs</td><td>List scalar field boundary conditions (fvPatchField&lt;scalar&gt;)</td></tr><tr><td>-listVectorBCs</td><td>List vector field boundary conditions (fvPatchField&lt;vector&gt;)</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-postProcess</td><td>Execute functionObjects only Subprocess root directories for distributed running</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-controldict/">controlDict</a> · <a href="/dictionaries/system-fvschemes/">fvSchemes</a> · <a href="/dictionaries/system-fvsolution/">fvSolution</a></p><h2>配套算例</h2><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel">multiphase/interCondensatingEvaporatingFoam/condensatingVessel</a></li><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam">verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam</a></li></ul><pre><code class="language-bash">mkdir -p &quot;$FOAM_RUN&quot;
+cd &quot;$FOAM_RUN&quot;
+cp -r &quot;$FOAM_TUTORIALS/multiphase/interCondensatingEvaporatingFoam/condensatingVessel&quot; interCondensatingEvaporatingFoam-study
+cd interCondensatingEvaporatingFoam-study
+ls</code></pre><p>使用一个新的目录名。算例中的 Allrun 列出网格、初始化和求解顺序；含多级网格或跨目录数据的教程，需要同时保留相邻文件。</p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: interCondensatingEvaporatingFoam [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;
@@ -84,5 +74,4 @@ re-meshing.
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interCondensatingEvaporatingFoam/interCondensatingEvaporatingFoam.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interCondensatingEvaporatingFoam/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interCondensatingEvaporatingFoam/interCondensatingEvaporatingFoam.C">源码与说明</a> · <a href="/assets/command-help/intercondensatingevaporatingfoam.txt">帮助文本</a></p>

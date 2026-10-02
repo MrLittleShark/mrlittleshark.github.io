@@ -1,11 +1,32 @@
 ---
-title: "constant/chemistryProperties · chemistryProperties"
+title: "chemistryProperties"
 layout: reference
-description: "控制化学反应开关、化学 ODE 求解方法和化学时间步。流动时间步与内部化学积分时间步不同，刚性反应机制通常要求独立的误差控制。先用 chemFoam 单单元算例检查点火延迟与组分守恒。"
+description: "控制化学反应开关、化学 ODE 求解方法和化学时间步。"
 dictionary: true
+cms_slug: "dictionary-chemistryproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>控制化学反应开关、化学 ODE 求解方法和化学时间步。流动时间步与内部化学积分时间步不同，刚性反应机制通常要求独立的误差控制。先用 chemFoam 单单元算例检查点火延迟与组分守恒。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>chemistryType</td><td>化学求解器、方法或化学热物性组合选择，决定后续化学系数的读取方式。</td></tr><tr><td>chemistry</td><td>化学反应积分开关。关闭它并不自动移除所有组分输运方程。</td></tr><tr><td>initialChemicalTimeStep</td><td>首次化学积分采用的时间步估计；后续步长由所选化学积分器调整。</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · lagrangian/reactingParcelFoam/rectangularChannel</h3><p>原始路径：<code>tutorials/lagrangian/reactingParcelFoam/rectangularChannel/constant/chemistryProperties</code>；求解器：<code>reactingParcelFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/rectangularChannel/constant/chemistryProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/chemistryproperties/1-chemistryProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/rectangularChannel">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>控制化学反应开关、化学 ODE 求解方法和化学时间步。</p><p>位置：<code>constant/chemistryProperties</code></p><h2>配置实例</h2><p>lagrangian/reactingParcelFoam/rectangularChannel 中的 chemistryProperties：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      chemistryProperties;
+}
+
+chemistryType
+{
+    solver            noChemistrySolver;
+}
+
+chemistry       off;</code></pre><h2>参数说明</h2><table><thead><tr><th>条目</th><th>含义</th></tr></thead><tbody><tr><td>chemistryType</td><td>化学求解器、方法或化学热物性组合选择，决定后续化学系数的读取方式。</td></tr><tr><td>chemistry</td><td>化学反应积分开关。关闭它并不自动移除所有组分输运方程。</td></tr><tr><td>initialChemicalTimeStep</td><td>首次化学积分采用的时间步估计；后续步长由所选化学积分器调整。</td></tr></tbody></table><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · lagrangian/reactingParcelFoam/rectangularChannel</summary><p><code>rectangularChannel</code> 用带颗粒的流动算例演示颗粒与连续相的耦合。这里把气相化学反应积分关闭，便于单独观察输运和颗粒过程。</p>
+<ul>
+<li><code>chemistryType/solver noChemistrySolver</code> 选择不推进化学反应方程的求解对象。</li>
+<li><code>chemistry off</code> 关闭化学计算。颗粒受力、换热和相变分别由云文件中的模型控制，阅读本文件时可同时打开该算例的云属性文件。</li>
+<li>这个配置没有化学子步长或 ODE 容差需要调节。排查气相组分变化时，应先区分对流扩散、颗粒释放与气相反应三个来源。</li>
+</ul>
+<p>要把此通道改成反应流，可参考 <code>counterFlowFlame2DLTS</code> 中的 <code>EulerImplicit</code> 与 <code>chemistry on</code>，同时提供反应机理、组分初值和燃烧模型。先保持颗粒设置不变，比较新增化学反应前后的温度和组分收支。</p>
+<p><a href="/assets/examples/v2512/chemistryproperties/1-chemistryProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/rectangularChannel/constant/chemistryProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/rectangularChannel">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -29,7 +50,14 @@ chemistryType
 chemistry       off;
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · combustion/fireFoam/LES/smallPoolFire3D</h3><p>原始路径：<code>tutorials/combustion/fireFoam/LES/smallPoolFire3D/constant/chemistryProperties</code>；求解器：<code>fireFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/smallPoolFire3D/constant/chemistryProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/chemistryproperties/2-chemistryProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/smallPoolFire3D">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · combustion/fireFoam/LES/smallPoolFire3D</summary><p><code>smallPoolFire3D</code> 计算小型池火。此处关闭的是详细化学方程积分；配套 <code>combustionProperties</code> 实际选择 <code>EDM</code>，由混合控制的燃烧模型提供反应源项。</p>
+<ul>
+<li><code>noChemistrySolver</code> 与 <code>chemistry off</code> 使本文件不承担化学动力学积分工作。</li>
+<li><code>initialChemicalTimeStep 1e-07</code> 是保留的化学初始子步长条目。在当前关闭状态下，改变它不会改变 EDM 的混合时间尺度。</li>
+<li>火焰反应强弱应结合 <code>combustionProperties/EDMCoeffs</code> 中实际的 <code>Cd 1</code>、<code>CEDC 1</code> 以及流动和湍流设置理解。</li>
+</ul>
+<p>研究化学动力学对点火或熄火的影响时，需要更换配套燃烧/化学模型并准备反应机理。保持入口供燃料方式一致，比较热释放率和温度，才能看清模型变化带来的影响。</p>
+<p><a href="/assets/examples/v2512/chemistryproperties/2-chemistryProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/smallPoolFire3D/constant/chemistryProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/smallPoolFire3D">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -55,7 +83,14 @@ chemistry       off;
 initialChemicalTimeStep 1e-07;
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · lagrangian/reactingParcelFoam/movingInjectorBox</h3><p>原始路径：<code>tutorials/lagrangian/reactingParcelFoam/movingInjectorBox/constant/chemistryProperties</code>；求解器：<code>reactingParcelFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/movingInjectorBox/constant/chemistryProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/chemistryproperties/3-chemistryProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/movingInjectorBox">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · lagrangian/reactingParcelFoam/movingInjectorBox</summary><p><code>movingInjectorBox</code> 重点展示随时间移动的喷射位置与颗粒输运。气相化学在此被关闭，配套燃烧文件也使用 <code>combustionModel none</code>。</p>
+<ul>
+<li><code>solver noChemistrySolver</code> 指定当前不进行反应积分；<code>chemistry off</code> 是相应的计算开关。</li>
+<li><code>initialChemicalTimeStep 1e-7</code> 保留了以后启用化学时可用的初始子步长。当前颗粒运动时间步由运行设置与云跟踪设置决定。</li>
+<li>调整喷射轨迹、注入速度或颗粒温度，应进入该算例的云属性文件；这些过程与本文件的化学开关分开配置。</li>
+</ul>
+<p>可以先改变喷射轨迹观察液滴空间分布，再加入传热或蒸发，最后配置气相反应。每次扩展后分别比较颗粒总质量、气相组分与能量变化。</p>
+<p><a href="/assets/examples/v2512/chemistryproperties/3-chemistryProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/movingInjectorBox/constant/chemistryProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/movingInjectorBox">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -81,9 +116,4 @@ chemistry       off;
 
 initialChemicalTimeStep 1e-7;
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/chemfoam/">chemFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/chemistryProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/chemistryProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/chemfoam/">chemFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

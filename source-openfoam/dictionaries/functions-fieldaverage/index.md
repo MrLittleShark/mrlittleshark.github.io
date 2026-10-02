@@ -1,43 +1,52 @@
 ---
-title: "system/controlDict → functions → fieldAverage · fieldAverage"
+title: "fieldAverage"
 layout: reference
-description: "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。"
+description: "计算场的时间平均或迭代平均，可同时输出脉动二阶矩。"
 dictionary: true
+cms_slug: "dictionary-fieldaverage"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。</p><figure><img src="/assets/diagrams/reference-7.svg" alt="函数对象配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/controlDict → functions → fieldAverage</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>type</code> · <code>fieldAverage</code> · <code>fields</code> · <code>mean</code> · <code>prime2Mean</code> · <code>base</code></p><h2>关联命令</h2><p><a href="/commands/?q=postProcess">postProcess</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/controlDict -entry functions -value
-postProcess -help</code></pre><h2>10.6 统计量与派生场</h2><div class="table-scroll"><table>
-<tr><th>类型</th><th>主要参数</th><th>配置与调用示例</th></tr>
-<tr><td>fieldAverage</td><td>fields 下每场的 mean、prime2Mean、base</td><td>U { mean on; prime2Mean on; base time; }；生成 UMean 等</td></tr>
-<tr><td>fieldMinMax</td><td>fields、location、mode</td><td>fields (p U); location true;，输出极值及位置</td></tr>
-<tr><td>volFieldValue</td><td>regionType、name、operation、fields</td><td>regionType all; operation volAverage; fields (T);</td></tr>
-<tr><td>surfaceFieldValue</td><td>regionType patch、name、operation、fields</td><td>name outlet; operation sum; fields (phi);，输出带法向符号的通量</td></tr>
-<tr><td>solverInfo</td><td>fields</td><td>fields (p U);，记录各方程初始残差</td></tr>
-<tr><td>yPlus</td><td>湍流模型及壁面量</td><td>simpleFoam -postProcess -func yPlus -latestTime</td></tr>
-<tr><td>wallShearStress</td><td>patches、writeControl</td><td>simpleFoam -postProcess -func wallShearStress -latestTime</td></tr>
-<tr><td>wallHeatFlux</td><td>热模型和壁面</td><td>通过相应传热求解器 -postProcess -func wallHeatFlux</td></tr>
-<tr><td>CourantNo</td><td>通量及密度条件</td><td>postProcess -func CourantNo -latestTime，读取所需通量等场</td></tr>
-<tr><td>mag、grad、div</td><td>操作字段</td><td>postProcess -func &#x27;mag(U)&#x27; -latestTime</td></tr>
-<tr><td>vorticity、Q</td><td>速度梯度派生量</td><td>postProcess -func vorticity -latestTime</td></tr>
-<tr><td>MachNo</td><td>速度和热物性声速</td><td>通过可压缩求解器 -postProcess -func MachNo</td></tr>
-<tr><td>streamLine</td><td>seedSampleSet、direction、lifeTime、trackLength 等</td><td>foamGetDict streamlines 获取模板，随后配置种子点</td></tr>
-</table></div>
-<p>表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。</p>
-<pre><code class="language-openfoam">statistics
+
+<p>计算场的时间平均或迭代平均，可同时输出脉动二阶矩。</p><p>位置：<code>system/controlDict → functions → fieldAverage</code></p><p><code>fieldAverage</code> 在计算过程中累计均值和脉动二阶矩。它可以输出速度平均场 <code>UMean</code>、压力平均场 <code>pMean</code>，以及速度脉动的二阶矩 <code>UPrime2Mean</code>。</p>
+<h3>示例：2 s 后开始平均</h3>
+<p>加入 <code>system/controlDict/functions</code>：</p>
+<pre><code class="language-foam">meanFlow
 {
     type fieldAverage;
-    libs (&quot;libfieldFunctionObjects.so&quot;);
-    timeStart 0.2;
+    libs (fieldFunctionObjects);
+    timeStart 2;
     executeControl timeStep;
     executeInterval 1;
     writeControl writeTime;
+    restartOnRestart false;
     fields
     (
-        U { mean on; prime2Mean on; base time; }
-        p { mean on; prime2Mean off; base time; }
+        U
+        {
+            mean on;
+            prime2Mean on;
+            base time;
+        }
+        p
+        {
+            mean on;
+            prime2Mean off;
+            base time;
+        }
     );
-}</code></pre><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>libs</td><td>额外加载的共享库。函数对象或自定义边界未注册时，应检查库名与编译版本。</td></tr><tr><td>writeControl</td><td>输出触发方式，其值决定 writeInterval 表示步数、物理时间或时钟时间。</td></tr><tr><td>fields</td><td>目标场列表。场名、数据类型和计算时刻必须满足相应函数对象的要求。</td></tr><tr><td>application</td><td>供运行脚本查询的求解器名称；直接在终端执行程序时，以执行的命令为准。</td></tr><tr><td>writeInterval</td><td>输出间隔，需要结合 writeControl 理解单位与触发时刻。</td></tr><tr><td>functions</td><td>函数对象实例集合，可以记录残差、采样、积分或计算派生量。</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/simpleFoam/simpleCar</h3><p>原始路径：<code>tutorials/incompressible/simpleFoam/simpleCar/system/fieldAverage</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/simpleCar/system/fieldAverage">查看固定版本源码</a> · <a href="/assets/examples/v2512/fieldaverage/1-fieldAverage.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/simpleCar">查看配套目录</a></p><pre><code class="language-openfoam">fieldAverage1
+}
+</code></pre>
+<p><code>timeStart</code> 决定统计起点，通常根据启动过程选择。<code>executeInterval 1</code> 每步更新，<code>writeTime</code> 随全场写出保存结果。<code>base time</code> 按时间加权，适用于变化的时间步；<code>base iteration</code> 则按累计次数平均。</p>
+<p>速度的 <code>prime2Mean</code> 是对称张量，包含 \(\overline{u_i'u_j'}\)；压力的此开关关闭，因此只输出均值。统计累计信息保存在时间目录的 <code>uniform</code> 中，<code>restartOnRestart false</code> 配合这些记录支持续算时继续平均。</p>
+<p>需要分段平均时，可研究 <code>periodicRestart</code> 和 <code>restartPeriod</code>。需要固定窗口时，可查看各字段的 <code>window</code> 设置。比较两段平均或逐步增加统计时长，可以观察统计结果是否已趋于稳定。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/simpleFoam/simpleCar</summary><p>simpleCar 在迭代后期对速度做平均，减小稳态迭代波动对展示结果的影响。</p>
+<ul>
+<li><code>type fieldAverage</code> 启用统计，<code>fields</code> 只选择 U。</li>
+<li><code>base iteration</code> 以迭代为统计基准，<code>mean on</code> 输出平均，<code>prime2Mean off</code> 不计算二阶脉动量。</li>
+<li><code>timeStart 500</code>、<code>triggerStart 1</code> 与 <code>controlMode timeOrTrigger</code> 通过时间或触发器条件控制启动。</li>
+<li><code>writeControl writeTime</code> 让统计字段随主结果保存。</li>
+</ul>
+<p>用于非定常湍流统计时应按物理时间设计平均窗口，并在启动瞬态结束后开始累计。</p>
+<p><a href="/assets/examples/v2512/fieldaverage/1-fieldAverage.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/simpleCar/system/fieldAverage">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/simpleCar">案例目录</a></p><pre><code class="language-foam">fieldAverage1
 {
     type            fieldAverage;
     libs            (fieldFunctionObjects);
@@ -54,7 +63,15 @@ postProcess -help</code></pre><h2>10.6 统计量与派生场</h2><div class="tab
             prime2Mean  off;
         }
     );
-}</code></pre><h3>示例 2 · incompressible/pimpleFoam/LES/NACA4412</h3><p>原始路径：<code>tutorials/incompressible/pimpleFoam/LES/NACA4412/system/fieldAverage</code>；求解器：<code>pimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/NACA4412/system/fieldAverage">查看固定版本源码</a> · <a href="/assets/examples/v2512/fieldaverage/2-fieldAverage.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/NACA4412">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+}</code></pre></details><details class="reference-example"><summary>示例 2 · incompressible/pimpleFoam/LES/NACA4412</summary><p>NACA4412 的 LES 统计在指定开始时刻后累计均值与速度脉动二阶矩。</p>
+<ul>
+<li><code>timeStart $tStartAvg</code> 从外部定义读取起始时刻，需在包含环境中找到其数值。</li>
+<li>所有字段 <code>base time</code> 按时间累计，适合不等时间步统计。</li>
+<li>U 同时启用 <code>mean</code> 和 <code>prime2Mean</code>；p、nut、nuTilda、wallShearStress 只启用均值。</li>
+<li><code>writeControl writeTime</code> 输出当前累计统计字段。</li>
+</ul>
+<p>延长统计时长后比较均值与脉动量是否稳定，改变重启策略时同时检查已有统计累计状态。</p>
+<p><a href="/assets/examples/v2512/fieldaverage/2-fieldAverage.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/NACA4412/system/fieldAverage">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/NACA4412">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -70,7 +87,7 @@ fieldAverage
     enabled         true;
     writeControl    writeTime;
 
-    timeStart       &#36;tStartAvg;
+    timeStart       $tStartAvg;
 
     fields
     (
@@ -107,7 +124,15 @@ fieldAverage
     );
 }
 
-// ************************************************************************* //</code></pre><h3>示例 3 · verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common</h3><p>原始路径：<code>tutorials/verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common/system/controlDict</code>；求解器：<code>buoyantBoussinesqSimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/fieldaverage/3-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common</summary><p>大气边界层 successor 在这里累计 U 的平均字段，便于检查稳态结果的变化。</p>
+<ul>
+<li><code>type fieldAverage</code>、<code>fields (U ...)</code> 选择速度统计。</li>
+<li><code>mean on</code>、<code>prime2Mean off</code> 仅计算平均。</li>
+<li><code>base time</code> 按求解器时间权重累计；本例为稳态应用、<code>deltaT 1</code>，应按其迭代过程解释。</li>
+<li>主场每 500 步写出，文本 <code>writePrecision 16</code> 提高保存有效位数，统计也在 writeTime 输出。</li>
+</ul>
+<p>转为非定常边界层时需重新选择采样开始时刻和足够长的物理平均时间。</p>
+<p><a href="/assets/examples/v2512/fieldaverage/3-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/verificationAndValidation/atmosphericModels/atmFlatTerrain/successor/setups.orig/common">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -177,9 +202,4 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/postprocess/">postProcess</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/fieldAverage&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/fieldAverage&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/postprocess/">postProcess</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

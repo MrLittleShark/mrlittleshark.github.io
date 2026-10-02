@@ -1,5 +1,5 @@
 ---
-title: 支持本站
+title: 支持作者
 layout: support
 section: support
 ---

@@ -1,10 +1,11 @@
 ---
 title: "第 12 章　system/controlDict"
 layout: reference
-description: "OpenCFD v2512 system/controlDict；包含原理、示例与版本核对。"
+description: "system/controlDict：用法与配置实例。"
+cms_slug: "reference-guide-12"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>它管什么：算多久、多久输出一次、用什么求解器、跑哪些后处理。每个算例必需。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>它管什么：算多久、多久输出一次、用什么求解器、跑哪些后处理。每个算例必需。</p>
 <h2>12.1 完整参数表</h2>
 <div class="table-scroll"><table>
 <tr><th>关键字</th><th>可选值</th><th>含义</th><th>备注</th></tr>
@@ -70,4 +71,3 @@ functions
     #includeFunc yPlus
 }</code></pre>
 <p>writeControl 到底选哪个：变步长（adjustTimeStep yes）时选 runTime 会导致输出时刻对不齐（步长恰好跨过输出时刻就跳过了）；adjustableRunTime 会微调步长让它正好落在输出时刻上，这才是变步长算例的正确选择。做动画时尤其重要——帧间隔必须均匀。</p><h2>v2512 的残差记录接口</h2><p>使用 <code>type solverInfo</code>，并加载 <code>utilityFunctionObjects</code>。<code>#includeFunc solverInfo</code> 的官方模板默认选择 p 和 U；如需其他字段，应复制模板并修改 fields。此功能读取求解过程中的 solverPerformance 数据，事后只读取已写出的 U、p 不能重建历史残差。</p><p><a href="/dictionaries/functions-solverinfo/">完整配置、字段解释与三个 v2512 示例</a></p>
-{% endraw %}

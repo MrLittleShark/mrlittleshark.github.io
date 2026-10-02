@@ -1,0 +1,764 @@
+{
+  "foamHelp": {
+    "summary": "查询边界条件、函数对象和求解器的帮助。",
+    "example": "foamHelp boundary -field U",
+    "body": "## 查询速度边界条件\n\n```bash\nfoamHelp boundary -field U\n```\n\n在已有网格和 `0/U` 的算例目录运行。`boundary` 选择边界条件类别，`-field U` 根据速度场的类型列出可用边界条件。类别名称放在选项之前。\n\n## 缩小边界条件范围\n\n```bash\nfoamHelp boundary -field U -fixedValue\nfoamHelp boundary -constraint\n```\n\n第一行列出定值类速度边界，第二行列出约束类网格边界。`-fixedValue` 与 `-field` 配合使用。\n\n## 查询函数对象和求解器\n\n```bash\nfoamHelp functionObject\nfoamHelp solver\nfoamHelp solver -read\n```\n\n`functionObject` 查询函数对象文档；`solver` 查询求解器文档；`-read` 从 `system/controlDict` 读取 `application`。文档查询依赖 OpenFOAM 的文档配置和可访问的文档索引。\n\n## 查看完整参数\n\n```bash\nfoamHelp -help-full\nfoamHelp boundary -help\n```\n\n第一行查看入口参数，第二行查看边界类别的参数。若提示找不到网格或场，先进入完成 `blockMesh` 的算例目录。",
+    "examples": [
+      {
+        "title": "查询速度边界条件",
+        "code": "foamHelp boundary -field U",
+        "explanation": "在已有网格和 `0/U` 的算例目录运行。`boundary` 选择边界条件类别，`-field U` 根据速度场的类型列出可用边界条件。类别名称放在选项之前。"
+      },
+      {
+        "title": "缩小边界条件范围",
+        "code": "foamHelp boundary -field U -fixedValue\nfoamHelp boundary -constraint",
+        "explanation": "第一行列出定值类速度边界，第二行列出约束类网格边界。`-fixedValue` 与 `-field` 配合使用。"
+      },
+      {
+        "title": "查询函数对象和求解器",
+        "code": "foamHelp functionObject\nfoamHelp solver\nfoamHelp solver -read",
+        "explanation": "`functionObject` 查询函数对象文档；`solver` 查询求解器文档；`-read` 从 `system/controlDict` 读取 `application`。文档查询依赖 OpenFOAM 的文档配置和可访问的文档索引。"
+      },
+      {
+        "title": "查看完整参数",
+        "code": "foamHelp -help-full\nfoamHelp boundary -help",
+        "explanation": "第一行查看入口参数，第二行查看边界类别的参数。若提示找不到网格或场，先进入完成 `blockMesh` 的算例目录。"
+      }
+    ]
+  },
+  "blockMesh": {
+    "summary": "读取 blockMeshDict，生成由六面体块组成的网格。",
+    "example": "blockMesh\ncheckMesh -allTopology -allGeometry",
+    "body": "## 生成并检查网格\n\n```bash\nblockMesh\ncheckMesh -allTopology -allGeometry\n```\n\n`blockMesh` 读取 `system/blockMeshDict`，通常将网格写入 `constant/polyMesh`。随后检查单元数、包围盒和网格质量；长度单位由字典中的 `scale` 决定。\n\n## 选择另一份网格配置\n\n```bash\nblockMesh -dict system/blockMeshDict.fine\n```\n\n这里使用名为 `blockMeshDict.fine` 的配置。可保留粗、细两份字典，分别改变 `blocks` 中的单元数；运行会更新当前算例的网格。\n\n## 从算例外运行\n\n```bash\nblockMesh -case ../cavity-fine\ncheckMesh -case ../cavity-fine\n```\n\n`-case` 指定已有算例目录，命令仍使用该目录中的字典。它只改变工作对象，不会替你复制算例。\n\n## 查看块的连接\n\n```bash\nblockMesh -write-vtk\n```\n\n输出块拓扑的 VTK 文件并退出。用 ParaView 查看块连接和顶点方向，适合检查多块结构中的顶点编号。",
+    "examples": [
+      {
+        "title": "生成并检查网格",
+        "code": "blockMesh\ncheckMesh -allTopology -allGeometry",
+        "explanation": "`blockMesh` 读取 `system/blockMeshDict`，通常将网格写入 `constant/polyMesh`。随后检查单元数、包围盒和网格质量；长度单位由字典中的 `scale` 决定。"
+      },
+      {
+        "title": "选择另一份网格配置",
+        "code": "blockMesh -dict system/blockMeshDict.fine",
+        "explanation": "这里使用名为 `blockMeshDict.fine` 的配置。可保留粗、细两份字典，分别改变 `blocks` 中的单元数；运行会更新当前算例的网格。"
+      },
+      {
+        "title": "从算例外运行",
+        "code": "blockMesh -case ../cavity-fine\ncheckMesh -case ../cavity-fine",
+        "explanation": "`-case` 指定已有算例目录，命令仍使用该目录中的字典。它只改变工作对象，不会替你复制算例。"
+      },
+      {
+        "title": "查看块的连接",
+        "code": "blockMesh -write-vtk",
+        "explanation": "输出块拓扑的 VTK 文件并退出。用 ParaView 查看块连接和顶点方向，适合检查多块结构中的顶点编号。"
+      }
+    ]
+  },
+  "checkMesh": {
+    "summary": "检查网格拓扑、几何形状与质量，并定位问题区域。",
+    "example": "checkMesh",
+    "body": "## 读取基本检查结果\n\n```bash\ncheckMesh\n```\n\n先看网格范围、单元数、边界数，再看非正交、偏斜和体积等指标。`Failed ... mesh checks` 后的名称指向具体问题。\n\n## 执行完整几何和拓扑检查\n\n```bash\ncheckMesh -allTopology -allGeometry > log.checkMesh 2>&1\n```\n\n`-allTopology` 增加连接关系检查，`-allGeometry` 增加几何检查。重定向将完整信息写入日志，方便比较两次网格修改。\n\n## 导出异常集合\n\n```bash\ncheckMesh -allTopology -allGeometry -writeSets vtk\n```\n\n将检查产生的面或单元集合写成 VTK，便于在 ParaView 中定位异常。先查出问题位置，再决定修改表面、细化等级或边界层参数。\n\n## 检查并行网格\n\n```bash\nmpirun -np 4 checkMesh -parallel\n```\n\n在已经分成 4 个子域的算例中运行。检查结果还包含分区边界及各处理器之间的连接。",
+    "examples": [
+      {
+        "title": "读取基本检查结果",
+        "code": "checkMesh",
+        "explanation": "先看网格范围、单元数、边界数，再看非正交、偏斜和体积等指标。`Failed ... mesh checks` 后的名称指向具体问题。"
+      },
+      {
+        "title": "执行完整几何和拓扑检查",
+        "code": "checkMesh -allTopology -allGeometry > log.checkMesh 2>&1",
+        "explanation": "`-allTopology` 增加连接关系检查，`-allGeometry` 增加几何检查。重定向将完整信息写入日志，方便比较两次网格修改。"
+      },
+      {
+        "title": "导出异常集合",
+        "code": "checkMesh -allTopology -allGeometry -writeSets vtk",
+        "explanation": "将检查产生的面或单元集合写成 VTK，便于在 ParaView 中定位异常。先查出问题位置，再决定修改表面、细化等级或边界层参数。"
+      },
+      {
+        "title": "检查并行网格",
+        "code": "mpirun -np 4 checkMesh -parallel",
+        "explanation": "在已经分成 4 个子域的算例中运行。检查结果还包含分区边界及各处理器之间的连接。"
+      }
+    ]
+  },
+  "snappyHexMesh": {
+    "summary": "细化背景网格，贴合几何表面，并按设置生成边界层。",
+    "example": "blockMesh\nsurfaceFeatureExtract\nsnappyHexMesh -overwrite\ncheckMesh -allTopology -allGeometry",
+    "body": "## 串行生成网格\n\n```bash\nblockMesh\nsurfaceFeatureExtract\nsnappyHexMesh -overwrite\ncheckMesh -allTopology -allGeometry\n```\n\n这组步骤适用于使用特征线的算例。`blockMesh` 生成背景网格，`surfaceFeatureExtract` 生成 eMesh，`snappyHexMesh` 读取几何和参数。`-overwrite` 将网格写回原位置。\n\n## 检查输入几何\n\n```bash\nsnappyHexMesh -checkGeometry\n```\n\n按 `snappyHexMeshDict` 读取几何并检查表面。几何问题应在正式细化前处理，尤其是开口、自相交和比例错误。\n\n## 并行生成网格\n\n```bash\ndecomposePar\nmpirun -np 4 snappyHexMesh -parallel -overwrite\nreconstructParMesh -constant\n```\n\n先在 `decomposeParDict` 中设置 4 个分区。最后一行重建网格，适用于网格写在 `constant` 的情况；场的重建使用 `reconstructPar`。",
+    "examples": [
+      {
+        "title": "串行生成网格",
+        "code": "blockMesh\nsurfaceFeatureExtract\nsnappyHexMesh -overwrite\ncheckMesh -allTopology -allGeometry",
+        "explanation": "这组步骤适用于使用特征线的算例。`blockMesh` 生成背景网格，`surfaceFeatureExtract` 生成 eMesh，`snappyHexMesh` 读取几何和参数。`-overwrite` 将网格写回原位置。"
+      },
+      {
+        "title": "检查输入几何",
+        "code": "snappyHexMesh -checkGeometry",
+        "explanation": "按 `snappyHexMeshDict` 读取几何并检查表面。几何问题应在正式细化前处理，尤其是开口、自相交和比例错误。"
+      },
+      {
+        "title": "并行生成网格",
+        "code": "decomposePar\nmpirun -np 4 snappyHexMesh -parallel -overwrite\nreconstructParMesh -constant",
+        "explanation": "先在 `decomposeParDict` 中设置 4 个分区。最后一行重建网格，适用于网格写在 `constant` 的情况；场的重建使用 `reconstructPar`。"
+      }
+    ]
+  },
+  "surfaceFeatureExtract": {
+    "summary": "从表面提取特征线，供 snappyHexMesh 控制棱边细化。",
+    "example": "surfaceFeatureExtract",
+    "body": "## 提取特征线\n\n```bash\nsurfaceFeatureExtract\n```\n\n读取 `system/surfaceFeatureExtractDict`。表面通常位于 `constant/triSurface`，生成的 eMesh 由 `snappyHexMeshDict/features` 引用。\n\n## 使用另一份提取配置\n\n```bash\nsurfaceFeatureExtract -dict system/features-fineDict\n```\n\n配置文件应包含待处理表面名称和提取角度。比较不同 `includedAngle` 下的特征线数量和位置，再选择能保留关键棱边的设置。",
+    "examples": [
+      {
+        "title": "提取特征线",
+        "code": "surfaceFeatureExtract",
+        "explanation": "读取 `system/surfaceFeatureExtractDict`。表面通常位于 `constant/triSurface`，生成的 eMesh 由 `snappyHexMeshDict/features` 引用。"
+      },
+      {
+        "title": "使用另一份提取配置",
+        "code": "surfaceFeatureExtract -dict system/features-fineDict",
+        "explanation": "配置文件应包含待处理表面名称和提取角度。比较不同 `includedAngle` 下的特征线数量和位置，再选择能保留关键棱边的设置。"
+      }
+    ]
+  },
+  "surfaceCheck": {
+    "summary": "检查三角化表面的范围、连通性和质量。",
+    "example": "surfaceCheck constant/triSurface/body.stl",
+    "body": "## 检查 STL 文件\n\n```bash\nsurfaceCheck constant/triSurface/body.stl\n```\n\n把 `body.stl` 换成实际文件。关注包围盒是否符合单位、表面是否封闭以及是否存在多个不连通区域。\n\n## 保存检查记录\n\n```bash\nsurfaceCheck constant/triSurface/body.stl > log.surfaceCheck 2>&1\nless log.surfaceCheck\n```\n\n日志适合与修复后的表面比较。CFD 封闭流体域还要求各边界面组合形成完整包围面。",
+    "examples": [
+      {
+        "title": "检查 STL 文件",
+        "code": "surfaceCheck constant/triSurface/body.stl",
+        "explanation": "把 `body.stl` 换成实际文件。关注包围盒是否符合单位、表面是否封闭以及是否存在多个不连通区域。"
+      },
+      {
+        "title": "保存检查记录",
+        "code": "surfaceCheck constant/triSurface/body.stl > log.surfaceCheck 2>&1\nless log.surfaceCheck",
+        "explanation": "日志适合与修复后的表面比较。CFD 封闭流体域还要求各边界面组合形成完整包围面。"
+      }
+    ]
+  },
+  "foamDictionary": {
+    "summary": "读取、修改和展开 OpenFOAM 字典。",
+    "example": "foamDictionary system/controlDict -entry endTime -value",
+    "body": "## 读取一个数值\n\n```bash\nfoamDictionary system/controlDict -entry endTime -value\n```\n\n输出 `endTime` 的值，适合检查设置，也便于在脚本中取值。此命令读取文件。\n\n## 修改结束时间\n\n```bash\nfoamDictionary system/controlDict -entry endTime -set 2\n```\n\n将 `endTime` 改成 `2` 并写回文件。单位由求解器的时间定义决定；瞬态计算通常是秒，稳态计算常用迭代计数。\n\n## 读取嵌套条目\n\n```bash\nfoamDictionary system/fvSolution -entry solvers/p/tolerance -value\n```\n\n`/` 分隔子字典层级。本例要求存在 `solvers` 下的 `p`，可先用下一组命令查看实际名称。\n\n## 列出键和展开引用\n\n```bash\nfoamDictionary system/fvSolution -entry solvers -keywords\nfoamDictionary system/fvSolution -expand > fvSolution.expanded\n```\n\n第一行列出线性求解器的字段条目。第二行将展开内容保存到新文件，适合检查宏与 include；含 `#codeStream` 等条目时，展开过程会执行相应代码。",
+    "examples": [
+      {
+        "title": "读取一个数值",
+        "code": "foamDictionary system/controlDict -entry endTime -value",
+        "explanation": "输出 `endTime` 的值，适合检查设置，也便于在脚本中取值。此命令读取文件。"
+      },
+      {
+        "title": "修改结束时间",
+        "code": "foamDictionary system/controlDict -entry endTime -set 2",
+        "explanation": "将 `endTime` 改成 `2` 并写回文件。单位由求解器的时间定义决定；瞬态计算通常是秒，稳态计算常用迭代计数。"
+      },
+      {
+        "title": "读取嵌套条目",
+        "code": "foamDictionary system/fvSolution -entry solvers/p/tolerance -value",
+        "explanation": "`/` 分隔子字典层级。本例要求存在 `solvers` 下的 `p`，可先用下一组命令查看实际名称。"
+      },
+      {
+        "title": "列出键和展开引用",
+        "code": "foamDictionary system/fvSolution -entry solvers -keywords\nfoamDictionary system/fvSolution -expand > fvSolution.expanded",
+        "explanation": "第一行列出线性求解器的字段条目。第二行将展开内容保存到新文件，适合检查宏与 include；含 `#codeStream` 等条目时，展开过程会执行相应代码。"
+      }
+    ]
+  },
+  "foamGetDict": {
+    "summary": "从模板目录复制字典到当前算例。",
+    "example": "foamGetDict decomposeParDict\nfoamGetDict meshQualityDict",
+    "body": "## 复制常用配置模板\n\n```bash\nfoamGetDict decomposeParDict\nfoamGetDict meshQualityDict\n```\n\n模板来自 OpenFOAM 的 `etc/caseDicts` 或用户、站点配置目录。多数 system 字典写到 `system`，物性类文件按脚本规则选择目录。\n\n## 指定输出目录\n\n```bash\nmkdir -p templates\nfoamGetDict -target templates snappyHexMeshDict\n```\n\n把模板保存到单独的 `templates` 目录，便于与当前算例比较。模板中的模型、几何和数值需按算例填写。\n\n## 替换已有模板\n\n```bash\nfoamGetDict -force decomposeParDict\n```\n\n`-force` 允许覆盖同名文件。需要保留原设置时，先复制备份，再比较新模板中的条目。",
+    "examples": [
+      {
+        "title": "复制常用配置模板",
+        "code": "foamGetDict decomposeParDict\nfoamGetDict meshQualityDict",
+        "explanation": "模板来自 OpenFOAM 的 `etc/caseDicts` 或用户、站点配置目录。多数 system 字典写到 `system`，物性类文件按脚本规则选择目录。"
+      },
+      {
+        "title": "指定输出目录",
+        "code": "mkdir -p templates\nfoamGetDict -target templates snappyHexMeshDict",
+        "explanation": "把模板保存到单独的 `templates` 目录，便于与当前算例比较。模板中的模型、几何和数值需按算例填写。"
+      },
+      {
+        "title": "替换已有模板",
+        "code": "foamGetDict -force decomposeParDict",
+        "explanation": "`-force` 允许覆盖同名文件。需要保留原设置时，先复制备份，再比较新模板中的条目。"
+      }
+    ]
+  },
+  "decomposePar": {
+    "summary": "按照 decomposeParDict 将网格与场分成并行子域。",
+    "example": "decomposePar",
+    "body": "## 分解算例\n\n```bash\ndecomposePar\n```\n\n读取 `numberOfSubdomains` 和 `method`，生成相应的分区数据。求解时的进程数应与分区数一致。\n\n## 显示分区分布\n\n```bash\ndecomposePar -cellDist\n```\n\n同时写出分区分布，便于查看各子域的大小与形状。长条或狭窄子域可能增加通信，分区数也受单元总数约束。\n\n## 重新建立四个分区\n\n```bash\nfoamDictionary system/decomposeParDict -entry numberOfSubdomains -set 4\ndecomposePar -force\n```\n\n第一行修改分区数，第二行替换已有分区数据。已有 processor 结果需要保留时，先重建或另存。\n\n## 分解后运行\n\n```bash\nmpirun -np 4 simpleFoam -parallel > log.simpleFoam 2>&1\n```\n\n`-np 4` 启动 4 个进程，`-parallel` 让求解器读取分区网格。这里的物理和数值配置应当已经适用于 `simpleFoam`。",
+    "examples": [
+      {
+        "title": "分解算例",
+        "code": "decomposePar",
+        "explanation": "读取 `numberOfSubdomains` 和 `method`，生成相应的分区数据。求解时的进程数应与分区数一致。"
+      },
+      {
+        "title": "显示分区分布",
+        "code": "decomposePar -cellDist",
+        "explanation": "同时写出分区分布，便于查看各子域的大小与形状。长条或狭窄子域可能增加通信，分区数也受单元总数约束。"
+      },
+      {
+        "title": "重新建立四个分区",
+        "code": "foamDictionary system/decomposeParDict -entry numberOfSubdomains -set 4\ndecomposePar -force",
+        "explanation": "第一行修改分区数，第二行替换已有分区数据。已有 processor 结果需要保留时，先重建或另存。"
+      },
+      {
+        "title": "分解后运行",
+        "code": "mpirun -np 4 simpleFoam -parallel > log.simpleFoam 2>&1",
+        "explanation": "`-np 4` 启动 4 个进程，`-parallel` 让求解器读取分区网格。这里的物理和数值配置应当已经适用于 `simpleFoam`。"
+      }
+    ]
+  },
+  "reconstructPar": {
+    "summary": "将并行子域中的场重建到完整网格上。",
+    "example": "reconstructPar -latestTime",
+    "body": "## 重建最新结果\n\n```bash\nreconstructPar -latestTime\n```\n\n读取最近时刻的分区场，将完整场写到主算例时间目录。\n\n## 只重建部分场\n\n```bash\nreconstructPar -latestTime -fields \"(U p)\"\n```\n\n仅合并速度和压力，可减少读写量。字段名使用实际求解器输出的名称。\n\n## 选择时间范围\n\n```bash\nreconstructPar -time \"0.1:0.5\"\n```\n\n合并 0.1 至 0.5 范围内已存在的时刻。动态网格或拓扑变化算例还需处理各时刻的网格。",
+    "examples": [
+      {
+        "title": "重建最新结果",
+        "code": "reconstructPar -latestTime",
+        "explanation": "读取最近时刻的分区场，将完整场写到主算例时间目录。"
+      },
+      {
+        "title": "只重建部分场",
+        "code": "reconstructPar -latestTime -fields \"(U p)\"",
+        "explanation": "仅合并速度和压力，可减少读写量。字段名使用实际求解器输出的名称。"
+      },
+      {
+        "title": "选择时间范围",
+        "code": "reconstructPar -time \"0.1:0.5\"",
+        "explanation": "合并 0.1 至 0.5 范围内已存在的时刻。动态网格或拓扑变化算例还需处理各时刻的网格。"
+      }
+    ]
+  },
+  "reconstructParMesh": {
+    "summary": "将分区网格重新合成为完整网格。",
+    "example": "reconstructParMesh -constant",
+    "body": "## 重建静态网格\n\n```bash\nreconstructParMesh -constant\n```\n\n用于网格位于各分区 `constant/polyMesh` 的情况，常见于并行网格生成。\n\n## 重建最近时刻网格\n\n```bash\nreconstructParMesh -latestTime\n```\n\n选择最新时间的网格。网格重建完成后，再用 `reconstructPar` 合并相应场。",
+    "examples": [
+      {
+        "title": "重建静态网格",
+        "code": "reconstructParMesh -constant",
+        "explanation": "用于网格位于各分区 `constant/polyMesh` 的情况，常见于并行网格生成。"
+      },
+      {
+        "title": "重建最近时刻网格",
+        "code": "reconstructParMesh -latestTime",
+        "explanation": "选择最新时间的网格。网格重建完成后，再用 `reconstructPar` 合并相应场。"
+      }
+    ]
+  },
+  "setFields": {
+    "summary": "按 setFieldsDict 为场赋初始值。",
+    "example": "setFields",
+    "body": "## 初始化体积分数\n\n```bash\nsetFields\n```\n\n先准备目标场，例如 `0/alpha.water`。工具先应用 `defaultFieldValues`，再按 `regions` 顺序写入选定区域。\n\n## 选择初始化文件\n\n```bash\nsetFields -dict system/setFieldsDict.waterColumn\n```\n\n可以保存不同水柱位置的配置。每次改变初值后，在求解前显示 `alpha.water`，检查水柱范围和体积。",
+    "examples": [
+      {
+        "title": "初始化体积分数",
+        "code": "setFields",
+        "explanation": "先准备目标场，例如 `0/alpha.water`。工具先应用 `defaultFieldValues`，再按 `regions` 顺序写入选定区域。"
+      },
+      {
+        "title": "选择初始化文件",
+        "code": "setFields -dict system/setFieldsDict.waterColumn",
+        "explanation": "可以保存不同水柱位置的配置。每次改变初值后，在求解前显示 `alpha.water`，检查水柱范围和体积。"
+      }
+    ]
+  },
+  "topoSet": {
+    "summary": "按照 topoSetDict 创建单元、面和点的集合及区域。",
+    "example": "topoSet",
+    "body": "## 生成集合\n\n```bash\ntopoSet\n```\n\n依次执行字典中的 `actions`。例如先用 `boxToCell` 建立 cellSet，再用 `setToCellZone` 转成供物理模型读取的 cellZone。\n\n## 使用独立区域配置\n\n```bash\ntopoSet -dict system/topoSetDict.rotor\n```\n\n把转子、加热区等选择操作分别保存，便于调整几何范围。模型读入的 zone 名称必须与这里生成的名称一致。",
+    "examples": [
+      {
+        "title": "生成集合",
+        "code": "topoSet",
+        "explanation": "依次执行字典中的 `actions`。例如先用 `boxToCell` 建立 cellSet，再用 `setToCellZone` 转成供物理模型读取的 cellZone。"
+      },
+      {
+        "title": "使用独立区域配置",
+        "code": "topoSet -dict system/topoSetDict.rotor",
+        "explanation": "把转子、加热区等选择操作分别保存，便于调整几何范围。模型读入的 zone 名称必须与这里生成的名称一致。"
+      }
+    ]
+  },
+  "mapFields": {
+    "summary": "把源算例的场映射到目标算例网格。",
+    "example": "mapFields ../coarseCase -sourceTime latestTime -consistent",
+    "body": "## 映射同类边界\n\n```bash\nmapFields ../coarseCase -sourceTime latestTime -consistent\n```\n\n在目标算例中执行。`../coarseCase` 是源算例；`latestTime` 选择源结果；`-consistent` 适合两边边界拓扑匹配的情况。\n\n## 映射不同边界\n\n```bash\nmapFields ../sourceCase -sourceTime 0.5\n```\n\n在目标的 `system/mapFieldsDict` 设置 `patchMap` 和 `cuttingPatches`。映射后检查初始场范围和边界，尤其是新网格中源域未覆盖的区域。",
+    "examples": [
+      {
+        "title": "映射同类边界",
+        "code": "mapFields ../coarseCase -sourceTime latestTime -consistent",
+        "explanation": "在目标算例中执行。`../coarseCase` 是源算例；`latestTime` 选择源结果；`-consistent` 适合两边边界拓扑匹配的情况。"
+      },
+      {
+        "title": "映射不同边界",
+        "code": "mapFields ../sourceCase -sourceTime 0.5",
+        "explanation": "在目标的 `system/mapFieldsDict` 设置 `patchMap` 和 `cuttingPatches`。映射后检查初始场范围和边界，尤其是新网格中源域未覆盖的区域。"
+      }
+    ]
+  },
+  "postProcess": {
+    "summary": "对已有结果执行函数对象，生成派生场或统计数据。",
+    "example": "postProcess -list",
+    "body": "## 列出预配置函数\n\n```bash\npostProcess -list\n```\n\n输出可直接通过 `-func` 调用的预配置名称。函数对象类型还可写入 `controlDict/functions`。\n\n## 计算速度大小\n\n```bash\npostProcess -func \"mag(U)\" -latestTime\n```\n\n在最新时刻读取 `U` 并生成速度大小场。引号让带括号的函数表达式作为一个参数传入。\n\n## 调用求解器后处理\n\n```bash\nsimpleFoam -postProcess -func yPlus -latestTime\n```\n\n需要湍流模型等求解器对象时，使用对应求解器的 `-postProcess` 入口。本例应在 `simpleFoam` 湍流算例中运行。",
+    "examples": [
+      {
+        "title": "列出预配置函数",
+        "code": "postProcess -list",
+        "explanation": "输出可直接通过 `-func` 调用的预配置名称。函数对象类型还可写入 `controlDict/functions`。"
+      },
+      {
+        "title": "计算速度大小",
+        "code": "postProcess -func \"mag(U)\" -latestTime",
+        "explanation": "在最新时刻读取 `U` 并生成速度大小场。引号让带括号的函数表达式作为一个参数传入。"
+      },
+      {
+        "title": "调用求解器后处理",
+        "code": "simpleFoam -postProcess -func yPlus -latestTime",
+        "explanation": "需要湍流模型等求解器对象时，使用对应求解器的 `-postProcess` 入口。本例应在 `simpleFoam` 湍流算例中运行。"
+      }
+    ]
+  },
+  "foamToVTK": {
+    "summary": "将 OpenFOAM 网格和场转换为 VTK 数据。",
+    "example": "foamToVTK -latestTime",
+    "body": "## 导出最新时刻\n\n```bash\nfoamToVTK -latestTime\n```\n\n结果写入 VTK 输出目录，便于在其他后处理工具中打开。\n\n## 只导出速度和压力\n\n```bash\nfoamToVTK -latestTime -fields \"(U p)\"\n```\n\n限制导出字段可以减少文件大小。点数据和单元数据含义不同，绘图时保留所选数据关联。\n\n## 导出一段时间\n\n```bash\nfoamToVTK -time \"0.1:0.5\"\n```\n\n只导出指定时间范围中已有的结果，适合制作短时间段动画。",
+    "examples": [
+      {
+        "title": "导出最新时刻",
+        "code": "foamToVTK -latestTime",
+        "explanation": "结果写入 VTK 输出目录，便于在其他后处理工具中打开。"
+      },
+      {
+        "title": "只导出速度和压力",
+        "code": "foamToVTK -latestTime -fields \"(U p)\"",
+        "explanation": "限制导出字段可以减少文件大小。点数据和单元数据含义不同，绘图时保留所选数据关联。"
+      },
+      {
+        "title": "导出一段时间",
+        "code": "foamToVTK -time \"0.1:0.5\"",
+        "explanation": "只导出指定时间范围中已有的结果，适合制作短时间段动画。"
+      }
+    ]
+  },
+  "paraFoam": {
+    "summary": "打开算例的 ParaView 可视化入口。",
+    "example": "paraFoam",
+    "body": "## 打开当前算例\n\n```bash\nparaFoam\n```\n\n在算例目录运行，使用环境中配置的 ParaView 和读取器。打开后选择需要的场并点击 Apply。\n\n## 使用 ParaView 内置读取器\n\n```bash\nparaFoam -builtin\n```\n\n使用内置 OpenFOAM Reader。需要远程读取或本地没有 OpenFOAM 插件时，这种方式通常更方便。\n\n## 仅创建入口文件\n\n```bash\nparaFoam -touch\n```\n\n创建读取器入口后退出，随后可在 ParaView 中手动打开。",
+    "examples": [
+      {
+        "title": "打开当前算例",
+        "code": "paraFoam",
+        "explanation": "在算例目录运行，使用环境中配置的 ParaView 和读取器。打开后选择需要的场并点击 Apply。"
+      },
+      {
+        "title": "使用 ParaView 内置读取器",
+        "code": "paraFoam -builtin",
+        "explanation": "使用内置 OpenFOAM Reader。需要远程读取或本地没有 OpenFOAM 插件时，这种方式通常更方便。"
+      },
+      {
+        "title": "仅创建入口文件",
+        "code": "paraFoam -touch",
+        "explanation": "创建读取器入口后退出，随后可在 ParaView 中手动打开。"
+      }
+    ]
+  },
+  "foamLog": {
+    "summary": "从求解日志提取残差、迭代次数和其他监测量。",
+    "example": "foamLog log.simpleFoam",
+    "body": "## 提取残差\n\n```bash\nfoamLog log.simpleFoam\n```\n\n在 `logs` 目录生成数据文件。通常可见 `p_0`、`Ux_0` 等名称，具体取决于日志实际包含的字段。\n\n## 监控提取结果\n\n```bash\nfoamMonitor -l logs/p_0\n```\n\n`-l` 使用对数纵轴。残差下降表示方程迭代误差减小，还可同时比较压降、流量等目标量。",
+    "examples": [
+      {
+        "title": "提取残差",
+        "code": "foamLog log.simpleFoam",
+        "explanation": "在 `logs` 目录生成数据文件。通常可见 `p_0`、`Ux_0` 等名称，具体取决于日志实际包含的字段。"
+      },
+      {
+        "title": "监控提取结果",
+        "code": "foamMonitor -l logs/p_0",
+        "explanation": "`-l` 使用对数纵轴。残差下降表示方程迭代误差减小，还可同时比较压降、流量等目标量。"
+      }
+    ]
+  },
+  "foamMonitor": {
+    "summary": "用绘图工具查看并更新时序数据。",
+    "example": "foamLog log.simpleFoam\nfoamMonitor -l logs/p_0",
+    "body": "## 绘制压力残差\n\n```bash\nfoamLog log.simpleFoam\nfoamMonitor -l logs/p_0\n```\n\n先将求解日志转成列数据，再绘图。该脚本依赖相应绘图程序；文件名称以 `foamLog` 输出为准。\n\n## 绘制多个分量\n\n```bash\nfoamMonitor -l logs/Ux_0\n```\n\n该命令一次读取一个文件。另开终端运行 foamMonitor -l logs/Uy_0，可分别观察两个速度分量。多列数据则可放在同一文件中绘图。",
+    "examples": [
+      {
+        "title": "绘制压力残差",
+        "code": "foamLog log.simpleFoam\nfoamMonitor -l logs/p_0",
+        "explanation": "先将求解日志转成列数据，再绘图。该脚本依赖相应绘图程序；文件名称以 `foamLog` 输出为准。"
+      },
+      {
+        "title": "绘制多个分量",
+        "code": "foamMonitor -l logs/Ux_0",
+        "explanation": "该命令一次读取一个文件。另开终端运行 foamMonitor -l logs/Uy_0，可分别观察两个速度分量。多列数据则可放在同一文件中绘图。"
+      }
+    ]
+  },
+  "wmake": {
+    "summary": "读取 Make/files 和 Make/options，编译 OpenFOAM 应用或共享库。",
+    "example": "wmake",
+    "body": "## 编译应用程序\n\n```bash\nwmake\n```\n\n在含 `Make` 目录的源码目录执行。`Make/files` 的 `EXE` 决定程序输出位置，`Make/options` 提供头文件路径和链接库。\n\n## 编译共享库\n\n```bash\nwmake libso\n```\n\n`Make/files` 使用 `LIB` 指定目标，`Make/options` 使用 `LIB_LIBS` 指定依赖。计算时通过 `controlDict/libs` 或程序链接加载生成的库。\n\n## 并行编译\n\n```bash\nwmake -j 4\n```\n\n最多并行执行 4 个编译任务。源码修改后再次执行 wmake，会根据依赖重新编译受影响的文件。",
+    "examples": [
+      {
+        "title": "编译应用程序",
+        "code": "wmake",
+        "explanation": "在含 `Make` 目录的源码目录执行。`Make/files` 的 `EXE` 决定程序输出位置，`Make/options` 提供头文件路径和链接库。"
+      },
+      {
+        "title": "编译共享库",
+        "code": "wmake libso",
+        "explanation": "`Make/files` 使用 `LIB` 指定目标，`Make/options` 使用 `LIB_LIBS` 指定依赖。计算时通过 `controlDict/libs` 或程序链接加载生成的库。"
+      },
+      {
+        "title": "并行编译",
+        "code": "wmake -j 4",
+        "explanation": "最多并行执行 4 个编译任务。源码修改后再次执行 wmake，会根据依赖重新编译受影响的文件。"
+      }
+    ]
+  },
+  "wclean": {
+    "summary": "清理当前源码目标的编译中间文件。",
+    "example": "wclean\nwmake",
+    "body": "## 清理应用后重新编译\n\n```bash\nwclean\nwmake\n```\n\n适合更换编译配置或排除旧中间文件影响。运行位置应为对应源码目录。\n\n## 清理并重编译共享库\n\n```bash\nwclean libso\nwmake libso\n```\n\n用于 Make/files 中以 LIB 声明的目标。头文件搜索和链接库仍由 Make/options 控制。",
+    "examples": [
+      {
+        "title": "清理应用后重新编译",
+        "code": "wclean\nwmake",
+        "explanation": "适合更换编译配置或排除旧中间文件影响。运行位置应为对应源码目录。"
+      },
+      {
+        "title": "清理并重编译共享库",
+        "code": "wclean libso\nwmake libso",
+        "explanation": "用于 Make/files 中以 LIB 声明的目标。头文件搜索和链接库仍由 Make/options 控制。"
+      }
+    ]
+  },
+  "runApplication": {
+    "summary": "在 Allrun 中执行程序并保存命名日志。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrunApplication blockMesh",
+    "body": "## 载入脚本函数\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrunApplication blockMesh\n```\n\n`runApplication` 是脚本函数。载入 RunFunctions 后调用，输出写入 `log.blockMesh`。默认情况下，同名日志已存在时会跳过，以避免重复运行。\n\n## 运行算例指定的求解器\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrunApplication $(getApplication)\n```\n\n`getApplication` 从 controlDict 读取 application，命令替换把名称传给 runApplication。脚本执行结果可在对应求解器日志中查看。",
+    "examples": [
+      {
+        "title": "载入脚本函数",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrunApplication blockMesh",
+        "explanation": "`runApplication` 是脚本函数。载入 RunFunctions 后调用，输出写入 `log.blockMesh`。默认情况下，同名日志已存在时会跳过，以避免重复运行。"
+      },
+      {
+        "title": "运行算例指定的求解器",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrunApplication $(getApplication)",
+        "explanation": "`getApplication` 从 controlDict 读取 application，命令替换把名称传给 runApplication。脚本执行结果可在对应求解器日志中查看。"
+      }
+    ]
+  },
+  "runParallel": {
+    "summary": "在 Allrun 中按算例分区设置启动并行程序。",
+    "example": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrunApplication decomposePar\nrunParallel $(getApplication)",
+    "body": "## 并行运行算例\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrunApplication decomposePar\nrunParallel $(getApplication)\n```\n\n先分解算例，再读取 controlDict 的 application 并启动并行求解。分区数来自 decomposeParDict，输出保存在求解器日志。\n\n## 用于并行网格生成\n\n```bash\nsource \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrunParallel snappyHexMesh -overwrite\n```\n\n在已分解的背景网格上运行。这里 -overwrite 传给 snappyHexMesh，控制生成网格的写出位置。",
+    "examples": [
+      {
+        "title": "并行运行算例",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrunApplication decomposePar\nrunParallel $(getApplication)",
+        "explanation": "先分解算例，再读取 controlDict 的 application 并启动并行求解。分区数来自 decomposeParDict，输出保存在求解器日志。"
+      },
+      {
+        "title": "用于并行网格生成",
+        "code": "source \"$WM_PROJECT_DIR/bin/tools/RunFunctions\"\nrunParallel snappyHexMesh -overwrite",
+        "explanation": "在已分解的背景网格上运行。这里 -overwrite 传给 snappyHexMesh，控制生成网格的写出位置。"
+      }
+    ]
+  },
+  "icoFoam": {
+    "summary": "使用 PISO 算法求解不可压缩瞬态层流。",
+    "example": "icoFoam > log.icoFoam 2>&1\ntail -n 20 log.icoFoam",
+    "body": "## 在配套算例中运行\n\n```bash\nicoFoam > log.icoFoam 2>&1\ntail -n 20 log.icoFoam\n```\n\n先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.icoFoam`。\n\n## 选择算例目录\n\n```bash\nicoFoam -case ../myCase\n```\n\n`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。\n\n## 查看支持的选项\n\n```bash\nicoFoam -help-full\n```\n\n帮助中的 `-parallel`、`-postProcess` 等选项可用于并行计算或后处理。物理模型和离散格式由算例字典设置。",
+    "examples": [
+      {
+        "title": "在配套算例中运行",
+        "code": "icoFoam > log.icoFoam 2>&1\ntail -n 20 log.icoFoam",
+        "explanation": "先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.icoFoam`。"
+      },
+      {
+        "title": "选择算例目录",
+        "code": "icoFoam -case ../myCase",
+        "explanation": "`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。"
+      },
+      {
+        "title": "查看支持的选项",
+        "code": "icoFoam -help-full",
+        "explanation": "帮助中的 `-parallel`、`-postProcess` 等选项可用于并行计算或后处理。物理模型和离散格式由算例字典设置。"
+      }
+    ]
+  },
+  "simpleFoam": {
+    "summary": "使用 SIMPLE 算法求解不可压缩稳态流动。",
+    "example": "simpleFoam > log.simpleFoam 2>&1\ntail -n 20 log.simpleFoam",
+    "body": "## 在配套算例中运行\n\n```bash\nsimpleFoam > log.simpleFoam 2>&1\ntail -n 20 log.simpleFoam\n```\n\n先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.simpleFoam`。\n\n## 选择算例目录\n\n```bash\nsimpleFoam -case ../myCase\n```\n\n`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。\n\n## 查看支持的选项\n\n```bash\nsimpleFoam -help-full\n```\n\n帮助中的 `-parallel`、`-postProcess` 等选项可用于并行计算或后处理。物理模型和离散格式由算例字典设置。",
+    "examples": [
+      {
+        "title": "在配套算例中运行",
+        "code": "simpleFoam > log.simpleFoam 2>&1\ntail -n 20 log.simpleFoam",
+        "explanation": "先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.simpleFoam`。"
+      },
+      {
+        "title": "选择算例目录",
+        "code": "simpleFoam -case ../myCase",
+        "explanation": "`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。"
+      },
+      {
+        "title": "查看支持的选项",
+        "code": "simpleFoam -help-full",
+        "explanation": "帮助中的 `-parallel`、`-postProcess` 等选项可用于并行计算或后处理。物理模型和离散格式由算例字典设置。"
+      }
+    ]
+  },
+  "pimpleFoam": {
+    "summary": "使用 PIMPLE 算法求解不可压缩瞬态流动。",
+    "example": "pimpleFoam > log.pimpleFoam 2>&1\ntail -n 20 log.pimpleFoam",
+    "body": "## 在配套算例中运行\n\n```bash\npimpleFoam > log.pimpleFoam 2>&1\ntail -n 20 log.pimpleFoam\n```\n\n先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.pimpleFoam`。\n\n## 选择算例目录\n\n```bash\npimpleFoam -case ../myCase\n```\n\n`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。\n\n## 查看支持的选项\n\n```bash\npimpleFoam -help-full\n```\n\n帮助中的 `-parallel`、`-postProcess` 等选项可用于并行计算或后处理。物理模型和离散格式由算例字典设置。",
+    "examples": [
+      {
+        "title": "在配套算例中运行",
+        "code": "pimpleFoam > log.pimpleFoam 2>&1\ntail -n 20 log.pimpleFoam",
+        "explanation": "先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.pimpleFoam`。"
+      },
+      {
+        "title": "选择算例目录",
+        "code": "pimpleFoam -case ../myCase",
+        "explanation": "`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。"
+      },
+      {
+        "title": "查看支持的选项",
+        "code": "pimpleFoam -help-full",
+        "explanation": "帮助中的 `-parallel`、`-postProcess` 等选项可用于并行计算或后处理。物理模型和离散格式由算例字典设置。"
+      }
+    ]
+  },
+  "interFoam": {
+    "summary": "使用 VOF 方法计算两种不可压缩、不混溶流体的界面运动。",
+    "example": "interFoam > log.interFoam 2>&1\ntail -n 20 log.interFoam",
+    "body": "## 在配套算例中运行\n\n```bash\ninterFoam > log.interFoam 2>&1\ntail -n 20 log.interFoam\n```\n\n先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.interFoam`。\n\n## 选择算例目录\n\n```bash\ninterFoam -case ../myCase\n```\n\n`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。\n\n## 查看支持的选项\n\n```bash\ninterFoam -help-full\n```\n\n帮助中的 `-parallel`、`-postProcess` 等选项可用于并行计算或后处理。物理模型和离散格式由算例字典设置。",
+    "examples": [
+      {
+        "title": "在配套算例中运行",
+        "code": "interFoam > log.interFoam 2>&1\ntail -n 20 log.interFoam",
+        "explanation": "先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.interFoam`。"
+      },
+      {
+        "title": "选择算例目录",
+        "code": "interFoam -case ../myCase",
+        "explanation": "`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。"
+      },
+      {
+        "title": "查看支持的选项",
+        "code": "interFoam -help-full",
+        "explanation": "帮助中的 `-parallel`、`-postProcess` 等选项可用于并行计算或后处理。物理模型和离散格式由算例字典设置。"
+      }
+    ]
+  },
+  "laplacianFoam": {
+    "summary": "求解温度等标量的拉普拉斯扩散问题。",
+    "example": "laplacianFoam > log.laplacianFoam 2>&1\ntail -n 20 log.laplacianFoam",
+    "body": "## 在配套算例中运行\n\n```bash\nlaplacianFoam > log.laplacianFoam 2>&1\ntail -n 20 log.laplacianFoam\n```\n\n先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.laplacianFoam`。\n\n## 选择算例目录\n\n```bash\nlaplacianFoam -case ../myCase\n```\n\n`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。\n\n## 查看支持的选项\n\n```bash\nlaplacianFoam -help-full\n```\n\n帮助中的 `-parallel`、`-postProcess` 等选项可用于并行计算或后处理。物理模型和离散格式由算例字典设置。",
+    "examples": [
+      {
+        "title": "在配套算例中运行",
+        "code": "laplacianFoam > log.laplacianFoam 2>&1\ntail -n 20 log.laplacianFoam",
+        "explanation": "先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.laplacianFoam`。"
+      },
+      {
+        "title": "选择算例目录",
+        "code": "laplacianFoam -case ../myCase",
+        "explanation": "`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。"
+      },
+      {
+        "title": "查看支持的选项",
+        "code": "laplacianFoam -help-full",
+        "explanation": "帮助中的 `-parallel`、`-postProcess` 等选项可用于并行计算或后处理。物理模型和离散格式由算例字典设置。"
+      }
+    ]
+  },
+  "scalarTransportFoam": {
+    "summary": "求解给定速度场中的被动标量输运。",
+    "example": "scalarTransportFoam > log.scalarTransportFoam 2>&1\ntail -n 20 log.scalarTransportFoam",
+    "body": "## 在配套算例中运行\n\n```bash\nscalarTransportFoam > log.scalarTransportFoam 2>&1\ntail -n 20 log.scalarTransportFoam\n```\n\n先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.scalarTransportFoam`。\n\n## 选择算例目录\n\n```bash\nscalarTransportFoam -case ../myCase\n```\n\n`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。\n\n## 查看支持的选项\n\n```bash\nscalarTransportFoam -help-full\n```\n\n本程序支持 `-parallel` 并行运行，也可用 `-dry-run` 检查设置、用 `-listFvOptions` 查询源项类型。",
+    "examples": [
+      {
+        "title": "在配套算例中运行",
+        "code": "scalarTransportFoam > log.scalarTransportFoam 2>&1\ntail -n 20 log.scalarTransportFoam",
+        "explanation": "先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.scalarTransportFoam`。"
+      },
+      {
+        "title": "选择算例目录",
+        "code": "scalarTransportFoam -case ../myCase",
+        "explanation": "`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。"
+      },
+      {
+        "title": "查看支持的选项",
+        "code": "scalarTransportFoam -help-full",
+        "explanation": "本程序支持 `-parallel` 并行运行，也可用 `-dry-run` 检查设置、用 `-listFvOptions` 查询源项类型。"
+      }
+    ]
+  },
+  "potentialFoam": {
+    "summary": "求解势流方程，常用于初始化速度与通量。",
+    "example": "potentialFoam > log.potentialFoam 2>&1\ntail -n 20 log.potentialFoam",
+    "body": "## 在配套算例中运行\n\n```bash\npotentialFoam > log.potentialFoam 2>&1\ntail -n 20 log.potentialFoam\n```\n\n先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.potentialFoam`。\n\n## 选择算例目录\n\n```bash\npotentialFoam -case ../myCase\n```\n\n`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。\n\n## 查看支持的选项\n\n```bash\npotentialFoam -help-full\n```\n\n`-initialiseUBCs` 初始化速度边界，`-writep` 写出压力，`-writePhi` 写出势函数，`-writephi` 写出面通量；大小写分别代表不同字段。",
+    "examples": [
+      {
+        "title": "在配套算例中运行",
+        "code": "potentialFoam > log.potentialFoam 2>&1\ntail -n 20 log.potentialFoam",
+        "explanation": "先完成配套算例的网格和初始化步骤。`>` 将标准输出写入日志，`2>&1` 将错误输出写到同一文件。计算结束后，`tail -n 20` 显示日志末尾。计算过程中查看日志时，在第二个终端执行 `tail -f log.potentialFoam`。"
+      },
+      {
+        "title": "选择算例目录",
+        "code": "potentialFoam -case ../myCase",
+        "explanation": "`myCase` 应是为该求解器准备好的算例。网格位于 `constant/polyMesh`，时间与写出设置位于 `system/controlDict`。"
+      },
+      {
+        "title": "查看支持的选项",
+        "code": "potentialFoam -help-full",
+        "explanation": "`-initialiseUBCs` 初始化速度边界，`-writep` 写出压力，`-writePhi` 写出势函数，`-writephi` 写出面通量；大小写分别代表不同字段。"
+      }
+    ]
+  },
+  "create-mpi-config": {
+    "summary": "生成 MPI 的打包配置，记录编译和链接设置。"
+  },
+  "createMingwRuntime": {
+    "summary": "将交叉编译的 MinGW 程序、DLL 和公共文件打包为 Windows 运行目录。"
+  },
+  "doxyFilter": {
+    "summary": "为 Doxygen 过滤源码注释，控制求解器和工具程序文档的生成范围。"
+  },
+  "findEmptyMake": {
+    "summary": "查找缺少 files 或 options 的 Make 目录。"
+  },
+  "foamConfigurePaths": {
+    "summary": "修改环境配置中的安装版本和硬编码路径。"
+  },
+  "foamCreateCompletionCache": {
+    "summary": "生成 OpenFOAM 命令补全缓存。"
+  },
+  "foamCreateManpage": {
+    "summary": "根据程序的 -help-man 输出生成手册页。"
+  },
+  "foamCreateModuleInclude": {
+    "summary": "生成供环境模块系统使用的设置草稿。"
+  },
+  "foamGrepExeTargets": {
+    "summary": "列出 Make/files 中的可执行文件目标，便于检查构建结果。"
+  },
+  "foamGrepLibTargets": {
+    "summary": "列出库的编译链接目标。"
+  },
+  "foamPackRelease": {
+    "summary": "生成打包 OpenFOAM 源码和子模块的脚本。"
+  },
+  "foamUpdateCaseFileHeader": {
+    "summary": "更新算例文件头并合并连续空行。"
+  },
+  "git-find-non-ascii": {
+    "summary": "在 Git 管理的源文件中查找非 ASCII 字符。"
+  },
+  "git-find-trailingspace": {
+    "summary": "查找源码行末的多余空白。"
+  },
+  "help-filter": {
+    "summary": "过滤 -help-full 的输出，供文档生成使用。"
+  },
+  "install-dirs": {
+    "summary": "安装与处理器架构无关的公共目录。"
+  },
+  "install-platform": {
+    "summary": "安装已编译的 bin 和 lib 平台目录。"
+  },
+  "lib-dir": {
+    "summary": "查找 lib 或 lib64 目录，并输出 shell 或 Make 使用的库路径设置。"
+  },
+  "pre-commit-hook": {
+    "summary": "在 Git 提交前检查源码中的制表符和行宽。"
+  },
+  "pre-receive-hook": {
+    "summary": "在 Git 接收提交时检查源码格式。"
+  },
+  "query-detect": {
+    "summary": "调用依赖检测脚本，列出发现的软件位置。"
+  },
+  "query-versions": {
+    "summary": "读取 ThirdParty 环境配置中的软件版本。"
+  },
+  "vscode-settings": {
+    "summary": "输出 OpenFOAM 的 VS Code 工作区设置。"
+  },
+  "dirToString": {
+    "summary": "将目录路径转换为驼峰式名称。"
+  },
+  "makeDepend": {
+    "summary": "封装预处理器的依赖生成命令，供构建规则使用。"
+  },
+  "makeFiles": {
+    "summary": "扫描源码并生成 Make/files。"
+  },
+  "makeOptions": {
+    "summary": "生成 Make/options 文件。"
+  },
+  "makeParser": {
+    "summary": "预生成 Ragel 或 Lemon 解析器代码。"
+  },
+  "makeTargetDir": {
+    "summary": "为指定目标文件创建父目录。"
+  },
+  "wcleanObjects": {
+    "summary": "清理项目 build 目录中的指定平台编译中间文件。"
+  },
+  "wmake-build-info": {
+    "summary": "显示项目版本和编译信息。"
+  },
+  "wmake-check-dir": {
+    "summary": "比较解析后的绝对目录；相同时返回退出码 0。"
+  },
+  "wmake-with-bear": {
+    "summary": "通过 Bear 调用 wmake，生成编译命令数据库。"
+  },
+  "wmakeFilesAndOptions": {
+    "summary": "扫描当前源码目录并生成 Make/files 和 Make/options。"
+  },
+  "wmakeWindowsDlOpenLibs": {
+    "summary": "为 Windows 程序生成运行时加载的动态库列表。"
+  },
+  "wrap-bison": {
+    "summary": "封装 Bison，调整生成文件的名称和位置。"
+  },
+  "wrap-lemon": {
+    "summary": "使用 OpenFOAM 的解析器模板封装 Lemon。"
+  },
+  "wcleanLnIncludeAll": {
+    "summary": "删除目录树中的 lnInclude 头文件链接目录。"
+  },
+  "wdep": {
+    "summary": "定位源文件对应的 .dep 依赖文件。"
+  },
+  "wmakeCollect": {
+    "summary": "调度并行编译任务。"
+  },
+  "wmakeLnInclude": {
+    "summary": "将头文件和模板实现链接到 lnInclude 目录。"
+  },
+  "wmakeLnIncludeAll": {
+    "summary": "为目录树中的库生成 lnInclude 链接目录。"
+  },
+  "wrmdep": {
+    "summary": "清理指定源文件或当前目标的依赖文件。"
+  },
+  "wrmo": {
+    "summary": "清理指定源文件或当前目标的对象文件。"
+  }
+}

@@ -1,19 +1,19 @@
 ---
-title: "setFields  按几何区域初始化场"
+title: "setFields · 按 setFieldsDict 为场赋初始值"
 layout: reference
-description: "读取 setFieldsDict，通常在网格生成后、分区前执行。"
+description: "按 setFieldsDict 为场赋初始值。"
+cms_slug: "command-setfields"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>读取 setFieldsDict，通常在网格生成后、分区前执行。</p><h2>v2512 源码中的用途</h2><p>Set values on a selected set of cells/patch-faces via a dictionary.</p><h2>使用入口</h2><pre><code class="language-bash">setFields</code></pre><h2>使用条件与核对</h2><p>读取 setFieldsDict，通常在网格生成后、分区前执行。 用法：setFields [-dict 文件] 示例：setFields
-源码说明：Set values on a selected set of cells/patch-faces via a dictionary.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-allAreas -area-region -area-regions -case -constant -debug-switch -decomposeParDict -dict -doc -doc-source -fileHandler -help -help-compat -help-full -help-man -help-notes -hostRoots -info-switch -latestTime -lib -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-finite-area -no-libs -noZero -opt-switch -parallel -region -roots -time -world</p><p>关联配置：<a href="/dictionaries/system-setfieldsdict/">setFieldsDict</a> · <a href="/dictionaries/0-alpha-water/">alpha.water</a></p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/setfields.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: setFields
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/preProcessing/setFields/setFields.C
 
-
-Usage: setFields [OPTIONS]
+<p>按 setFieldsDict 为场赋初始值。</p><h2>初始化体积分数</h2>
+<pre><code class="language-bash">setFields
+</code></pre>
+<p>先准备目标场，例如 <code>0/alpha.water</code>。工具先应用 <code>defaultFieldValues</code>，再按 <code>regions</code> 顺序写入选定区域。</p>
+<h2>选择初始化文件</h2>
+<pre><code class="language-bash">setFields -dict system/setFieldsDict.waterColumn
+</code></pre>
+<p>可以保存不同水柱位置的配置。每次改变初值后，在求解前显示 <code>alpha.water</code>，检查水柱范围和体积。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allAreas</td><td>Use all regions in finite-area regionProperties Specify area-mesh region. Eg, -area-region shell Use specified area region. Eg, -area-regions film Or from regionProperties.  Eg, -area-regions &#x27;(film &quot;solid.*&quot;)&#x27;</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-no-finite-area</td><td>Suppress handling of finite-area mesh/fields</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;value&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-setfieldsdict/">setFieldsDict</a> · <a href="/dictionaries/0-alpha-water/">alpha.water</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: setFields [OPTIONS]
 Options:
   -allAreas         Use all regions in finite-area regionProperties
   -area-region &lt;name&gt;
@@ -69,5 +69,4 @@ Set values on a selected set of cells/patch-faces via a dictionary
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/preProcessing/setFields/setFields.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/preProcessing/setFields/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/preProcessing/setFields/setFields.C">源码与说明</a> · <a href="/assets/command-help/setfields.txt">帮助文本</a></p>

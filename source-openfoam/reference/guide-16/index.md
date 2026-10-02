@@ -1,10 +1,11 @@
 ---
 title: "第 16 章　system/snappyHexMeshDict"
 layout: reference
-description: "OpenCFD v2512 system/snappyHexMeshDict；包含原理、示例与版本核对。"
+description: "system/snappyHexMeshDict：用法与配置实例。"
+cms_slug: "reference-guide-16"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>16.1 三阶段开关与总体结构</h2>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>16.1 三阶段开关与总体结构</h2>
 <pre><code class="language-openfoam">castellatedMesh true;      // ① 按几何切割背景网格 + 局部加密
 snap            true;      // ② 把切割后的网格贴合到几何表面
 addLayers       true;      // ③ 在壁面上长边界层
@@ -146,4 +147,3 @@ blockMesh                                          # 造背景网格
 surfaceFeatureExtract                              # 提特征边
 snappyHexMesh -overwrite                           # 生成
 checkMesh -allGeometry -allTopology                # 验收</code></pre>
-{% endraw %}

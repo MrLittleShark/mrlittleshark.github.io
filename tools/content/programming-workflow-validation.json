@@ -1,0 +1,38 @@
+{
+  "workspace": "F:/UbuntuShareFolder/.foamlab-build/programming-workflow-checks",
+  "version": "OpenFOAM v2512",
+  "programming-06": {
+    "compile": "passed",
+    "run": "passed",
+    "observed": [
+      "Default value 0",
+      "New value 10",
+      "basicFunction result 20",
+      "Yet another value 400",
+      "after reset = 0"
+    ],
+    "log": "run06.log"
+  },
+  "programming-07": {
+    "compile": "passed",
+    "run": "passed",
+    "original_max_radius_m": 0.0689656,
+    "moved_origin_max_radius_m": 0.139665,
+    "logs": [
+      "run07.log",
+      "run07-origin.log"
+    ],
+    "note": "max(r) includes internal and boundary field values; internal-only maximum differs"
+  },
+  "programming-09": {
+    "compile": "passed",
+    "change": "checkedZoneId helper and constructor call",
+    "log": "build09.log"
+  },
+  "programming-08": {
+    "review": "parabolic formula, paths, variable substitutions and full updateCoeffs checked against ZIP; new walkthrough not independently run"
+  },
+  "programming-11": {
+    "review": "point list and scaling experiment checked against ZIP; new walkthrough not independently run"
+  }
+}

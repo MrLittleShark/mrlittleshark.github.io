@@ -1,19 +1,11 @@
 ---
-title: "foamToGMV  导出 GMV 后处理数据"
+title: "foamToGMV · 结果供支持 GMV 格式的软件读取"
 layout: reference
 description: "结果供支持 GMV 格式的软件读取。"
+cms_slug: "command-foamtogmv"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>结果供支持 GMV 格式的软件读取。</p><h2>v2512 源码中的用途</h2><p>Translate OpenFOAM output to GMV readable files. A free post-processor with available binaries from http://www-xdiv.lanl.gov/XCM/gmv/</p><h2>使用入口</h2><pre><code class="language-bash">foamToGMV</code></pre><h2>使用条件与核对</h2><p>结果供支持 GMV 格式的软件读取。 用法：foamToGMV [选项] 示例：foamToGMV
-源码说明：Translate OpenFOAM output to GMV readable files. A free post-processor with available binaries from http://www-xdiv.lanl.gov/XCM/gmv/
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-case -debug-switch -decomposeParDict -doc -doc-source -fileHandler -help -help-full -help-man -help-notes -hostRoots -info-switch -lib -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-libs -noFunctionObjects -opt-switch -parallel -roots -world</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/foamtogmv.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: foamToGMV
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToGMV/foamToGMV.C
 
-
-Usage: foamToGMV [OPTIONS]
+<p>结果供支持 GMV 格式的软件读取。</p><h2>用法</h2><pre><code class="language-bash">foamToGMV</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">foamToGMV -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamToGMV [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;
@@ -56,5 +48,4 @@ Translate OpenFOAM output to GMV readable files
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToGMV/foamToGMV.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToGMV/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToGMV/foamToGMV.C">源码与说明</a> · <a href="/assets/command-help/foamtogmv.txt">帮助文本</a></p>

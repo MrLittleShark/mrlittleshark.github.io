@@ -1,11 +1,34 @@
 ---
-title: "constant/phaseChangeProperties · phaseChangeProperties"
+title: "phaseChangeProperties"
 layout: reference
-description: "interCondensatingEvaporatingFoam 的凝结与蒸发模型配置。phaseChangeTwoPhaseModel 选择模型，constantCoeffs 中 coeffC 与 coeffE 分别控制凝结与蒸发模型系数。它与等温空化求解器在 transportProperties 中选择的相变模型不是同一套接口。"
+description: "interCondensatingEvaporatingFoam 的凝结与蒸发模型配置。"
 dictionary: true
+cms_slug: "dictionary-phasechangeproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>interCondensatingEvaporatingFoam 的凝结与蒸发模型配置。phaseChangeTwoPhaseModel 选择模型，constantCoeffs 中 coeffC 与 coeffE 分别控制凝结与蒸发模型系数。它与等温空化求解器在 transportProperties 中选择的相变模型不是同一套接口。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>phaseChangeTwoPhaseModel</td><td>相变模型名称，本页凝结教程选择 constant。</td></tr><tr><td>constantCoeffs</td><td>与 constant 模型对应的系数字典。</td></tr><tr><td>coeffC</td><td>凝结方向的模型系数，含义由该相变模型实现确定。</td></tr><tr><td>coeffE</td><td>蒸发方向的模型系数，不能假定与 coeffC 总应相等。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>phaseChangeTwoPhaseModel</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 2 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · multiphase/interCondensatingEvaporatingFoam/condensatingVessel</h3><p>原始路径：<code>tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel/constant/phaseChangeProperties</code>；求解器：<code>interCondensatingEvaporatingFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel/constant/phaseChangeProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/phasechangeproperties/1-phaseChangeProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>interCondensatingEvaporatingFoam 的凝结与蒸发模型配置。</p><p>位置：<code>constant/phaseChangeProperties</code></p><h2>配置实例</h2><p>multiphase/interCondensatingEvaporatingFoam/condensatingVessel 中的 phaseChangeProperties：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      phaseChangeProperties;
+}
+
+phaseChangeTwoPhaseModel constant;
+
+constantCoeffs
+{
+    coeffC          150;
+    coeffE          150;
+}</code></pre><h2>参数说明</h2><table><thead><tr><th>条目</th><th>含义</th></tr></thead><tbody><tr><td>phaseChangeTwoPhaseModel</td><td>相变模型名称，本页凝结教程选择 constant。</td></tr><tr><td>constantCoeffs</td><td>与 constant 模型对应的系数字典。</td></tr><tr><td>coeffC</td><td>凝结方向的模型系数，含义由该相变模型实现确定。</td></tr><tr><td>coeffE</td><td>蒸发方向的模型系数，不能假定与 coeffC 总应相等。</td></tr></tbody></table><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · multiphase/interCondensatingEvaporatingFoam/condensatingVessel</summary><p><code>condensatingVessel</code> 用温度偏离饱和值的程度驱动液汽相变。<code>constant</code> 表示相变速率系数为常数，局部速率仍随温度和相分数变化。</p>
+<ul>
+<li><code>coeffC 150</code> 控制凝结，<code>coeffE 150</code> 控制蒸发；本模型中的量纲均为 \(\mathrm{s^{-1}K^{-1}}\)。</li>
+<li>温度低于饱和温度时，凝结项与 \(\alpha_v\rho_v(T_{sat}-T)\) 成正比；高于饱和温度时，蒸发项与 \(\alpha_l\rho_l(T-T_{sat})\) 成正比。</li>
+<li>两个数值相同给出对称的温差系数，但两相密度与相分数不同，实际质量变化率会随流场变化。</li>
+<li>饱和温度和两相热物性来自热物性模型；本文件只指定相变模型与系数。</li>
+</ul>
+<p>例如保持过冷度和局部汽相状态不变，把 <code>coeffC</code> 从 150 改为 300，会使该凝结源项加倍。参数增大后，相分数和能量交换更快，需结合时间步及潜热收支观察收敛情况。</p>
+<p><a href="/assets/examples/v2512/phasechangeproperties/1-phaseChangeProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel/constant/phaseChangeProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -30,7 +53,15 @@ constantCoeffs
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam</h3><p>原始路径：<code>tutorials/verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam/constant/phaseChangeProperties</code>；求解器：<code>interCondensatingEvaporatingFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam/constant/phaseChangeProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/phasechangeproperties/2-phaseChangeProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam</summary><p>Stefan 问题通过界面移动与解析解比较相变计算。本例选择 <code>interfaceHeatResistance</code>，利用重建的界面面积与温差计算质量交换。</p>
+<ul>
+<li><code>R 1e6</code> 在该实现中的量纲是 \(\mathrm{W/(m^2K)}\)，作为界面换热系数乘以温差。相变质量率按“界面面积密度 × <code>R</code> × 温差 ÷ 潜热”计算。</li>
+<li><code>spread 3</code> 控制源项向邻近单元的平滑扩展，源码据此构造与局部网格尺度有关的扩散系数。</li>
+<li>界面几何从液相分数的 0.5 等值面重建；网格加密会改变界面面积的离散表示。</li>
+<li>文件还保留了 <code>maxAlphaRate 1</code>、<code>coeffC 0</code>、<code>coeffE 500</code>。当前 <code>interfaceHeatResistance</code> 实现读取的模型参数是 <code>R</code> 与 <code>spread</code>，调参应集中在这两项及温度、潜热和网格上。</li>
+</ul>
+<p>可固定网格分别改变 <code>R</code>、<code>spread</code>，比较界面位置曲线；再固定参数进行网格与时间步细化。这样可以区分界面换热强度、源项分布与离散误差。</p>
+<p><a href="/assets/examples/v2512/phasechangeproperties/2-phaseChangeProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam/constant/phaseChangeProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/verificationAndValidation/multiphase/StefanProblem/setups.orig/interCondensatingEvaporatingFoam">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -57,9 +88,4 @@ spread          3;
 coeffC          0;
 coeffE          500;
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/intercondensatingevaporatingfoam/">interCondensatingEvaporatingFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/phaseChangeProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/phaseChangeProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/intercondensatingevaporatingfoam/">interCondensatingEvaporatingFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

@@ -20,3 +20,8 @@ html[data-theme] :is(.brand small,.branch,.nav-label,.tiny-label,.breadcrumb,
 html[data-theme] .footer a{color:var(--lab-blue)}
 html[data-theme] .skip{background:var(--lab-panel);color:var(--lab-blue)}
 .science-cover figcaption{font-size:12px;line-height:1.7}
+/* Full-width tables; horizontal overflow belongs to the wrapper. */
+.prose table { display: table; width: 100%; max-width: none; overflow: visible; }
+.prose .table-scroll { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
+.prose .table-scroll > table { margin: 0; }
+.prose :is(th, td) { overflow-wrap: break-word; }

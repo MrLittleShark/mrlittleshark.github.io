@@ -1,4 +1,4 @@
-/* Scientific interface details. Decorative streamlines are a schematic, not CFD data. */
+/* Scientific interface details and a static aircraft illustration. */
 :root {
   --refine-panel: rgba(255, 255, 255, .90);
   --refine-chrome: rgba(255, 255, 255, .93);
@@ -20,12 +20,16 @@ html[data-theme="dark"] {
 ::selection { background: #c7e5f6; color: #133953; }
 html[data-theme="dark"] ::selection { background: #315d79; color: #f2faff; }
 
-/* One static vector field keeps the background light and does not consume animation time. */
+/* A light veil preserves text contrast over the static aircraft background. */
 .app-shell {
-  background-image: url('/assets/diagrams/site-streamlines.svg');
-  background-position: right -100px top 80px;
-  background-size: 1500px 1125px;
+  background-image: linear-gradient(rgba(245,249,252,.90), rgba(245,249,252,.96)), url('/assets/covers/foamlab-aircraft-background-v1.png');
+  background-position: center, center top;
+  background-size: cover;
+  background-attachment: fixed;
   background-repeat: no-repeat;
+}
+html[data-theme="dark"] .app-shell {
+  background-image: linear-gradient(rgba(9,23,37,.78), rgba(9,23,37,.95)), url('/assets/covers/foamlab-aircraft-background-v1.png');
 }
 html[data-theme] :is(.science-panel, .science-topic, .science-community-grid > a,
   .lab-card, .resource-card, .dictionary-card, .command-card, .issue-card,
@@ -127,7 +131,7 @@ html[data-theme] :is(a, button, summary, input, select, textarea, [tabindex]):fo
   100% { transform: scale(1); opacity: 0; }
 }
 @media (max-width: 760px) {
-  .app-shell { background-size: 1050px 788px; background-position: center top 280px; }
+  .app-shell { background-size: auto, auto 760px; background-position: center, 55% top; background-attachment: scroll; }
   .foam-ripple { width: 64px; height: 64px; margin: -32px 0 0 -32px; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -135,12 +139,12 @@ html[data-theme] :is(a, button, summary, input, select, textarea, [tabindex]):fo
   .foam-ripple::before, .foam-ripple::after { animation: none; }
 }
 @media (forced-colors: active) {
-  .app-shell { background-image: none; }
+  html[data-theme] .app-shell { background-image: none; }
   .foam-ripple-layer { display: none; }
   .nav-item:is(.active, [aria-current="page"]) { outline: 1px solid Highlight; }
 }
 @media print {
-  .app-shell { background-image: none; }
+  html[data-theme] .app-shell { background-image: none; }
   .foam-ripple-layer { display: none; }
   html[data-theme] :is(.science-panel, .science-topic, .science-community-grid > a,
     .lab-card, .resource-card, .dictionary-card, .command-card, .issue-card) {

@@ -1,83 +1,86 @@
 ---
-title: "system/fvSolution · fvSolution"
+title: "fvSolution"
 layout: reference
-description: "SIMPLE、PISO 和 PIMPLE 分别采用对应的算法子字典。SIMPLE 常用 nNonOrthogonalCorrectors、consistent、residualControl 和 pRefCell/pRefValue；PISO 通过 nCorrectors 控制校正次数；PIMPLE 另设 nOuterCorrectors 控制外迭代。压力方程需要参考值且求解器采用该机制时，设置 pRefCell 和 pRefValue。"
+description: "设置线性方程求解器、收敛容差、压力速度耦合和欠松弛。"
 dictionary: true
+cms_slug: "dictionary-fvsolution"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>SIMPLE、PISO 和 PIMPLE 分别采用对应的算法子字典。SIMPLE 常用 nNonOrthogonalCorrectors、consistent、residualControl 和 pRefCell/pRefValue；PISO 通过 nCorrectors 控制校正次数；PIMPLE 另设 nOuterCorrectors 控制外迭代。压力方程需要参考值且求解器采用该机制时，设置 pRefCell 和 pRefValue。</p><figure><img src="/assets/diagrams/reference-4.svg" alt="数值方法配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/fvSolution</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>solvers</code> · <code>solver</code> · <code>tolerance</code> · <code>relTol</code> · <code>preconditioner</code> · <code>smoother</code> · <code>PISO</code> · <code>PIMPLE</code> · <code>SIMPLE</code> · <code>nCorrectors</code> · <code>nOuterCorrectors</code> · <code>nNonOrthogonalCorrectors</code> · <code>relaxationFactors</code> · <code>residualControl</code> · <code>pRefCell</code> · <code>pRefValue</code></p><h2>关联命令</h2><p><a href="/commands/?q=icoFoam">icoFoam</a> · <a href="/commands/?q=interFoam">interFoam</a> · <a href="/commands/?q=simpleFoam">simpleFoam</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/fvSolution -keywords
-icoFoam -help</code></pre><h2>8.3 system/fvSolution</h2><pre><code class="language-openfoam">FoamFile
-{
-    version 2.0; format ascii;
-    class dictionary; object fvSolution;
-}
-solvers
+
+<p>设置线性方程求解器、收敛容差、压力速度耦合和欠松弛。</p><p>位置：<code>system/fvSolution</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-pimple-pressure-coupling.png" alt="PIMPLE 外校正与 PISO 内校正" loading="lazy"><figcaption><strong>PIMPLE 外校正与 PISO 内校正</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module6.pdf，p. 96 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>fvSolution 控制代数求解和压力校正</h2>
+<p><code>system/fvSolution</code> 主要包含三类内容：各场的线性求解器、压力—速度耦合算法，以及需要时使用的松弛因子。下面是一份适用于 <code>icoFoam</code> 方腔的主体配置，放在 <code>FoamFile</code> 文件头之后：</p>
+<pre><code class="language-foam">solvers
 {
     p
     {
-        solver GAMG;
-        tolerance 1e-7;
+        solver PCG;
+        preconditioner DIC;
+        tolerance 1e-6;
         relTol 0.05;
-        smoother GaussSeidel;
     }
-    pFinal { $p; relTol 0; }
+    pFinal
+    {
+        $p;
+        relTol 0;
+    }
     U
     {
         solver smoothSolver;
         smoother symGaussSeidel;
-        tolerance 1e-8;
+        tolerance 1e-5;
         relTol 0;
     }
 }
-PIMPLE
+PISO
 {
-    nOuterCorrectors 2;
     nCorrectors 2;
     nNonOrthogonalCorrectors 0;
-    momentumPredictor yes;
     pRefCell 0;
     pRefValue 0;
 }
-relaxationFactors
+</code></pre>
+<h3>每次线性求解何时结束</h3>
+<p><code>solver</code> 选择算法，<code>preconditioner</code> 选择预条件器，<code>smoother</code> 选择平滑方法。PCG 适用于相应的对称正定系统；有对流项的非对称系统可使用 <code>PBiCGStab</code> 等算法。</p>
+<p><code>tolerance</code> 是归一化残差的绝对阈值，<code>relTol</code> 是相对本次初始残差的比例。初始残差为 0.01 时，<code>relTol 0.05</code> 对应 0.0005。满足相应停止条件后，本次线性求解结束；还可用 <code>maxIter</code> 限制最大迭代次数。</p>
+<p><code>pFinal</code> 先通过 <code>$p;</code> 继承压力配置，再关闭相对提前停止条件。最终校正采用更严格的压力求解，前面的校正可以较快完成。它使用同一个压力场。</p>
+<h3>校正次数怎么理解</h3>
+<p><code>nCorrectors 2</code> 表示每步做两次压力校正。<code>nNonOrthogonalCorrectors 0</code> 表示每次压力校正只做基础求解；取 1 则再增加一次非正交修正。封闭方腔需要压力基准，<code>pRefCell</code> 与 <code>pRefValue</code> 给出参考单元和参考压力。</p>
+<p>对于 <code>simpleFoam</code>，使用 <code>SIMPLE</code> 子字典；对于 <code>pimpleFoam</code>，使用 <code>PIMPLE</code>。以下片段替换算法控制部分，用在完整 <code>pimpleFoam</code> 算例中：</p>
+<pre><code class="language-foam">PIMPLE
 {
-    equations { U 1; }
-}</code></pre>
-<div class="table-scroll"><table>
-<tr><th>条目</th><th>含义</th><th>设置原则</th></tr>
-<tr><td>solver</td><td>线性代数求解器</td><td>PCG 适于相容的对称矩阵；PBiCGStab 可处理非对称矩阵；GAMG 为多重网格</td></tr>
-<tr><td>preconditioner</td><td>预条件器</td><td>DIC、DILU 等须与矩阵和 solver 相容</td></tr>
-<tr><td>smoother</td><td>平滑器</td><td>如 GaussSeidel、symGaussSeidel、DICGaussSeidel</td></tr>
-<tr><td>tolerance</td><td>绝对残差停止阈值</td><td>控制线性方程残差的停止条件</td></tr>
-<tr><td>relTol</td><td>相对本次求解初始残差的停止阈值</td><td>0 表示关闭相对阈值，常用于最终校正</td></tr>
-<tr><td>minIter、maxIter</td><td>线性迭代上下限</td><td>达到 maxIter 时结合残差判断收敛状态</td></tr>
-<tr><td>nSweeps</td><td>每组平滑扫描次数</td><td>仅适用求解器使用</td></tr>
-<tr><td>cacheAgglomeration</td><td>缓存 GAMG 聚合</td><td>静态网格可复用聚合结果</td></tr>
-<tr><td>nCellsInCoarsestLevel</td><td>GAMG 最粗层目标单元数</td><td>结合并行分区和收敛情况调整</td></tr>
-<tr><td>pFinal、UFinal 等</td><td>最后一次校正的专用设置</td><td>是否使用由求解器控制</td></tr>
-<tr><td>正则字段名</td><td>共享线性求解配置</td><td>如 &quot;(U|k|omega)&quot;，采用引号包围正则表达式</td></tr>
-<tr><td>relaxationFactors/fields</td><td>场松弛</td><td>如稳态 p 0.3</td></tr>
-<tr><td>relaxationFactors/equations</td><td>方程松弛</td><td>如稳态 U 0.7；较小因子降低更新幅度</td></tr>
-</table></div>
-<p>SIMPLE、PISO 和 PIMPLE 分别采用对应的算法子字典。SIMPLE 常用 nNonOrthogonalCorrectors、consistent、residualControl 和 pRefCell/pRefValue；PISO 通过 nCorrectors 控制校正次数；PIMPLE 另设 nOuterCorrectors 控制外迭代。压力方程需要参考值且求解器采用该机制时，设置 pRefCell 和 pRefValue。</p>
-<pre><code class="language-openfoam">// SIMPLE 片段：稳态算例
-SIMPLE
-{
+    momentumPredictor yes;
+    nOuterCorrectors 3;
+    nCorrectors 2;
     nNonOrthogonalCorrectors 0;
-    residualControl
+}
+</code></pre>
+<p>每个时间步做三轮外校正，每轮做两次压力校正。外循环允许动量系数与模型重复更新，适合需要更充分非线性耦合的情况。</p>
+<h3>稳态松弛</h3>
+<p>稳态 SIMPLE 算例常在文件末尾加入：</p>
+<pre><code class="language-foam">relaxationFactors
+{
+    fields
     {
-        p 1e-5;
-        U 1e-6;
-        &quot;(k|omega)&quot; 1e-6;
+        p 0.3;
+    }
+    equations
+    {
+        U 0.7;
+        "(k|epsilon)" 0.7;
     }
 }
-relaxationFactors
-{
-    fields { p 0.3; }
-    equations { U 0.7; k 0.7; omega 0.7; }
-}</code></pre>
-<p>residualControl 的结构由算法接口确定，部分 PIMPLE 控制采用 tolerance/relTol 子字典。收敛判定应同时考察残差、质量守恒及力、流量、温度等目标量的稳定性。</p>
-<h2>补充说明</h2><p>它管什么：每个方程用什么线性代数求解器、迭代到什么精度、外层算法（SIMPLE/PISO/PIMPLE）怎么循环、松弛因子多少。</p><h2>从真实配置理解关键条目</h2><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>solvers</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/icoFoam/cavity/cavity</h3><p>原始路径：<code>tutorials/incompressible/icoFoam/cavity/cavity/system/fvSolution</code>；求解器：<code>icoFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity/system/fvSolution">查看固定版本源码</a> · <a href="/assets/examples/v2512/fvsolution/1-fvSolution.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+</code></pre>
+<p><code>fields</code> 控制求解后场值的更新，<code>equations</code> 控制求解前矩阵的松弛。较小因子一般使更新更平缓，也可能增加迭代次数。正则键应匹配实际模型的场名。比较松弛因子时，观察达到相同目标量精度所需的耗时。</p>
+<p><code>residualControl</code> 用于 SIMPLE 或 PIMPLE 的外层收敛判断，<code>solvers</code> 的容差用于内层线性求解。二者放在不同层次，分别影响耦合迭代与每次矩阵求解。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/icoFoam/cavity/cavity</summary><p><code>icoFoam</code> 在每个时间步使用 PISO 修正压力和速度。这里同时规定线性方程的求解方式和一次时间步内的校正次数。</p>
+<ul>
+<li>压力 <code>p</code> 使用 <code>PCG</code>、<code>DIC</code>，绝对容差 <code>1e-6</code>，相对容差 <code>0.05</code>。普通压力求解可以在残差降到初始值的 5% 时结束，也可以因达到绝对容差而结束。</li>
+<li><code>pFinal</code> 通过 <code>$p</code> 继承压力设置，再令 <code>relTol 0</code>，使最后一次压力求解以绝对容差作为停止要求。</li>
+<li>速度 <code>U</code> 使用 <code>smoothSolver</code>、<code>symGaussSeidel</code>，容差为 <code>1e-5</code>，<code>relTol 0</code>。</li>
+<li><code>PISO/nCorrectors 2</code> 在每个时间步执行两次压力校正；<code>nNonOrthogonalCorrectors 0</code> 适用于配套正交网格，无额外非正交校正。</li>
+<li>方腔压力边界均为梯度条件，<code>pRefCell 0</code>、<code>pRefValue 0</code> 固定一个压力参考，消除任意常数。</li>
+</ul>
+<p>网格改变后先检查非正交性，再决定额外校正次数。<code>tolerance</code> 是线性残差的停止阈值，<code>writePrecision</code> 是文件输出位数，二者由不同字典管理。</p>
+<p><a href="/assets/examples/v2512/fvsolution/1-fvSolution.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity/system/fvSolution">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -105,7 +108,7 @@ solvers
 
     pFinal
     {
-        &#36;p;
+        $p;
         relTol          0;
     }
 
@@ -127,7 +130,16 @@ PISO
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · incompressible/simpleFoam/pitzDaily</h3><p>原始路径：<code>tutorials/incompressible/simpleFoam/pitzDaily/system/fvSolution</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily/system/fvSolution">查看固定版本源码</a> · <a href="/assets/examples/v2512/fvsolution/2-fvSolution.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · incompressible/simpleFoam/pitzDaily</summary><p>后台阶算例用 SIMPLE 外迭代求稳态流动；每轮外迭代内部还要求解压力、速度和湍流方程。</p>
+<ul>
+<li>压力使用 <code>GAMG</code> 多重网格求解，<code>tolerance 1e-6</code>、<code>relTol 0.1</code>，允许单轮线性求解先降到初始残差的十分之一。</li>
+<li><code>"(U|k|epsilon|omega|f|v2)"</code> 用一个正则表达式共用求解器设置，实际被读取的字段由所选湍流模型决定。</li>
+<li><code>SIMPLE/consistent yes</code> 开启一致性压力速度修正，即 SIMPLEC 风格处理；<code>nNonOrthogonalCorrectors 0</code> 表示没有额外非正交校正。</li>
+<li><code>residualControl</code> 把外迭代停止阈值设为压力 <code>1e-2</code>、速度和湍流变量 <code>1e-3</code>。它们与上面每次线性求解的 <code>tolerance</code> 分别控制不同层次。</li>
+<li><code>relaxationFactors/equations</code> 中 <code>U 0.9</code> 和 <code>".*" 0.9</code> 对方程进行欠松弛，减缓相邻外迭代的变化。</li>
+</ul>
+<p>如果回流区随迭代持续变化，可减小松弛系数并检查边界和网格。达到残差停止条件后，还应看回流长度、压降等目标量是否稳定，以决定阈值是否足够。</p>
+<p><a href="/assets/examples/v2512/fvsolution/2-fvSolution.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily/system/fvSolution">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -185,7 +197,16 @@ relaxationFactors
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · multiphase/interFoam/laminar/damBreak/damBreak</h3><p>原始路径：<code>tutorials/multiphase/interFoam/laminar/damBreak/damBreak/system/fvSolution</code>；求解器：<code>interFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/damBreak/damBreak/system/fvSolution">查看固定版本源码</a> · <a href="/assets/examples/v2512/fvsolution/3-fvSolution.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/damBreak/damBreak">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · multiphase/interFoam/laminar/damBreak/damBreak</summary><p>水柱塌落时需要同时更新体积分数、压力和速度。这个 <code>fvSolution</code> 使用一轮 PIMPLE 外校正，并在其中安排界面与压力校正。</p>
+<ul>
+<li><code>"alpha.water.*"</code> 匹配水体积分数相关求解条目。<code>nAlphaCorr 2</code> 执行两次相分数校正，<code>nAlphaSubCycles 1</code> 表示不把主时间步再拆成多个相分数子步。</li>
+<li><code>cAlpha 1</code> 设置界面压缩系数，<code>MULESCorr yes</code> 使用 MULES 修正，<code>nLimiterIter 5</code> 控制限制器迭代次数。它们共同影响界面锐度与有界性。</li>
+<li><code>p_rgh</code> 的容差为 <code>1e-7</code>、<code>relTol 0.05</code>；<code>p_rghFinal</code> 继承后将 <code>relTol</code> 设为 0，用较严格的最后一次压力求解收尾。</li>
+<li><code>PIMPLE/nOuterCorrectors 1</code> 每步一轮外校正，<code>nCorrectors 3</code> 为该轮设置三次压力校正，<code>nNonOrthogonalCorrectors 0</code> 不增加额外非正交求解。</li>
+<li><code>momentumPredictor no</code> 跳过单独的动量预测求解步骤，速度仍在压力速度耦合过程中更新。<code>relaxationFactors/equations/".*" 1</code> 不再通过小于 1 的系数增强欠松弛；方程松弛仍会检查和修正对角占优性。</li>
+</ul>
+<p>时间步增大后，可比较增加外校正次数对耦合误差的影响；相分数子循环主要细化界面输运时间步。改变这些设置时，同时比较水体积、前沿位置与每步成本。</p>
+<p><a href="/assets/examples/v2512/fvsolution/3-fvSolution.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/damBreak/damBreak/system/fvSolution">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interFoam/laminar/damBreak/damBreak">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -236,7 +257,7 @@ solvers
 
     p_rghFinal
     {
-        &#36;p_rgh;
+        $p_rgh;
         relTol          0;
     }
 
@@ -266,9 +287,4 @@ relaxationFactors
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/icofoam/">icoFoam</a> · <a href="/commands/interfoam/">interFoam</a> · <a href="/commands/simplefoam/">simpleFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/fvSolution&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/fvSolution&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>找不到离散项或场求解器</td><td>把错误中的完整键名与 fvSchemes / fvSolution 对照，注意 div(phi,U) 等键的精确拼写。</td></tr><tr><td>残差下降但目标量漂移</td><td>同时监测守恒误差、力或流量，并分别检查时间步与网格敏感性。</td></tr><tr><td>非正交修正导致成本增加</td><td>优先改善网格；增加修正次数不是无条件提高精度的办法。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/icofoam/">icoFoam</a> · <a href="/commands/interfoam/">interFoam</a> · <a href="/commands/simplefoam/">simpleFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>找不到离散项或场求解器</td><td>把错误中的完整键名与 fvSchemes / fvSolution 对照，注意 div(phi,U) 等键的精确拼写。</td></tr><tr><td>残差下降但目标量漂移</td><td>同时监测守恒误差、力或流量，并分别检查时间步与网格敏感性。</td></tr><tr><td>非正交修正导致成本增加</td><td>优先改善网格；增加修正次数其作用随网格质量和解的光滑程度变化，可通过细化对比评估。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

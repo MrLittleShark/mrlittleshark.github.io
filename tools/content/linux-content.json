@@ -1,0 +1,250 @@
+[
+  {
+    "slug": "linux-01",
+    "kind": "lesson",
+    "title": "01 · 终端、路径与文件操作",
+    "summary": "打开 Linux 终端，理解命令与路径，创建练习目录并完成文件的复制、改名和查找。",
+    "body": "Linux 终端可以输入命令、运行程序并查看结果。运行 OpenFOAM 时，常在终端中复制算例、生成网格、启动求解器和读取日志。本课从一个独立练习目录开始，文件操作都在这个目录内完成。\n\n## 打开终端并输入第一条命令\n\n在 Ubuntu 的应用菜单中搜索“终端”，或使用桌面支持的 `Ctrl+Alt+T` 快捷键。Windows 用户在 VMware 中打开 Ubuntu 终端，或从开始菜单启动已安装的 WSL Ubuntu。本文命令采用 Linux Bash 语法。\n\n输入下面一行，按 Enter 执行：\n\n```bash\npwd\n```\n\n`pwd` 显示当前工作目录。例如 `/home/student` 表示当前位于 `student` 用户的家目录。终端通常在行首显示 `student@ubuntu:~$` 一类提示符，它告诉你用户名、主机和当前位置；复制本文代码时只复制命令本身。\n\n终端是显示与输入命令的窗口，Bash 是解释命令的程序，`pwd`、`ls`、`blockMesh` 等则是具体操作。Bash 也支持变量和循环，后面的课程会把重复计算写成脚本。\n\n## 命令由哪些部分组成\n\n```bash\nls -lh /tmp\n```\n\n`ls` 是命令名，`-lh` 是选项，`/tmp` 是要查看的目录。`-l` 输出详细列表，`-h` 把文件大小写成便于阅读的单位。命令和参数之间用空格分开，选项通常以短横线开头。\n\n多数文件操作成功后会直接回到提示符。需要确认结果时，再使用 `ls` 或查看相应文件。终端中的上下方向键可以调出历史命令，Tab 可以补全文件名；很多终端用 `Ctrl+Shift+C`、`Ctrl+Shift+V` 复制和粘贴。\n\n## 建立自己的练习目录\n\n```bash\nmkdir -p \"$HOME/foamlab-linux-lab/01-paths/case/0\"\nmkdir -p \"$HOME/foamlab-linux-lab/01-paths/case/constant\"\nmkdir -p \"$HOME/foamlab-linux-lab/01-paths/case/system\"\ncd \"$HOME/foamlab-linux-lab/01-paths\"\nls\n```\n\n`mkdir` 创建目录，`-p` 会同时创建尚不存在的父目录。`$HOME` 展开为当前用户家目录，双引号将完整路径作为一个参数。`cd` 改变当前目录，最后的 `ls` 应列出 `case`。\n\n下面是刚创建的结构；这些空目录用于学习文件操作，完整算例还需要网格字典、物性和场文件。\n\n```text\nfoamlab-linux-lab/\n└── 01-paths/\n    └── case/\n        ├── 0/\n        ├── constant/\n        └── system/\n```\n\n`0` 保存初始场，`constant` 保存物性和网格等输入，`system` 保存运行控制和数值设置。之后执行 OpenFOAM 工具时，通常进入同时包含这三个子目录的算例根目录。\n\n![OpenFOAM 算例目录与文件位置](/assets/diagrams/core-case-tree.svg)\n\n## 绝对路径与相对路径\n\n绝对路径从 `/` 开始，例如 `/home/student/foamlab-linux-lab`，不依赖当前所在位置。相对路径从当前目录开始，例如 `case/system`。下面几条命令演示目录切换：\n\n```bash\ncd case/system\npwd\ncd ..\nls\ncd ../..\npwd\n```\n\n第一条进入 `system`。`..` 表示上一级目录，执行一次回到 `case`；`../..` 连续返回两层。`.` 表示当前目录，`~` 通常表示用户家目录。随时执行不带参数的 `cd`，可以返回家目录。\n\nLinux 路径使用正斜线 `/`。Windows 的 `F:\\UbuntuShareFolder` 在虚拟机或 WSL 中会有自己的挂载路径，需要在 Linux 中查看实际位置。文件名区分大小写，`U` 和 `u` 是两个不同名称。\n\n## 创建、复制和改名\n\n回到练习目录，写入一个文本文件：\n\n```bash\ncd \"$HOME/foamlab-linux-lab/01-paths\"\nprintf 'Case: cavity\\nVersion: v2512\\n' > notes.txt\ncat notes.txt\n```\n\n`printf` 输出指定文本，`\\n` 表示换行；`>` 将输出保存到文件。`cat` 显示内容，应该看到两行记录。已有同名文件时，`>` 会写入新的完整内容；需要在末尾追加时使用 `>>`，下一课会进一步介绍。\n\n复制文件并为副本改名：\n\n```bash\ncp -i notes.txt notes.backup.txt\nmv -i notes.backup.txt notes.saved.txt\nls -lh notes.txt notes.saved.txt\n```\n\n`cp` 保留原文件并建立副本，`mv` 改名或移动文件。`-i` 在目标已存在、将被覆盖时询问是否继续。最后会看到原文件和改名后的副本，大小应该相同。\n\n复制整个目录可以使用：\n\n```bash\ncp -a case case-copy\nls case-copy\n```\n\n`-a` 递归复制，并尽量保留权限、时间和符号链接。第一次执行时，新的 `case-copy` 中应有 `0`、`constant`、`system`。目标已存在时，复制结果的层级会受目标目录状态影响，因此每次练习前先查看目标名称。\n\n## 带空格的名称和通配符\n\n```bash\nmkdir -p 'case notes'\ncp notes.txt 'case notes/'\nls -l 'case notes'\nls *.txt\n```\n\n单引号使 `case notes` 作为一个完整名称传递。`*.txt` 匹配当前目录中以 `.txt` 结尾的名称，星号由 Bash 展开后再交给 `ls`。双引号允许 `$HOME` 等变量展开，单引号保留文字原样；路径使用变量时常采用双引号。\n\n隐藏文件以点开头，例如 `.bashrc`。`ls -a` 会将它们列出。`ls -lah` 可以同时查看隐藏文件、权限和易读大小。\n\n## 删除一个练习文件\n\n```bash\ntouch disposable.txt\nls -l disposable.txt\nrm -i disposable.txt\n```\n\n`touch` 在文件不存在时创建空文件。`rm -i` 询问后删除这个明确命名的练习文件；输入 `y` 确认。空目录可以使用 `rmdir 目录名` 删除。正式算例的历史结果可先归档，再按需要清理。\n\n## 查帮助和处理常见错误\n\n`ls --help` 显示简要用法，`man ls` 打开手册；手册中按 `/` 搜索，按 `q` 退出。Bash 内建命令可以用 `help cd` 查看帮助。\n\n| 提示 | 含义与处理 |\n| --- | --- |\n| `No such file or directory` | 路径不存在，检查当前目录、大小写和空格 |\n| `Not a directory` | 试图进入普通文件，先用 `ls -l` 查看类型 |\n| `File exists` | 创建的目标已存在，查看它是否是本次练习的目录 |\n| `Permission denied` | 当前用户没有所需权限，在自己的练习目录操作并检查权限 |\n\n## 练习\n\n在 `01-paths` 中创建 `study-a`，其中放入 `input` 和 `output` 两个子目录。将 `notes.txt` 复制到 `input`，然后复制整个 `study-a` 得到 `study-b`。分别使用绝对路径和相对路径进入两份副本，确认其中的文件内容相同。\n",
+    "track": "Linux 入门",
+    "series": "Linux 基础",
+    "sort_order": 400,
+    "status": "published",
+    "cover_url": "/assets/diagrams/core-case-tree.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "Linux / Bash",
+      "duration": "35 分钟",
+      "prerequisite": "无",
+      "topics": [],
+      "editorial_revision": "linux-tutorial-2026-10-02",
+      "source": "Wolf Dynamics, The Linux Terminal: A Crash Introduction；GNU Bash 与 GNU Coreutils 文档；菜鸟教程内容组织参考",
+      "downloads": [
+        {
+          "label": "本课代码与练习说明（ZIP）",
+          "url": "/downloads/linux/linux-01.zip",
+          "description": "包含讲解与命令示例。",
+          "size_bytes": 3621,
+          "sha256": "33d7cea1382c8dcfe9e7a832dd32de4bd701b05346d5e7b1bf059db2046996ee",
+          "kind": "source"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "linux-02",
+    "kind": "lesson",
+    "title": "02 · 查看、编辑和搜索文本",
+    "summary": "使用 nano 与 Vim 修改文本，按行查看文件，用 grep、find 和 sed 定位并整理配置。",
+    "body": "OpenFOAM 的字典、场文件和运行日志大多是文本。日常操作主要包括查看某几行、修改参数、搜索关键字和比较两份文件。本课使用一份简化配置练习，先掌握文本工具，再把相同方法用于真实算例。\n\n## 建立示例文件\n\n```bash\nmkdir -p \"$HOME/foamlab-linux-lab/02-text\"\ncd \"$HOME/foamlab-linux-lab/02-text\"\ncat > settings.txt <<'EOF'\napplication icoFoam;\nstartTime 0;\nendTime 0.5;\ndeltaT 0.005;\nwriteInterval 20;\nEOF\n```\n\n`cat` 将后续输入写入文件；`<<'EOF'` 表示一直读到单独一行的 `EOF`。给结束标记加引号后，正文中的 `$` 等符号按原样保存。执行后得到五行配置，`settings.txt` 是文本练习文件。\n\n## 短文件、长文件分别怎样看\n\n```bash\ncat settings.txt\nnl -ba settings.txt\nhead -n 2 settings.txt\ntail -n 2 settings.txt\n```\n\n`cat` 显示全部内容，`nl -ba` 显示行号，`head -n 2` 查看前两行，`tail -n 2` 查看最后两行。处理大日志时，只查看相关部分会更快，也更容易发现最早的异常。\n\n长文件使用 `less settings.txt` 打开。方向键逐行移动，空格向下翻页，`b` 向上翻页，`/deltaT` 搜索时间步条目，`n` 跳到下一个匹配，`q` 返回终端。`less` 用于阅读，文件内容保持原样。\n\n![配置文件在算例中的位置](/assets/diagrams/core-case-tree.svg)\n\n## 用 nano 修改参数\n\n```bash\nnano settings.txt\n```\n\n打开后可直接移动光标并输入文字。把 `endTime 0.5;` 改成 `endTime 1;`。按 `Ctrl+O` 保存，按 Enter 确认文件名，再按 `Ctrl+X` 退出。底部提示中的 `^O` 表示 `Ctrl+O`。\n\n返回终端后运行 `cat settings.txt`，确认修改已保存。OpenFOAM 字典中的分号、大括号和字段名称都属于语法，编辑时保留它们的结构。需要比较修改前后的文件，可以先用 `cp -i settings.txt settings.before.txt` 保存一份副本。\n\n## Vim 的基本操作\n\n服务器上常见 `vi` 或 `vim`。执行 `vim settings.txt` 后进入普通模式，按 `i` 进入插入模式，再输入文本；按 Esc 返回普通模式。输入 `:wq` 并回车，保存后退出。\n\n| 操作 | 普通模式中的按键 |\n| --- | --- |\n| 保存 | `:w` 后回车 |\n| 退出 | `:q` 后回车 |\n| 放弃本次未保存修改 | `:q!` 后回车 |\n| 搜索 `deltaT` | `/deltaT` 后回车 |\n| 撤销上一步 | `u` |\n| 跳到第 4 行 | `:4` 后回车 |\n\nVim 中输入文字没有出现时，先按 `i` 进入插入模式；文字被误当作命令时，可按 Esc 回到明确的模式后再操作。开始学习时选用熟悉的编辑器即可，字典本身与编辑器无关。\n\n## 在文件中搜索关键字\n\n```bash\ngrep -n 'deltaT' settings.txt\ngrep -nE 'endTime|writeInterval' settings.txt\ngrep -nF 'application icoFoam;' settings.txt\n```\n\n`-n` 显示匹配行的行号。`-E` 启用扩展正则表达式，竖线表示“匹配其中任一项”；`-F` 按固定文字搜索，适合含有括号、点号等字符的原文。\n\n第一条应定位时间步所在行。搜索命中后，可用 `sed -n '2,5p' settings.txt` 查看第 2 到 5 行的上下文。这里 `-n` 关闭默认逐行输出，`p` 只打印指定范围。\n\n## 搜索目录内的多个文件\n\n```bash\nmkdir -p cases/a cases/b\ncp settings.txt cases/a/controlDict\ncp settings.txt cases/b/controlDict\nfind cases -type f -name 'controlDict'\ngrep -rn --include='controlDict' 'deltaT' cases\n```\n\n`find` 按文件名搜索，`-type f` 只选择普通文件，`-name` 后的模式加引号以交给 `find` 处理。`grep -r` 递归搜索内容，`--include` 将范围限制为指定文件名。输出中的路径说明是哪一个算例，行号说明条目位置。\n\n安装了 `rg` 时，也可以用 `rg -n 'deltaT' cases` 进行内容搜索。对于 OpenFOAM 安装目录，缩小到某类求解器教程通常比从整个文件系统开始搜索更有效。\n\n## 生成修改版并比较差异\n\n```bash\nsed 's/^deltaT .*/deltaT 0.0025;/' settings.txt > settings.fine.txt\ndiff -u settings.txt settings.fine.txt\n```\n\n`sed` 中 `s/旧模式/新文字/` 进行替换，`^` 表示行首，`.*` 匹配这一行的其余内容。输出写入新文件，原文件保留。`diff -u` 用 `-` 标记旧行、`+` 标记新行，便于确认只有时间步改变。\n\n这里的文本结构非常简单。对包含嵌套字典、变量引用的 OpenFOAM 文件，可以使用 `foamDictionary` 精确修改条目，例如在完整算例中执行 `foamDictionary system/controlDict -entry deltaT -set 0.0025`。文本替换和字典工具适合不同复杂程度的输入。\n\n## 查看编码、换行和文件类型\n\n```bash\nfile settings.txt\nwc -l settings.txt\n```\n\n`file` 判断文本或二进制类型，并可能报告换行格式；`wc -l` 统计换行数。Linux 脚本通常采用 LF 换行，从 Windows 编辑器保存时可选择 UTF-8 和 LF，避免解释器路径末尾出现额外的回车字符。\n\n终端显示乱码时，检查文件编码和终端使用的字符集。复制命令时，选项前使用普通 ASCII 短横线 `-`，参数引号使用代码中的直引号。\n\n## 常见问题与练习\n\n`grep` 没有输出，表示当前模式没有匹配行，可先用 `cat` 查看关键字拼写。`find` 找到的是错误目录中的同名文件时，重新限定起始路径。`diff` 有差异时通常返回状态码 1，这是“文件不同”的结果，读取其差异内容即可。\n\n练习：为 `cases/a` 和 `cases/b` 设置不同的 `deltaT`，递归搜索并列出两份设置。随后将两份文件比较，定位时间步变化，最后把带行号的配置保存为一份阅读记录。\n",
+    "track": "Linux 入门",
+    "series": "Linux 基础",
+    "sort_order": 401,
+    "status": "published",
+    "cover_url": "/assets/diagrams/core-case-tree.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "Linux / Bash",
+      "duration": "35 分钟",
+      "prerequisite": "Linux 第 1 课",
+      "topics": [],
+      "editorial_revision": "linux-tutorial-2026-10-02",
+      "source": "Wolf Dynamics, The Linux Terminal: A Crash Introduction；GNU Bash 与 GNU Coreutils 文档；菜鸟教程内容组织参考",
+      "downloads": [
+        {
+          "label": "本课代码与练习说明（ZIP）",
+          "url": "/downloads/linux/linux-02.zip",
+          "description": "包含讲解与命令示例。",
+          "size_bytes": 3409,
+          "sha256": "f49664725604bd05542e17ad96b19a606d3282204b27e43fab6aa70eef3e966c",
+          "kind": "source"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "linux-03",
+    "kind": "lesson",
+    "title": "03 · 重定向、管道与计算日志",
+    "summary": "理解标准输出和错误输出，保存日志，用管道提取数据，并同时观察终端与文件。",
+    "body": "程序运行时会向终端写出正常信息和错误信息。重定向可以把这些内容保存到文件，管道可以把一个程序的输出交给另一个程序处理。OpenFOAM 的日志采集、残差搜索和批量统计都经常用到这两种功能。\n\n## 标准输入、输出和错误\n\nLinux 程序通常有三个默认通道：标准输入编号为 0，标准输出为 1，标准错误为 2。键盘常作为标准输入，终端常同时显示标准输出与标准错误。\n\n先建立练习目录：\n\n```bash\nmkdir -p \"$HOME/foamlab-linux-lab/03-logs\"\ncd \"$HOME/foamlab-linux-lab/03-logs\"\nprintf 'Time = 0\\nTime = 0.1\\n' > log.practice\ncat log.practice\n```\n\n`>` 把标准输出写入文件，原有同名内容会被替换。`log.practice` 中现在有两行时间记录，这是一份手工构造的练习日志。\n\n追加一条记录：\n\n```bash\nprintf 'Time = 0.2\\n' >> log.practice\ncat log.practice\n```\n\n`>>` 在文件末尾追加，原来的两行保留。日志记录需要连续保存时使用追加，独立工况通常使用独立文件名，便于区分每次运行。\n\n## 正常输出与错误分别保存\n\n```bash\nbash -c 'printf \"normal output\\n\"; printf \"example error\\n\" >&2' > output.txt 2> error.txt\ncat output.txt\ncat error.txt\n```\n\n`bash -c` 执行引号中的小程序。第一条 `printf` 写标准输出，第二条用 `>&2` 写标准错误。外层 `>` 和 `2>` 分别接收两个通道，因此两个文件各有一行。\n\n运行 OpenFOAM 时，通常把两个通道放在同一份日志中：\n\n```bash\nicoFoam > log.icoFoam 2>&1\n```\n\n这条命令在已经准备好的方腔算例目录中执行。`>` 先把标准输出指向日志，`2>&1` 再把标准错误指向当前的标准输出位置，因此求解信息和报错都保存在 `log.icoFoam`。重定向从左到右生效，保持这个顺序。\n\n## 同时在终端显示并保存\n\n```bash\nprintf 'step 1\\nstep 2\\n' | tee log.steps\n```\n\n竖线 `|` 把左侧标准输出交给右侧标准输入。`tee` 一边显示内容，一边写入 `log.steps`。需要追加时用 `tee -a 文件名`。\n\n对于求解器，可使用：\n\n```bash\nset -o pipefail\nicoFoam 2>&1 | tee log.icoFoam\nstatus=$?\nprintf '退出状态：%s\\n' \"$status\"\n```\n\n`pipefail` 使管道中前面的命令失败也能影响整条管道状态。`$?` 是上一条命令的退出码，立即保存到 `status`，可以避免被后面的命令覆盖。常见约定中 0 表示程序正常退出，非零表示发生某种错误；物理结果还通过残差、守恒和观测量分析。\n\n![求解日志与结果数据的关系](/assets/diagrams/core-residual.svg)\n\n## 用管道筛选日志\n\n先增加几条示例残差：\n\n```bash\ncat >> log.practice <<'EOF'\nSolving for p, Initial residual = 0.1, Final residual = 0.001\nSolving for Ux, Initial residual = 0.02, Final residual = 0.0001\nSolving for p, Initial residual = 0.01, Final residual = 0.00001\nEOF\ngrep 'Solving for p,' log.practice | tail -n 1\n```\n\n`grep` 选择压力求解行，`tail -n 1` 保留最后一条，输出应为第三条残差记录。两个命令各处理一部分任务，组合后可以直接定位最新压力残差。\n\n更常见的查看方式是：\n\n```bash\ngrep -nE 'FOAM FATAL|Courant Number|continuity errors' log.practice\n```\n\n它寻找三个常用关键字并显示行号。当前练习日志没有这些行，因此结果为空；在真实日志中，用行号向前后查看即可定位时间和上下文。变量名中带点号而希望完全按原文匹配时，可以采用 `grep -F`。\n\n## 从简单表格提取列\n\n```bash\nprintf 'time Ux\\n0.0 0.0\\n0.1 0.25\\n0.2 0.40\\n' > probe.txt\nawk 'NR > 1 {print $1, $2*2}' probe.txt > doubled.txt\ncat doubled.txt\n```\n\n`awk` 默认按空白分列，`NR` 是当前行号，`NR > 1` 跳过标题。`$1` 是第一列，`$2*2` 将第二列乘二，结果写到新文件。这适合学习纯数值表的处理。\n\nOpenFOAM 向量探针包含括号和多个分量，读取前先查看文件头及一行数据，确认分列方式。复杂格式可以用 Python 解析，避免把向量括号或重复表头当成数字。\n\n## 实时查看日志\n\n在另一个终端进入同一算例，执行 `tail -f log.icoFoam`。`-f` 持续显示文件新增内容，按 `Ctrl+C` 结束当前的日志跟踪。求解器若在另一个终端运行，会继续计算。\n\n搜索 `Time =` 可以查看计算推进到的时间；已保存的结果时刻可用 `foamListTimes` 查看。查错误应从最早一条明确异常开始。MPI 计算结束时常有多个进程的终止信息，最先出现的字段、网格或数值报错通常更接近原因。\n\n## 管道与文件名的区别\n\n管道传递程序输出的内容。`grep 'Time' log.practice` 接收的是日志路径，`cat log.practice | grep 'Time'` 则让 `grep` 接收管道中的文本，两者在这里能得到相同内容。简单文件搜索直接提供文件名更清楚；需要前一步转换结果时，再使用管道连接。\n\n`wc -l` 可以统计输入行数，例如 `grep 'Solving for p,' log.practice | wc -l` 统计练习日志中的压力求解记录。结果应为 2。\n\n## 常见问题与练习\n\n| 现象 | 原因与处理 |\n| --- | --- |\n| 日志中没有错误信息 | 只重定向了标准输出，增加 `2>&1` |\n| 再运行后旧日志消失 | `>` 重写了文件，按工况命名或按需要使用追加 |\n| 管道显示成功，但求解器失败 | 启用 `pipefail` 并记录退出状态 |\n| `tail -f` 没有新内容 | 程序暂无输出、已经结束，或正在跟踪另一个文件 |\n\n练习：创建一份同时含时间和残差的日志，只保留 `Time =` 行到 `times.txt`，再统计其中的行数。使用 `tee` 在终端显示筛选结果并保存，最后故意搜索一个不存在的关键字，观察“没有匹配”和“命令错误”在输出上的区别。\n",
+    "track": "Linux 入门",
+    "series": "Linux 基础",
+    "sort_order": 402,
+    "status": "published",
+    "cover_url": "/assets/diagrams/core-residual.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "Linux / Bash",
+      "duration": "35 分钟",
+      "prerequisite": "Linux 第 2 课",
+      "topics": [],
+      "editorial_revision": "linux-tutorial-2026-10-02",
+      "source": "Wolf Dynamics, The Linux Terminal: A Crash Introduction；GNU Bash 与 GNU Coreutils 文档；菜鸟教程内容组织参考",
+      "downloads": [
+        {
+          "label": "本课代码与练习说明（ZIP）",
+          "url": "/downloads/linux/linux-03.zip",
+          "description": "包含讲解与命令示例。",
+          "size_bytes": 3461,
+          "sha256": "e77be6447a8ce7b226e3b572176f8b2206bddb5ed0394e2c08ce8ee477436bc4",
+          "kind": "source"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "linux-04",
+    "kind": "lesson",
+    "title": "04 · 文件权限与第一个 Bash 脚本",
+    "summary": "读懂 rwx 权限，创建可执行脚本，传入参数，检查换行格式和常见运行错误。",
+    "body": "Linux 文件权限决定哪些用户可以读取、修改或执行文件。普通配置文件通常需要读写权限，`Allrun` 等脚本还需要执行方式。本课先读懂权限，再写一个能够接收算例名称的小脚本。\n\n## 查看文件权限\n\n```bash\nmkdir -p \"$HOME/foamlab-linux-lab/04-scripts\"\ncd \"$HOME/foamlab-linux-lab/04-scripts\"\nprintf 'learning Bash\\n' > note.txt\nls -l note.txt\n```\n\n输出中可能出现 `-rw-r--r--`。第一个字符 `-` 表示普通文件，目录用 `d`，符号链接用 `l`。后面九个字符分三组，分别对应所有者、所属组和其他用户。\n\n| 字母 | 普通文件中的含义 | 目录中的含义 |\n| --- | --- | --- |\n| `r` | 读取内容 | 列出目录项 |\n| `w` | 修改内容 | 配合相应访问权限创建、改名或删除目录项 |\n| `x` | 执行程序或脚本 | 进入目录并访问其中已知路径 |\n\n`rw-r--r--` 表示所有者可读写，组和其他用户可读。目录能否访问还与路径上各级目录的权限有关。`ls -ld 目录名` 查看目录本身的权限，`ls -l 目录名` 列出其中内容。\n\n## 创建一个脚本文件\n\n```bash\ncat > show-case.sh <<'EOF'\n#!/usr/bin/env bash\ncase_name=${1:-cavity}\nprintf 'Case: %s\\n' \"$case_name\"\nprintf 'Directory: %s\\n' \"$PWD\"\nEOF\nbash show-case.sh\nbash show-case.sh pitzDaily\n```\n\n第一行指定 Bash 解释器。`$1` 是第一个命令行参数，`${1:-cavity}` 表示参数为空或未提供时使用 `cavity`。赋值时等号两侧紧接变量名和值。`$PWD` 保存当前工作目录，`printf` 中的 `%s` 由后续参数替换。\n\n第一次调用输出 `Case: cavity`，第二次输出 `Case: pitzDaily`。`bash 文件名` 由 Bash 读取脚本文件并执行其中命令，因此脚本需要可读权限。\n\n## 使用执行权限直接运行\n\n```bash\nchmod u+x show-case.sh\n./show-case.sh motorBike\nls -l show-case.sh\n```\n\n`chmod u+x` 为文件所有者增加执行权限。`./` 表示当前目录，直接运行时由首行指定的解释器处理文件。此时权限中所有者那一组会包含 `x`。\n\n系统通常按 `PATH` 中的目录查找命令。当前目录的脚本写成 `./show-case.sh`，明确了程序位置。脚本位于别处时，也可以使用完整路径。\n\n## 符号权限与数字权限\n\n```bash\nchmod u=rw,go=r note.txt\nchmod 644 note.txt\nchmod 700 show-case.sh\n```\n\n第一条设置所有者读写、组和其他用户只读；第二条用数字表示同样的权限。读、写、执行的数值分别为 4、2、1，相加得到某组权限。`700` 表示仅所有者可读写执行，适合自己的练习脚本。\n\n共享项目通常按团队需求设置所属组和相应权限。查看当前用户与组可以用 `id`。修改文件所有权需要相应系统权限，日常算例保存在自己的工作目录，文件可由当前用户直接维护。\n\n![脚本、输入与结果目录](/assets/diagrams/core-reproducibility.svg)\n\n## 给参数加双引号\n\n```bash\n./show-case.sh 'case with spaces'\n```\n\n引号把带空格的名称作为一个参数传入。脚本中的 `\"$case_name\"` 也保持这个整体。如果后续改为复制某个路径，双引号同样能让带空格或特殊字符的路径正确传递。\n\n`$#` 表示参数个数，`$0` 表示脚本调用名称，`\"$@\"` 逐个保留全部参数。批量处理多个算例时，可以使用 `for case_name in \"$@\"` 依次处理，第八课会给出完整例子。\n\n## 从任意位置运行时固定目录\n\n如果脚本需要读取自己目录中的文件，可在开头加入：\n\n```bash\nscript_dir=$(cd \"$(dirname \"$0\")\" && pwd)\ncd \"$script_dir\"\n```\n\n`dirname \"$0\"` 取得脚本路径的目录部分，`$(...)` 将命令输出保存为变量。内部 `cd` 与 `pwd` 在命令替换的子环境中执行，得到绝对目录；第二行让脚本进入该位置。这样从不同工作目录调用，输入文件的相对路径也保持一致。\n\n只有前一个命令成功时，`&&` 后面的命令才执行。这常用于目录切换等有依赖的步骤；多条无依赖命令也可以各占一行，更便于阅读。\n\n## 检查脚本语法和换行格式\n\n```bash\nbash -n show-case.sh\nfile show-case.sh\n```\n\n`bash -n` 检查语法并报告错误位置，不执行脚本内容。`file` 可显示是否采用 CRLF 换行。从 Windows 复制的脚本如果出现 `/usr/bin/env: 'bash\\r': No such file or directory`，可在编辑器中将换行转换为 LF 后保存。\n\n也可以为自己的脚本生成一个转换后的副本：\n\n```bash\nsed 's/\\r$//' show-case.sh > show-case.lf.sh\nbash -n show-case.lf.sh\nbash show-case.lf.sh\n```\n\n`\\r$` 匹配行末的回车，替换为空后保留正常换行。新文件保留原稿作为比较。如果脚本来自压缩包，重新解压时注意文件权限和符号链接是否被正确保存。\n\n## 返回状态与错误退出\n\n脚本可用 `exit 0` 表示正常结束，`exit 1` 表示遇到自定义错误。调用脚本后立即执行 `printf '%s\\n' \"$?\"`，可以查看它的退出状态。后续命令可以据此决定继续运行还是处理错误。\n\n调试时可运行 `bash -x show-case.sh` 查看每条命令展开后的执行过程。脚本中若包含认证信息，调试输出会显示相应参数，因此调试前把这类输入移到受保护的认证配置中。\n\n## 常见问题与练习\n\n`Permission denied` 时查看脚本读/执行权限以及上级目录权限。`command not found` 时检查是否使用了 `./` 或正确路径。`syntax error near unexpected token` 时检查括号、引号和 `if`、`for` 的结束关键字。\n\n练习：将脚本扩展为接收第二个参数 `solver_name`，默认值为 `icoFoam`，同时打印算例名与求解器名。分别运行零参数、一个参数和两个参数的形式，再用带空格的算例名称检查引号是否正确。\n",
+    "track": "Linux 入门",
+    "series": "Linux 基础",
+    "sort_order": 403,
+    "status": "published",
+    "cover_url": "/assets/diagrams/core-reproducibility.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "Linux / Bash",
+      "duration": "35 分钟",
+      "prerequisite": "Linux 第 3 课",
+      "topics": [],
+      "editorial_revision": "linux-tutorial-2026-10-02",
+      "source": "Wolf Dynamics, The Linux Terminal: A Crash Introduction；GNU Bash 与 GNU Coreutils 文档；菜鸟教程内容组织参考",
+      "downloads": [
+        {
+          "label": "本课代码与练习说明（ZIP）",
+          "url": "/downloads/linux/linux-04.zip",
+          "description": "包含讲解与命令示例。",
+          "size_bytes": 3453,
+          "sha256": "cb8298366ebde1e9b080459b4283369b7588b1f09cad4d22895996fb4c4591da",
+          "kind": "source"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "linux-05",
+    "kind": "lesson",
+    "title": "05 · 环境变量、软件安装与 OpenFOAM 环境",
+    "summary": "理解 PATH、export 和 source，安装常用工具，设置自己的命令目录并加载 OpenFOAM。",
+    "body": "环境变量把一些配置传给程序，例如家目录、程序搜索路径和 OpenFOAM 安装位置。软件已经安装但终端找不到命令时，通常需要检查程序位置和当前环境。本课先用自己创建的变量练习，再加载 OpenFOAM 环境。\n\n## 创建和读取变量\n\n```bash\nmkdir -p \"$HOME/foamlab-linux-lab/05-environment\"\ncd \"$HOME/foamlab-linux-lab/05-environment\"\ncase_name=cavity\nprintf '当前算例：%s\\n' \"$case_name\"\n```\n\n`case_name=cavity` 创建 Bash 变量，等号两侧没有空格。读取变量时加 `$`，双引号保留展开后的完整值。变量名可包含字母、数字和下划线，开头使用字母或下划线；自定义变量采用具体名称，便于看出用途。\n\n`HOME`、`PATH` 等是已有环境变量。`printf '%s\\n' \"$HOME\"` 显示家目录，`printf '%s\\n' \"$SHELL\"` 通常显示账号的登录 shell 路径。当前正在执行的 shell 也可能由用户另行启动，因此查看实际进程可用 `ps -p $$ -o comm=`。\n\n## export 怎样传给子程序\n\n```bash\nFOAMLAB_CASE=cavity\nbash -c 'printf \"子进程读取：%s\\n\" \"${FOAMLAB_CASE:-未设置}\"'\nexport FOAMLAB_CASE\nbash -c 'printf \"子进程读取：%s\\n\" \"$FOAMLAB_CASE\"'\n```\n\n第一次启动的 Bash 子进程通常读不到这个新建的局部变量；`export` 将它标记为环境变量，第二次子进程会继承 `cavity`。`${变量:-默认值}` 在变量未设置或为空时提供默认文字。\n\n子程序可以继承父进程的环境，子程序退出后，它自己的变量修改不会自动写回父进程。这个特点解释了为什么加载环境要使用 `source`。\n\n## source 与执行脚本的区别\n\n```bash\nprintf 'FOAMLAB_TOPIC=mesh\\nexport FOAMLAB_TOPIC\\n' > lesson-env.sh\nbash lesson-env.sh\nprintf '%s\\n' \"${FOAMLAB_TOPIC:-当前终端未设置}\"\nsource lesson-env.sh\nprintf '%s\\n' \"$FOAMLAB_TOPIC\"\n```\n\n`bash lesson-env.sh` 在子 shell 中执行，结束后当前终端仍没有该新变量。`source lesson-env.sh` 在当前 shell 中读取命令，因此最后会输出 `mesh`。`.` 也是 Bash 中读取脚本的写法，例如 `. ./lesson-env.sh`。\n\nOpenFOAM 的环境脚本设置版本、程序目录和动态库目录。使用 `source` 后，这些配置才会保留在当前终端，并被随后运行的 `blockMesh`、`icoFoam` 等程序继承。\n\n![OpenFOAM 程序、库和工作目录](/assets/diagrams/core-architecture.svg)\n\n## PATH 怎样找到命令\n\n```bash\nprintf '%s\\n' \"$PATH\"\ncommand -v bash\ncommand -v blockMesh\n```\n\n`PATH` 是一组以冒号分隔的目录，Bash 按顺序查找外部程序。`command -v` 显示当前会使用的命令位置。已安装多个同名程序时，排在前面的目录通常先被选中。\n\n可以为自己的脚本建立一个独立目录：\n\n```bash\nmkdir -p \"$HOME/foamlab-linux-lab/bin\"\nprintf '#!/usr/bin/env bash\\nprintf \"FoamLab tools\\\\n\"\\n' > \"$HOME/foamlab-linux-lab/bin/foam-lab-hello\"\nchmod u+x \"$HOME/foamlab-linux-lab/bin/foam-lab-hello\"\nexport PATH=\"$HOME/foamlab-linux-lab/bin:$PATH\"\nfoam-lab-hello\n```\n\n脚本写入后添加执行权限，再把它的目录放到 `PATH` 前面。最后应输出 `FoamLab tools`。`$PATH` 保留原有搜索路径，新的目录只是在其前面增加一项。\n\n## 查找并加载 OpenFOAM\n\nUbuntu 软件包安装可能位于 `/usr/lib/openfoam/openfoam2512`，源码安装则可能位于用户自己的目录。先找到实际安装根目录中的 `etc/bashrc`，再执行，例如：\n\n```bash\nfoam_root=/usr/lib/openfoam/openfoam2512\nls \"$foam_root/etc/bashrc\"\nsource \"$foam_root/etc/bashrc\"\nfoamVersion\ncommand -v blockMesh\nprintf '%s\\n' \"$FOAM_TUTORIALS\"\n```\n\n`foam_root` 按实际位置修改。`ls` 确认脚本存在，`source` 加载，随后查看版本、工具路径和教程目录。`FOAM_TUTORIALS` 指向安装中的案例库，复制案例时可直接使用这个变量。\n\n同一电脑使用多个 OpenFOAM 安装时，可以为每个版本分别开终端并加载对应环境。编译与运行采用一致的头文件、库和程序路径，能减少动态库加载和接口不匹配的问题。\n\n## 打开终端时自动配置\n\nBash 交互式非登录 shell 通常读取 `~/.bashrc`。需要长期保留的简单别名或环境设置，可以用编辑器加入这个文件末尾。例如 `alias ll='ls -lah'` 为常用列表命令建立简称。\n\n编辑后先用 `bash -n ~/.bashrc` 检查语法，再打开新终端观察效果。仅希望临时使用某套环境时，在当前终端执行对应 `source` 即可。登录 shell、图形桌面和远程服务的启动文件规则不同，排查自动加载时应确认具体启动方式。\n\n## Ubuntu 中安装常用工具\n\n先查看系统信息和软件包状态：\n\n```bash\ncat /etc/os-release\napt-cache policy tree\n```\n\n`os-release` 标明发行版，`apt-cache policy` 显示软件包的已安装和候选版本。在 Ubuntu 中安装 `tree`、`nano`、`tmux` 可使用：\n\n```bash\nsudo apt update\nsudo apt install tree nano tmux\n```\n\n`apt update` 刷新软件包索引，`apt install` 安装指定工具及依赖。`sudo` 让当前命令使用管理权限，输入密码时终端通常不显示字符。软件安装使用管理权限，自己的算例运行和日常编辑使用普通用户即可。\n\nOpenFOAM v2512 的软件源与安装方法见系统课程的安装章节。这里的软件管理命令介绍通用操作，包名和可用版本由已配置的软件源决定。\n\n## 常见问题与练习\n\n| 现象 | 检查方法 |\n| --- | --- |\n| `command not found` | `command -v`、实际安装目录和 `PATH` |\n| `source` 提示文件不存在 | 安装根目录、路径大小写和是否完成安装 |\n| 程序找不到共享库 | 重新加载匹配的 OpenFOAM 环境，检查程序是否来自同一安装 |\n| 新终端变量消失 | 将需要长期使用的设置放入适用的启动文件 |\n\n练习：创建变量 `FOAMLAB_RUN` 指向练习目录，在当前 shell 和新启动的 `bash -c` 中分别读取它，观察 `export` 前后的差别。然后为自己的 `foam-lab-hello` 增加一个参数，重新运行并查看 `command -v` 指向的位置。\n",
+    "track": "Linux 入门",
+    "series": "Linux 基础",
+    "sort_order": 404,
+    "status": "published",
+    "cover_url": "/assets/diagrams/core-architecture.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "Linux / Bash",
+      "duration": "35 分钟",
+      "prerequisite": "Linux 第 4 课",
+      "topics": [],
+      "editorial_revision": "linux-tutorial-2026-10-02",
+      "source": "Wolf Dynamics, The Linux Terminal: A Crash Introduction；GNU Bash 与 GNU Coreutils 文档；菜鸟教程内容组织参考",
+      "downloads": [
+        {
+          "label": "本课代码与练习说明（ZIP）",
+          "url": "/downloads/linux/linux-05.zip",
+          "description": "包含讲解与命令示例。",
+          "size_bytes": 3430,
+          "sha256": "b0bc9df488097421c2a354af793fbfec1239ae6c789d3a61b9531d13e25b552d",
+          "kind": "source"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "linux-06",
+    "kind": "lesson",
+    "title": "06 · 进程、资源监测与后台运行",
+    "summary": "查看计算进程和资源，练习前后台任务，使用 tmux 保留远程会话并管理求解日志。",
+    "body": "求解器运行后，操作系统把它作为进程管理。进程具有自己的编号 PID、内存和 CPU 使用量。掌握进程查看和后台运行后，可以判断计算是否仍在进行、资源是否充足，以及终端断开后怎样继续查看任务。\n\n## 用一个短任务理解后台运行\n\n```bash\nmkdir -p \"$HOME/foamlab-linux-lab/06-processes\"\ncd \"$HOME/foamlab-linux-lab/06-processes\"\nsleep 60 &\njob_pid=$!\nprintf 'PID=%s\\n' \"$job_pid\"\njobs\n```\n\n`sleep 60` 等待 60 秒后退出，适合练习进程管理。行末的 `&` 让命令在后台运行，终端立即返回提示符。`$!` 是最近启动的后台任务 PID，保存后可以准确查看这个任务。`jobs` 列出当前 shell 管理的作业。\n\n查看它的状态：\n\n```bash\nps -p \"$job_pid\" -o pid,etime,stat,comm\n```\n\n`-p` 按 PID 选择，`-o` 指定输出列：进程编号、已运行时间、状态和命令名。`sleep` 经常处于睡眠状态 `S`。任务正常结束后，`ps` 不再显示该进程。\n\n## 前台、后台与暂停\n\n后台任务可用 `fg %1` 调回前台，`%1` 是 `jobs` 中显示的作业号。前台运行期间按 `Ctrl+Z` 会暂停任务，随后 `bg %1` 让它在后台继续。暂停的任务停止推进，重新继续后才恢复计算。\n\n`Ctrl+C` 向当前前台程序发送中断信号。对于本课的 `sleep`，可以直接结束练习；对求解器则需要考虑结果写出。运行较长案例时，可采用求解器支持的写出后停止方式，或在结束前保存必要时间状态。\n\n当前终端中的作业号和操作系统 PID 是两套编号：`jobs` 用 `%1` 这类作业标识，`ps` 用整数 PID。在不同终端查看任务时使用 PID 或命令名更方便。\n\n## 查看求解器与机器资源\n\n```bash\npgrep -a icoFoam\nps -u \"$USER\" -o pid,%cpu,%mem,etime,comm\nfree -h\ndf -h .\ndu -sh .\n```\n\n`pgrep -a` 查找名称匹配的进程并显示命令，`ps -u` 列出自己的进程。`free -h` 查看内存，重点留意可用内存 `available`；Linux 会利用空闲内存缓存文件，因此单独看 `free` 一列容易低估可用空间。\n\n`df -h .` 查看当前目录所在文件系统的容量，`du -sh .` 统计当前目录占用。OpenFOAM 多进程和多时间输出会增大文件数量与磁盘用量，运行前可根据已有案例估计空间。\n\n`top` 提供动态进程视图，按 `q` 退出。某些系统中单进程 CPU 百分比以一个逻辑核为 100% 统计，多线程程序可能超过 100%。并行 OpenFOAM 常表现为多个 MPI 进程共同工作。\n\n![多个进程协同计算](/assets/diagrams/core-parallel.svg)\n\n## 后台写日志\n\n```bash\nnohup bash -c 'for i in 1 2 3 4 5; do printf \"step %s\\n\" \"$i\"; sleep 2; done' > log.background 2>&1 &\nbackground_pid=$!\ntail -f log.background\n```\n\n这个示例每两秒输出一条记录，共五条。`nohup` 使程序忽略常见的终端挂断信号，`&` 放到后台，输出全部保存到日志。`tail -f` 持续显示新增内容；五条记录结束后，按 `Ctrl+C` 退出日志查看。\n\n在同一个 shell 中可以用 `wait \"$background_pid\"` 等待后台任务结束，并读取它的退出状态。`nohup` 的实际持续运行还受服务器会话策略影响；需要方便地重新连接和查看终端，通常可采用 `tmux`。\n\n## 使用 tmux 保留计算会话\n\n安装 `tmux` 后执行：\n\n```bash\ntmux new -s foam-study\n```\n\n它创建名为 `foam-study` 的会话。在其中进入算例目录、加载 OpenFOAM 环境并启动求解器。按 `Ctrl+B`，松开后再按 `D`，可以脱离会话，程序继续运行。\n\n稍后连接回来：\n\n```bash\ntmux ls\ntmux attach -t foam-study\n```\n\n`ls` 列出会话，`attach` 重新进入指定会话。一个会话中还可以创建多个窗口，分别用于求解、日志和资源查看。远程计算时先 SSH 登录服务器，再创建 `tmux` 会话，任务就在服务器上运行。\n\n集群通常要求通过 Slurm 等调度器提交计算，`tmux` 可用于维持交互操作，但资源分配由调度器控制。记录作业号后，通过平台提供的查询命令观察状态。\n\n## 怎样让 OpenFOAM 写出后停止\n\n支持运行中读取控制字典的案例，可在另一个终端进入同一算例并执行：\n\n```bash\nfoamDictionary system/controlDict -entry stopAt -set writeNow\n```\n\n`stopAt writeNow` 请求求解器在处理到相应控制状态后写出并结束。该过程需要当前求解器支持并启用相应的运行时读取；设置后继续查看日志，确认写出完成。下一次续算前把 `stopAt` 改回 `endTime`，并根据需要设置 `startFrom latestTime`。\n\n对于普通系统任务，`kill -TERM PID` 发送终止请求。这里的 PID 应来自自己刚检查的目标进程。终止 MPI 计算通常使用相应启动器或调度器管理整个作业，避免只结束其中一个进程而留下其他部分。\n\n## 怎样判断任务卡在哪里\n\n日志时间仍在增加且 CPU 活跃，通常说明计算持续推进。CPU 很低但磁盘繁忙，可能正在写出结果或等待 I/O；内存压力很高且频繁换页，会显著降低速度。日志不再更新时，还需检查进程是否已退出、是否在等待输入，以及是否查看了正确文件。\n\n计算日志、资源占用和退出状态可以结合使用。例如 `No space left on device` 对应磁盘空间或文件数限制，`Killed` 可能与内存限制相关，需要查看系统或调度器记录；具体原因以对应记录为准。\n\n## 练习\n\n启动本课五步后台任务，一边用 `tail -f` 查看日志，一边在第二个终端用 `ps` 查看 PID。随后在 `tmux` 中运行同一任务，脱离并重新连接，确认日志仍完整。最后比较练习目录的 `du -sh` 与文件系统的 `df -h .`，理解目录占用和磁盘剩余容量的区别。\n",
+    "track": "Linux 入门",
+    "series": "Linux 基础",
+    "sort_order": 405,
+    "status": "published",
+    "cover_url": "/assets/diagrams/core-parallel.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "Linux / Bash",
+      "duration": "35 分钟",
+      "prerequisite": "Linux 第 5 课",
+      "topics": [],
+      "editorial_revision": "linux-tutorial-2026-10-02",
+      "source": "Wolf Dynamics, The Linux Terminal: A Crash Introduction；GNU Bash 与 GNU Coreutils 文档；菜鸟教程内容组织参考",
+      "downloads": [
+        {
+          "label": "本课代码与练习说明（ZIP）",
+          "url": "/downloads/linux/linux-06.zip",
+          "description": "包含讲解与命令示例。",
+          "size_bytes": 3575,
+          "sha256": "c56f4b4c48b8ddb2413a182f27202c5f166876ad7fcf92dc8915a0f903409971",
+          "kind": "source"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "linux-07",
+    "kind": "lesson",
+    "title": "07 · 压缩归档、SSH 与文件同步",
+    "summary": "打包算例并检查归档内容，连接自己的服务器，使用 scp 和 rsync 传输输入与结果。",
+    "body": "算例在本机、虚拟机和服务器之间传输时，常用压缩包保存完整目录，用 SSH 连接远程终端，用 `scp` 或 `rsync` 传输文件。本课先在本地完成归档和同步练习，再介绍远程命令的写法。\n\n## 准备一个独立目录\n\n```bash\nmkdir -p \"$HOME/foamlab-linux-lab/07-transfer/case/system\"\nmkdir -p \"$HOME/foamlab-linux-lab/07-transfer/case/0\"\nmkdir -p \"$HOME/foamlab-linux-lab/07-transfer/case/constant\"\ncd \"$HOME/foamlab-linux-lab/07-transfer\"\nprintf 'archive practice\\n' > case/README.txt\n```\n\n这份小目录用于练习传输结构。实际算例还需要相应字典、字段、几何和脚本。进入工程的外层目录归档，可以使压缩包内自然保留一个顶层 `case`。\n\n## 创建并查看 tar.gz\n\n```bash\ntar -czf case-inputs.tar.gz case\ntar -tzf case-inputs.tar.gz\nls -lh case-inputs.tar.gz\n```\n\n`-c` 创建归档，`-z` 使用 gzip 压缩，`-f` 后面紧跟压缩包文件名。第二条中 `-t` 表示列出内容，可以看到 `case/` 及其子目录。`tar` 能保存目录结构、权限和符号链接，适合 Linux 算例。\n\n解压到一个新目录：\n\n```bash\nmkdir -p restored\ntar -xzf case-inputs.tar.gz -C restored\nls restored/case\n```\n\n`-x` 解包，`-C` 指定目标目录。结果应位于 `restored/case`，而原来的 `case` 保留。收到别人提供的压缩包时，先列出内容，再在独立目录解压，便于检查结构和依赖。\n\n## ZIP 与归档内容选择\n\n```bash\nzip -r case-inputs.zip case\nunzip -l case-inputs.zip\n```\n\n`zip -r` 递归打包目录，`unzip -l` 查看包内文件。ZIP 便于跨平台交换；涉及 Linux 执行权限和符号链接时，需要确认打包和解包工具是否保留这些属性。\n\n大规模 OpenFOAM 计算通常把输入与全场结果分别打包。生成输入包时，可明确选择 `0`、`constant`、`system` 和必要脚本；CAD、`#include` 文件和自定义源码也要包含。结果包中保留需要共享的时间、采样 CSV 和图，下载体积会更容易控制。\n\n![输入与结果的归档组织](/assets/diagrams/core-reproducibility.svg)\n\n## 检查传输前后文件是否一致\n\n```bash\nsha256sum case-inputs.tar.gz\n```\n\n命令输出文件摘要。发送方和接收方对同一个压缩包计算摘要，结果一致时，可以确认传输后的文件内容与原件一致。这对较大的下载、共享盘复制和归档保存有帮助。\n\n摘要用于检查文件字节的一致性；具体算例参数仍通过文件内容和说明阅读。日常使用中，可以把摘要保存在归档目录中，而课程正文主要展示操作与结果。\n\n## SSH 连接远程 Linux\n\n假设自己的服务器地址为 `server.example.org`，用户名为 `cfd`，SSH 端口为 22，连接形式是：\n\n```bash\nssh cfd@server.example.org\n```\n\n这里的域名是写法示例，使用时替换为实际服务器地址和用户名。首次连接会显示服务器主机密钥指纹，可以与服务器管理者提供的值核对后保存。完成认证后，终端中的命令运行在服务器上。\n\n使用自定义端口时：\n\n```bash\nssh -p 2222 cfd@server.example.org\n```\n\n`-p` 指定端口。登录后用 `hostname` 查看主机名，`pwd` 查看远程目录，`exit` 结束这次连接。服务器上的 OpenFOAM 安装与本机环境分别管理，需要在远程终端加载服务器的环境脚本。\n\n## 使用 scp 上传和下载\n\n下面两条命令在本机终端执行，假定远程用户的 `cases` 目录已建立：\n\n```bash\nscp case-inputs.tar.gz cfd@server.example.org:cases/\nscp cfd@server.example.org:cases/log.icoFoam ./log.remote.icoFoam\n```\n\n冒号左侧是用户与服务器，右侧是远程路径；相对路径通常从远程用户家目录开始。第一条上传压缩包，第二条下载日志并在本机改名。带空格的本地文件路径使用引号。\n\n`scp` 的自定义端口参数是大写 `-P`，例如 `scp -P 2222 文件 用户@服务器:目录/`。小写 `-p` 另有保留时间和权限的含义，注意大小写。\n\n## 使用 rsync 增量同步\n\n先在本地练习：\n\n```bash\nmkdir -p synced-case\nrsync -av --dry-run case/ synced-case/\nrsync -av case/ synced-case/\n```\n\n`-a` 采用归档模式，保留常用文件属性并递归处理；`-v` 显示过程，`--dry-run` 只预览将发生的复制。确认路径后，第二条执行同步。再次运行时，工具主要处理新增或变化的文件。\n\n源路径 `case/` 的末尾斜线表示同步目录里的内容，因此 `synced-case` 下直接得到 `0`、`constant`、`system`。源路径写成 `case` 时，结果可能额外保留一层目录名；先用预览查看层级最直观。\n\n同步到远程的形式是：\n\n```bash\nrsync -av --dry-run case/ cfd@server.example.org:cases/case-a/\n```\n\n确认服务器和目标目录正确后，去掉 `--dry-run` 执行。自定义 SSH 端口可加入 `-e 'ssh -p 2222'`。这里的同步保留目标已有的其他文件，适合学习增量复制。\n\n## 排除自动生成的大文件\n\n上传输入时可按实际需求增加 `--exclude='processor*/'` 或 `--exclude='postProcessing/'`。这些模式交给 `rsync` 处理，使用引号保留星号。已有结果需要继续计算时，保留必要时间目录和分区信息，单独确定本次传输包含哪些数据。\n\n符号链接指向包外文件时，传过去的链接可能失效。归档前用 `ls -l` 查看重要链接，将必须共享的目标文件纳入资料包，或在说明中给出可取得的依赖位置。\n\n## 常见问题与练习\n\n`Connection refused` 通常与地址、端口或 SSH 服务有关；`Permission denied` 查看账号与认证方式；`No such file or directory` 检查远程目标目录是否存在。大文件传输中断后，`rsync` 可以再次比较并继续传输变化部分。\n\n练习：为本地 `case/README.txt` 追加一行，先预览同步，再实际同步到 `synced-case`。比较两份文件内容。随后归档 `synced-case`，在第三个独立目录解压，检查目录层级和文件内容。\n",
+    "track": "Linux 入门",
+    "series": "Linux 基础",
+    "sort_order": 406,
+    "status": "published",
+    "cover_url": "/assets/diagrams/core-reproducibility.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "Linux / Bash",
+      "duration": "35 分钟",
+      "prerequisite": "Linux 第 6 课",
+      "topics": [],
+      "editorial_revision": "linux-tutorial-2026-10-02",
+      "source": "Wolf Dynamics, The Linux Terminal: A Crash Introduction；GNU Bash 与 GNU Coreutils 文档；菜鸟教程内容组织参考",
+      "downloads": [
+        {
+          "label": "本课代码与练习说明（ZIP）",
+          "url": "/downloads/linux/linux-07.zip",
+          "description": "包含讲解与命令示例。",
+          "size_bytes": 3492,
+          "sha256": "aca64e31f6f284c8366c09bd97862bc1ff7be3121aae47d299e06b8cf2038c26",
+          "kind": "source"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "linux-08",
+    "kind": "lesson",
+    "title": "08 · 用 Bash 自动运行多个算例",
+    "summary": "学习参数、条件、循环和函数，把网格检查、求解和日志保存组织成可重复使用的脚本。",
+    "body": "Bash 脚本可以按顺序执行命令，也可以根据条件决定下一步，或对多个目录重复同样操作。OpenFOAM 的 `Allrun` 就采用这种方式组织计算。本课先运行独立的小例子，再编写用于方腔算例的批处理脚本。\n\n## 变量和命令行参数\n\n```bash\nmkdir -p \"$HOME/foamlab-linux-lab/08-automation\"\ncd \"$HOME/foamlab-linux-lab/08-automation\"\ncat > describe.sh <<'EOF'\n#!/usr/bin/env bash\nprintf '脚本名称：%s\\n' \"$0\"\nprintf '参数个数：%s\\n' \"$#\"\nfor item in \"$@\"; do\n    printf '收到参数：%s\\n' \"$item\"\ndone\nEOF\nbash describe.sh cavity 'mesh study'\n```\n\n`$0` 是脚本名，`$#` 是参数数量，`\"$@\"` 按原有边界展开每一个参数。这个例子应显示两个参数：`cavity` 和 `mesh study`。`for` 逐个取值赋给 `item`，`do` 与 `done` 包围循环体。\n\n处理文件路径时，保留 `\"$@\"` 与 `\"$item\"` 的引号，带空格的名称就可以作为一个完整路径使用。\n\n## 条件判断\n\n```bash\ncat > check-dir.sh <<'EOF'\n#!/usr/bin/env bash\nif [[ $# -ne 1 ]]; then\n    printf '用法：bash check-dir.sh 目录\\n' >&2\n    exit 2\nfi\nif [[ -d \"$1\" ]]; then\n    printf '目录存在：%s\\n' \"$1\"\nelse\n    printf '目录不存在：%s\\n' \"$1\" >&2\n    exit 1\nfi\nEOF\nbash check-dir.sh .\n```\n\n`[[ ... ]]` 是 Bash 的条件表达式，`-ne` 比较整数是否不等，`-d` 检查目录是否存在。`then` 后写条件成立时的命令，`else` 后写另一种情况，`fi` 结束判断。错误提示通过 `>&2` 写入标准错误，`exit` 给调用者返回状态。\n\n还常用 `-f` 检查普通文件，`-r` 检查可读，`-s` 检查文件是否非空。判断实际算例时，可以检查 `system/controlDict`，而不是仅依赖目录名称。\n\n## 用函数整理重复操作\n\n```bash\ncat > make-study.sh <<'EOF'\n#!/usr/bin/env bash\ncreate_case_tree()\n{\n    local target=$1\n    mkdir -p \"$target/0\" \"$target/constant\" \"$target/system\"\n    printf '已创建：%s\\n' \"$target\"\n}\ncreate_case_tree practice-a\ncreate_case_tree practice-b\nEOF\nbash make-study.sh\n```\n\n函数 `create_case_tree` 接收目标路径，`local` 将变量限定在函数内部。两次调用产生相同目录结构。函数适合封装网格生成、日志统计或归档等重复步骤，使主流程保持清楚。\n\n这里创建的是空练习目录。运行方腔时需要完整教程文件，下面从已加载的 OpenFOAM 环境复制一份。\n\n![脚本组织网格、求解与结果](/assets/diagrams/core-reproducibility.svg)\n\n## 准备两个完整方腔副本\n\n```bash\nmkdir -p cases\ncp -a \"$FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity\" cases/cavity-a\ncp -a \"$FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity\" cases/cavity-b\n```\n\n`FOAM_TUTORIALS` 指向当前安装的教程目录。这两条命令用于目标 `cavity-a`、`cavity-b` 尚未存在的练习目录，分别保留完整的 `0`、`constant`、`system`。已有同名副本时，可另取名称，保持输入和历史结果清楚分开。\n\n可以修改 `cavity-b/system/controlDict` 的时间步，形成两组输入。每个副本独立保存日志，便于之后比较。\n\n## 批量运行脚本\n\n将下面内容保存为 `run-cases.sh`：\n\n```bash\n#!/usr/bin/env bash\nset -euo pipefail\n\nif (( $# == 0 )); then\n    printf '用法：bash run-cases.sh 算例目录...\\n' >&2\n    exit 2\nfi\n\n: \"${WM_PROJECT_DIR:?请先加载 OpenFOAM 环境}\"\n\nfor case_dir in \"$@\"; do\n    if [[ ! -f \"$case_dir/system/controlDict\" ]]; then\n        printf '缺少 controlDict：%s\\n' \"$case_dir\" >&2\n        exit 1\n    fi\n\n    (\n        cd \"$case_dir\"\n        printf '开始计算：%s\\n' \"$PWD\"\n        blockMesh > log.blockMesh 2>&1\n        checkMesh > log.checkMesh 2>&1\n        if grep -Eq 'Failed [1-9][0-9]* mesh checks' log.checkMesh; then\n            printf '网格检查失败：%s\\n' \"$PWD\" >&2\n            exit 1\n        fi\n        icoFoam > log.icoFoam 2>&1\n        printf '计算结束：%s\\n' \"$PWD\"\n    )\ndone\n```\n\n`set -e` 使未处理的命令失败中止脚本，`-u` 检查未定义变量，`pipefail` 保留管道失败状态。`${WM_PROJECT_DIR:?...}` 提供明确的环境缺失提示。`for` 接收任意数量的案例目录，逐一处理。\n\n小括号建立子 shell，每次循环在里面切换目录。子 shell 结束后，外部脚本仍位于原来的 `08-automation`，因此下一份相对路径能正确解析。\n\n网格、检查和求解各自写日志。`grep` 检查 `checkMesh` 的失败汇总，命中时停止当前批次。完整日志还可以查看单元数量、质量指标和具体错误。这个脚本按顺序运行两份案例，适合控制本机资源使用。\n\n执行：\n\n```bash\nbash -n run-cases.sh\nbash run-cases.sh cases/cavity-a cases/cavity-b\n```\n\n第一条检查 Bash 语法，第二条实际运行。成功完成后，每个案例目录中有各自的日志和时间结果。若第二个案例失败，第一个已完成的结果仍保留，查看第二个目录中的对应日志即可定位步骤。\n\n## 自动整理日志\n\n计算后可用循环汇总时间信息：\n\n```bash\nfor case_dir in cases/cavity-a cases/cavity-b; do\n    printf '\\n%s\\n' \"$case_dir\"\n    grep 'ExecutionTime' \"$case_dir/log.icoFoam\" | tail -n 1\ndone\n```\n\n每个目录输出一行名称，再输出最后一次计时。`ExecutionTime` 与 `ClockTime` 的含义要按日志和平台计时方式解释，比较工况时保持计时范围和写出频率一致。\n\n进一步可以把结果写入 CSV，调用 Python 绘制中心线；脚本只负责组织步骤，物理参数保存在各算例字典中。这样查看某次计算时，可以直接对应到完整输入。\n\n## 调试与扩展\n\n`bash -x run-cases.sh cases/cavity-a` 会显示命令展开后的执行过程，适合定位路径与参数问题。出现文件不存在时，先查看打印的当前目录；出现环境变量缺失时，在启动脚本的同一个终端加载环境。\n\n要支持多个求解器，可以增加参数，或用 `foamDictionary system/controlDict -entry application -value` 读取案例选择的应用。不同物理案例还可能需要 `setFields`、`topoSet`、区域拆分等预处理，按照各自流程封装为函数。\n\n## 练习\n\n给脚本增加一个日志汇总步骤：每个案例结束后，记录目录名和最后一条 `ExecutionTime`。然后创建第三个方腔副本，改变网格数，比较三组计算的耗时与中心线结果。最后将运行脚本和输入一起归档，在新目录解压后重新执行。\n",
+    "track": "Linux 入门",
+    "series": "Linux 基础",
+    "sort_order": 407,
+    "status": "published",
+    "cover_url": "/assets/diagrams/core-reproducibility.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "Linux / Bash",
+      "duration": "35 分钟",
+      "prerequisite": "Linux 第 7 课",
+      "topics": [],
+      "editorial_revision": "linux-tutorial-2026-10-02",
+      "source": "Wolf Dynamics, The Linux Terminal: A Crash Introduction；GNU Bash 与 GNU Coreutils 文档；菜鸟教程内容组织参考",
+      "downloads": [
+        {
+          "label": "本课代码与练习说明（ZIP）",
+          "url": "/downloads/linux/linux-08.zip",
+          "description": "包含讲解与命令示例。",
+          "size_bytes": 3689,
+          "sha256": "0a0543ede898c35c0bc3a5b1d72fc2781626ec04014d9b2e895a928747cb7ad2",
+          "kind": "source"
+        }
+      ]
+    }
+  }
+]

@@ -1,28 +1,46 @@
 ---
-title: "constant/MRFProperties · MRFProperties"
+title: "MRFProperties"
 layout: reference
-description: "rotor 为预先建立的 cellZone，omega 的单位为 rad/s。nonRotatingPatches 指定区域内保持静止的边界。MRF 在固定网格上采用旋转参考系近似处理。"
+description: "在指定 cellZone 内设置旋转参考系，常用于固定网格上的叶轮流动近似。"
 dictionary: true
+cms_slug: "dictionary-mrfproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>rotor 为预先建立的 cellZone，omega 的单位为 rad/s。nonRotatingPatches 指定区域内保持静止的边界。MRF 在固定网格上采用旋转参考系近似处理。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>constant/MRFProperties</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>cellZone</code> · <code>active</code> · <code>origin</code> · <code>axis</code> · <code>omega</code> · <code>nonRotatingPatches</code></p><h2>关联命令</h2><p><a href="/commands/?q=simpleFoam">simpleFoam</a> · <a href="/commands/?q=pimpleFoam">pimpleFoam</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary constant/MRFProperties -keywords
-simpleFoam -help</code></pre><h2>9.10 constant/MRFProperties 与 SRFProperties</h2><pre><code class="language-openfoam">FoamFile
+
+<p>在指定 cellZone 内设置旋转参考系，常用于固定网格上的叶轮流动近似。</p><p>位置：<code>constant/MRFProperties</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-dynamic-mrf-configuration.png" alt="MRF 的旋转区和壁面参考系" loading="lazy"><figcaption><strong>MRF 的旋转区和壁面参考系</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 154 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>MRFProperties 定义旋转参考系区域</h2>
+<p>MRF（Multiple Reference Frame）在指定体积区域中采用旋转参考系处理动量方程，常用于搅拌器和旋转机械的稳态近似。网格几何在计算中保持静止，区域内的旋转效应通过方程和通量处理体现。</p>
+<p>以下配置主体放在 <code>constant/MRFProperties</code> 的文件头之后：</p>
+<pre><code class="language-foam">MRF1
 {
-    version 2.0; format ascii;
-    class dictionary; object MRFProperties;
-}
-rotorZone
-{
-    active yes;
     cellZone rotor;
-    nonRotatingPatches (stator);
+    active yes;
+    nonRotatingPatches ();
     origin (0 0 0);
     axis (0 0 1);
-    omega constant 100;
-}</code></pre>
-<p>rotor 为预先建立的 cellZone，omega 的单位为 rad/s。nonRotatingPatches 指定区域内保持静止的边界。MRF 在固定网格上采用旋转参考系近似处理。</p>
-<p>SRFProperties 配置单参考系模型，常用 SRFModel rpm 和 rpmCoeffs/rpm，以 rpm 表示转速。使用两种模型时应分别采用对应的角速度单位。</p><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>cellZone</td><td>源项、运动或材料区域所引用的单元区名称。</td></tr><tr><td>active</td><td>是否启用当前模型实例或操作。</td></tr><tr><td>origin</td><td>局部坐标系、旋转或几何操作的参考原点。</td></tr><tr><td>axis</td><td>旋转轴或方向向量；需明确是否要求单位向量。</td></tr><tr><td>omega</td><td>角速度参数或湍流比耗散率场名，二者物理意义与量纲不同。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>MRF1</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr><tr><td>nonRotatingPatches</td><td>Fixed patches (by default they &#x27;move&#x27; with the MRF zone)</td></tr><tr><td>VC_1</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/simpleFoam/rotatingCylinders</h3><p>原始路径：<code>tutorials/incompressible/simpleFoam/rotatingCylinders/constant/MRFProperties</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/rotatingCylinders/constant/MRFProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/mrfproperties/1-MRFProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/rotatingCylinders">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+    omega 104.72;
+}
+</code></pre>
+<p><code>MRF1</code> 是区域名称，可以自定；<code>rotor</code> 必须是已有 <code>cellZone</code>。<code>origin</code> 定义转轴经过的点，单位为 m；<code>axis</code> 给出轴方向；<code>omega</code> 是角速度，单位为 rad/s，正方向按右手定则。</p>
+<p>转速与角速度满足 \(\omega=2\pi n/60\)。1000 r/min 对应约 104.72 rad/s。将转速数值 1000 直接填进 <code>omega</code> 会改变实际转速。</p>
+<h3>nonRotatingPatches 怎么填</h3>
+<p>MRF 区域中的边界通常按区域旋转处理。若固定外壁也落在旋转单元区域的边界上，需要把对应 patch 名加入 <code>nonRotatingPatches</code>，例如：</p>
+<pre><code class="language-foam">nonRotatingPatches (stationaryWall);
+</code></pre>
+<p>名称与网格 <code>boundary</code> 文件一致。叶轮壁面随参考系旋转，固定机壳保持绝对静止；这一区分决定壁面速度与流体相对运动。若固定壁面在旋转区之外，则由其所在区域的普通边界设置处理。</p>
+<h3>确认旋转区域</h3>
+<p>建立 <code>cellZone</code> 后，在 ParaView 中显示相应区域，检查它是否覆盖叶轮附近的流体，并与静止区域形成合理划分。运行时日志会列出 MRF 区域，几何上的 <code>rotor</code> 分区与文件名中的文字本身没有自动关联，关键是网格中的实际区域名称。</p>
+<p>可在文件中添加多个类似 <code>MRF1</code> 的对象，分别指定单元区、转轴和角速度。区域定义和物理分区应一致，避免同一单元被不合理地重复赋予不同旋转状态。</p>
+<h3>什么时候改用动网格</h3>
+<p>MRF 适合在固定相对位置上估计平均流动、压升或扭矩。若需要计算叶片通过频率、转子与定子相对位置变化或运动引起的瞬态作用，可使用实际旋转网格和 AMI 接口，相关运动写在 <code>dynamicMeshDict</code> 中。</p>
+<p>v2512 的 <code>simpleFoam/mixerVessel2D</code> 提供 MRF 示例。比较不同转速时，同时记录流量、压差和力矩，比只观察速度云图更便于理解运行特性。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/simpleFoam/rotatingCylinders</summary><p>rotatingCylinders 采用 MRF 旋转参考系处理转动区域，网格点保持原位。</p>
+<ul>
+<li><code>cellZone all</code> 选定作用区域，<code>active yes</code> 启用它。</li>
+<li><code>origin (0 0 0)</code>、<code>axis (0 0 1)</code> 给出 z 轴转动中心。</li>
+<li><code>omega 100</code> 的单位为 rad/s。</li>
+<li><code>nonRotatingPatches (outerWall)</code> 指明外壁不随该参考系转动。</li>
+</ul>
+<p>改变转速时修改 omega；外壁和内壁的实际运动还需与速度边界条件一起核对。</p>
+<p><a href="/assets/examples/v2512/mrfproperties/1-MRFProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/rotatingCylinders/constant/MRFProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/rotatingCylinders">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -51,7 +69,15 @@ MRF1
     omega     100;
 }
 
-// ************************************************************************* //</code></pre><h3>示例 2 · heatTransfer/chtMultiRegionSimpleFoam/cpuCabinet</h3><p>原始路径：<code>tutorials/heatTransfer/chtMultiRegionSimpleFoam/cpuCabinet/constant/domain0/MRFProperties</code>；求解器：<code>chtMultiRegionSimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionSimpleFoam/cpuCabinet/constant/domain0/MRFProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/mrfproperties/2-MRFProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionSimpleFoam/cpuCabinet">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · heatTransfer/chtMultiRegionSimpleFoam/cpuCabinet</summary><p>cpuCabinet 在 domain0 流体区内用 MRF 近似风扇区域的转动。</p>
+<ul>
+<li><code>cellZone v_MRF</code> 指定局部旋转区，<code>active true</code> 启用。</li>
+<li>转轴通过 (−0.01,0.04,−0.06)，<code>axis (1 0 0)</code> 沿 x。</li>
+<li><code>omega 209.44</code> 约对应 2000 rpm。</li>
+<li><code>nonRotatingPatches ()</code> 未另外列出保持静止的边界。</li>
+</ul>
+<p>移动风扇位置时同步更新 cellZone 和轴心；转速变化后比较流量、压降与散热效果。</p>
+<p><a href="/assets/examples/v2512/mrfproperties/2-MRFProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionSimpleFoam/cpuCabinet/constant/domain0/MRFProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionSimpleFoam/cpuCabinet">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -79,7 +105,15 @@ VC_1
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · incompressible/simpleFoam/mixerVessel2D</h3><p>原始路径：<code>tutorials/incompressible/simpleFoam/mixerVessel2D/constant/MRFProperties</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/mixerVessel2D/constant/MRFProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/mrfproperties/3-MRFProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/mixerVessel2D">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · incompressible/simpleFoam/mixerVessel2D</summary><p>mixerVessel2D 使用 MRF 近似搅拌转子对流体的作用。</p>
+<ul>
+<li><code>cellZone rotor</code> 选择旋转单元区。</li>
+<li>转轴经过原点，方向为 <code>(0 0 1)</code>。</li>
+<li><code>omega 104.72</code> 约为 1000 rpm，<code>active yes</code> 开启该区域。</li>
+<li><code>nonRotatingPatches ()</code> 没有附加静止边界清单。</li>
+</ul>
+<p>需要解析转子相位随时间的变化时，应评估真实动网格方案；MRF 参数变化主要改变参考系中的旋转作用。</p>
+<p><a href="/assets/examples/v2512/mrfproperties/3-MRFProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/mixerVessel2D/constant/MRFProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/mixerVessel2D">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -109,9 +143,4 @@ MRF1
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/simplefoam/">simpleFoam</a> · <a href="/commands/pimplefoam/">pimpleFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/MRFProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/MRFProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/simplefoam/">simpleFoam</a> · <a href="/commands/pimplefoam/">pimpleFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

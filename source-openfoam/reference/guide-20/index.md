@@ -1,10 +1,11 @@
 ---
 title: "第 20 章　OpenFOAM 运行所需的 Linux 命令"
 layout: reference
-description: "OpenCFD v2512 OpenFOAM 运行所需的 Linux 命令；包含原理、示例与版本核对。"
+description: "OpenFOAM 运行所需的 Linux 命令：用法与配置实例。"
+cms_slug: "reference-guide-20"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>OpenFOAM 没有图形界面，终端就是你的操作台。这一章只收跑算例真正会用到的命令，每条都配一个 OpenFOAM 场景的例子。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>OpenFOAM 没有图形界面，终端就是你的操作台。这一章只收跑算例真正会用到的命令，每条都配一个 OpenFOAM 场景的例子。</p>
 <h2>20.1 走路与看路：目录操作</h2>
 <div class="table-scroll"><table>
 <tr><th>命令</th><th>作用</th><th>例子</th></tr>
@@ -46,14 +47,14 @@ diff -r case1/system case2/system                   # 比较两个算例的全�
 <p>grep：在文件内容里找</p>
 <pre><code class="language-plaintext">grep -n "endTime" system/controlDict            # -n 显示行号
 grep -i "error" log.simpleFoam                  # -i 忽略大小写
-grep -r "kOmegaSST" &#36;FOAM_TUTORIALS             # -r 递归搜目录
-grep -rl "interFoam" &#36;FOAM_TUTORIALS --include=controlDict   # -l 只列文件名
+grep -r "kOmegaSST" $FOAM_TUTORIALS             # -r 递归搜目录
+grep -rl "interFoam" $FOAM_TUTORIALS --include=controlDict   # -l 只列文件名
 grep -A5 -B2 "FOAM FATAL" log.simpleFoam        # 前 2 行后 5 行一起看
 grep -c "Time = " log.simpleFoam                # 数一共算了多少步
 grep "^Time = " log.simpleFoam | tail -1        # 算到第几步了</code></pre>
 <p>find：按文件名/属性找</p>
 <pre><code class="language-plaintext">find . -name "*.stl"                       # 当前目录树里所有 stl
-find &#36;FOAM_SRC -name "kOmegaSST*"          # 找源码
+find $FOAM_SRC -name "kOmegaSST*"          # 找源码
 find . -name "log.*" -delete               # 删掉所有日志
 find . -type d -name "processor*"          # 只找目录
 find . -size +100M                         # 找出大文件（清硬盘时用）</code></pre>
@@ -132,13 +133,13 @@ rsync -avz --progress user@server:~/run/case/ ./case/    # ★ 断点续传、�
 rsync -avz --exclude 'processor*' server:~/run/case/ ./case/</code></pre>
 <p>rsync 可以按变化传输并支持指定排除规则，适用于重复同步大型结果。与 scp 比较时，应同时考虑连接方式、文件数量、权限以及断点恢复选项。</p>
 <h2>20.10 环境变量与 .bashrc</h2>
-<pre><code class="language-bash">echo &#36;PATH
+<pre><code class="language-bash">echo $PATH
 export FOAM_SIGFPE=true            # 只对当前终端生效
 source ~/.bashrc                   # 让改动立即生效（等价于 . ~/.bashrc）
 which simpleFoam                   # 这条命令实际在哪
 type run                           # 看某个名字是命令还是别名</code></pre>
 <p>在 ~/.bashrc 末尾加自己的别名，是长期效率的来源：</p>
-<pre><code class="language-plaintext">alias of2512='source &#36;HOME/OpenFOAM/OpenFOAM-v2512/etc/bashrc'
+<pre><code class="language-plaintext">alias of2512='source $HOME/OpenFOAM/OpenFOAM-v2512/etc/bashrc'
 alias ll='ls -lh'
 alias cl='foamListTimes -rm'
 alias t='tail -f'</code></pre>
@@ -153,5 +154,3 @@ free -h                       # 剩多少内存
 ssh user@server               # 登服务器
 man ls                        # 看手册（q 退出）</code></pre>
 <p>Tab 补全可减少命令和路径的拼写错误。输入名称前缀后按 Tab，查看当前 shell 提供的候选项；补全结果也可用于检查路径是否存在。</p>
-<h2>第五部分　排错与附录</h2>
-{% endraw %}

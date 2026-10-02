@@ -1,10 +1,11 @@
 ---
 title: "07 网格生成与前处理配置"
 layout: reference
-description: "OpenCFD v2512 网格生成与前处理配置；包含原理、示例与版本核对。"
+description: "网格生成与前处理配置：用法与配置实例。"
+cms_slug: "reference-manual-07"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>7.1 system/blockMeshDict</h3>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>7.1 system/blockMeshDict</h3>
 <p>blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。</p>
 <p>下例建立长 1 m、宽 0.1 m、厚 0.01 m 的二维通道。厚度方向设置一层单元，两侧边界设为 empty。</p>
 <pre><code class="language-openfoam">FoamFile
@@ -350,4 +351,3 @@ dictionaryReplacement
     }
 }</code></pre>
 <p>dictionaryReplacement 按目标文件名组织替换条目，运行 changeDictionary 后写回相应文件。-instance 指定目标实例目录。单个键值可直接通过 foamDictionary 修改。</p>
-{% endraw %}

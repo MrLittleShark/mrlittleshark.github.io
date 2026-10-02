@@ -1,19 +1,11 @@
 ---
-title: "transformPoints  对体网格进行平移旋转和缩放"
+title: "transformPoints · 示例将毫米坐标换算为米"
 layout: reference
 description: "示例将毫米坐标换算为米。外部源项位置和参考点需同步换算。"
+cms_slug: "command-transformpoints"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>示例将毫米坐标换算为米。外部源项位置和参考点需同步换算。</p><h2>v2512 源码中的用途</h2><p>Transforms the mesh points in the polyMesh directory according to the translate, rotate and scale options.</p><h2>使用入口</h2><pre><code class="language-bash">transformPoints -scale &#x27;(0.001 0.001 0.001)&#x27;</code></pre><h2>使用条件与核对</h2><p>示例将毫米坐标换算为米。外部源项位置和参考点需同步换算。 用法：transformPoints 变换选项 示例：transformPoints -scale &#x27;(0.001 0.001 0.001)&#x27;
-源码说明：Transforms the mesh points in the polyMesh directory according to the translate, rotate and scale options.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-allRegions -auto-centre -case -centre -cylToCart -debug-switch -decomposeParDict -doc -doc-source -fileHandler -help -help-compat -help-full -help-man -help-notes -hostRoots -info-switch -lib -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-libs -noFunctionObjects -opt-switch -parallel -recentre -region -regions -rollPitchYaw -roots -rotate -rotate-angle -rotate-x -rotate-y -rotate-z -rotateFields -scale -time -translate -world -yawPitchRoll</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/transformpoints.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: transformPoints
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/transformPoints/transformPoints.C
 
-
-Usage: transformPoints [OPTIONS]
+<p>示例将毫米坐标换算为米。外部源项位置和参考点需同步换算。</p><h2>用法</h2><pre><code class="language-bash">transformPoints -scale &#x27;(0.001 0.001 0.001)&#x27;</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">transformPoints -scale &#x27;(0.001 0.001 0.001)&#x27; -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-auto-centre</td><td>Use bounding box centre as centre for rotations</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-centre &lt;point&gt;</td><td>Use specified &lt;point&gt; as centre for rotations Tranform cylindrical coordinates to cartesian coordinates Set named DebugSwitch (default value: 1). [Can be used multiple times] Alternative decomposePar dictionary file Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-recentre</td><td>Recentre the bounding box before other operations</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-rotate-x &lt;deg&gt;</td><td>Rotate (degrees) about x-axis</td></tr><tr><td>-rotate-y &lt;deg&gt;</td><td>Rotate (degrees) about y-axis</td></tr><tr><td>-rotate-z &lt;deg&gt;</td><td>Rotate (degrees) about z-axis</td></tr><tr><td>-rotateFields</td><td>Read and transform vector and tensor fields too Scale by the specified amount - Eg, for uniform [mm] to [m] scaling use either &#x27;(0.001 0.001 0.001)&#x27; or simply &#x27;0.001&#x27;</td></tr><tr><td>-time &lt;time&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: transformPoints [OPTIONS]
 Options:
   -allRegions       Use all regions in regionProperties
   -auto-centre      Use bounding box centre as centre for rotations
@@ -87,5 +79,4 @@ Note: roll=rotate about x, pitch=rotate about y, yaw=rotate about z
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/transformPoints/transformPoints.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/transformPoints/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/transformPoints/transformPoints.C">源码与说明</a> · <a href="/assets/command-help/transformpoints.txt">帮助文本</a></p>

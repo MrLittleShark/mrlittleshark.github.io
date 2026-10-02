@@ -1,19 +1,28 @@
 ---
-title: "foamDictionary  读取或修改字典条目"
+title: "foamDictionary · 读取、修改和展开 OpenFOAM 字典"
 layout: reference
-description: "-value 读取条目值，-keywords 列出关键字，-expand 展开引用。子条目采用 solvers/p/tolerance 等路径表示。"
+description: "读取、修改和展开 OpenFOAM 字典。"
+cms_slug: "command-foamdictionary"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>-value 读取条目值，-keywords 列出关键字，-expand 展开引用。子条目采用 solvers/p/tolerance 等路径表示。</p><h2>v2512 源码中的用途</h2><p>Interrogate and manipulate dictionaries.</p><h2>使用入口</h2><pre><code class="language-bash">foamDictionary system/controlDict -entry endTime -set 100</code></pre><h2>使用条件与核对</h2><p>-value 读取条目值，-keywords 列出关键字，-expand 展开引用。子条目采用 solvers/p/tolerance 等路径表示。 用法：foamDictionary 字典 [-entry 路径] [-value/-set 值] 示例：foamDictionary system/controlDict -entry endTime -set 100
-源码说明：Interrogate and manipulate dictionaries.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-add -case -debug-switch -decomposeParDict -diff -diff-etc -disableFunctionEntries -doc -doc-source -entry -expand -fileHandler -help -help-compat -help-full -help-man -help-notes -hostRoots -includes -info-switch -keywords -lib -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-libs -noFunctionObjects -opt-switch -parallel -precision -remove -roots -set -value -world</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/foamdictionary.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: foamDictionary
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/foamDictionary/foamDictionary.C
 
-
-Usage: foamDictionary [OPTIONS] &lt;dict&gt;
+<p>读取、修改和展开 OpenFOAM 字典。</p><h2>读取一个数值</h2>
+<pre><code class="language-bash">foamDictionary system/controlDict -entry endTime -value
+</code></pre>
+<p>输出 <code>endTime</code> 的值，适合检查设置，也便于在脚本中取值。此命令读取文件。</p>
+<h2>修改结束时间</h2>
+<pre><code class="language-bash">foamDictionary system/controlDict -entry endTime -set 2
+</code></pre>
+<p>将 <code>endTime</code> 改成 <code>2</code> 并写回文件。单位由求解器的时间定义决定；瞬态计算通常是秒，稳态计算常用迭代计数。</p>
+<h2>读取嵌套条目</h2>
+<pre><code class="language-bash">foamDictionary system/fvSolution -entry solvers/p/tolerance -value
+</code></pre>
+<p><code>/</code> 分隔子字典层级。本例要求存在 <code>solvers</code> 下的 <code>p</code>，可先用下一组命令查看实际名称。</p>
+<h2>列出键和展开引用</h2>
+<pre><code class="language-bash">foamDictionary system/fvSolution -entry solvers -keywords
+foamDictionary system/fvSolution -expand &gt; fvSolution.expanded
+</code></pre>
+<p>第一行列出线性求解器的字段条目。第二行将展开内容保存到新文件，适合检查宏与 include；含 <code>#codeStream</code> 等条目时，展开过程会执行相应代码。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-add &lt;value&gt;</td><td>Add a new entry</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-diff &lt;dict&gt;</td><td>Write differences with respect to the specified dictionary</td></tr><tr><td>-diff-etc &lt;dict&gt;</td><td>As per -diff, but locate the file as per foamEtcFile Disable expansion of dictionary directives - #include, #codeStream etc</td></tr><tr><td>-entry &lt;name&gt;</td><td>定位字典中的键或子字典路径。</td></tr><tr><td>-expand</td><td>展开字典引用和函数条目；#codeStream 等条目可能执行代码。</td></tr><tr><td>-includes</td><td>List the #include/#sinclude files to standard output Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-keywords</td><td>列出当前字典层级的键名。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-precision &lt;int&gt;</td><td>Set default write precision for IOstreams</td></tr><tr><td>-remove</td><td>Remove the entry Subprocess root directories for distributed running</td></tr><tr><td>-set &lt;value&gt;</td><td>设置条目值，会修改文件。</td></tr><tr><td>-value</td><td>仅输出所选条目的值。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamDictionary [OPTIONS] &lt;dict&gt;
 Arguments:
   &lt;dict&gt;            The dictionary file to process
 Options:
@@ -74,5 +83,4 @@ Interrogate and manipulate dictionaries
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/foamDictionary/foamDictionary.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/foamDictionary/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/miscellaneous/foamDictionary/foamDictionary.C">源码与说明</a> · <a href="/assets/command-help/foamdictionary.txt">帮助文本</a></p>

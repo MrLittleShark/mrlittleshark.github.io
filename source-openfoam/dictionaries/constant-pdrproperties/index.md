@@ -1,11 +1,107 @@
 ---
-title: "constant/PDRProperties · PDRProperties"
+title: "PDRProperties"
 layout: reference
-description: "PDR 燃烧或障碍物模型的物性与模型控制参数。PDR 将未解析障碍物对流动与火焰的影响表示为模型项，必须保持障碍物预处理、阻力数据和求解器模型一致。"
+description: "PDR 燃烧或障碍物模型的物性与模型控制参数。"
 dictionary: true
+cms_slug: "dictionary-pdrproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>PDR 燃烧或障碍物模型的物性与模型控制参数。PDR 将未解析障碍物对流动与火焰的影响表示为模型项，必须保持障碍物预处理、阻力数据和求解器模型一致。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>PDRDragModel</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr><tr><td>StSmoothCoef</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr><tr><td>schelkin</td><td>No smooth if &gt;100</td></tr><tr><td>gulderCoef</td><td>this value is not usssed 1.0.</td></tr><tr><td>gMaCoef</td><td>not used</td></tr><tr><td>gMaCoef1</td><td>not used</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 2 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · preProcessing/PDRsetFields/simplePipeCage</h3><p>原始路径：<code>tutorials/preProcessing/PDRsetFields/simplePipeCage/constant/PDRProperties</code>；求解器：<code>PDRFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/preProcessing/PDRsetFields/simplePipeCage/constant/PDRProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/pdrproperties/1-PDRProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/preProcessing/PDRsetFields/simplePipeCage">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>PDR 燃烧或障碍物模型的物性与模型控制参数。</p><p>位置：<code>constant/PDRProperties</code></p><h2>配置实例</h2><p>preProcessing/PDRsetFields/simplePipeCage 中的 PDRProperties：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      PDRProperties;
+}
+
+PDRDragModel basic;
+
+basicCoeffs
+{
+    drag     on;
+    Csu      0.5;
+    Csk      0.05;
+}
+
+XiModel transport;
+
+transportCoeffs
+{
+    XiShapeCoef 1;
+}
+
+XiEqModel instability;
+
+instabilityCoeffs
+{
+    XiEqIn 2.5;
+
+    XiEqModel basicSubGrid;
+
+    basicSubGridCoeffs
+    {
+        XiEqModel SCOPEBlend;
+
+        SCOPEBlendCoeffs
+        {
+            XiEqModelL
+            {
+                XiEqModel       Gulder;
+
+                GulderCoeffs
+                {
+                    XiEqCoef   0.62;
+                    uPrimeCoef      1.0;
+                    subGridSchelkin true;
+                }
+            }
+
+            XiEqModelH
+            {
+                XiEqModel       SCOPEXiEq;
+
+                SCOPEXiEqCoeffs
+                {
+                    XiEqCoef   1.6;
+                    XiEqExp    0.33333;
+                    lCoef      0.336;
+                    uPrimeCoef      1.0;
+                    subGridSchelkin true;
+                }
+            }
+        }
+    }
+}
+
+XiGModel instabilityG;
+
+instabilityGCoeffs
+{
+    lambdaIn        lambdaIn   [0 1 0 0 0 0 0] 0.6;
+    GIn             GIn        [0 0 -1 0 0 0 0] 1.917;
+
+    XiGModel basicSubGridG;
+
+    basicSubGridGCoeffs
+    {
+        k1 0.5;
+
+        XiGModel KTS;
+
+        KTSCoeffs
+        {
+             GEtaCoef   0.28;
+        }
+    }
+}</code></pre><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · preProcessing/PDRsetFields/simplePipeCage</summary><p>simplePipeCage 用管架障碍物展示 PDR 场初始化。PDRProperties 提供阻力模型以及预混火焰褶皱模型的选择。</p>
+<ul>
+<li><code>PDRDragModel basic</code> 与 <code>drag on</code> 启用基本阻力模型，<code>Csu 0.5</code>、<code>Csk 0.05</code> 是该模型的闭合系数。</li>
+<li><code>XiModel transport</code> 求解火焰褶皱因子 Xi 的输运，<code>XiShapeCoef 1</code> 控制对应模型项。</li>
+<li><code>XiEqModel instability</code> 内嵌 basicSubGrid 与 SCOPEBlend；后者分别给出低、高湍流强度条件下的模型选择与系数。阅读时从每一级 <code>XiEqModel</code> 向内追踪实际选中的子字典。</li>
+<li><code>XiGModel instabilityG</code> 的 <code>lambdaIn 0.6</code> 带长度量纲，<code>GIn 1.917</code> 带逆时间量纲，用于不稳定性相关的生成模型。</li>
+</ul>
+<p>这些系数与障碍物尺度、燃料及标定条件有关。调整管架几何时先更新几何生成的 PDR 场，再比较压力上升和火焰传播速度。</p>
+<p><a href="/assets/examples/v2512/pdrproperties/1-PDRProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/preProcessing/PDRsetFields/simplePipeCage/constant/PDRProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/preProcessing/PDRsetFields/simplePipeCage">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -103,7 +199,16 @@ instabilityGCoeffs
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · combustion/PDRFoam/pipeLattice</h3><p>原始路径：<code>tutorials/combustion/PDRFoam/pipeLattice/constant/PDRProperties</code>；求解器：<code>PDRFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/combustion/PDRFoam/pipeLattice/constant/PDRProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/pdrproperties/2-PDRProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/PDRFoam/pipeLattice">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · combustion/PDRFoam/pipeLattice</summary><p>pipeLattice 的预混火焰穿过管阵列。这个较长字典同时保留多种模型的系数，实际使用哪一组由各层模型名称决定。</p>
+<ul>
+<li><code>PDRDragModel basic</code> 选择障碍物阻力，<code>Csu 0.5</code>、<code>Csk 0.05</code> 参与其闭合。</li>
+<li><code>XiModel transport</code> 启用 Xi 输运，所选 transportCoeffs 中 <code>XiShapeCoef 1</code>、<code>GEtaExp 0.28</code> 为模型系数。</li>
+<li><code>XiEqModel instability</code> 的子字典继续选择 <code>XiEqModel Gulder</code>；此路径采用 <code>XiEqCoef 0.62</code>，同文件中 SCOPEBlend 等备用配置只有被选中后才参与计算。</li>
+<li><code>XiGModel instabilityG</code> 使用 <code>lambdaIn 4.5e-3</code> m、<code>GIn 1.917</code> s⁻¹，内部选择 KTS 生成模型。</li>
+<li><code>XpEqModel normBasicSubGrid</code> 与 <code>XpGModel normBasicSubGridG</code> 给出另一组亚网格火焰闭合，系数应按所选模型成组理解。</li>
+</ul>
+<p>比较模型时一次更换一个模型选择及其对应系数，并记录相同测点上的火焰到达时间与峰值压力。</p>
+<p><a href="/assets/examples/v2512/pdrproperties/2-PDRProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/combustion/PDRFoam/pipeLattice/constant/PDRProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/PDRFoam/pipeLattice">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -146,7 +251,7 @@ basicCoeffs
 basicSchCoeffs
 {
     drag        on;
-    &#36;schelkin;
+    $schelkin;
     Csu         0.0;
     Csk         0.0;
 }
@@ -181,14 +286,14 @@ k3Coeffs
 
 transportThreeEqsCoeffs
 {
-    &#36;transportTwoEqsCoeffs;
-    &#36;k3Coeffs;
+    $transportTwoEqsCoeffs;
+    $k3Coeffs;
 }
 
 transportFourEqsCoeffs
 {
-    &#36;transportTwoEqsCoeffs;
-    &#36;k3Coeffs;
+    $transportTwoEqsCoeffs;
+    $k3Coeffs;
 }
 
 transportOneEqObsCoeffs
@@ -244,24 +349,24 @@ instability2XiEqCoeffs
 
     BLMgMaXiEqCoeffs
     {
-        &#36;schelkin;
+        $schelkin;
         gulderCoef  1.0; //this value is not usssed 1.0.
         kaCoef      0.25;
         lowK0       0.1;
         lowKg       0.0;
         gMaCoef     0.032; //not used
         gMaCoef1    0.0;  // not used
-        &#36;BLMcoeffs;
+        $BLMcoeffs;
     }
 
     BLMXiEqCoeffs
     {
-        &#36;schelkin;
+        $schelkin;
         gulderCoef  0.31;
         kaCoef      0.25;
         lowK1       0.02;
         lowK2       0.05;
-        &#36;BLMcoeffs;
+        $BLMcoeffs;
      }
 }
 
@@ -285,7 +390,7 @@ instabilityCoeffs
 
             GulderCoeffs
             {
-                &#36;schelkin;
+                $schelkin;
                 XiEqCoef    0.62;
             }
         }
@@ -296,7 +401,7 @@ instabilityCoeffs
 
             SCOPEXiEqCoeffs
             {
-                &#36;schelkin;
+                $schelkin;
                 XiEqCoef    1.6;
                 XiEqExp     0.33333;
             }
@@ -388,9 +493,4 @@ basicSubGridGCoeffs
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/pdrfoam/">PDRFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/PDRProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/PDRProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/pdrfoam/">PDRFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

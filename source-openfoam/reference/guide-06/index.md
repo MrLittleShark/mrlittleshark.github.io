@@ -1,10 +1,11 @@
 ---
 title: "第 6 章　前处理命令（网格与初场）"
 layout: reference
-description: "OpenCFD v2512 前处理命令（网格与初场）；包含原理、示例与版本核对。"
+description: "前处理命令（网格与初场）：用法与配置实例。"
+cms_slug: "reference-guide-06"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>前处理要回答三个问题：网格从哪来（生成或转换）→ 网格好不好（检查）→ 初始场怎么给（初始化）。这一章按这个顺序排。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>前处理要回答三个问题：网格从哪来（生成或转换）→ 网格好不好（检查）→ 初始场怎么给（初始化）。这一章按这个顺序排。</p>
 <h2>6.1 blockMesh —— 结构化网格生成器</h2>
 <p>是什么：读 system/blockMeshDict，把若干个六面体块划分成网格，写进 constant/polyMesh/。</p>
 <p>blockMesh 将顶点、块连接关系、网格数量和边界保存在文本字典中，适合学习局部编号与网格拓扑。snappyHexMesh 需要背景网格，该网格可以由 blockMesh 等工具提供。</p>
@@ -18,7 +19,7 @@ description: "OpenCFD v2512 前处理命令（网格与初场）；包含原理�
 </table></div>
 <p>示例</p>
 <pre><code class="language-bash">run
-cp -r &#36;FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity .
+cp -r $FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity .
 cd cavity
 blockMesh
 ...
@@ -143,7 +144,7 @@ actions
 <p>setFields 按几何区域批量赋值，比直接修改按单元编号排列的数据更便于复现。操作后应检查相分数范围、所选体积和积分质量，并确认边界条件仍符合模型。</p>
 <pre><code class="language-bash">setFields                     # 读 system/setFieldsDict</code></pre>
 <p>完整示例（溃坝）</p>
-<pre><code class="language-bash">cp -r &#36;FOAM_TUTORIALS/multiphase/interFoam/laminar/damBreak/damBreak .
+<pre><code class="language-bash">cp -r $FOAM_TUTORIALS/multiphase/interFoam/laminar/damBreak/damBreak .
 cd damBreak
 ./Allrun.pre        # 或手动：
 blockMesh
@@ -209,4 +210,3 @@ mpirun -np 8 mapFieldsPar ../coarseCase -consistent -sourceTime latestTime -para
 <p>多区域算例含有多个网格和相互耦合的边界。使用脚本或字典批量更新可减少重复编辑，但仍需逐一核对区域名、patch 对应关系和耦合条件。</p>
 <pre><code class="language-plaintext">changeDictionary -region solid          # 读 system/solid/changeDictionaryDict
 changeDictionary -literalRE             # 关键字里的正则按字面处理</code></pre>
-{% endraw %}

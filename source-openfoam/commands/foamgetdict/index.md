@@ -1,19 +1,25 @@
 ---
-title: "foamGetDict  复制配置字典模板"
+title: "foamGetDict · 从模板目录复制字典到当前算例"
 layout: reference
-description: "默认写入 system，*Properties 通常写入 constant。-target 指定目标目录，-force 覆盖已有文件。"
+description: "从模板目录复制字典到当前算例。"
+cms_slug: "command-foamgetdict"
 ---
-{% raw %}
-<div class="source-note">v2512 脚本源码已收录；未执行脚本。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>默认写入 system，*Properties 通常写入 constant。-target 指定目标目录，-force 覆盖已有文件。</p><h2>v2512 源码中的用途</h2><p>Find an OpenFOAM dictionary file from OpenFOAM/etc/caseDicts/ or {user,site} locations and copy it into the case directory.</p><h2>使用入口</h2><pre><code class="language-bash">foamGetDict decomposeParDict</code></pre><h2>使用条件与核对</h2><p>默认写入 system，*Properties 通常写入 constant。-target 指定目标目录，-force 覆盖已有文件。 用法：foamGetDict [选项] 文件名 示例：foamGetDict decomposeParDict
-Find an OpenFOAM dictionary file from OpenFOAM/etc/caseDicts/ or {user,site} locations and copy it into the case directory.
-本条基于固定版本脚本源码，运行前检查帮助与依赖。
-源码帮助选项：-case -cfg -ext -f -help -no-ext -target -with-api</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/foamgetdict.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 script source evidence
-Command: foamGetDict
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamGetDict
 
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-Usage: foamGetDict [OPTIONS] &lt;file&gt;
+<p>从模板目录复制字典到当前算例。</p><h2>复制常用配置模板</h2>
+<pre><code class="language-bash">foamGetDict decomposeParDict
+foamGetDict meshQualityDict
+</code></pre>
+<p>模板来自 OpenFOAM 的 <code>etc/caseDicts</code> 或用户、站点配置目录。多数 system 字典写到 <code>system</code>，物性类文件按脚本规则选择目录。</p>
+<h2>指定输出目录</h2>
+<pre><code class="language-bash">mkdir -p templates
+foamGetDict -target templates snappyHexMeshDict
+</code></pre>
+<p>把模板保存到单独的 <code>templates</code> 目录，便于与当前算例比较。模板中的模型、几何和数值需按算例填写。</p>
+<h2>替换已有模板</h2>
+<pre><code class="language-bash">foamGetDict -force decomposeParDict
+</code></pre>
+<p><code>-force</code> 允许覆盖同名文件。需要保留原设置时，先复制备份，再比较新模板中的条目。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-ext</td><td>&lt;ext&gt;       File extension</td></tr><tr><td>-cfg</td><td>Same as &#x27;-ext cfg&#x27; for &#x27;.cfg&#x27; files</td></tr><tr><td>-f | -force</td><td>Force overwrite of existing files</td></tr><tr><td>-no-ext</td><td>Files without extension</td></tr><tr><td>-target &lt;dir&gt;</td><td>Target directory (default: system, or auto-detected)</td></tr><tr><td>-with-api=NUM</td><td>Alternative api value for searching</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamGetDict [OPTIONS] &lt;file&gt;
 options:
   -case &lt;dir&gt;       Alternative case directory, default is the cwd
   -ext  &lt;ext&gt;       File extension
@@ -30,5 +36,4 @@ and copy it into the case directory. For example,
     foamGetDict decomposeParDict
     foamGetDict extrudeMeshDict
     foamGetDict createPatchDict
-    foamGetDict surfaces</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamGetDict">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+    foamGetDict surfaces</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamGetDict">源码与说明</a> · <a href="/assets/command-help/foamgetdict.txt">帮助文本</a></p>

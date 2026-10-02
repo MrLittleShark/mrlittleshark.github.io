@@ -1,36 +1,46 @@
 ---
-title: "system/controlDict → functions → surfaces · surfaces"
+title: "surfaces"
 layout: reference
-description: "面采样还支持 patch、isoSurface 等类型。采用 isoSurface 时，通过字段、等值和采样算法定义所需相界面或涡结构。"
+description: "在平面、边界或等值面上采样场数据，输出可视化或分析用的表面数据。"
 dictionary: true
+cms_slug: "dictionary-surfaces"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>面采样还支持 patch、isoSurface 等类型。采用 isoSurface 时，通过字段、等值和采样算法定义所需相界面或涡结构。</p><figure><img src="/assets/diagrams/reference-7.svg" alt="函数对象配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/controlDict → functions → surfaces</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>type</code> · <code>surfaces</code> · <code>surfaceFormat</code> · <code>fields</code> · <code>surfaces</code> · <code>cuttingPlane</code> · <code>point</code> · <code>normal</code></p><h2>关联命令</h2><p><a href="/commands/?q=postProcess">postProcess</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/controlDict -entry functions -value
-postProcess -help</code></pre><h2>10.4 面采样</h2><pre><code class="language-openfoam">sectionSample
+
+<p>在平面、边界或等值面上采样场数据，输出可视化或分析用的表面数据。</p><p>位置：<code>system/controlDict → functions → surfaces</code></p><p><code>surfaces</code> 把体积场采样到平面、等值面或其他表面，并导出 VTK 等格式。它适合保存速度截面、温度截面以及多相界面附近的场。</p>
+<h3>示例：导出方腔中间截面</h3>
+<p>将下列对象放入 <code>system/controlDict/functions</code>：</p>
+<pre><code class="language-foam">midPlane
 {
     type surfaces;
-    libs (&quot;libsampling.so&quot;);
+    libs (sampling);
     writeControl writeTime;
     surfaceFormat vtk;
-    fields (U p);
     interpolationScheme cellPoint;
+    fields (U p);
     surfaces
     {
-        midPlane
+        zMid
         {
-            type cuttingPlane;
-            planeType pointAndNormal;
-            pointAndNormalDict
-            {
-                point (0.5 0 0);
-                normal (1 0 0);
-            }
+            type plane;
+            point (0 0 0.005);
+            normal (0 0 1);
             interpolate true;
         }
     }
-}</code></pre>
-<p>面采样还支持 patch、isoSurface 等类型。采用 isoSurface 时，通过字段、等值和采样算法定义所需相界面或涡结构。</p><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>libs</td><td>额外加载的共享库。函数对象或自定义边界未注册时，应检查库名与编译版本。</td></tr><tr><td>writeControl</td><td>输出触发方式，其值决定 writeInterval 表示步数、物理时间或时钟时间。</td></tr><tr><td>fields</td><td>目标场列表。场名、数据类型和计算时刻必须满足相应函数对象的要求。</td></tr><tr><td>patches</td><td>参与该操作的边界列表，必须对应网格中的实际 patch 名称。</td></tr><tr><td>application</td><td>供运行脚本查询的求解器名称；直接在终端执行程序时，以执行的命令为准。</td></tr><tr><td>writeInterval</td><td>输出间隔，需要结合 writeControl 理解单位与触发时刻。</td></tr><tr><td>functions</td><td>函数对象实例集合，可以记录残差、采样、积分或计算派生量。</td></tr><tr><td>interpolationScheme</td><td>把离散场插值到采样位置的方式；不同插值可能影响局部峰值。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>invariant</td><td>Unaffected by mesh motion</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/pimpleFoam/RAS/propeller</h3><p>原始路径：<code>tutorials/incompressible/pimpleFoam/RAS/propeller/system/surfaces</code>；求解器：<code>pimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/RAS/propeller/system/surfaces">查看固定版本源码</a> · <a href="/assets/examples/v2512/surfaces/1-surfaces.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/RAS/propeller">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+}
+</code></pre>
+<p><code>point</code> 给出平面经过的一点，<code>normal</code> 给出法向；这里是 z=0.005 m 的截面。<code>interpolate true</code> 将数据插值到采样表面的点，采用外层指定的 <code>cellPoint</code>；输出格式为 VTK，可直接在 ParaView 中打开。</p>
+<p>结果位于 <code>postProcessing/midPlane/</code> 下的时间目录。使用同一色标比较不同时间或工况，有助于分辨实际场变化。更改法向可生成流向或横向截面，改变平面位置可比较入口发展和下游分布。</p>
+<p>对于相分数或压力等值面，可选择相应的等值面采样类型。做表面积分时，需要关注表面的完整性、法向和三角面重复情况；计算出口流量通常优先使用原网格 patch 上的 <code>surfaceFieldValue</code>，可以直接利用求解器的面通量。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/pimpleFoam/RAS/propeller</summary><p>螺旋桨流动的 surfaces 同时输出剖面、涡结构等值面与桨叶表面。</p>
+<ul>
+<li><code>fields (p U Q)</code> 选择要带到采样表面的字段，Q 需已由相应计算生成。</li>
+<li><code>zNormal/cuttingPlane</code> 经过原点、法向 <code>(0 0 1)</code>，得到 z=0 截面。</li>
+<li><code>isoQ</code> 取 <code>Q=1000</code> 等值面，具体阈值应结合速度和长度尺度解释。</li>
+<li><code>propeller/patches ("propeller.*")</code> 收集桨叶边界，使用 Ensight；其他表面默认 VTK。</li>
+</ul>
+<p>转速或尺度变化后重新评估 Q 阈值，并用相同剖面位置比较压力和速度。</p>
+<p><a href="/assets/examples/v2512/surfaces/1-surfaces.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/RAS/propeller/system/surfaces">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/RAS/propeller">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -79,7 +89,15 @@ surfaces
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · multiphase/compressibleInterIsoFoam/laminar/depthCharge2D</h3><p>原始路径：<code>tutorials/multiphase/compressibleInterIsoFoam/laminar/depthCharge2D/system/controlDict</code>；求解器：<code>compressibleInterIsoFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/compressibleInterIsoFoam/laminar/depthCharge2D/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/surfaces/2-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/compressibleInterIsoFoam/laminar/depthCharge2D">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · multiphase/compressibleInterIsoFoam/laminar/depthCharge2D</summary><p>depthCharge2D 使用几何 VOF 算法，并在每次主场写出时导出重构界面。</p>
+<ul>
+<li><code>surfaces</code> 加载 <code>geometricVoF sampling</code>，<code>freeSurf/type interface</code> 表示直接使用界面几何。</li>
+<li><code>surfaceFormat vtp</code> 输出表面文件，<code>fields (p U)</code> 附带压力与速度。</li>
+<li><code>interpolate false</code> 保留该界面采样方式，主结果按 <code>writeInterval 0.01</code> s 输出。</li>
+<li>主步长自动调整，<code>maxCo 0.5</code> 与 <code>maxAlphaCo 0.5</code> 同时限制流动和界面输运。</li>
+</ul>
+<p>观察快速膨胀或压力波时，分别检查求解时间分辨率与表面输出频率。</p>
+<p><a href="/assets/examples/v2512/surfaces/2-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/compressibleInterIsoFoam/laminar/depthCharge2D/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/compressibleInterIsoFoam/laminar/depthCharge2D">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -156,7 +174,16 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · multiphase/interIsoFoam/damBreak</h3><p>原始路径：<code>tutorials/multiphase/interIsoFoam/damBreak/system/controlDict</code>；求解器：<code>interIsoFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/damBreak/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/surfaces/3-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/damBreak">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · multiphase/interIsoFoam/damBreak</summary><p>这个溃坝版本使用 <code>interIsoFoam</code> 的几何界面输运，并在写出时把水气界面提取成可视化表面。与 <code>interFoam</code> 示例比较时，应同时看求解器和实际时间步设置。</p>
+<ul>
+<li><code>startFrom latestTime</code> 从已有最大数值时间目录继续；文件中的 <code>startTime 0</code> 不能单独决定起点。<code>endTime 1</code> 是本次要求达到的结束时刻。</li>
+<li><code>deltaT 0.001</code> 是初始步长，<code>adjustTimeStep yes</code> 允许自动调整。这里 <code>maxCo 10</code>、<code>maxAlphaCo 0.5</code>，界面 Courant 限制比全流场设置更紧。</li>
+<li><code>writeControl adjustable</code>、<code>writeInterval 0.02</code> 按 0.02 s 的物理间隔保存；<code>writePrecision 6</code> 控制文本输出的有效位数。</li>
+<li><code>surfaces/type surfaces</code> 加载 <code>geometricVoF</code> 与 <code>sampling</code>，<code>freeSurf/type interface</code> 提取几何重构界面。</li>
+<li><code>fields (p U)</code> 让界面携带压力和速度，<code>surfaceFormat vtp</code> 便于在 ParaView 中读取，<code>writeControl writeTime</code> 使表面输出随主结果写出。</li>
+</ul>
+<p>需要更密的界面动画时减小主写出间隔。改变 Courant 限制后，比较界面位置和体积守恒；<code>maxCo 10</code> 是本例的一项设置，合适步长还取决于实际网格、流速和界面算法。</p>
+<p><a href="/assets/examples/v2512/surfaces/3-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/damBreak/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interIsoFoam/damBreak">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -236,9 +263,4 @@ functions
     }
 }
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/postprocess/">postProcess</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/surfaces&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/surfaces&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/postprocess/">postProcess</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

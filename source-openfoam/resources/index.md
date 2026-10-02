@@ -2,6 +2,6 @@
 title: 资料与算例
 layout: catalog
 section: resources
-description: 下载配套源码、配置示例和验证记录；按来源与软件版本查找资料。
+description: 课程讲义、源码与算例下载。
 eyebrow: DATA, CODE & REFERENCES
 ---

@@ -2,7 +2,7 @@
 
 网站：<https://foamlabshark.github.io/>。本地工程：`E:\Hexo`。
 
-本站以 **OpenCFD OpenFOAM v2512** 为软件基准，使用 Hexo 8.1.2 和 `themes/foam-lab` 主题生成网站，部署到 GitHub Pages。Supabase 提供 GitHub 登录、内容管理、讨论、评论、附件和跨设备学习记录。课程、参考资料、实践分享与讨论分别组织，电极气泡专题暂不纳入当前内容。
+本站使用 **OpenFOAM v2512**，由 Hexo 8.1.2 和 `themes/foam-lab` 主题生成，部署到 GitHub Pages。Supabase 提供 GitHub 登录、内容管理、讨论、评论、附件和跨设备学习记录。
 
 ## 内容范围
 
@@ -14,9 +14,9 @@
 
 | 内容 | 初始规模与范围 |
 | --- | --- |
-| 课程单元 | 46 个：29 个基础、网格、数值方法、模型与后处理单元，17 个 BasicOFProgramming 编程单元 |
+| 课程单元 | 72 个：30 个 OpenFOAM 基础与应用、20 个 OpenFOAM 编程、10 个 C++ 入门、8 个 Linux 入门、4 个数值理论单元 |
 | 命令目录 | 443 条，区分核心求解器、核心工具、官方脚本、shell 函数、构建辅助与 Linux 配套命令 |
-| 配置参考 | 111 项配置字典、场文件、函数对象与编译配置，附 281 份完整的 v2512 官方教程文件 |
+| 配置参考 | 111 项配置字典、场文件、函数对象与编译配置，附 288 份完整的 v2512 官方教程文件 |
 | 主题参考 | 37 个重新审校的参考章节，保留通用内容并修正版本差异 |
 | 扩展工具 | ParaView、Gmsh、SALOME、PyVista、PyFoam、FreeCAD 等 6 篇使用说明 |
 | 分类推荐 | 15 项，分官方文档、教程与课程、源码与开发、几何网格、可视化与数据、学术社区 |
@@ -24,7 +24,7 @@
 
 443 条目录不等于 443 个已安装的 OpenFOAM 可执行程序。固定版本源码的核心范围为 `applications/solvers` 中的 108 个求解器和 `applications/utilities` 中的 170 个工具，共 278 个目标。其中 273 个在本机 v2512 环境显示了 `-help-full`，另 5 个未安装。`applications/tools` 下另列的 `foamCalc`、`foamExprParserInfo` 也未安装。脚本与 shell 入口单独标注依据，不把源码存在、帮助可执行和物理算例验证混为一谈。
 
-课程参考 Wolf 培训资料并重新组织。Wolf 原培训基于 OpenFOAM Foundation 9；本站运行和配置依据为 OpenCFD v2512，两者不是可直接互换的版本。命令与字典示例固定到官方 `OpenFOAM-v2512` 标签。核验范围见 [VERIFICATION.md](VERIFICATION.md)。
+课程参考 Wolf 培训资料，命令与字典示例固定到官方 `OpenFOAM-v2512` 标签。具体检查与实际运行记录见 [VERIFICATION.md](VERIFICATION.md)。
 
 ## 日常内容管理
 
@@ -44,7 +44,7 @@
 
 内容保存支持修订历史与并发冲突检查；回收站恢复为草稿，永久删除需要管理员权限。文件上传到公开 `foamlab-resources` 存储桶，常规文件上限 50 MB。内容归档与删除附件是两个动作，删除文件前应检查其引用。
 
-完整操作说明见 [维护手册](source-openfoam/maintenance/index.md)及[线上维护入口](https://foamlabshark.github.io/maintenance/)。
+完整操作说明见 [维护手册主稿](tools/content/authored-pages/site-maintenance.md)及[管理员维护入口](https://foamlabshark.github.io/admin/maintenance/)。
 
 ## 讨论、评论与作业
 
@@ -58,7 +58,7 @@ GitHub OAuth 由 Supabase Auth 处理。个人资料与新版课程进度使用�
 
 [资源推荐](https://foamlabshark.github.io/recommendations/)使用 `recommendation` 类型。编辑可维护标题、分类、正文、外部入口和版本核对信息；分类来自 `track`，统一系列可填“资源推荐”。第三方工具的版本兼容性与社区经验应分别注明，不能把推荐条目写成未经验证的运行承诺。
 
-[支持入口](https://foamlabshark.github.io/support/)的启用状态、用途说明、微信与支付宝图片由管理员在“站点与导航”中维护。**本次未上传真实收款码，入口保持停用。** 可上传不超过 5 MB 的 PNG、JPEG 或 WebP 图片，核对预览与收款对象后保存并启用。关闭入口不会删除已上传的公开图片。
+[支持入口](https://foamlabshark.github.io/support/)的启用状态、用途说明、微信与支付宝图片由管理员在“站点与导航”中维护。页脚以小型“支持作者”入口展示两张收款码，鼠标移出即关闭；手机点击展开。 可上传不超过 5 MB 的 PNG、JPEG 或 WebP 图片，核对预览与收款对象后保存并启用。关闭入口不会删除已上传的公开图片。
 
 ## 本地预览与 Hexo 发布
 
@@ -93,17 +93,19 @@ python tools/source-sync.py resolve source-openfoam/maintenance/index.md
 | 位置 | 用途 |
 | --- | --- |
 | Supabase `foamlab_content` | 已发布课程、文章、资料、推荐及参考覆盖正文的日常主稿 |
-| `tools/content/*content.json` | 可审查的初始内容数据；不自动读取后台后续修改 |
-| `tools/content/build-core.py` | 基础课程、数值方法及工具说明生成器 |
-| `tools/content/build-programming-content.py` | 17 个编程单元生成器 |
-| `tools/build-reference-library.py` | 命令、配置页及官方示例清单生成器 |
+| `tools/content/*content.json` | 本轮审校后的本地内容主稿；后台后续修改需先导出合并 |
+| `tools/content/authored-lessons`、`authored-pages` | 逐课与逐页审校后的 Markdown 主稿 |
+| `tools/content/apply-editorial.py` | 应用正文、编程实训和标题修订，刷新静态参考页 |
+| `tools/content/programming10-walkthrough.json`、`programming14-correction.json`、`programming-workflow-*.json` | 编程课逐步讲解与案例修订 |
+| `tools/content/development-*-content.json` | 求解器、边界条件和工具开发实训 |
+| `tools/content/rewrite-reference.py` | 命令、配置及 288 份示例的案例说明 |
 | `tools/revise-legacy-reference.py` | 37 个主题参考章节的审校生成器 |
 | `tools/content/build-recommendations.py` | 15 个资源推荐条目生成器 |
 | `source-openfoam/assets/commands.json`、`dictionaries.json` | 命令与配置搜索目录 |
 | `source-openfoam/commands`、`dictionaries`、`reference` | 可直接访问的静态参考初始版本 |
 | `source-openfoam/assets/examples/v2512` | 完整教程配置及来源校验清单所对应文件 |
 | `source-openfoam/downloads` | 静态资料、编程包与运行证据 |
-| `source-openfoam/maintenance`、`design` | 维护手册及字体界面规范 |
+| `source-openfoam/admin/maintenance`、`admin/design` | 仅管理员与编辑可读的文档入口 |
 | `themes/foam-lab/layout`、`themes/foam-lab/source/assets` | 模板、样式、浏览器交互及本地依赖 |
 | `supabase/migrations`、`supabase/tests` | 数据库结构、权限变更与隔离测试 |
 
@@ -115,17 +117,17 @@ python tools/source-sync.py resolve source-openfoam/maintenance/index.md
 
 ## 数学、代码与界面
 
-课程目录卡片和正文开头均提供配套案例下载。后台编辑课程时，在“专题与配套案例”中上传 ZIP、填写使用说明和核验范围，并关联湍流、多相流、网格划分、动网格专题。四个专题入口为 `/topics/`，专题介绍使用 `module` 内容记录，元数据 `topic_key` 保持稳定。
+课程目录卡片和正文开头均提供配套案例下载。后台编辑课程时，在“专题与配套案例”中上传 ZIP、填写使用说明和核验范围，并关联湍流、多相流、网格划分、动网格专题。五个专题（有限体积法、湍流、多相流、网格划分、动网格）入口为 `/topics/`，专题介绍使用 `module` 内容记录，元数据 `topic_key` 保持稳定。
 
 基础课程案例包位于 `source-openfoam/downloads/courses/`，编程课程使用现有逐课 ZIP。包中保留输入文件、来源与许可；实际运行过的新增案例另附日志和解析比较数据。下载元数据记录文件大小与 SHA-256，替换包后需同步更新元数据。
 
 Wolf 图源索引为 `tools/content/wolf-figures.json`，图片位于 `source-openfoam/assets/wolf/`。`wolf_media.py` 统一生成署名与出处，`integrate-wolf-figures.py` 将插图放入相应课程。点击正文插图可放大并保留图注。
 
-批量重建课程内容时，先备份当前 JSON 与数据库导出，再运行基础生成器和既有标题修订，然后依次执行 `refine-core-courses.py`、`refine-programming-courses.py`、`build-topic-content.py`、`integrate-wolf-figures.py`。两个 refine 脚本应读取未经本轮润色的基线；请先查阅各自参数和本地依赖，不要直接对已编辑主稿运行整套生成器。后处理更新本地数据，不会自动覆盖数据库内容。日常维护以后台编辑为主。
+编辑主稿位于 `tools/content/authored-lessons/` 和 `authored-pages/`。Linux、C++、数值理论与版本比较文章保存在各自 `*content.json` 中；命令和字典讲解使用 `command-guides.json`、`dictionary-guides.json`、`field-guides.json`、`reference-example-notes.json`。参考页运行 `rewrite-reference.py`，再运行 `apply-editorial.py`、`build-finite-volume-topic.py` 和 `tools/build-lesson-snippets.py`。旧生成器仅用于追溯原始材料。发布前导出数据库，通过修订号保护的更新批次同步正文；Hexo 发布负责页面、脚本和附件。
 
 正文公式使用 TeX，推荐 `\(...\)` 与 `\[...\]`。静态页面在构建时渲染，CMS 正文在浏览器中处理；编辑时先预览，排除语法错误。代码块标明 `bash`、`openfoam`、`cpp`、`python`、`makefile` 等语言，保留可复制的原文。图片应区分教学示意、资料原图、生成式封面与真实计算图。
 
-界面使用蓝色体系并支持亮色、暗色、跟随系统。中文正文、标题和代码使用不同字体层级；Noto 字体子集及许可证随站点托管，新增罕见字由系统字体回退。具体字号、行距、对比度和响应式规则见 [字体与界面设计规范](source-openfoam/design/index.md)，线上入口为 `/design/`。封面为 CFD 主题生成式插图，不表示真实计算结果。
+界面使用蓝色体系并支持亮色、暗色、跟随系统。中文正文、标题和代码使用不同字体层级；Noto 字体子集及许可证随站点托管，新增罕见字由系统字体回退。具体字号、行距、对比度和响应式规则见 [字体与界面设计规范](tools/content/authored-pages/site-design.md)，管理员线上入口为 `/admin/design/`。封面为 CFD 主题生成式插图，不表示真实计算结果。
 
 ## 检查与备份
 
@@ -144,3 +146,14 @@ node tools/check-refinements.cjs
 `check-cms-ui.cjs` 使用隔离请求数据，不向公开社区发布测试内容。历史 `check-admin.cjs` 等脚本针对早期管理流程，不能代替新版 CMS 与数据库权限验证。最终联机检查、部署提交与运行结果记录在 [VERIFICATION.md](VERIFICATION.md)。
 
 管理平台“导出与维护”可导出当前可访问的内容和站点设置；导出包含附件地址，**不包含附件本体、认证用户、私有资料或完整数据库备份**。同时保存附件、源码 Git 历史和数据库迁移记录；完整数据库与身份备份在 Supabase 侧管理。公开配置只允许使用 publishable key，OAuth Secret 和服务端密钥不得写入前端、仓库或资料附件。
+
+
+## 本轮界面与内容编辑
+
+维护手册和设计规范在管理平台内提供，数据库标记 `admin_only` 并保存为草稿；RLS 和公开搜索都排除内部文档。普通会员的学习入口包含课程、资料、讨论与个人记录，Linux/C++ 归入 OpenFOAM 编程。
+
+每页右上角提供跳转目录；标题上方的返回按钮保留进入详情前的关键词与筛选。表格铺满正文宽度，窄屏按表格局部横向滚动。页脚支持作者使用悬停二维码，移动设备点击打开，点击空白关闭；收款码由管理员站点设置维护。
+
+飞机背景与封面文件：`source-openfoam/assets/covers/foamlab-aircraft-background-v1.png`；生成提示与使用方式见 `tools/content/aircraft-background-design.md`。
+
+追加内容与界面检查：`node tools/check-editorial.cjs`、`node tools/check-editorial-ui.cjs`。示例源码保持原文件；补充说明由 `reference-example-notes.json` 管理。

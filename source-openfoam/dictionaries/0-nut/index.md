@@ -1,22 +1,35 @@
 ---
-title: "0/nut · nut"
+title: "nut"
 layout: reference
-description: "入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。"
+description: "湍流运动黏度场，由湍流模型和近壁处理计算，单位为 m²/s。"
 dictionary: true
+cms_slug: "dictionary-nut"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：k = 1.5*(I*U)^2，epsilon = Cmu^0.75*k^1.5/L，omega = sqrt(k)/(Cmu^0.25*L)。常用 Cmu = 0.09，湍流强度 5% 对应 I = 0.05。</p><figure><img src="/assets/diagrams/reference-2.svg" alt="初始场配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>0/nut</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>dimensions</code> · <code>internalField</code> · <code>boundaryField</code> · <code>nutkWallFunction</code> · <code>calculated</code></p><h2>关联命令</h2><p><a href="/commands/?q=simpleFoam">simpleFoam</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary 0/nut -keywords
-simpleFoam -help</code></pre><h2>9.4 湍流场与热扩散场</h2><div class="table-scroll"><table>
-<tr><th>字段</th><th>量纲</th><th>常见边界与设置</th></tr>
-<tr><td>k</td><td>[0 2 -2 0 0 0 0]</td><td>入口固定湍动能；壁面可配 kqRWallFunction</td></tr>
-<tr><td>epsilon</td><td>[0 2 -3 0 0 0 0]</td><td>k epsilon 模型使用；壁面 epsilonWallFunction</td></tr>
-<tr><td>omega</td><td>[0 0 -1 0 0 0 0]</td><td>k omega 模型使用；壁面 omegaWallFunction</td></tr>
-<tr><td>nut</td><td>[0 2 -1 0 0 0 0]</td><td>湍动黏度，由模型给定；壁面可用 nutkWallFunction 等</td></tr>
-<tr><td>alphat</td><td>由热模型定义，常见可压缩形式为 [1 -1 -1 0 0 0 0]</td><td>量纲按所用热模型确定</td></tr>
-</table></div>
-<p>入口湍流量可由湍流强度 I、速度大小 U 和长度尺度 L 估算：\(k=1.5(IU)^2\)，\(\varepsilon=\frac{C_\mu^{0.75}k^{1.5}}{L}\)，\(\omega=\frac{\sqrt{k}}{C_\mu^{0.25}L}\)。常用 \(C_\mu = 0.09\)，湍流强度 5% 对应 \(I = 0.05\)。</p>
-<p>近壁处理方式应与网格设计一致。采用壁面函数或直接解析近壁区域时，分别据其要求确定第一层网格厚度及目标 y+。</p><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>dimensions</td><td>七个指数依次表示质量、长度、时间、温度、物质量、电流、发光强度。量纲错误常在矩阵组装或赋值时暴露。</td></tr><tr><td>internalField</td><td>初始内部场，可使用 uniform 或 nonuniform。uniform 不表示求解过程始终空间均匀。</td></tr><tr><td>boundaryField</td><td>按网格 patch 名称设置边界条件；名称必须与 polyMesh/boundary 一致，类型还受网格边界类型约束。</td></tr><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/pimpleFoam/LES/decayIsoTurb</h3><p>原始路径：<code>tutorials/incompressible/pimpleFoam/LES/decayIsoTurb/0.orig/nut</code>；求解器：<code>pimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/decayIsoTurb/0.orig/nut">查看固定版本源码</a> · <a href="/assets/examples/v2512/nut/1-nut.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/decayIsoTurb">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>湍流运动黏度场，由湍流模型和近壁处理计算，单位为 m²/s。</p><p>位置：<code>0/nut</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-turbulence-wall-law.png" alt="无量纲壁面速度分布与近壁区域" loading="lazy"><figcaption><strong>无量纲壁面速度分布与近壁区域</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 21 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><p><code>nut</code> 是湍流运动黏度，单位 m²/s，用来表示湍流对动量输运的附加作用。它由湍流模型计算；分子运动黏度 <code>nu</code> 来自材料物性。采用涡黏性模型时，二者共同构成有效动量扩散。</p>
+<h3>示例：k–ε 案例的 nut 边界</h3>
+<p>在已有 <code>0/nut</code> 文件中，保留 <code>class volScalarField</code>、<code>object nut</code>，并设置：</p>
+<pre><code class="language-foam">dimensions [0 2 -1 0 0 0 0];
+internalField uniform 0;
+boundaryField
+{
+    inlet { type calculated; value uniform 0; }
+    outlet { type calculated; value uniform 0; }
+    walls { type nutkWallFunction; value uniform 0; }
+    frontAndBack { type empty; }
+}
+</code></pre>
+<p>这个例子适用于具有相应 patch 的二维通道。<code>calculated</code> 表示边界值由模型计算，<code>value</code> 用于初始读取；壁面通过 <code>nutkWallFunction</code> 得到与所选近壁处理相符的湍流黏度。初始化为零后，模型会依据湍流场更新内部 <code>nut</code>。</p>
+<p>标准 k–ε 关系为 \(\nu_t=C_\mu k^2/\epsilon\)。SST 和 LES 使用各自的计算与限制关系。后处理 <code>nut/nu</code> 可查看湍流扩散相对于分子扩散的大小，较大的比值常见于强湍流区域。</p>
+<p>低 y⁺ 解析、连续壁面律和粗糙壁面需要匹配的 <code>nut</code> 条件。修改壁面函数后，同时检查 <code>k</code>、第二个湍流变量和首层网格，才能解释阻力或壁面剪切的变化。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/pimpleFoam/LES/decayIsoTurb</summary><p>衰减各向同性湍流采用周期边界，nut 由 LES 亚格子模型随流场计算。</p>
+<ul>
+<li><code>dimensions [0 2 -1 0 0 0 0]</code> 表示运动黏度单位 m²/s。</li>
+<li><code>internalField uniform 0</code> 给定亚格子黏度初值。</li>
+<li><code>".*"/cyclic</code> 让对应周期面传递一致的场值。</li>
+</ul>
+<p>更换网格或滤波尺度后，比较能量衰减和 nut 分布，而初始零值只是计算起点。</p>
+<p><a href="/assets/examples/v2512/nut/1-nut.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/decayIsoTurb/0.orig/nut">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/decayIsoTurb">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -45,7 +58,14 @@ boundaryField
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · combustion/fireFoam/LES/simplePMMApanel</h3><p>原始路径：<code>tutorials/combustion/fireFoam/LES/simplePMMApanel/0.orig/nut</code>；求解器：<code>fireFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/simplePMMApanel/0.orig/nut">查看固定版本源码</a> · <a href="/assets/examples/v2512/nut/2-nut.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/simplePMMApanel">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · combustion/fireFoam/LES/simplePMMApanel</summary><p>PMMA 面板火灾算例以零湍流运动黏度开始，再由选定模型更新。</p>
+<ul>
+<li>nut 的单位为 m²/s，内部初值为 <code>0</code>。</li>
+<li>匹配的边界统一采用 <code>zeroGradient</code>。</li>
+<li>模型类型、网格尺度和 k 等字段共同决定后续 nut。</li>
+</ul>
+<p>调整近壁模型时检查 nut 边界是否需要改为对应的壁面函数。</p>
+<p><a href="/assets/examples/v2512/nut/2-nut.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/simplePMMApanel/0.orig/nut">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/simplePMMApanel">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -74,7 +94,14 @@ boundaryField
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · heatTransfer/buoyantPimpleFoam/hotRoomWithThermalShell.multi-area</h3><p>原始路径：<code>tutorials/heatTransfer/buoyantPimpleFoam/hotRoomWithThermalShell.multi-area/0/nut</code>；求解器：<code>buoyantPimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/heatTransfer/buoyantPimpleFoam/hotRoomWithThermalShell.multi-area/0/nut">查看固定版本源码</a> · <a href="/assets/examples/v2512/nut/3-nut.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/buoyantPimpleFoam/hotRoomWithThermalShell.multi-area">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · heatTransfer/buoyantPimpleFoam/hotRoomWithThermalShell.multi-area</summary><p>带热壳层的热房间采用 nut 壁面函数处理近壁湍流黏度。</p>
+<ul>
+<li>内部初值为 <code>0</code>，量纲为 m²/s。</li>
+<li><code>".*"/nutkWallFunction</code> 对匹配壁面根据 k 等量计算近壁 nut。</li>
+<li><code>value uniform 0</code> 提供启动时的边界值。</li>
+</ul>
+<p>改变壁面分组时核对正则表达式覆盖范围，并结合目标 y⁺ 调整首层网格。</p>
+<p><a href="/assets/examples/v2512/nut/3-nut.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/heatTransfer/buoyantPimpleFoam/hotRoomWithThermalShell.multi-area/0/nut">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/buoyantPimpleFoam/hotRoomWithThermalShell.multi-area">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -104,9 +131,4 @@ boundaryField
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/simplefoam/">simpleFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;0.orig/nut&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;0.orig/nut&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown patchField / patch type mismatch</td><td>同时检查网格 patch 类型与场边界类型，例如 empty 网格面应使用相容的场条件。</td></tr><tr><td>速度与压力约束不相容</td><td>在入口、出口和封闭壁面共同考虑通量约束与压力参考。</td></tr><tr><td>湍流场出现非法值</td><td>检查 k、epsilon、omega 等场的正性及壁面函数适用范围，不能以截断代替模型诊断。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/simplefoam/">simpleFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown patchField / patch type mismatch</td><td>同时检查网格 patch 类型与场边界类型，例如 empty 网格面应使用相容的场条件。</td></tr><tr><td>速度与压力约束不相容</td><td>在入口、出口和封闭壁面共同考虑通量约束与压力参考。</td></tr><tr><td>湍流场出现非法值</td><td>检查 k、epsilon、omega 等场的正性及壁面函数适用范围，不能以截断代替模型诊断。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

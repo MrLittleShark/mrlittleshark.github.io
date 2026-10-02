@@ -1,10 +1,11 @@
 ---
 title: "10 后处理函数对象与数据采样"
 layout: reference
-description: "OpenCFD v2512 后处理函数对象与数据采样；包含原理、示例与版本核对。"
+description: "后处理函数对象与数据采样：用法与配置实例。"
+cms_slug: "reference-manual-10"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>10.1 函数对象的通用设置</h3>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h3>10.1 函数对象的通用设置</h3>
 <p>函数对象配置于 system/controlDict 的 functions 子字典，或置于独立字典并由 postProcess -dict 指定。外层名称为实例名，type 指定函数对象类型。类型定义及模板见 S2 的 src/functionObjects 和 etc/caseDicts/postProcessing。</p>
 <div class="table-scroll"><table>
 <tr><th>参数</th><th>含义</th><th>设置示例</th></tr>
@@ -140,4 +141,3 @@ simpleFoam -postProcess -func yPlus -latestTime
 foamToVTK -latestTime -fields '(U p)'
 paraFoam -builtin</code></pre>
 <p>上述命令中的 simpleFoam 按算例所用求解器替换。瞬态压力载荷结果应注明压力单位、压力基准、采样频率、探针坐标及积分区间。</p><h2>v2512 的残差记录接口</h2><p>使用 <code>type solverInfo</code>，并加载 <code>utilityFunctionObjects</code>。<code>#includeFunc solverInfo</code> 的官方模板默认选择 p 和 U；如需其他字段，应复制模板并修改 fields。此功能读取求解过程中的 solverPerformance 数据，事后只读取已写出的 U、p 不能重建历史残差。</p><p><a href="/dictionaries/functions-solverinfo/">完整配置、字段解释与三个 v2512 示例</a></p>
-{% endraw %}

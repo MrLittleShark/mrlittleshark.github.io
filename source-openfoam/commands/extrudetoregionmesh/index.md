@@ -1,19 +1,11 @@
 ---
-title: "extrudeToRegionMesh  将面集合挤出为独立区域"
+title: "extrudeToRegionMesh · 用于薄层或膜区域，源面和目标区域名称由字典指定"
 layout: reference
 description: "用于薄层或膜区域，源面和目标区域名称由字典指定。"
+cms_slug: "command-extrudetoregionmesh"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>用于薄层或膜区域，源面和目标区域名称由字典指定。</p><h2>v2512 源码中的用途</h2><p>Extrude faceZones (internal or boundary faces) or faceSets (boundary faces only) into a separate mesh (as a different region). - used to e.g. extrude baffles (extrude internal faces) or create liquid film regions. - if extruding internal faces: - create baffles in original mesh with mappedWall patches - if extruding boundary faces: - convert boundary faces to mappedWall patches - extrude edges of faceZone as a \&lt;zone\&gt;_sidePatch - extrude edges inbetween different faceZones as a (nonuniformTransform)cyclic \&lt;zoneA\&gt;_\&lt;zoneB\&gt; - extrudes into master direction (i.e. away from the owner cell if flipMap is false)</p><h2>使用入口</h2><pre><code class="language-bash">extrudeToRegionMesh</code></pre><h2>使用条件与核对</h2><p>用于薄层或膜区域，源面和目标区域名称由字典指定。 用法：extrudeToRegionMesh [-dict 文件] 示例：extrudeToRegionMesh
-源码说明：Extrude faceZones (internal or boundary faces) or faceSets (boundary faces only) into a separate mesh (as a different region). - used to e.g. extrude baffles (extrude internal faces) or create liquid film regions. - if extruding internal faces: - create baffles in original mesh with mappedWall patches - if extruding boundary faces: - convert boundary faces to mappedWall patches - extrude edges of faceZone as a \&lt;zone\&gt;_sidePatch - extrude edges inbetween different faceZones as a (nonuniformTransform)cyclic \&lt;zoneA\&gt;_\&lt;zoneB\&gt; - extrudes into master direction (i.e. away from the owner cell if flipMap is false)
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-case -debug-switch -decomposeParDict -dict -doc -doc-source -fileHandler -help -help-full -help-man -help-notes -hostRoots -info-switch -lib -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-libs -noFunctionObjects -opt-switch -overwrite -parallel -region -roots -world</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/extrudetoregionmesh.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: extrudeToRegionMesh
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/extrude/extrudeToRegionMesh/extrudeToRegionMesh.C
 
-
-Usage: extrudeToRegionMesh [OPTIONS]
+<p>用于薄层或膜区域，源面和目标区域名称由字典指定。</p><h2>用法</h2><pre><code class="language-bash">extrudeToRegionMesh</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">extrudeToRegionMesh -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: extrudeToRegionMesh [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;
@@ -59,5 +51,4 @@ Create region mesh by extruding a faceZone or faceSet
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/extrude/extrudeToRegionMesh/extrudeToRegionMesh.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/extrude/extrudeToRegionMesh/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/generation/extrude/extrudeToRegionMesh/extrudeToRegionMesh.C">源码与说明</a> · <a href="/assets/command-help/extrudetoregionmesh.txt">帮助文本</a></p>

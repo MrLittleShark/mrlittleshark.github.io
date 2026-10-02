@@ -1,19 +1,20 @@
 ---
-title: "surfaceCheck  检查表面网格闭合性和相交情况"
+title: "surfaceCheck · 检查三角化表面的范围、连通性和质量"
 layout: reference
-description: "用于检查 snappyHexMesh 等工具的输入表面。"
+description: "检查三角化表面的范围、连通性和质量。"
+cms_slug: "command-surfacecheck"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>用于检查 snappyHexMesh 等工具的输入表面。</p><h2>v2512 源码中的用途</h2><p>Check geometric and topological quality of a surface.</p><h2>使用入口</h2><pre><code class="language-bash">surfaceCheck constant/triSurface/body.stl -checkSelfIntersection</code></pre><h2>使用条件与核对</h2><p>用于检查 snappyHexMesh 等工具的输入表面。 用法：surfaceCheck 表面文件 [选项] 示例：surfaceCheck constant/triSurface/body.stl -checkSelfIntersection
-源码说明：Check geometric and topological quality of a surface.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-blockMesh -case -checkSelfIntersection -debug-switch -doc -doc-source -fileHandler -help -help-full -help-man -help-notes -info-switch -lib -no-libs -noFunctionObjects -opt-switch -outputThreshold -splitNonManifold -verbose -writeSets</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/surfacecheck.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: surfaceCheck
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceCheck/surfaceCheck.C
 
-
-Usage: surfaceCheck [OPTIONS] &lt;input&gt;
+<p>检查三角化表面的范围、连通性和质量。</p><h2>检查 STL 文件</h2>
+<pre><code class="language-bash">surfaceCheck constant/triSurface/body.stl
+</code></pre>
+<p>把 <code>body.stl</code> 换成实际文件。关注包围盒是否符合单位、表面是否封闭以及是否存在多个不连通区域。</p>
+<h2>保存检查记录</h2>
+<pre><code class="language-bash">surfaceCheck constant/triSurface/body.stl &gt; log.surfaceCheck 2&gt;&amp;1
+less log.surfaceCheck
+</code></pre>
+<p>日志适合与修复后的表面比较。CFD 封闭流体域还要求各边界面组合形成完整包围面。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-blockMesh</td><td>Write vertices/blocks for blockMeshDict</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-verbose</td><td>Additional verbosity (can be used multiple times) Reconstruct and write problem triangles/edges in selected format</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceCheck [OPTIONS] &lt;input&gt;
 Arguments:
   &lt;input&gt;           The input surface file
 Options:
@@ -58,5 +59,4 @@ Check geometric and topological quality of a surface
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceCheck/surfaceCheck.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceCheck/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/surface/surfaceCheck/surfaceCheck.C">源码与说明</a> · <a href="/assets/command-help/surfacecheck.txt">帮助文本</a></p>

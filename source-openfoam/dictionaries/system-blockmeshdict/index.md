@@ -1,13 +1,12 @@
 ---
-title: "system/blockMeshDict · blockMeshDict"
+title: "blockMeshDict"
 layout: reference
-description: "blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。"
+description: "定义网格顶点、六面体块、单元数和边界，供 blockMesh 生成结构网格。"
 dictionary: true
+cms_slug: "dictionary-blockmeshdict"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。</p><figure><img src="/assets/diagrams/reference-0.svg" alt="网格配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/blockMeshDict</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>vertices</code> · <code>blocks</code> · <code>edges</code> · <code>boundary</code> · <code>scale</code> · <code>convertToMeters</code> · <code>simpleGrading</code></p><h2>关联命令</h2><p><a href="/commands/?q=blockMesh">blockMesh</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/blockMeshDict -keywords
-blockMesh -help</code></pre><h2>7.1 system/blockMeshDict</h2><p>blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。</p>
+
+<p>定义网格顶点、六面体块、单元数和边界，供 blockMesh 生成结构网格。</p><p>位置：<code>system/blockMeshDict</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-mesh-smooth-transition.png" alt="网格尺寸的突变与平滑过渡" loading="lazy"><figcaption><strong>网格尺寸的突变与平滑过渡</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module3.pdf，p. 19 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>配置实例</h2><p>blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。</p>
 <p>下例建立长 1 m、宽 0.1 m、厚 0.01 m 的二维通道。厚度方向设置一层单元，两侧边界设为 empty。</p>
 <pre><code class="language-openfoam">FoamFile
 {
@@ -62,7 +61,15 @@ mergePatchPairs ();</code></pre>
 <tr><td>defaultPatch</td><td>为未显式列出的面指定名称和类型</td><td>显式边界之外的面归入该边界</td></tr>
 <tr><td>mergePatchPairs</td><td>((patchA patchB))</td><td>合并指定的块接口</td></tr>
 </table></div>
-<h2>补充说明</h2><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>patches</td><td>参与该操作的边界列表，必须对应网格中的实际 patch 名称。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>scale</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/icoFoam/cavity/cavity</h3><p>原始路径：<code>tutorials/incompressible/icoFoam/cavity/cavity/system/blockMeshDict</code>；求解器：<code>icoFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity/system/blockMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/blockmeshdict/1-blockMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+<h2>参数说明</h2><table><thead><tr><th>条目</th><th>含义</th></tr></thead><tbody><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>patches</td><td>参与该操作的边界列表，必须对应网格中的实际 patch 名称。</td></tr></tbody></table><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/icoFoam/cavity/cavity</summary><p>方腔由一个六面体块生成，配合二维 empty 边界使用。</p>
+<ul>
+<li><code>scale 0.1</code> 把顶点坐标乘以 0.1，得到长高各 0.1 m、厚 0.01 m 的腔体。</li>
+<li><code>hex ... (20 20 1)</code> 在三个方向分成 20、20、1 个单元，共 400 个单元。</li>
+<li><code>simpleGrading (1 1 1)</code> 使用均匀间距。</li>
+<li><code>movingWall</code> 是顶盖，<code>fixedWalls</code> 为其余侧壁，<code>frontAndBack/type empty</code> 约束前后方向为二维。</li>
+</ul>
+<p>加密时可改为 (40 40 1) 并重建网格；保持二维模型时厚度方向仍取一层，同时检查时间步。</p>
+<p><a href="/assets/examples/v2512/blockmeshdict/1-blockMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity/system/blockMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/icoFoam/cavity/cavity">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -133,7 +140,15 @@ boundary
 );
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · incompressible/simpleFoam/pitzDaily</h3><p>原始路径：<code>tutorials/incompressible/simpleFoam/pitzDaily/system/blockMeshDict</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily/system/blockMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/blockmeshdict/2-blockMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · incompressible/simpleFoam/pitzDaily</summary><p>pitzDaily 的后台阶及下游通道由五个六面体块拼接，以便在台阶、剪切层和壁面附近分配不同分辨率。</p>
+<ul>
+<li><code>scale 0.001</code> 将毫米量级坐标换算为米。</li>
+<li>入口块 <code>(18 30 1)</code>、下游块 <code>(180 27 1)</code> 与 <code>(180 30 1)</code> 等分别控制不同分区的单元数。</li>
+<li><code>negY</code>、<code>posY</code>、<code>posYR</code> 被 grading 条目引用，使单元向需要分辨的区域渐变。</li>
+<li><code>inlet</code>、<code>outlet</code>、上下壁面与 <code>frontAndBack empty</code> 分开命名，随后由场文件设置物理边界。</li>
+</ul>
+<p>移动台阶或改变高度时保持相邻块共享面的单元数相容；比较回流长度时优先加密台阶后的剪切层。</p>
+<p><a href="/assets/examples/v2512/blockmeshdict/2-blockMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily/system/blockMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/pitzDaily">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -202,15 +217,15 @@ blocks
 (
     hex (0 3 4 1 11 14 15 12)
     (18 30 1)
-    simpleGrading (0.5 &#36;posY 1)
+    simpleGrading (0.5 $posY 1)
 
     hex (2 5 6 3 13 16 17 14)
     (180 27 1)
-    edgeGrading (4 4 4 4 &#36;negY 1 1 &#36;negY 1 1 1 1)
+    edgeGrading (4 4 4 4 $negY 1 1 $negY 1 1 1 1)
 
     hex (3 6 7 4 14 17 18 15)
     (180 30 1)
-    edgeGrading (4 4 4 4 &#36;posY &#36;posYR &#36;posYR &#36;posY 1 1 1 1)
+    edgeGrading (4 4 4 4 $posY $posYR $posYR $posY 1 1 1 1)
 
     hex (5 8 9 6 16 19 20 17)
     (25 27 1)
@@ -218,7 +233,7 @@ blocks
 
     hex (6 9 10 7 17 20 21 18)
     (25 30 1)
-    simpleGrading (2.5 &#36;posYR 1)
+    simpleGrading (2.5 $posYR 1)
 );
 
 edges
@@ -285,7 +300,15 @@ boundary
 );
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · compressible/acousticFoam/obliqueAirJet/main</h3><p>原始路径：<code>tutorials/compressible/acousticFoam/obliqueAirJet/main/system/blockMeshDict</code>；求解器：<code>acousticFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/compressible/acousticFoam/obliqueAirJet/main/system/blockMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/blockmeshdict/3-blockMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/compressible/acousticFoam/obliqueAirJet/main">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · compressible/acousticFoam/obliqueAirJet/main</summary><p>倾斜射流声学算例的 main 区先建立规则背景网格，后续数据与边界处理需结合配套流程。</p>
+<ul>
+<li><code>scale 1</code> 表示坐标直接按米使用，包围范围是 x: −0.2～2.2、y: −0.3～1.3、z: −0.2～2.2。</li>
+<li>单块 <code>(15 10 15)</code> 对应 2250 个单元，各方向间距均约 0.16 m。</li>
+<li><code>simpleGrading (1 1 1)</code> 使用均匀分布，<code>edges ()</code> 没有额外曲边。</li>
+<li><code>patches ()</code> 未在本文件细分边界，边界划分应继续对照算例的其他预处理配置。</li>
+</ul>
+<p>研究更高频的声学扰动时，需要按目标波长检查每波长网格数，并同步检查采样与时间步。</p>
+<p><a href="/assets/examples/v2512/blockmeshdict/3-blockMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/compressible/acousticFoam/obliqueAirJet/main/system/blockMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/compressible/acousticFoam/obliqueAirJet/main">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -330,9 +353,4 @@ patches
 );
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/blockmesh/">blockMesh</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/blockMeshDict&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/blockMeshDict&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>边界名称与字段不一致</td><td>修改拓扑后重新核对 constant/polyMesh/boundary 和所有 0/ 场文件，不能只修一个场。</td></tr><tr><td>单位或坐标方向错误</td><td>比较几何包围盒与预期物理尺寸；检查 scale、挤出法向和旋转轴。</td></tr><tr><td>网格生成成功但质量不足</td><td>运行 checkMesh -allTopology -allGeometry，再评估所选离散格式对非正交和扭曲的容忍度。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/blockmesh/">blockMesh</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>边界名称与字段不一致</td><td>修改拓扑后重新核对 constant/polyMesh/boundary 和所有 0/ 场文件，不能只修一个场。</td></tr><tr><td>单位或坐标方向错误</td><td>比较几何包围盒与预期物理尺寸；检查 scale、挤出法向和旋转轴。</td></tr><tr><td>网格生成成功但质量不足</td><td>运行 checkMesh -allTopology -allGeometry，再评估所选离散格式对非正交和扭曲的容忍度。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

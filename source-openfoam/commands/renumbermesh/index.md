@@ -1,19 +1,11 @@
 ---
-title: "renumberMesh  重排网格编号以降低矩阵带宽"
+title: "renumberMesh · -write-maps 输出新旧编号映射，供外部编号关联使用"
 layout: reference
 description: "-write-maps 输出新旧编号映射，供外部编号关联使用。"
+cms_slug: "command-renumbermesh"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>-write-maps 输出新旧编号映射，供外部编号关联使用。</p><h2>v2512 源码中的用途</h2><p>Renumbers the cell list in order to reduce the bandwidth, reading and renumbering all fields from all the time directories. By default uses bandCompression (Cuthill-McKee) or the method specified by the -renumber-method option, but will read system/renumberMeshDict if -dict option is present</p><h2>使用入口</h2><pre><code class="language-bash">renumberMesh -overwrite</code></pre><h2>使用条件与核对</h2><p>-write-maps 输出新旧编号映射，供外部编号关联使用。 用法：renumberMesh [选项] 示例：renumberMesh -overwrite
-源码说明：Renumbers the cell list in order to reduce the bandwidth, reading and renumbering all fields from all the time directories. By default uses bandCompression (Cuthill-McKee) or the method specified by the -renumber-method option, but will read system/renumberMeshDict if -dict option is present
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-allRegions -case -constant -debug-switch -decompose -decomposeParDict -dict -doc -doc-source -dry-run -fileHandler -frontWidth -help -help-compat -help-full -help-man -help-notes -hostRoots -info-switch -latestTime -lib -list-renumber -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-fields -no-libs -noZero -opt-switch -overwrite -parallel -region -regions -renumber-coeffs -renumber-method -roots -time -verbose -world -write-maps</p><p>关联配置：<a href="/dictionaries/system-renumbermeshdict/">renumberMeshDict</a></p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/renumbermesh.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: renumberMesh
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/renumberMesh/renumberMesh.C
 
-
-Usage: renumberMesh [OPTIONS]
+<p>-write-maps 输出新旧编号映射，供外部编号关联使用。</p><h2>用法</h2><pre><code class="language-bash">renumberMesh -overwrite</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">renumberMesh -overwrite -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-decompose</td><td>Aggregate initially with a decomposition method (serial only) Alternative decomposePar dictionary file</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-dry-run</td><td>Test without writing. Changes -write-maps to write VTK output. Override the file handler type</td></tr><tr><td>-frontWidth</td><td>Calculate the RMS of the front-width Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-list-renumber</td><td>List available renumbering methods</td></tr><tr><td>-no-fields</td><td>Suppress renumbering of fields (eg, when they are only uniform)</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-renumbermeshdict/">renumberMeshDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: renumberMesh [OPTIONS]
 Options:
   -allRegions       Use all regions in regionProperties
   -case &lt;dir&gt;       Case directory (instead of current directory)
@@ -83,5 +75,4 @@ Renumber mesh cells to reduce the bandwidth. Use the -lib option or dictionary
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/renumberMesh/renumberMesh.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/renumberMesh/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/renumberMesh/renumberMesh.C">源码与说明</a> · <a href="/assets/command-help/renumbermesh.txt">帮助文本</a></p>

@@ -1,68 +1,212 @@
 ---
-title: "constant/thermophysicalProperties · thermophysicalProperties"
+title: "thermophysicalProperties"
 layout: reference
-description: "下例采用单相理想气体、常热容和常输运系数，能量变量为显焓。热物性类型和能量形式应与求解器接口对应。"
+description: "定义热力学类型、状态方程、热容、输运性质和能量变量。"
 dictionary: true
+cms_slug: "dictionary-thermophysicalproperties"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>下例采用单相理想气体、常热容和常输运系数，能量变量为显焓。热物性类型和能量形式应与求解器接口对应。</p><figure><img src="/assets/diagrams/reference-5.svg" alt="物理模型配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>constant/thermophysicalProperties</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>thermoType</code> · <code>type</code> · <code>mixture</code> · <code>transport</code> · <code>thermo</code> · <code>equationOfState</code> · <code>specie</code> · <code>energy</code></p><h2>关联命令</h2><p><a href="/commands/?q=rhoPimpleFoam">rhoPimpleFoam</a> · <a href="/commands/?q=chtMultiRegionFoam">chtMultiRegionFoam</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary constant/thermophysicalProperties -keywords
-rhoPimpleFoam -help</code></pre><h2>9.7 constant/thermophysicalProperties</h2><p>下例采用单相理想气体、常热容和常输运系数，能量变量为显焓。热物性类型和能量形式应与求解器接口对应。</p>
-<pre><code class="language-openfoam">FoamFile
+
+<p>定义热力学类型、状态方程、热容、输运性质和能量变量。</p><p>位置：<code>constant/thermophysicalProperties</code></p><h2>thermophysicalProperties 组合热物性模型</h2>
+<p><code>constant/thermophysicalProperties</code> 定义密度、比热、黏度和能量变量如何计算。它将热力学模型、状态方程和输运模型组合成求解器需要的物性系统。</p>
+<p>下面从 <code>buoyantPimpleFoam/hotRoom</code> 提取理想气体物性配置，放在 <code>FoamFile</code> 文件头之后：</p>
+<pre><code class="language-foam">thermoType
 {
-    version 2.0; format ascii;
-    class dictionary; object thermophysicalProperties;
-}
-thermoType
-{
-    type hePsiThermo;
-    mixture pureMixture;
-    transport const;
-    thermo hConst;
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          hConst;
     equationOfState perfectGas;
-    specie specie;
-    energy sensibleEnthalpy;
+    specie          specie;
+    energy          sensibleEnthalpy;
 }
 mixture
 {
-    specie { molWeight 28.96; }
-    thermodynamics { Cp 1005; Hf 0; }
-    transport { mu 1.8e-5; Pr 0.7; }
-}</code></pre>
-<div class="table-scroll"><table>
-<tr><th>参数</th><th>作用</th><th>设置方法</th></tr>
-<tr><td>type</td><td>热物性基类</td><td>hePsiThermo、heRhoThermo 等；须与求解器匹配</td></tr>
-<tr><td>mixture</td><td>混合物模型</td><td>pureMixture 单组分；反应流使用相应多组分模型</td></tr>
-<tr><td>transport</td><td>输运模型</td><td>const、sutherland 等</td></tr>
-<tr><td>thermo</td><td>热容模型</td><td>hConst 常热容；janaf 温度相关多项式</td></tr>
-<tr><td>equationOfState</td><td>状态方程</td><td>perfectGas、rhoConst 等，按介质状态关系选择</td></tr>
-<tr><td>energy</td><td>能量变量</td><td>sensibleEnthalpy 或 sensibleInternalEnergy 等</td></tr>
-<tr><td>molWeight</td><td>摩尔质量</td><td>单位为 kg/kmol，空气示例为 28.96</td></tr>
-<tr><td>Cp、Hf</td><td>定压比热、生成焓</td><td>按模型定义及参考态赋值</td></tr>
-<tr><td>mu、Pr</td><td>动力黏度和 Prandtl 数</td><td>采用一致的单位与适用温度范围</td></tr>
-<tr><td>As、Ts</td><td>Sutherland 输运系数</td><td>选择 sutherland 后按该模型填写</td></tr>
-<tr><td>Tlow、Thigh、Tcommon、lowCpCoeffs、highCpCoeffs</td><td>JANAF 温度区间及系数</td><td>从可靠物性数据或机理文件提取</td></tr>
-</table></div>
-<p>rhoCentralFoam 等采用相应的热物性基类和能量变量。使用显内能的求解器应配置 sensibleInternalEnergy，并保留配套教程中的热物性组合。</p>
-<h2>18.3 thermophysicalProperties（可压/传热必需）</h2><pre><code class="language-openfoam">thermoType
+    specie
+    {
+        molWeight 28.9;
+    }
+    thermodynamics
+    {
+        Cp 1000;
+        Hf 0;
+    }
+    transport
+    {
+        mu 1.8e-5;
+        Pr 0.7;
+    }
+}
+</code></pre>
+<h3>模型名称怎样组合</h3>
+<table>
+<thead>
+<tr>
+<th>条目</th>
+<th>本例设置</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>type</code></td>
+<td><code>heRhoThermo</code></td>
+<td>密度形式的热物性包</td>
+</tr>
+<tr>
+<td><code>mixture</code></td>
+<td><code>pureMixture</code></td>
+<td>单一组成、均匀混合物</td>
+</tr>
+<tr>
+<td><code>transport</code></td>
+<td><code>const</code></td>
+<td>常数黏度及 Prandtl 数</td>
+</tr>
+<tr>
+<td><code>thermo</code></td>
+<td><code>hConst</code></td>
+<td>常数定压比热模型</td>
+</tr>
+<tr>
+<td><code>equationOfState</code></td>
+<td><code>perfectGas</code></td>
+<td>理想气体状态方程</td>
+</tr>
+<tr>
+<td><code>energy</code></td>
+<td><code>sensibleEnthalpy</code></td>
+<td>以显焓为能量变量</td>
+</tr>
+</tbody></table>
+<p>这些选项需要形成受支持的组合，并与求解器所需热物性类型一致。若使用求解内能的完整案例，其 <code>energy</code> 和对应方程也会相应变化。</p>
+<h3>数值与单位</h3>
+<p><code>molWeight 28.9</code> 的单位为 kg/kmol；<code>Cp 1000</code> 的单位为 J/(kg K)；<code>mu 1.8e-5</code> 为动力黏度，单位为 Pa s；<code>Pr</code> 是无量纲 Prandtl 数。<code>Hf</code> 是该模型的形成焓参数。</p>
+<p>理想气体满足 \(\rho=p/(RT)\)，其中 \(R=R_u/M\)，\(R_u\approx8314.46\,\mathrm{J/(kmol\,K)}\)。本例 \(M=28.9\,\mathrm{kg/kmol}\)，所以 \(R\approx287.70\,\mathrm{J/(kg\,K)}\)。取 100000 Pa 和 300 K，密度约为 \(1.159\,\mathrm{kg/m^3}\)。</p>
+<p>常数输运模型的导热系数可由 \(k=\mu C_p/Pr\) 计算，本例约为 \(0.0257\,\mathrm{W/(m\,K)}\)。这也说明温度传热不仅取决于 <code>Cp</code>，还与黏度及 <code>Pr</code> 共同相关。</p>
+<p>温度场使用 K，理想气体密度由热力学绝对压力计算。封闭不可压缩系统的压力基准通常在 <code>fvSolution</code> 中通过 <code>pRefCell/pRefValue</code> 等控制；它用于确定压力常数，与本例状态方程中的绝对压力含义不同。</p>
+<h3>扩展与排查</h3>
+<p>温度范围很宽时，可选择温度相关的输运和比热模型，并提供对应系数。变化后的 \(\mu(T)\) 和 \(C_p(T)\) 会影响动量、导热及温度与能量的转换，适合先在简单边界条件下检查物性曲线。</p>
+<p>启动时输出的模型组合和密度范围很有参考价值。若出现非物理温度或密度，先检查压力、温度初值及单位，再检查所选状态方程。多区域算例为各区域分别保存该文件，流体和固体使用各自的物性类型。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · heatTransfer/buoyantPimpleFoam/hotRoom</summary><p>hotRoom 的热浮力计算需要温度、压力与密度相互联系。本文件给空气选择热物性模型。</p>
+<ul>
+<li><code>heRhoThermo</code>、<code>pureMixture</code> 使用单组分密度型热力学包，能量变量为 <code>sensibleEnthalpy</code>。</li>
+<li><code>perfectGas</code> 按理想气体关系计算密度，<code>molWeight 28.9</code> 给出分子量；<code>pRef 100000</code> 提供压力参考。</li>
+<li><code>hConst</code> 与 <code>Cp 1000</code> 使用恒定比热，<code>Hf 0</code> 给定焓参考。</li>
+<li><code>transport const</code>、<code>mu 1.8e-05</code>、<code>Pr 0.7</code> 使用恒定动力黏度和 Prandtl 数，单位分别为 Pa·s 和无量纲。</li>
+</ul>
+<p>更换气体时同步修改分子量、比热和输运参数；温度跨度较大时可比较温度相关物性模型。</p>
+<p><a href="/assets/examples/v2512/thermophysicalproperties/authored-hotRoom-thermophysicalProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/heatTransfer/buoyantPimpleFoam/hotRoom/constant/thermophysicalProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/buoyantPimpleFoam/hotRoom">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2512                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
 {
-    type            hePsiThermo;          // hePsiThermo(可压理想气体) / heRhoThermo(液体)
-    mixture         pureMixture;          // 单组分
-    transport       sutherland;           // const / sutherland / polynomial
-    thermo          janaf;                // hConst / eConst / janaf
-    equationOfState perfectGas;           // perfectGas / rhoConst / Boussinesq / PengRobinson
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      thermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType
+{
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          hConst;
+    equationOfState perfectGas;
     specie          specie;
-    energy          sensibleInternalEnergy;   // sensibleEnthalpy / sensibleInternalEnergy
+    energy          sensibleEnthalpy;
+}
+
+pRef            100000;
+
+mixture
+{
+    specie
+    {
+        molWeight       28.9;
+    }
+    thermodynamics
+    {
+        Cp              1000;
+        Hf              0;
+    }
+    transport
+    {
+        mu              1.8e-05;
+        Pr              0.7;
+    }
+}
+
+
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · heatTransfer/chtMultiRegionFoam/multiRegionHeater</summary><p>这个文件属于 multiRegionHeater 的 heater 固体区，控制固体储热与导热，空气区另有自己的物性。</p>
+<ul>
+<li><code>heSolidThermo</code> 与 <code>constIso</code> 选择固体、各向同性恒定导热模型。</li>
+<li><code>kappa 80</code> 是导热系数，单位 W/(m·K)，决定相同温差下的传热强度。</li>
+<li><code>Cp 450</code>、<code>rho 8000</code> 分别给出比热 J/(kg·K) 和密度 kg/m³，乘积决定单位体积的热容量。</li>
+<li><code>rhoConst</code> 保持密度不变，<code>sensibleEnthalpy</code> 以显焓表达能量。</li>
+</ul>
+<p>更换加热体材料时成组修改 kappa、Cp、rho；多区域耦合边界仍需在各区温度文件中设置。</p>
+<p><a href="/assets/examples/v2512/thermophysicalproperties/authored-multiRegionHeater-solid-thermophysicalProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionFoam/multiRegionHeater/constant/heater/thermophysicalProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionFoam/multiRegionHeater">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2512                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      thermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType
+{
+    type            heSolidThermo;
+    mixture         pureMixture;
+    transport       constIso;
+    thermo          hConst;
+    equationOfState rhoConst;
+    specie          specie;
+    energy          sensibleEnthalpy;
 }
 
 mixture
 {
-    specie          { molWeight  28.96; }
-    thermodynamics  { Cp 1004.5; Hf 0; }
-    transport       { mu 1.8e-05; Pr 0.7; }
-}</code></pre>
-<p>七个字段各自的意思：type 决定用 \(\psi (=1/RT)\) 还是 \(\rho\) 作为基本量；mixture 是单组分还是多组分；transport 是粘性/导热系数的模型；thermo 是比热模型（hConst 常数比热，janaf 用 JANAF 多项式）；equationOfState 是状态方程；energy 是用焓还是内能作为求解变量。修改时七个字段必须相互兼容，不兼容时报错信息会把所有合法组合列出来——照着报错里的列表挑就行，这是 OpenFOAM 少数几个报错比文档还好用的地方。</p>
-<p>sensibleEnthalpy 还是 sensibleInternalEnergy：基于压力的求解器（rhoPimpleFoam）一般用焓；基于密度的（rhoCentralFoam）用内能。照抄对应教程即可。</p><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>phases</td><td>相名称列表；这些名称会影响相分数、速度、热物性等字段或字典的命名。</td></tr><tr><td>sigma</td><td>常见为表面张力系数，但在电磁模型中可表示电导率；以模型与量纲为准。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>TSat</td><td>saturation temperature</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · multiphase/interCondensatingEvaporatingFoam/condensatingVessel</h3><p>原始路径：<code>tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel/constant/thermophysicalProperties</code>；求解器：<code>interCondensatingEvaporatingFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel/constant/thermophysicalProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/thermophysicalproperties/1-thermophysicalProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+    specie
+    {
+        molWeight   50;
+    }
+    transport
+    {
+        kappa   80;
+    }
+    thermodynamics
+    {
+        Hf      0;
+        Cp      450;
+    }
+    equationOfState
+    {
+        rho     8000;
+    }
+}
+
+
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · multiphase/interCondensatingEvaporatingFoam/condensatingVessel</summary><p>冷凝容器在此给出固定饱和温度，供相变模型判断温度相对于饱和状态的位置。</p>
+<ul>
+<li><code>TSat 367</code> 表示饱和温度为 367 K。</li>
+<li>本文件只有这一项，液相与气相的其他热物性需结合配套相属性文件读取。</li>
+<li>温度与 TSat 的差值会参与相变源项，因此初始温度和壁温应与之对应。</li>
+</ul>
+<p>改变工况压力或材料后，应检查固定饱和温度假设是否仍适用，并同步调整相变参数。</p>
+<p><a href="/assets/examples/v2512/thermophysicalproperties/1-thermophysicalProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel/constant/thermophysicalProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/interCondensatingEvaporatingFoam/condensatingVessel">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -81,7 +225,14 @@ FoamFile
 TSat             367;   // saturation temperature
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · multiphase/compressibleInterDyMFoam/laminar/sloshingTank2D</h3><p>原始路径：<code>tutorials/multiphase/compressibleInterDyMFoam/laminar/sloshingTank2D/constant/thermophysicalProperties</code>；求解器：<code>compressibleInterDyMFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/compressibleInterDyMFoam/laminar/sloshingTank2D/constant/thermophysicalProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/thermophysicalproperties/2-thermophysicalProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/compressibleInterDyMFoam/laminar/sloshingTank2D">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 4 · multiphase/compressibleInterDyMFoam/laminar/sloshingTank2D</summary><p>可压缩晃荡水箱在这份总配置中列出两相，并给出压力下限和界面张力。</p>
+<ul>
+<li><code>phases (water air)</code> 定义相名称，各相热物性与场名需保持对应。</li>
+<li><code>pMin 1000</code> 给出压力下限 1000 Pa，用于相关压力处理。</li>
+<li><code>sigma 0</code> 在这个算例中忽略界面张力，主要观察晃荡及可压缩效应。</li>
+</ul>
+<p>研究毛细尺度运动时应恢复合适的 sigma，并检查网格与时间步是否解析界面张力效应。</p>
+<p><a href="/assets/examples/v2512/thermophysicalproperties/2-thermophysicalProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/compressibleInterDyMFoam/laminar/sloshingTank2D/constant/thermophysicalProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/compressibleInterDyMFoam/laminar/sloshingTank2D">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -104,7 +255,14 @@ pMin            1000;
 sigma           0;
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · multiphase/compressibleInterFoam/laminar/depthCharge3D</h3><p>原始路径：<code>tutorials/multiphase/compressibleInterFoam/laminar/depthCharge3D/constant/thermophysicalProperties</code>；求解器：<code>compressibleInterFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/compressibleInterFoam/laminar/depthCharge3D/constant/thermophysicalProperties">查看固定版本源码</a> · <a href="/assets/examples/v2512/thermophysicalproperties/3-thermophysicalProperties.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/compressibleInterFoam/laminar/depthCharge3D">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 5 · multiphase/compressibleInterFoam/laminar/depthCharge3D</summary><p>depthCharge3D 使用水和空气两相描述气体区与周围液体的压力运动。</p>
+<ul>
+<li><code>phases (water air)</code> 规定两相名称。</li>
+<li><code>pMin 10000</code> 设置 10000 Pa 的压力下限；应与预期压力范围和相热物性一致。</li>
+<li><code>sigma 0.07</code> 设置界面张力为 0.07 N/m。</li>
+</ul>
+<p>改变初始气体压力或尺寸时，同时检查两相状态方程、压力范围与界面分辨率。</p>
+<p><a href="/assets/examples/v2512/thermophysicalproperties/3-thermophysicalProperties.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/multiphase/compressibleInterFoam/laminar/depthCharge3D/constant/thermophysicalProperties">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/compressibleInterFoam/laminar/depthCharge3D">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -127,9 +285,4 @@ pMin            10000;
 sigma           0.07;
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/rhopimplefoam/">rhoPimpleFoam</a> · <a href="/commands/chtmultiregionfoam/">chtMultiRegionFoam</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;constant/thermophysicalProperties&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;constant/thermophysicalProperties&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，残差小不能替代物理验证。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/rhopimplefoam/">rhoPimpleFoam</a> · <a href="/commands/chtmultiregionfoam/">chtMultiRegionFoam</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>Unknown model / Unknown type</td><td>核对模型名、求解器所构建的模型类别和 libs；同名模型可能属于不同注册表。</td></tr><tr><td>量纲不一致或压力基准错误</td><td>对照场 dimensions 和模型所需单位。运动学压力与热力学压力不能直接互换。</td></tr><tr><td>计算收敛但物理结果不合理</td><td>用质量、能量、相分数范围和极限工况检查模型，同时比较流量、压降等目标量与参考数据。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

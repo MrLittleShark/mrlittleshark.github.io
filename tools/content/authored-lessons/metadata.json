@@ -1,0 +1,82 @@
+{
+  "start-openfoam-v2512": {
+    "title": "01 · OpenFOAM v2512 软件组成与环境配置",
+    "summary": "认识求解器、工具程序和算例，完成 Ubuntu 安装、环境加载与工作目录设置。",
+    "metadata": {
+      "editorial_revision": "authored-foundations-2026-10-02-v2",
+      "version": "OpenFOAM v2512"
+    }
+  },
+  "terminal-and-source-map": {
+    "title": "02 · 终端、环境变量与源码目录",
+    "summary": "练习目录操作、文件查看、命令选项和日志保存，找到可执行程序与对应源码。",
+    "metadata": {
+      "editorial_revision": "authored-foundations-2026-10-02-v2",
+      "version": "OpenFOAM v2512"
+    }
+  },
+  "case-structure-dimensions": {
+    "title": "03 · 算例结构、字典语法与量纲",
+    "summary": "从完整速度场文件学习算例目录、字典语法、量纲、文件包含和参数修改。",
+    "metadata": {
+      "editorial_revision": "authored-foundations-2026-10-02-v2",
+      "version": "OpenFOAM v2512"
+    }
+  },
+  "first-cavity-result": {
+    "title": "04 · 顶盖驱动方腔：计算流程与结果分析",
+    "summary": "运行顶盖驱动方腔，阅读求解日志，在 ParaView 中查看速度场并提取中心线曲线。",
+    "metadata": {
+      "editorial_revision": "authored-foundations-2026-10-02-v2",
+      "version": "OpenFOAM v2512"
+    }
+  },
+  "fields-and-boundaries": {
+    "title": "05 · 场文件、初始条件与边界条件的配合",
+    "summary": "理解初值与边界条件，配置速度、压力、二维 empty 条件和压力参考值。",
+    "metadata": {
+      "editorial_revision": "authored-foundations-2026-10-02-v2",
+      "version": "OpenFOAM v2512"
+    }
+  },
+  "control-time-restart": {
+    "title": "06 · 时间控制、结果写出与续算",
+    "summary": "设置时间步和输出频率，从指定时刻续算，比较写出精度与时间分辨率的影响。",
+    "metadata": {
+      "editorial_revision": "authored-foundations-2026-10-02-v2",
+      "version": "OpenFOAM v2512"
+    }
+  },
+  "blockmesh-first-principles": {
+    "title": "07 · blockMesh 结构网格生成与尺度检查",
+    "summary": "逐项解释完整 blockMeshDict，学习顶点顺序、边界面、均匀加密和分段渐变。",
+    "metadata": {
+      "editorial_revision": "authored-foundations-2026-10-02-v2",
+      "version": "OpenFOAM v2512"
+    }
+  },
+  "checkmesh-and-quality": {
+    "title": "08 · checkMesh 网格质量检查与异常定位",
+    "summary": "阅读 checkMesh 日志，理解非正交、偏斜和长宽比，将质量问题定位到网格中。",
+    "metadata": {
+      "editorial_revision": "authored-foundations-2026-10-02-v2",
+      "version": "OpenFOAM v2512"
+    }
+  },
+  "surface-geometry-preparation": {
+    "title": "09 · CAD、STL、单位与封闭流体域",
+    "summary": "检查 CAD 导出表面的单位、连接与区域划分，准备 motorBike 几何和背景流体域。",
+    "metadata": {
+      "editorial_revision": "authored-foundations-2026-10-02-v2",
+      "version": "OpenFOAM v2512"
+    }
+  },
+  "snappyhexmesh-workflow": {
+    "title": "10 · snappyHexMesh 分阶段网格生成与检查",
+    "summary": "以 motorBike 逐阶段生成复杂网格，解释特征提取、细化等级、表面贴合和近壁层参数。",
+    "metadata": {
+      "editorial_revision": "authored-foundations-2026-10-02-v2",
+      "version": "OpenFOAM v2512"
+    }
+  }
+}

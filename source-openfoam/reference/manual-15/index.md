@@ -1,10 +1,11 @@
 ---
 title: "15 参考资料"
 layout: reference
-description: "OpenCFD v2512 参考资料；包含原理、示例与版本核对。"
+description: "参考资料：用法与配置实例。"
+cms_slug: "reference-manual-15"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>S1  OpenCFD. OpenFOAM v2512 发布说明及版本记录. 2025 年 12 月发布，2026 年 9 月 4 日访问。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>S1  OpenCFD. OpenFOAM v2512 发布说明及版本记录. 2025 年 12 月发布，2026 年 9 月 4 日访问。</p>
 <p>https://www.openfoam.com/news/main-news/openfoam-v2512</p>
 <p>https://www.openfoam.com/download/release-history</p>
 <p>S2  OpenCFD. OpenFOAM-v2512 源码发行包。MD5：8a1abe3864851902bb77809efa94ba3e。命令定义见 applications 下的 Make/files、bin 及 etc/config.sh/aliases。非测试应用包括 108 个求解器、171 个工具和 1 个 macOS 辅助程序。</p>
@@ -43,4 +44,3 @@ description: "OpenCFD v2512 参考资料；包含原理、示例与版本核对�
 <p>https://gitlab.com/procps-ng/procps</p>
 <p>https://github.com/util-linux/util-linux</p>
 <p>https://manpages.ubuntu.com/</p>
-{% endraw %}

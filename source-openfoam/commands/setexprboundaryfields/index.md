@@ -1,19 +1,11 @@
 ---
-title: "setExprBoundaryFields  按表达式设置边界场"
+title: "setExprBoundaryFields · 读取边界表达式字典，-backup 保留原场"
 layout: reference
 description: "读取边界表达式字典，-backup 保留原场。"
+cms_slug: "command-setexprboundaryfields"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>读取边界表达式字典，-backup 保留原场。</p><h2>v2512 源码中的用途</h2><p>Set boundary values using an expression</p><h2>使用入口</h2><pre><code class="language-bash">setExprBoundaryFields</code></pre><h2>使用条件与核对</h2><p>读取边界表达式字典，-backup 保留原场。 用法：setExprBoundaryFields [-dict 文件] 示例：setExprBoundaryFields
-源码说明：Set boundary values using an expression
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-ascii -backup -cache-fields -case -debug-switch -decomposeParDict -dict -doc -doc-source -dry-run -fileHandler -help -help-compat -help-full -help-man -help-notes -hostRoots -info-switch -latestTime -lib -load-fields -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-libs -noZero -opt-switch -parallel -region -roots -time -withFunctionObjects -world</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/setexprboundaryfields.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: setExprBoundaryFields
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/preProcessing/setExprBoundaryFields/setExprBoundaryFields.C
 
-
-Usage: setExprBoundaryFields [OPTIONS]
+<p>读取边界表达式字典，-backup 保留原场。</p><h2>用法</h2><pre><code class="language-bash">setExprBoundaryFields</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">setExprBoundaryFields -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-ascii</td><td>Write in ASCII format instead of the controlDict setting</td></tr><tr><td>-backup</td><td>Preserve sub-entry as .backup</td></tr><tr><td>-cache-fields</td><td>Cache fields between calls</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-dry-run</td><td>Evaluate but do not write Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: setExprBoundaryFields [OPTIONS]
 Options:
   -ascii            Write in ASCII format instead of the controlDict setting
   -backup           Preserve sub-entry as .backup
@@ -66,5 +58,4 @@ Options:
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/preProcessing/setExprBoundaryFields/setExprBoundaryFields.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/preProcessing/setExprBoundaryFields/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/preProcessing/setExprBoundaryFields/setExprBoundaryFields.C">源码与说明</a> · <a href="/assets/command-help/setexprboundaryfields.txt">帮助文本</a></p>

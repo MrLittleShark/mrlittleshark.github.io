@@ -26,8 +26,8 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "source-openfoam"
 CONTENT = ROOT / "tools/content"
 REPORT = ROOT / ".openfoam-work/course-refinement/asset-integrity.json"
-TOPICS = ("turbulence", "multiphase", "meshing", "dynamic-mesh")
-EXPECTED_LESSONS = 46
+TOPICS = ("finite-volume", "turbulence", "multiphase", "meshing", "dynamic-mesh")
+EXPECTED_LESSONS = 72
 EXPECTED_FIGURES = 37
 SHA256 = re.compile(r"[0-9a-fA-F]{64}\Z")
 

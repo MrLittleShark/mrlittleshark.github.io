@@ -1,13 +1,11 @@
 ---
-title: "foamTestTutorial  执行教程测试"
+title: "foamTestTutorial · 默认在临时目录运行一个时间步"
 layout: reference
 description: "默认在临时目录运行一个时间步。-full 执行完整教程，-output=DIR 保留输出，指定目录须预先建立。"
+cms_slug: "command-foamtesttutorial"
 ---
-{% raw %}
-<div class="source-note">v2512 脚本源码已收录；未执行脚本。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>默认在临时目录运行一个时间步。-full 执行完整教程，-output=DIR 保留输出，指定目录须预先建立。</p><h2>v2512 源码中的用途</h2><p>Run foamRunTutorials with specified tutorial directories Creates/destroys a temporary directory for each test unless an output directory has been specified.</p><h2>使用入口</h2><pre><code class="language-bash">foamTestTutorial -1 incompressible/icoFoam/cavity/cavity</code></pre><h2>使用条件与核对</h2><p>默认在临时目录运行一个时间步。-full 执行完整教程，-output=DIR 保留输出，指定目录须预先建立。 用法：foamTestTutorial [选项] 教程相对路径 示例：foamTestTutorial -1 incompressible/icoFoam/cavity/cavity
-Run foamRunTutorials with specified tutorial directories Creates/destroys a temporary directory for each test unless an output directory has been specified.
-本条基于固定版本脚本源码，运行前检查帮助与依赖。
-源码帮助选项：-debian -force -full -help -output -parallel -serial</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/foamtesttutorial.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 script source evidence
+
+<p>默认在临时目录运行一个时间步。-full 执行完整教程，-output=DIR 保留输出，指定目录须预先建立。</p><h2>用法</h2><pre><code class="language-bash">foamTestTutorial -1 incompressible/icoFoam/cavity/cavity</code></pre><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-1</td><td>Run only one time step (modifies controlDict) [default]</td></tr><tr><td>-full</td><td>Run to completion (does not modify controlDict)</td></tr><tr><td>-force</td><td>Force overwrite of existing output directories</td></tr><tr><td>-debian</td><td>Adjust for running with autopkgtest</td></tr><tr><td>-serial</td><td>Prefer Allrun-serial if available</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-output=DIR</td><td>Output directory (default: a temporary directory)</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
 Command: foamTestTutorial
 Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamTestTutorial
 
@@ -27,5 +25,4 @@ options:
 
 Run foamRunTutorials with specified tutorial directories
 Creates/destroys a temporary directory for each test unless
-an output directory has been specified.</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamTestTutorial">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+an output directory has been specified.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamTestTutorial">源码与说明</a> · <a href="/assets/command-help/foamtesttutorial.txt">帮助文本</a></p>

@@ -1,26 +1,27 @@
 ---
-title: "checkMesh  检查网格拓扑和几何质量"
+title: "checkMesh · 检查网格拓扑、几何形状与质量，并定位问题区域"
 layout: reference
-description: "-meshQuality 读取网格质量约束。"
+description: "检查网格拓扑、几何形状与质量，并定位问题区域。"
+cms_slug: "command-checkmesh"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>-meshQuality 读取网格质量约束。</p><h2>使用入口</h2><pre><code class="language-bash">checkMesh -allTopology -allGeometry</code></pre><h2>使用条件与核对</h2><p>-meshQuality 读取网格质量约束。 用法：checkMesh [选项] 示例：checkMesh -allTopology -allGeometry
-源码说明：
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-allGeometry -allRegions -allTopology -case -constant -debug-switch -decomposeParDict -doc -doc-source -fileHandler -help -help-compat -help-full -help-man -help-notes -hostRoots -info-switch -latestTime -lib -meshQuality -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -no-libs -noFunctionObjects -noTopology -noZero -opt-switch -parallel -region -regions -roots -time -world -write-edges -writeAllFields -writeAllSurfaceFields -writeChecks -writeFields -writeSets</p><p>关联配置：<a href="/dictionaries/system-meshqualitydict/">meshQualityDict</a></p><h2>同版本官方教程</h2><p>以下链接直接指向 OpenFOAM-v2512 标签中的教程目录。先阅读 Allrun 确定网格生成、初始化和依赖，再在自己的工作目录运行。列出教程不表示本网站已执行它的全部计算。</p><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/polyDualMesh/missingCorner">mesh/polyDualMesh/missingCorner</a></li></ul><pre><code class="language-bash">mkdir -p &quot;&#36;FOAM_RUN&quot;
-cd &quot;&#36;FOAM_RUN&quot;
-# 先选择一个尚不存在的新目录；保留原教程
-cp -r &quot;&#36;FOAM_TUTORIALS/mesh/polyDualMesh/missingCorner&quot; ./checkMesh-study
-cd ./checkMesh-study
-ls
-# 查看运行流程后，再决定执行哪些步骤
-sed -n &#x27;1,200p&#x27; Allrun</code></pre><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/checkmesh.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: checkMesh
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/checkMesh/writeFields.C
 
-
-Usage: checkMesh [OPTIONS]
+<p>检查网格拓扑、几何形状与质量，并定位问题区域。</p><h2>读取基本检查结果</h2>
+<pre><code class="language-bash">checkMesh
+</code></pre>
+<p>先看网格范围、单元数、边界数，再看非正交、偏斜和体积等指标。<code>Failed ... mesh checks</code> 后的名称指向具体问题。</p>
+<h2>执行完整几何和拓扑检查</h2>
+<pre><code class="language-bash">checkMesh -allTopology -allGeometry &gt; log.checkMesh 2&gt;&amp;1
+</code></pre>
+<p><code>-allTopology</code> 增加连接关系检查，<code>-allGeometry</code> 增加几何检查。重定向将完整信息写入日志，方便比较两次网格修改。</p>
+<h2>导出异常集合</h2>
+<pre><code class="language-bash">checkMesh -allTopology -allGeometry -writeSets vtk
+</code></pre>
+<p>将检查产生的面或单元集合写成 VTK，便于在 ParaView 中定位异常。先查出问题位置，再决定修改表面、细化等级或边界层参数。</p>
+<h2>检查并行网格</h2>
+<pre><code class="language-bash">mpirun -np 4 checkMesh -parallel
+</code></pre>
+<p>在已经分成 4 个子域的算例中运行。检查结果还包含分区边界及各处理器之间的连接。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allGeometry</td><td>执行更完整的网格几何检查。</td></tr><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-allTopology</td><td>执行更完整的网格拓扑检查。</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-meshQuality</td><td>Read user-defined mesh quality criteria from system/meshQualityDict</td></tr><tr><td>-noTopology</td><td>Skip checking the mesh topology</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-write-edges</td><td>Write bad edges (possibly relevant for finite-area) in vtk format</td></tr><tr><td>-writeAllFields</td><td>Write volFields with mesh quality parameters Write surfaceFields with mesh quality parameters Write checks to file in dictionary or JSON format Write volFields with selected mesh quality parameters Reconstruct and write all faceSets and cellSets in selected format</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-meshqualitydict/">meshQualityDict</a></p><h2>配套算例</h2><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/polyDualMesh/missingCorner">mesh/polyDualMesh/missingCorner</a></li></ul><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: checkMesh [OPTIONS]
 Options:
   -allGeometry      Include bounding box checks
   -allRegions       Use all regions in regionProperties
@@ -90,5 +91,4 @@ Checks validity of a mesh
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/checkMesh/writeFields.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/checkMesh/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/checkMesh/writeFields.C">源码与说明</a> · <a href="/assets/command-help/checkmesh.txt">帮助文本</a></p>

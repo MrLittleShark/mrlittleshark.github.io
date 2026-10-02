@@ -1,18 +1,15 @@
 ---
-title: "wmakeWindowsDlOpenLibs · 构建或开发辅助脚本"
+title: "wmakeWindowsDlOpenLibs · 为 Windows 程序生成运行时加载的动态库列表"
 layout: reference
-description: "Extract library dependencies from the EXE_LIBS entry for Windows applications and emit as FOAM_DLOPEN_LIBS for use with setRootCase.H Forcibly dlOpen'ing these libraries ensures that they are truly loaded for the windows application binary."
+description: "为 Windows 程序生成运行时加载的动态库列表。"
+cms_slug: "command-wmakewindowsdlopenlibs"
 ---
-{% raw %}
-<div class="source-note">v2512 脚本源码已收录；未执行脚本。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>Extract library dependencies from the EXE_LIBS entry for Windows applications and emit as FOAM_DLOPEN_LIBS for use with setRootCase.H Forcibly dlOpen&#x27;ing these libraries ensures that they are truly loaded for the windows application binary. An alternative means is to define external entry points into particular libraries and linking with &#x27;-u symbol&#x27;, which would possibly have a lower overhead but is more code-intrusive and somewhat ad hoc.</p><h2>v2512 源码中的用途</h2><p>Extract library dependencies from the EXE_LIBS entry for Windows applications and emit as FOAM_DLOPEN_LIBS for use with setRootCase.H Forcibly dlOpen&#x27;ing these libraries ensures that they are truly loaded for the windows application binary. An alternative means is to define external entry points into particular libraries and linking with &#x27;-u symbol&#x27;, which would possibly have a lower overhead but is more code-intrusive and somewhat ad hoc.</p><h2>使用入口</h2><pre><code class="language-bash"># 查看安装中的脚本；这条命令不会执行脚本
-sed -n &#x27;1,180p&#x27; &quot;&#36;WM_PROJECT_DIR/wmake/scripts/wmakeWindowsDlOpenLibs&quot;</code></pre><p>该条属于内部构建或开发辅助入口，可能依赖调用方预先设置变量、工作目录和参数。正常使用应优先从 wmake、Allwmake 或相应公开脚本进入。</p><h2>使用条件与核对</h2><p>
-Extract library dependencies from the EXE_LIBS entry for Windows applications and emit as FOAM_DLOPEN_LIBS for use with setRootCase.H Forcibly dlOpen&#x27;ing these libraries ensures that they are truly loaded for the windows application binary. An alternative means is to define external entry points into particular libraries and linking with &#x27;-u symbol&#x27;, which would possibly have a lower overhead but is more code-intrusive and somewhat ad hoc.
-辅助脚本不一定加入 PATH；不要把内部调用接口当作稳定的用户命令。
-源码帮助选项：</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/wmakewindowsdlopenlibs.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 script source evidence
+
+<p>为 Windows 程序生成运行时加载的动态库列表。</p><h2>用法</h2><pre><code class="language-bash"># 查看安装中的脚本；这条命令不会执行脚本
+sed -n &#x27;1,180p&#x27; &quot;$WM_PROJECT_DIR/wmake/scripts/wmakeWindowsDlOpenLibs&quot;</code></pre><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
 Command: wmakeWindowsDlOpenLibs
 Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmakeWindowsDlOpenLibs
 
 以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
 
-Extract library dependencies from the EXE_LIBS entry for Windows applications and emit as FOAM_DLOPEN_LIBS for use with setRootCase.H Forcibly dlOpen&#x27;ing these libraries ensures that they are truly loaded for the windows application binary. An alternative means is to define external entry points into particular libraries and linking with &#x27;-u symbol&#x27;, which would possibly have a lower overhead but is more code-intrusive and somewhat ad hoc.</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmakeWindowsDlOpenLibs">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Extract library dependencies from the EXE_LIBS entry for Windows applications and emit as FOAM_DLOPEN_LIBS for use with setRootCase.H Forcibly dlOpen&#x27;ing these libraries ensures that they are truly loaded for the windows application binary. An alternative means is to define external entry points into particular libraries and linking with &#x27;-u symbol&#x27;, which would possibly have a lower overhead but is more code-intrusive and somewhat ad hoc.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/scripts/wmakeWindowsDlOpenLibs">源码与说明</a> · <a href="/assets/command-help/wmakewindowsdlopenlibs.txt">帮助文本</a></p>

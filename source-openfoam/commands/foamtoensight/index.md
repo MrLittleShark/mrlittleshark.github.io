@@ -1,19 +1,11 @@
 ---
-title: "foamToEnsight  导出 EnSight 数据集"
+title: "foamToEnsight · 选项可控制区域、粒子及场数据的输出范围"
 layout: reference
 description: "选项可控制区域、粒子及场数据的输出范围。"
+cms_slug: "command-foamtoensight"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>选项可控制区域、粒子及场数据的输出范围。</p><h2>使用入口</h2><pre><code class="language-bash">foamToEnsight -latestTime -fields &#x27;(U p)&#x27;</code></pre><h2>使用条件与核对</h2><p>选项可控制区域、粒子及场数据的输出范围。 用法：foamToEnsight [选项] 示例：foamToEnsight -latestTime -fields &#x27;(U p)&#x27;
-源码说明：
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-allAreas -allRegions -area-region -area-regions -ascii -case -cellZones -constant -debug-switch -decomposeParDict -doc -doc-source -exclude-fields -exclude-patches -faceZones -fields -fileHandler -help -help-compat -help-full -help-man -help-notes -hostRoots -index -info-switch -latestTime -lib -mpi-no-comm-dup -mpi-split-by-appnum -mpi-threads -name -nearCellValue -no-boundary -no-cellZones -no-fields -no-finite-area -no-internal -no-lagrangian -no-libs -no-mesh -no-overwrite -no-point-data -noFunctionObjects -noZero -nodeValues -opt-switch -parallel -patches -region -regions -roots -time -verbose -width -world</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/foamtoensight.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: foamToEnsight
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToEnsight/readFields.C
 
-
-Usage: foamToEnsight [OPTIONS]
+<p>选项可控制区域、粒子及场数据的输出范围。</p><h2>用法</h2><pre><code class="language-bash">foamToEnsight -latestTime -fields &#x27;(U p)&#x27;</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">foamToEnsight -latestTime -fields &#x27;(U p)&#x27; -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allAreas</td><td>Use all regions in finite-area regionProperties</td></tr><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-ascii</td><td>Write in ASCII format instead of &#x27;C Binary&#x27;</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-index &lt;start&gt;</td><td>Starting index for consecutive number of Ensight data/ files. Ignore the time index contained in the uniform/time file. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-name &lt;subdir&gt;</td><td>Sub-directory name for Ensight output (default: &#x27;EnSight&#x27;)</td></tr><tr><td>-nearCellValue</td><td>Use zero-gradient cell values on patches</td></tr><tr><td>-no-boundary</td><td>Suppress writing any patches</td></tr><tr><td>-no-cellZones</td><td>Suppress writing any cellZones</td></tr><tr><td>-no-fields</td><td>Suppress conversion of fields</td></tr><tr><td>-no-finite-area</td><td>Suppress output of finite-area mesh/fields</td></tr><tr><td>-no-internal</td><td>Suppress writing the internal mesh</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamToEnsight [OPTIONS]
 Options:
   -allAreas         Use all regions in finite-area regionProperties
   -allRegions       Use all regions in regionProperties
@@ -110,5 +102,4 @@ unzoned cells and patches
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToEnsight/readFields.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToEnsight/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/foamToEnsight/readFields.C">源码与说明</a> · <a href="/assets/command-help/foamtoensight.txt">帮助文本</a></p>

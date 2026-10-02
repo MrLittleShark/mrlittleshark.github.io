@@ -1,0 +1,46 @@
+{
+  "physical-boundary-design": {
+    "title": "19 · 设计入口、出口、壁面与周期边界",
+    "summary": "从通道算例设置速度、压力和壁面，理解流量入口、回流出口、对称与周期边界。"
+  },
+  "laminar-turbulence-model-choice": {
+    "title": "20 · 层流、RANS、LES 与模型选择",
+    "summary": "理解层流、RANS 与 LES，计算入口湍流量，配置 k–ε 和 SST 模型。"
+  },
+  "wall-resolution-yplus": {
+    "title": "21 · 近壁网格、壁面函数与 y⁺",
+    "summary": "计算首层网格厚度，配合壁面函数和层网格设置，查看并解释 y⁺ 分布。"
+  },
+  "vof-interface-dambreak": {
+    "title": "22 · VOF 两相流：体积分数、初始化与质量守恒",
+    "summary": "用 interFoam 计算溃坝，设置物性与初始水柱，分析界面参数和水量变化。"
+  },
+  "heat-and-multiregion": {
+    "title": "23 · 传热、多区域耦合与能量收支",
+    "summary": "建立流体与固体区域，配置热物性和耦合边界，分析温度与热量收支。"
+  },
+  "compressibility-and-thermodynamics": {
+    "title": "24 · 可压缩流动与热物性模型",
+    "summary": "读取气体热物性，理解绝对压力与能量变量，分析储气腔的压力振荡。"
+  },
+  "moving-mesh-and-ami": {
+    "title": "25 · 动网格、旋转参考系与 AMI",
+    "summary": "配置旋转与变形网格，理解 MRF 和 AMI，检查运动轨迹、接口与时间步。"
+  },
+  "parallel-decompose-reconstruct": {
+    "title": "26 · 并行计算：分区、MPI、重构与效率",
+    "summary": "完成分区、MPI 求解、结果重构和续算，比较分区方法与并行效率。"
+  },
+  "sampling-functions-and-observables": {
+    "title": "27 · 采样、监测与 function objects",
+    "summary": "配置探针、中心线、出口流量和时间平均，读取采样文件并解释输出。"
+  },
+  "verification-validation-uncertainty": {
+    "title": "28 · 数值验证、物理确认与不确定性",
+    "summary": "比较解析解，计算网格收敛阶，研究时间步误差并对照实验不确定性。"
+  },
+  "reproducible-case-and-sharing": {
+    "title": "29 · 可复现算例的组织与共享",
+    "summary": "组织算例输入、运行脚本和结果，记录参数变化，制作便于复现的共享资料。"
+  }
+}

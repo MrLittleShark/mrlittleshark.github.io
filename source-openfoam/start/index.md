@@ -1,82 +1,87 @@
 ---
-title: 快速开始
+title: "快速开始"
 layout: page
-description: 检查 v2512 环境，复制并运行第一个方腔流动算例。
+description: "FoamLab 使用与维护说明。"
+cms_slug: "site-start"
 ---
 
-先完成一次“复制算例 → 生成网格 → 检查网格 → 求解 → 查看结果”，再逐步理解每个配置文件。
+OpenFOAM 的一次计算通常包括准备文件、生成网格、运行求解器和查看结果。这里用顶盖驱动方腔完成这四步。
 
-## 1 确认软件分支与环境
+## 加载环境
 
-本站使用 **openfoam.com 分支的 OpenFOAM v2512**。不同分支的版本号、求解器和字典名称可能不同，请先核对实际环境。Windows 用户可在 WSL2 的 Ubuntu 中进行操作；下面的命令在 Linux Bash 终端执行。
-
-还没有安装时，从 [v2512 官方发布页面](https://www.openfoam.com/news/main-news/openfoam-v2512) 选择适合系统的安装包，或查阅 [v2512 官方下载目录](https://dl.openfoam.com/source/v2512/)。安装位置取决于所用安装方式。
+以下命令在 Linux 终端运行。还未安装时，先阅读[安装课程](/read/?slug=start-openfoam-v2512)；第一次接触终端，可以从 [Linux 入门](/linux/)开始。
 
 ```bash
-# 适用于安装在此目录的 Ubuntu 软件包；其他安装方式请改成实际路径
 source /usr/lib/openfoam/openfoam2512/etc/bashrc
 echo "$WM_PROJECT_VERSION"
-echo "$WM_PROJECT_DIR"
-echo "$FOAM_TUTORIALS"
 icoFoam -help
 ```
 
-**检查结果：**版本信息应包含 `2512`，教程路径存在，`icoFoam -help` 能正常显示帮助。遇到 `command not found` 时，先检查环境脚本的位置与当前终端，不要直接修改算例文件。
+第一行适用于安装到该路径的 Ubuntu 软件包。其他安装位置请替换为实际的 `etc/bashrc`。第二行应输出 `v2512`；第三行显示方腔所用求解器的参数。
 
-## 2 复制方腔算例
-
-在加载环境的同一个终端中执行。下面使用一个新目录保存本次练习，避免覆盖已有计算。
+## 复制方腔算例
 
 ```bash
 mkdir -p "$FOAM_RUN"
 cd "$FOAM_RUN"
-# 如果 cavity-first 已存在，请换一个新的目标名称
 cp -r "$FOAM_TUTORIALS/incompressible/icoFoam/cavity/cavity" cavity-first
 cd cavity-first
-pwd
-ls 0 constant system
+ls
 ```
 
-**检查结果：**当前目录应为自己的 `cavity-first`，并包含 `0`、`constant` 和 `system`。如果官方教程路径不存在，先用 `find "$FOAM_TUTORIALS" -path '*/icoFoam/*/system/controlDict'` 查找本机教程位置。
+`cp -r` 复制整个目录，`cavity-first` 是本次练习的名称。若已经用过这个名称，换一个新名称。复制后可以看到三个主要目录：
 
-<div class="directory-map"><a href="/reference/guide-19/"><code>0/</code><h3>初始场与边界</h3><p>速度 U、压力 p</p></a><a href="/reference/guide-18/"><code>constant/</code><h3>物性与网格</h3><p>黏度、polyMesh</p></a><a href="/reference/guide-12/"><code>system/</code><h3>计算控制</h3><p>网格字典、格式与求解设置</p></a></div>
+| 目录 | 本例包含什么 |
+| --- | --- |
+| `0` | 速度 `U`、压力 `p` 的初值与边界条件 |
+| `constant` | 流体黏度；生成网格后还会出现 `polyMesh` |
+| `system` | 网格描述、离散格式、线性求解和时间控制 |
 
-## 3 生成网格并检查
-
-逐条运行，确认前一步成功后再执行下一条。
+## 生成网格
 
 ```bash
-blockMesh > log.blockMesh 2>&1
-tail -n 15 log.blockMesh
-checkMesh > log.checkMesh 2>&1
-tail -n 25 log.checkMesh
+blockMesh
+checkMesh
 ```
 
-**检查结果：**网格生成正常结束，`checkMesh` 报告 `Mesh OK`。出现 `FOAM FATAL ERROR` 或网格失败项时，先阅读错误前后的日志，修正后再开始求解。
+`blockMesh` 按 `system/blockMeshDict` 生成 $20\times20\times1$ 个单元。`checkMesh` 随后检查连接与几何，正常输出包含 `Mesh OK`。
 
-## 4 求解与查看结果
+![方腔网格](/assets/science/cavity-mesh.png)
+
+本例是二维方腔。厚度方向只有一层单元，前后边界设置为 `empty`；顶盖以 $1\,\mathrm{m/s}$ 沿水平方向运动，其余壁面静止。
+
+## 运行计算
 
 ```bash
 icoFoam > log.icoFoam 2>&1
 tail -n 20 log.icoFoam
+```
+
+第一行运行求解器，把输出与错误信息保存到 `log.icoFoam`。程序结束后，第二行显示日志最后 20 行。计算至 $0.5\,\mathrm{s}$，结果按 `controlDict` 中的写出间隔保存在时间目录中。
+
+日志中的 `Time` 是当前时刻，`Solving for` 后是所求的场，`Initial residual` 和 `Final residual` 是线性方程求解前后的残差。各项的计算含义在[方腔课程](/read/?slug=first-cavity-result)中展开。
+
+## 查看速度场
+
+```bash
 paraFoam -builtin
 ```
 
-日志正常结束时通常包含 `End`。在 ParaView 中点击 **Apply**，选择速度 `U` 或压力 `p`，切换到最后保存的时刻。先观察网格和边界，再用流线或矢量观察方腔中的回流。
+在 ParaView 中点击 **Apply**，切换到最后一个时刻，着色字段选择 **U → Magnitude**。可以看到顶盖驱动的回流。
 
-若当前环境不能打开图形窗口，可执行 `touch case.foam`，在能访问同一算例目录的 ParaView 中打开此文件；也可用 `foamToVTK -latestTime` 导出。`.foam` 文件只是读取入口，查看结果时还需要同目录下的网格与场数据。
+![方腔速度大小](/assets/science/cavity-velocity.png)
 
-## 5 第一次练习
+若计算在无图形界面的服务器上进行，可创建读取入口，再把算例复制到安装了 ParaView 的电脑：
 
-1. 记录版本号、算例路径和实际执行的命令。
-2. 找出 `system/controlDict` 中的终止时间和时间步长。
-3. 保存一张网格图、一张速度图，并解释顶盖与其他壁面的区别。
-4. 在副本中改变一个参数，重新计算并记录结果变化。
+```bash
+touch cavity.foam
+```
 
-本站已在 Ubuntu 虚拟机的 OpenFOAM v2512 环境中运行这一方腔示例：网格为 20 × 20 × 1，终止时刻为 0.5 s。下图来自该次计算。运行完成只说明程序正常推进；离散误差、网格依赖性和稳态程度仍需分别检查。
+打开 `cavity.foam` 时，保留同目录下的网格和结果文件。
 
-![OpenFOAM v2512 方腔流动速度分布](/assets/science/cavity-velocity.png)
+## 接着学什么
 
-计算日志、算例参数和结果范围见[方腔算例验证记录](/read/?slug=first-cavity-result)。
-
-<a class="button" href="/read/?slug=start-openfoam-v2512">进入系统课程 →</a> <a class="button secondary" href="/community/">讨论与答疑</a>
+- [算例结构与字典语法](/read/?slug=case-structure-dimensions)：看懂文件中的条目、列表和量纲。
+- [顶盖驱动方腔](/read/?slug=first-cavity-result)：解释边界、雷诺数和计算结果。
+- [blockMesh](/read/?slug=blockmesh-first-principles)：修改网格并比较结果。
+- [C++ 入门](/cpp/)：为自定义 OpenFOAM 程序准备基础。

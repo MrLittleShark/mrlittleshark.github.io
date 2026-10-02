@@ -1,43 +1,39 @@
 ---
-title: "system/controlDict → functions → Q · Q"
+title: "Q"
 layout: reference
-description: "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。"
+description: "由速度梯度计算 Q 判据场，用于显示旋转占优的流动区域。"
 dictionary: true
+cms_slug: "dictionary-q"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。</p><figure><img src="/assets/diagrams/reference-7.svg" alt="函数对象配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/controlDict → functions → Q</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>type</code> · <code>Q</code> · <code>field</code> · <code>result</code></p><h2>关联命令</h2><p><a href="/commands/?q=postProcess">postProcess</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/controlDict -entry functions -value
-postProcess -help</code></pre><h2>10.6 统计量与派生场</h2><div class="table-scroll"><table>
-<tr><th>类型</th><th>主要参数</th><th>配置与调用示例</th></tr>
-<tr><td>fieldAverage</td><td>fields 下每场的 mean、prime2Mean、base</td><td>U { mean on; prime2Mean on; base time; }；生成 UMean 等</td></tr>
-<tr><td>fieldMinMax</td><td>fields、location、mode</td><td>fields (p U); location true;，输出极值及位置</td></tr>
-<tr><td>volFieldValue</td><td>regionType、name、operation、fields</td><td>regionType all; operation volAverage; fields (T);</td></tr>
-<tr><td>surfaceFieldValue</td><td>regionType patch、name、operation、fields</td><td>name outlet; operation sum; fields (phi);，输出带法向符号的通量</td></tr>
-<tr><td>solverInfo</td><td>fields</td><td>fields (p U);，记录各方程初始残差</td></tr>
-<tr><td>yPlus</td><td>湍流模型及壁面量</td><td>simpleFoam -postProcess -func yPlus -latestTime</td></tr>
-<tr><td>wallShearStress</td><td>patches、writeControl</td><td>simpleFoam -postProcess -func wallShearStress -latestTime</td></tr>
-<tr><td>wallHeatFlux</td><td>热模型和壁面</td><td>通过相应传热求解器 -postProcess -func wallHeatFlux</td></tr>
-<tr><td>CourantNo</td><td>通量及密度条件</td><td>postProcess -func CourantNo -latestTime，读取所需通量等场</td></tr>
-<tr><td>mag、grad、div</td><td>操作字段</td><td>postProcess -func &#x27;mag(U)&#x27; -latestTime</td></tr>
-<tr><td>vorticity、Q</td><td>速度梯度派生量</td><td>postProcess -func vorticity -latestTime</td></tr>
-<tr><td>MachNo</td><td>速度和热物性声速</td><td>通过可压缩求解器 -postProcess -func MachNo</td></tr>
-<tr><td>streamLine</td><td>seedSampleSet、direction、lifeTime、trackLength 等</td><td>foamGetDict streamlines 获取模板，随后配置种子点</td></tr>
-</table></div>
-<p>表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。</p>
-<pre><code class="language-openfoam">statistics
+
+<p>由速度梯度计算 Q 判据场，用于显示旋转占优的流动区域。</p><p>位置：<code>system/controlDict → functions → Q</code></p><p><code>Q</code> 计算速度梯度张量的第二不变量，常通过正值等值面显示旋转占优的流动结构。场的单位是 s⁻²，等值面阈值需要结合速度和长度尺度选择。</p>
+<h3>示例：计算 Q 场</h3>
+<p>在 <code>system/controlDict/functions</code> 中加入：</p>
+<pre><code class="language-foam">vortexQ
 {
-    type fieldAverage;
-    libs (&quot;libfieldFunctionObjects.so&quot;);
-    timeStart 0.2;
-    executeControl timeStep;
-    executeInterval 1;
+    type Q;
+    libs (fieldFunctionObjects);
+    field U;
+    result Q;
     writeControl writeTime;
-    fields
-    (
-        U { mean on; prime2Mean on; base time; }
-        p { mean on; prime2Mean off; base time; }
-    );
-}</code></pre><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>dimensions</td><td>七个指数依次表示质量、长度、时间、温度、物质量、电流、发光强度。量纲错误常在矩阵组装或赋值时暴露。</td></tr><tr><td>internalField</td><td>初始内部场，可使用 uniform 或 nonuniform。uniform 不表示求解过程始终空间均匀。</td></tr><tr><td>boundaryField</td><td>按网格 patch 名称设置边界条件；名称必须与 polyMesh/boundary 一致，类型还受网格边界类型约束。</td></tr><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>libs</td><td>额外加载的共享库。函数对象或自定义边界未注册时，应检查库名与编译版本。</td></tr><tr><td>application</td><td>供运行脚本查询的求解器名称；直接在终端执行程序时，以执行的命令为准。</td></tr><tr><td>writeControl</td><td>输出触发方式，其值决定 writeInterval 表示步数、物理时间或时钟时间。</td></tr><tr><td>writeInterval</td><td>输出间隔，需要结合 writeControl 理解单位与触发时刻。</td></tr><tr><td>functions</td><td>函数对象实例集合，可以记录残差、采样、积分或计算派生量。</td></tr><tr><td>fields</td><td>目标场列表。场名、数据类型和计算时刻必须满足相应函数对象的要求。</td></tr><tr><td>region</td><td>目标网格区域名称；多区域场与网格路径中应保持一致。</td></tr><tr><td>executeControl</td><td>函数对象执行触发方式，与写出频率可以不同。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>result</td><td>Optional entries</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · heatTransfer/buoyantSimpleFoam/circuitBoardCooling</h3><p>原始路径：<code>tutorials/heatTransfer/buoyantSimpleFoam/circuitBoardCooling/0.orig/baffle3DRegion/Q</code>；求解器：<code>buoyantSimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/heatTransfer/buoyantSimpleFoam/circuitBoardCooling/0.orig/baffle3DRegion/Q">查看固定版本源码</a> · <a href="/assets/examples/v2512/q/1-Q.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/buoyantSimpleFoam/circuitBoardCooling">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+}
+</code></pre>
+<p><code>field U</code> 指定速度场，<code>result Q</code> 指定输出场名，<code>writeTime</code> 随整场写出保存。用 ParaView 对 <code>Q</code> 建立 Contour，再用速度或压力着色，可以观察涡结构与周围流场的关系。</p>
+<p>v2512 中该对象计算</p>
+<p>\[
+Q=\tfrac12\left[(\operatorname{tr}\nabla\mathbf U)^2-
+\operatorname{tr}((\nabla\mathbf U)^2)\right].
+\]</p>
+<p>对于不可压缩流，速度散度为零，公式化为 \(Q=\tfrac12(\|\boldsymbol\Omega\|^2-\|\mathbf S\|^2)\)，其中 \(\mathbf S\) 和 \(\boldsymbol\Omega\) 是速度梯度的对称和反对称部分。可压缩流中需按完整第二不变量解释。</p>
+<p>已有速度场可使用 <code>postProcess -func Q -latestTime</code>。比较不同工况时可采用 \(Q L^2/U_{ref}^2\) 这样的无量纲阈值。梯度对网格和离散敏感，细小结构随网格改变时，应结合速度场与分辨率分析。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · heatTransfer/buoyantSimpleFoam/circuitBoardCooling</summary><p>circuitBoardCooling 的这个 Q 文件是 baffle3DRegion 中的体积热源。</p>
+<ul>
+<li>量纲 <code>[1 -1 -3 0 0 0 0]</code> 对应 W/m³。</li>
+<li><code>internalField uniform 17000</code> 给出均匀的 17000 W/m³ 发热强度，总功率由它对固体体积积分得到。</li>
+<li>匹配的边界采用 <code>zeroGradient</code>。</li>
+</ul>
+<p>已知器件总功率时，可按有效发热体积换算 Q，并检查材料导热与界面传热设置。</p>
+<p><a href="/assets/examples/v2512/q/1-Q.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/heatTransfer/buoyantSimpleFoam/circuitBoardCooling/0.orig/baffle3DRegion/Q">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/buoyantSimpleFoam/circuitBoardCooling">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -66,7 +62,15 @@ boundaryField
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase</h3><p>原始路径：<code>tutorials/incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase/system/controlDict</code>；求解器：<code>pimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/q/2-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase</summary><p>这里的 Q1 函数对象计算速度梯度的 Q 判据，用来显示绕立方体流动的旋转结构。</p>
+<ul>
+<li><code>type Q</code>、<code>libs (fieldFunctionObjects)</code> 选择判据计算。</li>
+<li><code>writeControl writeTime</code> 使 Q 与主场同时输出，固定步长 0.002 s、每 100 步写出对应 0.2 s。</li>
+<li>同一配置还输出 vorticity，并在 10 s 后累计 U、p 的时间统计。</li>
+<li>Q 由速度梯度计算，量纲为 s⁻²；显示等值面时阈值应与速度和长度尺度对应。</li>
+</ul>
+<p>不同工况比较可采用共同的无量纲阈值或明确给出各自参考尺度。</p>
+<p><a href="/assets/examples/v2512/q/2-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -198,7 +202,14 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><p>本例包含外部引用：&quot;sample&quot;。下载单个文件不会自动取得这些依赖。</p><h3>示例 3 · etc/caseDicts/postProcessing/fields</h3><p>原始路径：<code>etc/caseDicts/postProcessing/fields/Q</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/caseDicts/postProcessing/fields/Q">查看固定版本源码</a> · <a href="/assets/examples/v2512/q/3-Q.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/etc/caseDicts/postProcessing/fields">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · etc/caseDicts/postProcessing/fields</summary><p>这是 Q 判据函数对象的公共配置，可在后处理时计算旋转结构指标。</p>
+<ul>
+<li><code>type Q</code> 指定算法，<code>field U</code> 选择输入速度场。</li>
+<li><code>libs (fieldFunctionObjects)</code> 加载实现。</li>
+<li><code>executeControl writeTime</code>、<code>writeControl writeTime</code> 让计算与写出都发生在结果输出时刻。</li>
+</ul>
+<p>更换速度字段名时修改 field；展示等值面时同时说明阈值和单位。</p>
+<p><a href="/assets/examples/v2512/q/3-Q.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/caseDicts/postProcessing/fields/Q">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/etc/caseDicts/postProcessing/fields">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Version:  v2512
@@ -218,9 +229,4 @@ field           U;
 executeControl  writeTime;
 writeControl    writeTime;
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/postprocess/">postProcess</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;0.orig/baffle3DRegion/Q&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;0.orig/baffle3DRegion/Q&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/postprocess/">postProcess</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

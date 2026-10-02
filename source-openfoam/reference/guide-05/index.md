@@ -1,10 +1,11 @@
 ---
 title: "第 5 章　系统与通用命令"
 layout: reference
-description: "OpenCFD v2512 系统与通用命令；包含原理、示例与版本核对。"
+description: "系统与通用命令：用法与配置实例。"
+cms_slug: "reference-guide-05"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>5.1 所有命令都认的通用选项</h2>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>5.1 所有命令都认的通用选项</h2>
 <p>OpenFOAM 的可执行文件都继承同一套命令行解析器，所以下面这些选项几乎每个命令都能用。先学这一组，等于一次性学会了两百个命令的用法。</p>
 <div class="table-scroll"><table>
 <tr><th>选项</th><th>作用</th><th>为什么需要它</th></tr>
@@ -36,7 +37,7 @@ interFoam -dry-run                     # 只检查设置，不真算
 simpleFoam -listFunctionObjects | head -40
 pimpleFoam -listVectorBCs | grep -i inlet</code></pre>
 <h2>5.2 foamVersion —— 确认版本</h2>
-<pre><code class="language-bash">printf '%s\n' "&#36;WM_PROJECT_VERSION"  # 版本变量不依赖交互式别名</code></pre>
+<pre><code class="language-bash">printf '%s\n' "$WM_PROJECT_VERSION"  # 版本变量不依赖交互式别名</code></pre>
 <p>用途：任何求助、任何报错帖，第一句都该是版本号。它也是检查 source 有没有生效的最快方法。</p>
 <h2>5.3 foamHelp —— 内置的”查手册”命令</h2>
 <p>是什么：OpenFOAM 自带的帮助工具，能查边界条件、求解器、functionObject 的可用类型和参数。</p>
@@ -56,15 +57,15 @@ foamHelp boundary -constraint
 foamHelp boundary -browse inletOutlet</code></pre>
 <p>提示 foamHelp boundary 必须在一个算例目录里运行（它需要读网格和场信息）。在空目录里跑会报错。</p>
 <h2>5.4 foamGet —— 把官方模板抓到手边</h2>
-<p>是什么：从 &#36;FOAM_ETC/caseDicts 里把官方字典模板复制到当前算例。</p>
+<p>是什么：从 $FOAM_ETC/caseDicts 里把官方字典模板复制到当前算例。</p>
 <p>从 v2512 自带模板开始配置，可以保留必要的库和参数结构。模板中的场名、patch 名、坐标与物性仍需根据具体算例修改，模板存在也不代表任意求解器都能使用它。</p>
 <p>用法与示例</p>
 <pre><code class="language-bash">foamGetDict -list                 # 列出所有可取的模板
 foamGetDict singleGraph           # 把沿线取样模板拷进 system/
 foamGetDict -case ../run1 probes  # 拷到别的算例目录</code></pre>
 <p>先用 command -v foamGetDict 检查当前环境。若安装未提供该脚本，可从正确的 etc/caseDicts 子目录复制对应模板；模板仍可能通过 #includeEtc 引用其他文件。</p>
-<pre><code class="language-bash">cp &#36;FOAM_ETC/caseDicts/postProcessing/graphs/singleGraph system/
-ls &#36;FOAM_ETC/caseDicts/postProcessing/     # 先看看有哪些模板</code></pre>
+<pre><code class="language-bash">cp $FOAM_ETC/caseDicts/postProcessing/graphs/singleGraph system/
+ls $FOAM_ETC/caseDicts/postProcessing/     # 先看看有哪些模板</code></pre>
 <h2>5.5 foamEtcFile —— 定位配置文件</h2>
 <p>是什么：按 OpenFOAM 的查找顺序（用户 → 站点 → 安装）找出某个配置文件的真实路径。</p>
 <pre><code class="language-bash">foamEtcFile -list             # 列出配置文件的搜索路径
@@ -113,19 +114,19 @@ foamDictionary system/controlDict -expand</code></pre>
 <p>第 ⑦ 条在排查”我用了 #include 结果不对”时是决定性的：它把所有包含、变量替换、#calc 全部算完再打印，你看到的就是求解器看到的。</p>
 <p>批量脚本示例（网格无关性验证）</p>
 <pre><code class="language-plaintext">for N in 20 40 80 160; do
-    foamCloneCase base mesh_&#36;N
-    foamDictionary mesh_&#36;N/system/blockMeshDict -entry blocks \
-        -set "( hex (0 1 2 3 4 5 6 7) (&#36;N &#36;N 1) simpleGrading (1 1 1) )"
-    ( cd mesh_&#36;N &amp;&amp; blockMesh &gt; log.blockMesh &amp;&amp; simpleFoam &gt; log.simpleFoam )
+    foamCloneCase base mesh_$N
+    foamDictionary mesh_$N/system/blockMeshDict -entry blocks \
+        -set "( hex (0 1 2 3 4 5 6 7) ($N $N 1) simpleGrading (1 1 1) )"
+    ( cd mesh_$N &amp;&amp; blockMesh &gt; log.blockMesh &amp;&amp; simpleFoam &gt; log.simpleFoam )
 done</code></pre>
 <h2>5.9 foamSearch —— 在教程库里搜关键字的取值</h2>
 <p>是什么：在一堆算例里搜索某个字典关键字，并把出现过的不同取值汇总去重。</p>
 <p>foamSearch 用于比较多个算例中特定条目的取值。其他教程的参数提供实例，不能替代本算例的模型选择、量纲分析和敏感性检查。</p>
 <pre><code class="language-bash"># 看官方教程里 p 方程都用过哪些线性求解器
-foamSearch "&#36;FOAM_TUTORIALS" solvers.p.solver fvSolution
+foamSearch "$FOAM_TUTORIALS" solvers.p.solver fvSolution
 
 # 看 ddtSchemes 都有哪些用法
-foamSearch "&#36;FOAM_TUTORIALS" ddtSchemes.default fvSchemes</code></pre>
+foamSearch "$FOAM_TUTORIALS" ddtSchemes.default fvSchemes</code></pre>
 <p>若提示参数顺序不对，敲一次 foamSearch -h 看本机用法。</p>
 <h2>5.10 foamLog —— 把日志里的残差拆成可画图的数据</h2>
 <p>是什么：解析求解器日志，把每个方程的初始残差、迭代次数、连续性误差等提取成一列列数据文件，放进 logs/ 目录。</p>
@@ -163,13 +164,13 @@ foamNewFunctionObject myFO          # 新建 functionObject 骨架</code></pre>
 <h2>5.16 Allrun / Allclean 与 RunFunctions</h2>
 <p>官方算例里几乎都有 Allrun、Allclean（有的还有 Allmesh、Allpost）。它们是普通 shell 脚本，开头都会 source 两个函数库：</p>
 <pre><code class="language-bash">#!/bin/sh
-cd "&#36;{0%/*}" || exit                                # 切到脚本所在目录
-. &#36;{WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # 运行相关函数
-. &#36;{WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # 清理相关函数
+cd "${0%/*}" || exit                                # 切到脚本所在目录
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # 运行相关函数
+. ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # 清理相关函数
 
 runApplication blockMesh
 runApplication decomposePar
-runParallel &#36;(getApplication)
+runParallel $(getApplication)
 runApplication reconstructPar</code></pre>
 <p>RunFunctions 提供的函数</p>
 <div class="table-scroll"><table>
@@ -184,12 +185,11 @@ runApplication reconstructPar</code></pre>
 <p>0.orig 常用来保存可重复恢复的初始场模板。setFields 等工具可能修改工作目录中的场；restore0Dir 从保留模板恢复初始条件，有助于避免连续多次操作的相互影响。重复运行 setFields 是否改变结果，取决于其默认值与区域赋值方式，不能一概认为第二次运行必然错误。</p>
 <p>一个完整的 Allrun 示例（interFoam 溃坝）</p>
 <pre><code class="language-bash">#!/bin/sh
-cd "&#36;{0%/*}" || exit
-. &#36;{WM_PROJECT_DIR:?}/bin/tools/RunFunctions
+cd "${0%/*}" || exit
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions
 
 restore0Dir
 runApplication blockMesh
 runApplication setFields
-runApplication &#36;(getApplication)</code></pre>
+runApplication $(getApplication)</code></pre>
 <p>CleanFunctions 提供的函数：cleanCase（删时间目录、日志、processor*）、cleanCase0（再把 0/ 也删掉，配合 0.orig 用）、cleanTimeDirectories、cleanPostProcessing、cleanDynamicCode（清 dynamicCode/，改了 codedFixedValue 却不生效时必须清）。</p><h2>环境函数与安装程序的区别</h2><p><code>foamVersion</code>、<code>tut</code>、<code>run</code> 等可由环境脚本定义为函数或别名，并非所有打包环境和非交互式 shell 都加载它们。<code>type foamVersion</code> 用于诊断当前 shell；查询版本可直接输出 <code>WM_PROJECT_VERSION</code>，查找实际程序用 <code>command -v blockMesh</code>。</p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/config.sh/aliases">v2512 的函数与别名定义</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamExec">foamExec 的位置和环境激活实现</a></p><h2>v2512 的残差记录接口</h2><p>使用 <code>type solverInfo</code>，并加载 <code>utilityFunctionObjects</code>。<code>#includeFunc solverInfo</code> 的官方模板默认选择 p 和 U；如需其他字段，应复制模板并修改 fields。此功能读取求解过程中的 solverPerformance 数据，事后只读取已写出的 U、p 不能重建历史残差。</p><p><a href="/dictionaries/functions-solverinfo/">完整配置、字段解释与三个 v2512 示例</a></p><h2>未安装的官方目标</h2><p><code>foamCalc</code> 与 <code>foamExprParserInfo</code> 存在于 v2512 的 applications/tools，但当前虚拟机安装没有找到其可执行文件。请先用 command -v 核对，不能把源码中存在的程序等同于已安装程序。</p><p><code>foamHelp boundary -field U</code> 需要能够读取相应网格和字段的算例。源码工具中的浏览器文档功能还依赖可用的文档索引及浏览器设置。</p>
-{% endraw %}

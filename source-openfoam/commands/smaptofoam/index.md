@@ -1,19 +1,11 @@
 ---
-title: "smapToFoam  导入 SMAP 格式数据"
+title: "smapToFoam · 输入采用程序支持的 SMAP 数据结构"
 layout: reference
 description: "输入采用程序支持的 SMAP 数据结构。"
+cms_slug: "command-smaptofoam"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>输入采用程序支持的 SMAP 数据结构。</p><h2>v2512 源码中的用途</h2><p>Translate a STARCD SMAP data file into OpenFOAM field format.</p><h2>使用入口</h2><pre><code class="language-bash">smapToFoam input.smap</code></pre><h2>使用条件与核对</h2><p>输入采用程序支持的 SMAP 数据结构。 用法：smapToFoam SMAP文件 示例：smapToFoam input.smap
-源码说明：Translate a STARCD SMAP data file into OpenFOAM field format.
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-case -debug-switch -doc -doc-source -fileHandler -help -help-full -help-man -help-notes -info-switch -lib -no-libs -noFunctionObjects -opt-switch</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/smaptofoam.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: smapToFoam
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/smapToFoam/smapToFoam.C
 
-
-Usage: smapToFoam [OPTIONS] &lt;SMAP fileName&gt;
+<p>输入采用程序支持的 SMAP 数据结构。</p><h2>用法</h2><pre><code class="language-bash">smapToFoam input.smap</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">smapToFoam input.smap -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: smapToFoam [OPTIONS] &lt;SMAP fileName&gt;
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;
@@ -43,5 +35,4 @@ Translate a STARCD SMAP data file into OpenFOAM field format
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/smapToFoam/smapToFoam.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/smapToFoam/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/postProcessing/dataConversion/smapToFoam/smapToFoam.C">源码与说明</a> · <a href="/assets/command-help/smaptofoam.txt">帮助文本</a></p>

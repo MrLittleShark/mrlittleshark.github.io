@@ -1,43 +1,40 @@
 ---
-title: "system/controlDict → functions → surfaceFieldValue · surfaceFieldValue"
+title: "surfaceFieldValue"
 layout: reference
-description: "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。"
+description: "在边界、面区域或采样面上计算场的求和、平均与面积积分。"
 dictionary: true
+cms_slug: "dictionary-surfacefieldvalue"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。</p><figure><img src="/assets/diagrams/reference-7.svg" alt="函数对象配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/controlDict → functions → surfaceFieldValue</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>type</code> · <code>surfaceFieldValue</code> · <code>regionType</code> · <code>name</code> · <code>operation</code> · <code>fields</code></p><h2>关联命令</h2><p><a href="/commands/?q=postProcess">postProcess</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/controlDict -entry functions -value
-postProcess -help</code></pre><h2>10.6 统计量与派生场</h2><div class="table-scroll"><table>
-<tr><th>类型</th><th>主要参数</th><th>配置与调用示例</th></tr>
-<tr><td>fieldAverage</td><td>fields 下每场的 mean、prime2Mean、base</td><td>U { mean on; prime2Mean on; base time; }；生成 UMean 等</td></tr>
-<tr><td>fieldMinMax</td><td>fields、location、mode</td><td>fields (p U); location true;，输出极值及位置</td></tr>
-<tr><td>volFieldValue</td><td>regionType、name、operation、fields</td><td>regionType all; operation volAverage; fields (T);</td></tr>
-<tr><td>surfaceFieldValue</td><td>regionType patch、name、operation、fields</td><td>name outlet; operation sum; fields (phi);，输出带法向符号的通量</td></tr>
-<tr><td>solverInfo</td><td>fields</td><td>fields (p U);，记录各方程初始残差</td></tr>
-<tr><td>yPlus</td><td>湍流模型及壁面量</td><td>simpleFoam -postProcess -func yPlus -latestTime</td></tr>
-<tr><td>wallShearStress</td><td>patches、writeControl</td><td>simpleFoam -postProcess -func wallShearStress -latestTime</td></tr>
-<tr><td>wallHeatFlux</td><td>热模型和壁面</td><td>通过相应传热求解器 -postProcess -func wallHeatFlux</td></tr>
-<tr><td>CourantNo</td><td>通量及密度条件</td><td>postProcess -func CourantNo -latestTime，读取所需通量等场</td></tr>
-<tr><td>mag、grad、div</td><td>操作字段</td><td>postProcess -func &#x27;mag(U)&#x27; -latestTime</td></tr>
-<tr><td>vorticity、Q</td><td>速度梯度派生量</td><td>postProcess -func vorticity -latestTime</td></tr>
-<tr><td>MachNo</td><td>速度和热物性声速</td><td>通过可压缩求解器 -postProcess -func MachNo</td></tr>
-<tr><td>streamLine</td><td>seedSampleSet、direction、lifeTime、trackLength 等</td><td>foamGetDict streamlines 获取模板，随后配置种子点</td></tr>
-</table></div>
-<p>表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。</p>
-<pre><code class="language-openfoam">statistics
+
+<p>在边界、面区域或采样面上计算场的求和、平均与面积积分。</p><p>位置：<code>system/controlDict → functions → surfaceFieldValue</code></p><p><code>surfaceFieldValue</code> 对网格 patch、faceZone 或采样表面上的场进行求和、平均和积分，适合出口流量、壁面平均温度及表面热流积分。</p>
+<h3>示例：出口体积流量</h3>
+<p>在 <code>simpleFoam</code> 等不可压缩算例的 <code>system/controlDict/functions</code> 中加入：</p>
+<pre><code class="language-foam">outletFlow
 {
-    type fieldAverage;
-    libs (&quot;libfieldFunctionObjects.so&quot;);
-    timeStart 0.2;
-    executeControl timeStep;
-    executeInterval 1;
-    writeControl writeTime;
-    fields
-    (
-        U { mean on; prime2Mean on; base time; }
-        p { mean on; prime2Mean off; base time; }
-    );
-}</code></pre><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>application</td><td>供运行脚本查询的求解器名称；直接在终端执行程序时，以执行的命令为准。</td></tr><tr><td>writeControl</td><td>输出触发方式，其值决定 writeInterval 表示步数、物理时间或时钟时间。</td></tr><tr><td>writeInterval</td><td>输出间隔，需要结合 writeControl 理解单位与触发时刻。</td></tr><tr><td>functions</td><td>函数对象实例集合，可以记录残差、采样、积分或计算派生量。</td></tr><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>libs</td><td>额外加载的共享库。函数对象或自定义边界未注册时，应检查库名与编译版本。</td></tr><tr><td>fields</td><td>目标场列表。场名、数据类型和计算时刻必须满足相应函数对象的要求。</td></tr><tr><td>T</td><td>温度值或温度场引用，通常采用热力学温度 K。</td></tr><tr><td>region</td><td>目标网格区域名称；多区域场与网格路径中应保持一致。</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · lagrangian/simpleReactingParcelFoam/verticalChannel</h3><p>原始路径：<code>tutorials/lagrangian/simpleReactingParcelFoam/verticalChannel/system/controlDict</code>；求解器：<code>simpleReactingParcelFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/simpleReactingParcelFoam/verticalChannel/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/surfacefieldvalue/1-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/simpleReactingParcelFoam/verticalChannel">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+    type surfaceFieldValue;
+    libs (fieldFunctionObjects);
+    regionType patch;
+    name outlet;
+    operation sum;
+    fields (phi);
+    writeFields false;
+    writeArea true;
+    writeControl timeStep;
+    writeInterval 1;
+}
+</code></pre>
+<p><code>name</code> 是实际出口 patch。<code>phi</code> 已包含每个网格面的面积贡献，<code>sum</code> 将其相加得到总流量。<code>writeArea</code> 同时记录所选面积，有助于检查边界选择是否正确。正值通常表示流出域外，负值表示流入。</p>
+<p>不可压缩场的 <code>phi</code> 常以 m³/s 表示，可压缩场则常以 kg/s 表示，读取字段量纲确认。对壁面热流密度 W/m²，需要 <code>areaIntegrate</code> 才得到 W；对温度场使用 <code>areaAverage</code> 得到面积平均温度。</p>
+<p>截面平均温度若用于流体携热量，通常应按质量通量加权。此时可研究 <code>weightedAverage</code> 或相应加权面积操作，并明确权重场是否已经包含面积。发生回流时，正负通量会抵消，可以按需要分别统计流入与流出部分。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · lagrangian/simpleReactingParcelFoam/verticalChannel</summary><p>稳态垂直通道用出口通量加权平均，获得更适合表示流出流体状态的温度和水蒸气含量。</p>
+<ul>
+<li><code>regionType patch</code>、<code>name outlet</code> 选择出口。</li>
+<li><code>operation weightedAverage</code> 配合 <code>weightField phi</code> 按面通量加权。</li>
+<li><code>fields (H2O T)</code> 输出组分与温度，<code>writeFields no</code> 只保存汇总结果。</li>
+<li><code>writeControl writeTime</code> 跟随主结果写出，主场每 20 次迭代保存。</li>
+</ul>
+<p>出口存在回流时检查通量符号及加权结果的含义，必要时分别统计流入与流出部分。</p>
+<p><a href="/assets/examples/v2512/surfacefieldvalue/1-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/simpleReactingParcelFoam/verticalChannel/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/simpleReactingParcelFoam/verticalChannel">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -107,7 +104,15 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · lagrangian/reactingParcelFoam/verticalChannelLTS</h3><p>原始路径：<code>tutorials/lagrangian/reactingParcelFoam/verticalChannelLTS/system/controlDict</code>；求解器：<code>reactingParcelFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/verticalChannelLTS/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/surfacefieldvalue/2-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/verticalChannelLTS">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · lagrangian/reactingParcelFoam/verticalChannelLTS</summary><p>verticalChannelLTS 在局部时间步迭代中监测出口混合状态。</p>
+<ul>
+<li><code>surfaceFieldValue</code> 选择 outlet patch。</li>
+<li><code>weightedAverage</code> 与 <code>weightField phi</code> 计算通量加权的 H2O、T。</li>
+<li>主控制每 10 步写出，函数对象采用 <code>writeTime</code> 与之同步。</li>
+<li><code>writeFields no</code> 保留简洁的统计文件，日志也会显示数值。</li>
+</ul>
+<p>判断稳态收敛时同时看加权出口量和残差；局部时间步的迭代编号应按该求解过程解释。</p>
+<p><a href="/assets/examples/v2512/surfacefieldvalue/2-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/verticalChannelLTS/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/reactingParcelFoam/verticalChannelLTS">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -180,7 +185,15 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · heatTransfer/chtMultiRegionFoam/windshieldDefrost</h3><p>原始路径：<code>tutorials/heatTransfer/chtMultiRegionFoam/windshieldDefrost/system/controlDict</code>；求解器：<code>chtMultiRegionFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionFoam/windshieldDefrost/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/surfacefieldvalue/3-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionFoam/windshieldDefrost">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · heatTransfer/chtMultiRegionFoam/windshieldDefrost</summary><p>挡风玻璃除霜的多区域计算每步监测 cabin 流体区入口通量。</p>
+<ul>
+<li><code>region cabin</code> 将函数对象绑定到客舱网格。</li>
+<li><code>regionType patch</code>、<code>name inlet</code> 选择入口。</li>
+<li><code>operation sum</code> 对已有面通量 phi 直接求和；phi 已包含面面积，求和时无需再乘面积。</li>
+<li>每步记录并打印，主场则按 1 s 的可调时间间隔保存。</li>
+</ul>
+<p>按该区域 phi 的量纲解释质量或体积流率，再与出口及区域质量变化比较。</p>
+<p><a href="/assets/examples/v2512/surfacefieldvalue/3-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionFoam/windshieldDefrost/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionFoam/windshieldDefrost">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -252,9 +265,4 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/postprocess/">postProcess</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/controlDict&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/controlDict&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/postprocess/">postProcess</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

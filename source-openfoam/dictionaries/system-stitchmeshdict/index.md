@@ -1,11 +1,46 @@
 ---
-title: "system/stitchMeshDict · stitchMeshDict"
+title: "stitchMeshDict"
 layout: reference
-description: "stitchMesh 的网格边界拼接配置，连接指定 patch 对。拼接会改变边界与拓扑；先确认两侧几何匹配方式，再执行 checkMesh 并核对所有场的边界条目。"
+description: "stitchMesh 的网格边界拼接配置，连接指定 patch 对。"
 dictionary: true
+cms_slug: "dictionary-stitchmeshdict"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>stitchMesh 的网格边界拼接配置，连接指定 patch 对。拼接会改变边界与拓扑；先确认两侧几何匹配方式，再执行 checkMesh 并核对所有场的边界条目。</p><figure><img src="/assets/diagrams/reference-0.svg" alt="网格配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>outerx</td><td>* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</td></tr><tr><td>match</td><td>partial | integral | perfect</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 1 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><p>该文件族在本次固定版本源码中仅选到一份不同的完整配置；不重复同一个文件充当多个案例。</p><h3>示例 1 · mesh/stitchMesh/simple-cube1</h3><p>原始路径：<code>tutorials/mesh/stitchMesh/simple-cube1/system/stitchMeshDict</code>；求解器：<code>stitchMesh</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/mesh/stitchMesh/simple-cube1/system/stitchMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/stitchmeshdict/1-stitchMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/stitchMesh/simple-cube1">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>stitchMesh 的网格边界拼接配置，连接指定 patch 对。</p><p>位置：<code>system/stitchMeshDict</code></p><h2>配置实例</h2><p>mesh/stitchMesh/simple-cube1 中的 stitchMeshDict：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      stitchMeshDict;
+}
+
+outerx
+{
+    match   partial;    // partial | integral | perfect
+    master  outerx;
+    slave   innerx;
+}
+
+outery
+{
+    match   partial;
+    master  outery;
+    slave   innery;
+}
+
+outerz
+{
+    match   partial;
+    master  outerz;
+    slave   innerz;
+}</code></pre><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · mesh/stitchMesh/simple-cube1</summary><p>simple-cube1 使用 stitchMesh 将相对的两个边界拼接成内部连接，字典分别列出 x、y、z 三组面。</p>
+<ul>
+<li>outerx、outery、outerz 是三次拼接操作的名称。</li>
+<li>每组 <code>master</code> 与 <code>slave</code> 指向要连接的实际边界，例如 outerx 与 innerx。</li>
+<li><code>match partial</code> 允许仅对两个边界重合的部分进行匹配，适合非完全一一对应的面布局。</li>
+</ul>
+<p>拼接前显示两侧边界确认空间位置，拼接后检查内部连接、剩余边界面积及网格质量。</p>
+<p><a href="/assets/examples/v2512/stitchmeshdict/1-stitchMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/mesh/stitchMesh/simple-cube1/system/stitchMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/stitchMesh/simple-cube1">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -43,9 +78,4 @@ outerz
 }
 
 
-// ************************************************************************* //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/stitchmesh/">stitchMesh</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/stitchMeshDict&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/stitchMeshDict&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>边界名称与字段不一致</td><td>修改拓扑后重新核对 constant/polyMesh/boundary 和所有 0/ 场文件，不能只修一个场。</td></tr><tr><td>单位或坐标方向错误</td><td>比较几何包围盒与预期物理尺寸；检查 scale、挤出法向和旋转轴。</td></tr><tr><td>网格生成成功但质量不足</td><td>运行 checkMesh -allTopology -allGeometry，再评估所选离散格式对非正交和扭曲的容忍度。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/stitchmesh/">stitchMesh</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>边界名称与字段不一致</td><td>修改拓扑后重新核对 constant/polyMesh/boundary 和所有 0/ 场文件，不能只修一个场。</td></tr><tr><td>单位或坐标方向错误</td><td>比较几何包围盒与预期物理尺寸；检查 scale、挤出法向和旋转轴。</td></tr><tr><td>网格生成成功但质量不足</td><td>运行 checkMesh -allTopology -allGeometry，再评估所选离散格式对非正交和扭曲的容忍度。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

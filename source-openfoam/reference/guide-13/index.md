@@ -1,10 +1,11 @@
 ---
 title: "第 13 章　system/fvSchemes（离散格式）"
 layout: reference
-description: "OpenCFD v2512 system/fvSchemes（离散格式）；包含原理、示例与版本核对。"
+description: "system/fvSchemes（离散格式）：用法与配置实例。"
+cms_slug: "reference-guide-13"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>它管什么：每一项微分算子用什么数值格式离散。这是精度与稳定性的主要旋钮，也是初学者最容易被卡住的地方。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>它管什么：每一项微分算子用什么数值格式离散。这是精度与稳定性的主要旋钮，也是初学者最容易被卡住的地方。</p>
 <h2>13.1 六个子字典</h2>
 <pre><code class="language-openfoam">ddtSchemes          { }   // 时间导数 ∂/∂t
 gradSchemes         { }   // 梯度 ∇
@@ -93,4 +94,3 @@ snGradSchemes    { default corrected; }</code></pre>
 <h2>13.6 其余两项</h2>
 <pre><code class="language-plaintext">interpolationSchemes { default linear; }
 wallDist             { method meshWave; }</code></pre>
-{% endraw %}

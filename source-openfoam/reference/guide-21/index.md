@@ -1,10 +1,11 @@
 ---
 title: "第 21 章　常见报错速查"
 layout: reference
-description: "OpenCFD v2512 常见报错速查；包含原理、示例与版本核对。"
+description: "常见报错速查：用法与配置实例。"
+cms_slug: "reference-guide-21"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>先学会读 OpenFOAM 的报错。它的格式是固定的：</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>先学会读 OpenFOAM 的报错。它的格式是固定的：</p>
 <pre><code class="language-plaintext">--&gt; FOAM FATAL ERROR: (openfoam-2512)
 cannot find file "/home/chen/run/cavity/0/U"
 
@@ -16,7 +17,7 @@ FOAM exiting</code></pre>
 <tr><th>症状</th><th>原因</th><th>处理</th></tr>
 <tr><td>blockMesh: command not found</td><td>没 source 环境</td><td>of2512（或 source .../etc/bashrc），再 foamVersion 确认</td></tr>
 <tr><td>cannot find file ".../0/U"</td><td>缺场文件，或 0/ 被 Allclean 删了</td><td>cp -r 0.orig 0</td></tr>
-<tr><td>keyword xxx is undefined in dictionary</td><td>字典里缺关键字</td><td>报错会给出字典路径，去补；不确定填什么就去 &#36;FOAM_TUTORIALS 找同类算例抄</td></tr>
+<tr><td>keyword xxx is undefined in dictionary</td><td>字典里缺关键字</td><td>报错会给出字典路径，去补；不确定填什么就去 $FOAM_TUTORIALS 找同类算例抄</td></tr>
 <tr><td>Cannot find patchField entry for &lt;名字&gt;</td><td>0/ 里某个场漏了某个 patch</td><td>在该场的 boundaryField 里补上；或加 ".*" { type zeroGradient; } 兜底</td></tr>
 <tr><td>ill defined primitiveEntry starting at ...</td><td>语法错：漏分号、括号不配对、有中文全角符号</td><td>从报错行往上找；从 PDF 复制的内容尤其要检查全角字符</td></tr>
 <tr><td>incompatible dimensions for operation</td><td>量纲不匹配</td><td>检查 dimensions。最常见：不可压求解器里把 p 写成了 Pa 的量纲</td></tr>
@@ -70,11 +71,11 @@ Floating point exception</code></pre>
 <h2>21.5 编译类</h2>
 <div class="table-scroll"><table>
 <tr><th>症状</th><th>原因</th><th>处理</th></tr>
-<tr><td>xxx.H: No such file or directory</td><td>Make/options 里 EXE_INC 缺路径</td><td>加对应的 -I&#36;(LIB_SRC)/.../lnInclude</td></tr>
+<tr><td>xxx.H: No such file or directory</td><td>Make/options 里 EXE_INC 缺路径</td><td>加对应的 -I$(LIB_SRC)/.../lnInclude</td></tr>
 <tr><td>undefined reference to ...</td><td>EXE_LIBS 缺库</td><td>加对应的 -lxxx</td></tr>
-<tr><td>编译成功但 command not found</td><td>装到了 &#36;FOAM_USER_APPBIN 但环境没刷新，或 Make/files 里 EXE 路径写错</td><td>wmake 后看输出路径；which 命令名</td></tr>
+<tr><td>编译成功但 command not found</td><td>装到了 $FOAM_USER_APPBIN 但环境没刷新，或 Make/files 里 EXE 路径写错</td><td>wmake 后看输出路径；which 命令名</td></tr>
 <tr><td>改了 codedFixedValue 不生效</td><td>dynamicCode/ 缓存</td><td>rm -rf dynamicCode</td></tr>
-<tr><td>error: 'xxx' was not declared</td><td>版本 API 变了</td><td>去 &#36;FOAM_SRC 找同名新接口</td></tr>
+<tr><td>error: 'xxx' was not declared</td><td>版本 API 变了</td><td>去 $FOAM_SRC 找同名新接口</td></tr>
 </table></div>
 <h2>21.6 无运行报错情况下的结果偏差</h2>
 <p>这类问题没有报错信息，只能靠检查清单：</p>
@@ -88,4 +89,3 @@ Floating point exception</code></pre>
 <p>收敛了吗：稳态算例残差降到 1e-4 以下了吗？监测量（如阻力系数）平了吗？残差降下来 \(\ne\) 收敛，还要看物理量不再变化。</p>
 <p>网格无关性：加密一倍，结果变化超过 5% 吗？</p>
 <p>养成一个习惯：任何一个新算例，先用你知道答案的简化工况验证一遍（层流管流对比 Hagen–Poiseuille、圆柱绕流对比 \(\mathrm{Re}=100\) 的 St 数）。这一步花半天，能省掉后面几周的怀疑。</p>
-{% endraw %}

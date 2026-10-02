@@ -1,11 +1,39 @@
 ---
-title: "system/extrude2DMeshDict · extrude2DMeshDict"
+title: "extrude2DMeshDict"
 layout: reference
-description: "extrude2DMesh 将二维网格转为具有厚度或角度的三维网格。重点检查挤出方向、层数、前后边界类型与 wedge/empty 假设是否一致。"
+description: "extrude2DMesh 将二维网格转为具有厚度或角度的三维网格。"
 dictionary: true
+cms_slug: "dictionary-extrude2dmeshdict"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>extrude2DMesh 将二维网格转为具有厚度或角度的三维网格。重点检查挤出方向、层数、前后边界类型与 wedge/empty 假设是否一致。</p><figure><img src="/assets/diagrams/reference-0.svg" alt="网格配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>extrudeModel</td><td>挤出几何模型，例如平移、旋转或法向挤出；各模型需要不同系数。</td></tr><tr><td>axis</td><td>旋转轴或方向向量；需明确是否要求单位向量。</td></tr><tr><td>nLayers</td><td>挤出或边界层生成的层数；同时检查层厚与总厚度。</td></tr><tr><td>expansionRatio</td><td>相邻挤出层的厚度增长比例。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>patchType</td><td>extrudeModel        wedge;</td></tr><tr><td>sectorCoeffs</td><td>&lt;- Also used for wedge</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · mesh/foamyQuadMesh/square</h3><p>原始路径：<code>tutorials/mesh/foamyQuadMesh/square/system/extrude2DMeshDict</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/mesh/foamyQuadMesh/square/system/extrude2DMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/extrude2dmeshdict/1-extrude2DMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/foamyQuadMesh/square">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+
+<p>extrude2DMesh 将二维网格转为具有厚度或角度的三维网格。</p><p>位置：<code>system/extrude2DMeshDict</code></p><h2>配置实例</h2><p>mesh/foamyQuadMesh/square 中的 extrude2DMeshDict：</p><pre><code class="language-foam">FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      extrude2DMeshDict;
+}
+
+extrudeModel    wedge;
+
+patchInfo
+{}
+
+patchType       wedge;
+
+sectorCoeffs    //&lt;- Also used for wedge
+{
+    point       (0 0 0);
+    axis        (1 0 0);
+    angle       10;
+}</code></pre><h2>参数说明</h2><table><thead><tr><th>条目</th><th>含义</th></tr></thead><tbody><tr><td>extrudeModel</td><td>挤出几何模型，例如平移、旋转或法向挤出；各模型需要不同系数。</td></tr><tr><td>axis</td><td>旋转轴或方向向量；需明确是否要求单位向量。</td></tr><tr><td>nLayers</td><td>挤出或边界层生成的层数；同时检查层厚与总厚度。</td></tr><tr><td>expansionRatio</td><td>相邻挤出层的厚度增长比例。</td></tr></tbody></table><h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · mesh/foamyQuadMesh/square</summary><p>square 的 extrude2DMeshDict 把平面网格沿圆周方向拉伸成薄楔体，用于轴对称几何表示。</p>
+<ul>
+<li><code>extrudeModel wedge</code> 选择楔形拉伸，<code>patchType wedge</code> 设置两侧边界类型。</li>
+<li><code>point (0 0 0)</code> 给出旋转轴经过的点，<code>axis (1 0 0)</code> 将轴线设为 x 方向。</li>
+<li><code>angle 10</code> 指定楔形开角为 10°，sectorCoeffs 同时供 wedge 模型读取。</li>
+</ul>
+<p>拉伸前检查平面网格与旋转轴的位置关系，拉伸后检查楔形两侧法向及轴线附近单元质量。</p>
+<p><a href="/assets/examples/v2512/extrude2dmeshdict/1-extrude2DMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/mesh/foamyQuadMesh/square/system/extrude2DMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/foamyQuadMesh/square">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -36,7 +64,15 @@ sectorCoeffs    //&lt;- Also used for wedge
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 2 · mesh/foamyQuadMesh/OpenCFD</h3><p>原始路径：<code>tutorials/mesh/foamyQuadMesh/OpenCFD/system/extrude2DMeshDict</code>；求解器：<code>foamyQuadMesh</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/mesh/foamyQuadMesh/OpenCFD/system/extrude2DMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/extrude2dmeshdict/2-extrude2DMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/foamyQuadMesh/OpenCFD">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · mesh/foamyQuadMesh/OpenCFD</summary><p>OpenCFD 字样网格采用直线拉伸，把平面形状转换为只有一层单元的二维计算网格。</p>
+<ul>
+<li><code>extrudeModel linearDirection</code> 选择固定方向拉伸，<code>direction (0 0 1)</code> 指定 z 方向。</li>
+<li><code>thickness 0.1</code> 设置厚度为 0.1 m，<code>nLayers 1</code> 在厚度方向只生成一层。</li>
+<li><code>patchType empty</code> 配合这一层网格用于二维求解，<code>expansionRatio 1</code> 表示均匀层厚。</li>
+<li>同文件中的 sectorCoeffs 是另一种拉伸方式的参数；当前由 linearDirectionCoeffs 决定生成形状。</li>
+</ul>
+<p>需要三维厚度分辨率时增加层数，同时将前后边界改为实际物理边界类型。</p>
+<p><a href="/assets/examples/v2512/extrude2dmeshdict/2-extrude2DMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/mesh/foamyQuadMesh/OpenCFD/system/extrude2DMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/foamyQuadMesh/OpenCFD">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -77,7 +113,14 @@ sectorCoeffs    //&lt;- Also used for wedge
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · etc/caseDicts/annotated</h3><p>原始路径：<code>etc/caseDicts/annotated/extrude2DMeshDict</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/caseDicts/annotated/extrude2DMeshDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/extrude2dmeshdict/3-extrude2DMeshDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/etc/caseDicts/annotated">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · etc/caseDicts/annotated</summary><p>这个模板给出沿 z 方向拉伸二维网格的基本写法，可作为创建薄层网格的起点。</p>
+<ul>
+<li><code>linearDirection</code> 使用指定的直线方向，<code>direction (0 0 1)</code> 沿正 z 方向延伸。</li>
+<li><code>nLayers 1</code>、<code>thickness 0.1</code> 生成厚度 0.1 m 的单层网格，<code>expansionRatio 1</code> 表示等距分层。</li>
+<li><code>patchType empty</code> 表明前后面用于二维计算；sectorCoeffs 保留了旋转拉伸所需的另一组参数。</li>
+</ul>
+<p>如果实际问题需要解析厚度方向的速度或温度变化，应增加单元层数，并为两侧面配置对应物理条件。</p>
+<p><a href="/assets/examples/v2512/extrude2dmeshdict/3-extrude2DMeshDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/caseDicts/annotated/extrude2DMeshDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/etc/caseDicts/annotated">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -118,9 +161,4 @@ sectorCoeffs    //&lt;- Also used for wedge
     angle       10;
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</code></pre><h2>配套命令与验证次序</h2><p><a href="/commands/extrude2dmesh/">extrude2DMesh</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/extrude2DMeshDict&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/extrude2DMeshDict&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>边界名称与字段不一致</td><td>修改拓扑后重新核对 constant/polyMesh/boundary 和所有 0/ 场文件，不能只修一个场。</td></tr><tr><td>单位或坐标方向错误</td><td>比较几何包围盒与预期物理尺寸；检查 scale、挤出法向和旋转轴。</td></tr><tr><td>网格生成成功但质量不足</td><td>运行 checkMesh -allTopology -allGeometry，再评估所选离散格式对非正交和扭曲的容忍度。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //</code></pre></details><h2>相关命令</h2><p><a href="/commands/extrude2dmesh/">extrude2DMesh</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>边界名称与字段不一致</td><td>修改拓扑后重新核对 constant/polyMesh/boundary 和所有 0/ 场文件，不能只修一个场。</td></tr><tr><td>单位或坐标方向错误</td><td>比较几何包围盒与预期物理尺寸；检查 scale、挤出法向和旋转轴。</td></tr><tr><td>网格生成成功但质量不足</td><td>运行 checkMesh -allTopology -allGeometry，再评估所选离散格式对非正交和扭曲的容忍度。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

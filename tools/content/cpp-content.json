@@ -1,0 +1,312 @@
+[
+  {
+    "slug": "cpp-01",
+    "kind": "lesson",
+    "title": "C++ 01 · 第一个程序与编译运行",
+    "summary": "编写并运行第一个 C++ 程序，认识 main、输出语句、源码文件和编译器。",
+    "body": "C++ 是 OpenFOAM 使用的主要编程语言。阅读求解器、编写边界条件和增加模型时，都会用到变量、函数、类与模板。本系列从普通 C++ 程序开始，示例可以独立编译运行。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/diagrams/cpp-01.svg\" alt=\"编译与运行\" loading=\"lazy\"><figcaption>编译与运行</figcaption></figure>\n\n## 第一个程序\n\n新建文本文件 `main.cpp`，写入以下内容：\n\n```cpp\n#include <iostream>\n\nint main()\n{\n    std::cout << \"FoamLab C++\" << '\\n';\n    std::cout << \"Learning to write a program.\" << '\\n';\n    return 0;\n}\n```\n\n运行后输出：\n\n```text\nFoamLab C++\nLearning to write a program.\n```\n\n程序按语句顺序打印两行文字，然后结束。`.cpp` 表示 C++ 源文件；OpenFOAM 项目还常使用大写 `.C` 作为源文件扩展名。\n\n## 怎样编译\n\n在 Ubuntu 终端查看编译器是否可用：\n\n```bash\ng++ --version\n```\n\n尚未安装时，可以安装包含编译工具的 Ubuntu 软件包：\n\n```bash\nsudo apt update\nsudo apt install build-essential\n```\n\n进入 `main.cpp` 所在目录，执行：\n\n```bash\ng++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp -o hello\n./hello\n```\n\n第一条命令将源码转换为可执行程序 `hello`，第二条运行它。`-std=c++17` 选择本系列使用的语言标准；后三个警告选项帮助发现可疑写法；`-o hello` 指定输出文件名。编译成功时，终端通常没有额外文字。\n\nWindows 上使用 MSYS2 等工具提供的 `g++` 时，可以把输出名写为 `hello.exe`，在 PowerShell 中使用 `./hello.exe`。课程配套文件均使用标准 C++。\n\n## 逐行理解程序\n\n`#include <iostream>` 引入标准输入输出库的声明，使程序能够使用 `std::cout`。预处理指令以 `#` 开头，这一行末尾无需分号。\n\n`int main()` 定义程序入口。程序启动后执行 `main` 中的语句；`int` 表示它向运行环境返回一个整数状态。这里 `return 0` 表示正常结束。\n\n花括号 `{ }` 围出函数体。大括号内的两条输出语句分别在末尾用分号结束：\n\n```cpp\nstd::cout << \"FoamLab C++\" << '\\n';\n```\n\n`std::cout` 表示标准输出流，通常连接终端。`<<` 把后面的内容送入输出流，可以连续使用。双引号中的内容是字符串，`'\\n'` 是换行字符。\n\n`std::` 指定名称属于标准库命名空间。程序中写出这个前缀，能清楚地区分标准库名称与自己定义的名称。之后阅读 OpenFOAM 时，也会看到 `Foam::` 这样的命名空间限定。\n\n## 修改文字与增加输出\n\n把第二条语句改成：\n\n```cpp\nstd::cout << \"Case: cavity\" << '\\n';\n```\n\n保存后重新编译，再运行 `hello`，第二行会变成 `Case: cavity`。源码是可编辑文本，可执行文件是编译结果；每次修改源码后重新编译，运行结果才会包含修改。\n\n输出语句也可以打印数值和算式：\n\n```cpp\nstd::cout << \"cells = \" << 20*20 << '\\n';\n```\n\n这里双引号外的 `20*20` 由程序计算，输出为 `cells = 400`；写在双引号内则作为原样文字输出。\n\n## 注释与排版\n\n`//` 开始单行注释，适合解释某一条语句；`/* ... */` 包围多行注释。注释可记录单位、输入要求和算法原因，例如：\n\n```cpp\n// 网格在两个平面方向各有 20 个单元\nstd::cout << \"cells = \" << 20*20 << '\\n';\n```\n\n缩进帮助阅读函数和循环的范围。建议每层使用四个空格，同一文件保持一致。C++ 的执行范围由花括号决定，因此一行缩进看起来属于函数，仍然需要检查它是否位于对应括号内。\n\n## 编译错误怎么看\n\n编译器通常给出文件名、行号和错误说明。先阅读第一处错误，再检查该位置及上一行。\n\n| 错误信息或现象 | 常见原因 | 修改方法 |\n| --- | --- | --- |\n| `expected ';'` | 语句末尾少了分号 | 补齐分号后重新编译 |\n| `cout was not declared` | 缺少 `std::` 或头文件 | 使用 `std::cout` 并包含 `<iostream>` |\n| 字符串相关语法错误 | 引号没有配对 | 使用成对的英文双引号 |\n| 运行时仍显示旧文字 | 修改后没有成功生成新程序 | 先确认本次编译成功，再执行对应文件 |\n\n编译阶段检查代码的语法与类型，运行阶段执行实际计算。一个逻辑写错但语法正确的程序，可能顺利编译，因此后面的课程都会同时给出可手算的输出。\n\n## 练习\n\n让程序依次打印课程名、算例名和单元数，输出如下：\n\n```text\nCourse: C++ basics\nCase: cavity\nCells: 1600\n```\n\n答案要点是三条输出语句，其中单元数可以用 `40*40` 计算。完成后把 `40` 改成 `80`，输出应变成 6400。下一课会给这些数值起名字，用变量保存并参与计算。\n\n本系列的入门顺序参考 [菜鸟教程 C++](https://www.runoob.com/cplusplus/cpp-tutorial.html) 与 Wolf Dynamics 的《C++: A Crash Introduction》，示例围绕数值计算重新编写。\n",
+    "track": "C++ 入门",
+    "series": "C++ 基础",
+    "sort_order": 500,
+    "status": "published",
+    "cover_url": "/assets/diagrams/cpp-01.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "C++17",
+      "source": "FoamLab 原创示例；教学顺序参考 Wolf Dynamics: C++ A Crash Introduction 与菜鸟教程 C++",
+      "prerequisite": "无",
+      "duration": "35–50 分钟",
+      "downloads": [
+        {
+          "label": "C++ 01 示例源码",
+          "url": "/downloads/cpp/cpp-01.zip",
+          "description": "包含本课完整源码、编译命令与预期输出。",
+          "kind": "source",
+          "size_bytes": 671,
+          "sha256": "c6bd99df1855501810bd75767f976d983b903978339793ea6f6a497263b7f93d"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "cpp-intro-2026-10-02-v1"
+    }
+  },
+  {
+    "slug": "cpp-02",
+    "kind": "lesson",
+    "title": "C++ 02 · 变量、类型与数值运算",
+    "summary": "用雷诺数计算学习变量、整数与浮点数、const、运算顺序和输出精度。",
+    "body": "变量为程序中的数据提供名称。速度可以写成 `velocity`，管径可以写成 `diameter`，计算时用这些名称代替分散的数字。每个变量还具有类型，用于说明它保存整数、小数、字符还是其他数据。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/diagrams/cpp-02.svg\" alt=\"变量与公式\" loading=\"lazy\"><figcaption>变量与公式</figcaption></figure>\n\n## 完整示例：计算雷诺数\n\n新建 `main.cpp`：\n\n```cpp\n#include <iomanip>\n#include <iostream>\n\nint main()\n{\n    const double velocity = 1.0;\n    const double diameter = 0.01;\n    const double viscosity = 1e-6;\n    const double reynolds = velocity*diameter/viscosity;\n    const int cells = 40;\n    const double spacing = diameter/cells;\n\n    std::cout << std::fixed << std::setprecision(4);\n    std::cout << \"Re = \" << reynolds << '\\n';\n    std::cout << \"dx = \" << spacing << \" m\\n\";\n    std::cout << \"3/2 = \" << 3/2 << '\\n';\n    std::cout << \"3/2.0 = \" << 3/2.0 << '\\n';\n    return 0;\n}\n```\n\n编译运行：\n\n```bash\ng++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp -o reynolds\n./reynolds\n```\n\n输出为：\n\n```text\nRe = 10000.0000\ndx = 0.0003 m\n3/2 = 1\n3/2.0 = 1.5000\n```\n\n## 声明、初始化与赋值\n\n这一行创建一个浮点变量，并给出初始值：\n\n```cpp\ndouble velocity = 1.0;\n```\n\n`double` 是类型，`velocity` 是名称，`1.0` 是初始值。以后执行 `velocity = 2.0;` 可以更新它。对于本次计算中固定的参数，加入 `const` 可以表达其保持不变的用途：\n\n```cpp\nconst double diameter = 0.01;\n```\n\n如果后续代码尝试修改这个管径，编译器会报告错误。需要在不同算例中变化的参数仍可从文件或用户输入读取，再保存为本次运行使用的值。\n\n定义变量时同时初始化，可以明确它第一次参与运算时的内容。花括号初始化也是常见写法，例如 `double velocity{1.0};`，并能检查部分不合适的窄化转换。\n\n## 常用类型\n\n| 类型 | 示例 | 常见用途 |\n| --- | --- | --- |\n| `int` | `int cells = 40;` | 单元数、循环计数 |\n| `double` | `double pressure = 101325.0;` | 科学计算中的浮点数 |\n| `bool` | `bool converged = false;` | 真或假状态 |\n| `char` | `char axis = 'x';` | 单个字符 |\n| `std::string` | `std::string name = \"cavity\";` | 文本，需包含 `<string>` |\n\n整数类型的可表示范围有限，浮点数也只有有限精度。数值很大时应选择合适类型；计数从小例子扩大到大型网格时，要注意整数范围。OpenFOAM 用 `label` 表示索引，用 `scalar` 表示所选精度下的浮点数，后续编程课会介绍它们。\n\n## 运算式怎样对应公式\n\n雷诺数公式为：\n\n$$\nRe=\\frac{UD}{\\nu}.\n$$\n\n程序中的 `velocity*diameter/viscosity` 按乘法和除法计算。示例使用 $U=1\\,\\mathrm{m/s}$、$D=0.01\\,\\mathrm m$、$\\nu=10^{-6}\\,\\mathrm{m^2/s}$，因此得到 10000。`1e-6` 是科学记数法，表示 $1\\times10^{-6}$。\n\n变量的物理单位由这里的约定和注释表达。把毫米数值直接代入采用米的公式，会产生尺度错误。计算之前把输入统一到同一单位制，能使公式与数值保持一致。\n\n乘除优先于加减，需要改变顺序时使用括号。例如平均值应写成 `(a+b)/2.0`。代码中的括号既帮助计算，也让读者看清公式分组。\n\n## 整数除法与类型转换\n\n`3/2` 的两边都是整数，因此结果为整数 1，小数部分被截去。`3/2.0` 含有浮点数，按浮点运算得到 1.5。\n\n同样，下面的表达式仍会先执行整数除法：\n\n```cpp\ndouble ratio = 3/2;\n```\n\n赋给 `double` 后得到的是 1.0。希望计算两个整数变量的浮点比值，可以写：\n\n```cpp\ndouble ratio = static_cast<double>(numerator)/denominator;\n```\n\n这里 `static_cast<double>` 显式转换分子类型。除数还需要具有非零值，这属于输入范围检查，下一课将用条件语句实现。\n\n## 输出精度与计算精度\n\n`std::fixed` 选择固定小数位格式，`std::setprecision(4)` 保留四位小数。因此真实的网格间距 $0.01/40=0.00025$ 在输出中四舍五入显示为 `0.0003`。\n\n把精度改为 6 后，输出会显示 `0.000250`。这种修改影响显示方式，变量内部的计算值保持相同。比较很小的误差时，可使用更多有效数字或科学记数法 `std::scientific`。\n\n浮点数采用有限位表示，像 0.1 这样的十进制小数通常只能近似存储。比较计算结果是否接近某个目标值时，适合检查差值是否落在合理容差内，而不是要求逐位完全相等。\n\n## 练习\n\n将管径改成 $0.02\\,\\mathrm m$，其他条件保持相同。预期雷诺数变为 20000，40 个单元的间距变为 $0.0005\\,\\mathrm m$。\n\n再增加 `density=1000` 和 `dynamicViscosity=0.001`，用 `dynamicViscosity/density` 计算运动黏度。答案应为 $10^{-6}\\,\\mathrm{m^2/s}$。这个改动把物性关系也写进程序，可以减少手工换算时的重复输入。\n",
+    "track": "C++ 入门",
+    "series": "C++ 基础",
+    "sort_order": 501,
+    "status": "published",
+    "cover_url": "/assets/diagrams/cpp-02.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "C++17",
+      "source": "FoamLab 原创示例；教学顺序参考 Wolf Dynamics: C++ A Crash Introduction 与菜鸟教程 C++",
+      "prerequisite": "C++ 01",
+      "duration": "35–50 分钟",
+      "downloads": [
+        {
+          "label": "C++ 02 示例源码",
+          "url": "/downloads/cpp/cpp-02.zip",
+          "description": "包含本课完整源码、编译命令与预期输出。",
+          "kind": "source",
+          "size_bytes": 802,
+          "sha256": "7ca14588183c92142f71a81ce8ff3bb6a415d7e1652beb745efbf8491aab31bb"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "cpp-intro-2026-10-02-v1"
+    }
+  },
+  {
+    "slug": "cpp-03",
+    "kind": "lesson",
+    "title": "C++ 03 · 条件判断与循环",
+    "summary": "用迭代残差示例学习 if、while、for、逻辑运算与停止条件。",
+    "body": "条件语句根据数据选择执行分支，循环让同一组语句重复执行。网格遍历、时间推进和迭代求解都依赖这些结构。本课用一个每轮减半的数列模拟残差变化，便于观察停止条件。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/diagrams/cpp-03.svg\" alt=\"循环中的状态更新\" loading=\"lazy\"><figcaption>循环中的状态更新</figcaption></figure>\n\n## 完整示例：迭代到指定阈值\n\n将下面的程序保存为 `main.cpp`：\n\n```cpp\n#include <iostream>\n\nint main()\n{\n    double residual = 1.0;\n    const double tolerance = 0.01;\n    const int maxIterations = 10;\n    int iteration = 0;\n\n    while (residual > tolerance && iteration < maxIterations)\n    {\n        residual *= 0.5;\n        ++iteration;\n        std::cout << iteration << ' ' << residual << '\\n';\n    }\n\n    if (residual <= tolerance)\n    {\n        std::cout << \"Converged after \" << iteration << \" iterations.\\n\";\n    }\n    else\n    {\n        std::cout << \"Reached the iteration limit.\\n\";\n    }\n    return 0;\n}\n```\n\n使用 `g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp -o iterations` 编译，再执行 `./iterations`。输出为：\n\n```text\n1 0.5\n2 0.25\n3 0.125\n4 0.0625\n5 0.03125\n6 0.015625\n7 0.0078125\nConverged after 7 iterations.\n```\n\n数列在第七轮低于 0.01，所以循环结束。这里的残差变化由代码直接规定，实际方程的残差由线性求解器计算。\n\n## while 的执行顺序\n\n`while` 每轮先判断括号中的条件，条件为真才执行大括号中的语句，执行后再回到判断位置。\n\n```cpp\nwhile (residual > tolerance && iteration < maxIterations)\n```\n\n`&&` 表示两个条件同时成立：残差仍高于阈值，而且迭代次数尚未达到上限。前者描述计算是否继续需要更新，后者给出计算成本上限。循环每次都修改残差和计数，因而条件能够随运行改变。\n\n`residual *= 0.5` 等价于 `residual = residual*0.5`。`++iteration` 将计数加 1。输出放在更新之后，因此第一行是完成第一轮后的数值。\n\n## if 与 else\n\n循环结束有两种可能：已经满足容差，或者到达迭代上限。`if` 检查残差是否满足要求；条件为假时执行 `else` 分支。\n\n需要多个互斥分支时，可以使用 `else if`，例如输入检查：\n\n```cpp\nif (viscosity <= 0.0)\n{\n    std::cout << \"Viscosity must be positive.\\n\";\n}\nelse if (diameter <= 0.0)\n{\n    std::cout << \"Diameter must be positive.\\n\";\n}\nelse\n{\n    std::cout << velocity*diameter/viscosity << '\\n';\n}\n```\n\n这段用于已有变量的程序中。检查通过后再计算，能够避免无效物性或零除。\n\n## 比较与逻辑运算\n\n| 运算符 | 含义 | 示例 |\n| --- | --- | --- |\n| `<`、`>` | 小于、大于 | `iteration < 10` |\n| `<=`、`>=` | 小于等于、大于等于 | `residual <= tolerance` |\n| `==`、`!=` | 相等、不等 | `cells == 0` |\n| `&&` | 同时满足 | `a > 0 && b > 0` |\n| `||` | 至少满足一个 | `a < 0 || b < 0` |\n| `!` | 取反 | `!converged` |\n\n`=` 用于赋值，`==` 用于比较。把它们混淆时，有的表达式仍能通过编译，但会改变变量并导致错误分支；编译警告可以帮助发现这类情况。\n\n`&&` 和 `||` 采用短路求值。例如 `index >= 0 && values[index] > 0` 会先检查索引下界，第一项为假时跳过第二项。数组访问还需要同时检查上界，后面容器章节会具体说明。\n\n## 已知循环次数时使用 for\n\n需要依次输出四个网格尺寸时，可在 `main` 中加入：\n\n```cpp\nfor (int level = 0; level < 4; ++level)\n{\n    std::cout << \"level = \" << level << '\\n';\n}\n```\n\n`for` 的括号由三部分组成：初始化、继续条件和每轮结束后的更新。这里 `level` 依次为 0、1、2、3，执行四次。使用从零开始的编号，便于对应数组与网格索引。\n\n把条件改为 `level <= 4` 后，循环会执行五次。写索引循环时，应根据实际元素数量确定严格小于还是小于等于。\n\n## break 与 continue\n\n`break` 立即结束当前循环；`continue` 跳过本轮余下语句，进入下一轮。可以在遍历测点时用 `continue` 跳过无效数据，在找到目标单元后用 `break` 停止继续查找。\n\n循环逻辑简单时，优先将主要停止条件写在循环头，阅读时更容易看到它的运行范围。需要处理特殊情况时再增加分支。\n\n## 练习\n\n将 `maxIterations` 改为 3，输出三轮后应显示 `Reached the iteration limit.`，残差仍为 0.125。再把容差改成 0.1，最大轮数恢复为 10，预期在第四轮结束，残差为 0.0625。\n\n扩展练习是每两轮输出一次残差。答案要点是在打印语句外增加 `if (iteration % 2 == 0)`，其中 `%` 取余数。迭代仍每轮执行，改变的只是显示频率，这与求解步长和结果写出频率的区分相似。\n",
+    "track": "C++ 入门",
+    "series": "C++ 基础",
+    "sort_order": 502,
+    "status": "published",
+    "cover_url": "/assets/diagrams/cpp-03.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "C++17",
+      "source": "FoamLab 原创示例；教学顺序参考 Wolf Dynamics: C++ A Crash Introduction 与菜鸟教程 C++",
+      "prerequisite": "C++ 02",
+      "duration": "35–50 分钟",
+      "downloads": [
+        {
+          "label": "C++ 03 示例源码",
+          "url": "/downloads/cpp/cpp-03.zip",
+          "description": "包含本课完整源码、编译命令与预期输出。",
+          "kind": "source",
+          "size_bytes": 832,
+          "sha256": "86efc59770ae16a9b3591f8834eefdf49421b570f17482ffbe0a43efead123ca"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "cpp-intro-2026-10-02-v1"
+    }
+  },
+  {
+    "slug": "cpp-04",
+    "kind": "lesson",
+    "title": "C++ 04 · 函数、参数与作用域",
+    "summary": "把 Courant 数计算写成函数，理解参数、返回值、声明与局部变量。",
+    "body": "函数把一段计算封装成有名称的操作。需要计算多个位置的 Courant 数时，可以把公式写成函数，再用不同参数调用，避免在主程序中反复复制同一段代码。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/diagrams/cpp-04.svg\" alt=\"函数调用\" loading=\"lazy\"><figcaption>函数调用</figcaption></figure>\n\n## 完整示例：计算 Courant 数\n\n对速度大小 $U$、时间步 $\\Delta t$ 和网格宽度 $\\Delta x$，简单估计为 $Co=U\\Delta t/\\Delta x$。保存以下程序为 `main.cpp`：\n\n```cpp\n#include <iostream>\n\ndouble courant(double speed, double deltaT, double spacing)\n{\n    const double distance = speed*deltaT;\n    return distance/spacing;\n}\n\nint main()\n{\n    const double speed = 2.0;\n    const double deltaT = 0.001;\n    const double spacing = 0.01;\n\n    const double coarseStep = courant(speed, deltaT, spacing);\n    const double fineStep = courant(speed, deltaT/2.0, spacing);\n    std::cout << \"Co = \" << coarseStep << '\\n';\n    std::cout << \"Co with half dt = \" << fineStep << '\\n';\n    return 0;\n}\n```\n\n编译运行后输出：\n\n```text\nCo = 0.2\nCo with half dt = 0.1\n```\n\n运行命令为 `g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp -o courant` 和 `./courant`。两次调用共用同一个函数，只改变第二个参数。\n\n## 函数由哪些部分组成\n\n```cpp\ndouble courant(double speed, double deltaT, double spacing)\n```\n\n最前面的 `double` 表示返回值类型；`courant` 是函数名；括号内列出三个参数及其类型。调用者依次提供速度、时间步和网格宽度，函数体使用这些值完成计算。\n\n`return distance/spacing;` 返回结果，并结束这次函数调用。返回值随后存入 `coarseStep` 或 `fineStep`。一个具有返回值的函数，每条正常执行路径都应给出符合类型的结果。\n\n函数可以继续调用其他函数，因此较长程序可以逐层组织成读取输入、检查参数、完成计算和保存结果等操作。每个函数名称应清楚表达它完成的计算。\n\n## 参数按值传递\n\n当前三个参数采用按值传递。函数接收调用时提供的数值，函数内对参数的修改只影响本次调用中的副本。例如在函数里执行 `deltaT *= 0.5`，主程序的 `deltaT` 保持原值。\n\n需要返回计算结果时，可以像这里一样使用 `return`。需要由函数直接修改调用者的对象时，则使用引用参数，下一课会介绍。\n\n参数名称属于函数内部。调用时主程序的变量可以有不同名称，例如 `courant(inletSpeed, timeStep, cellWidth)`，传递关系由参数位置确定。因此具有多个相同类型参数的函数，应把顺序设计得清晰，并在调用附近保留必要的单位说明。\n\n## 局部变量与作用域\n\n`distance` 定义在 `courant` 的花括号内，其作用域和生命周期属于这次函数调用。`main` 中可以使用函数返回值，无法直接使用函数内部的 `distance` 名称。\n\n代码块也能创建局部作用域：\n\n```cpp\nif (coarseStep > 0.1)\n{\n    const double recommendedStep = 0.1*spacing/speed;\n    std::cout << recommendedStep << '\\n';\n}\n```\n\n`recommendedStep` 仅在这个分支内部有效。把变量放在实际需要它的位置，能减少名称冲突，也便于确认它何时被初始化。\n\n## 声明与定义\n\n完整示例把函数定义放在 `main` 前，因此编译器在读到调用时已经知道函数的参数与返回类型。也可以先写声明，再把实现放到文件后面：\n\n```cpp\ndouble courant(double speed, double deltaT, double spacing);\n```\n\n这个声明以分号结束，说明函数接口；带花括号的实现称为定义。两者的类型和参数数量要保持一致。多文件项目会把声明放进头文件，把定义放进 `.cpp` 文件，第十课将给出完整例子。\n\n## 返回 void 的函数\n\n只负责输出结果的操作可以返回 `void`：\n\n```cpp\nvoid printCourant(double value)\n{\n    std::cout << \"Co = \" << value << '\\n';\n}\n```\n\n调用 `printCourant(0.2);` 后产生一行输出。这类函数通过执行动作产生效果；需要参与进一步运算的结果则通常用返回值交给调用者。\n\n## 输入范围与函数职责\n\nCourant 数公式要求 `spacing > 0`。实际程序可以在读取参数后集中检查，也可以在函数内部检查。较小的工具中，常用 `if` 报告无效输入；需要层层调用的程序，可以通过异常把错误交给上层统一处理。\n\n计算公式与打印分开，能让同一个函数既用于终端程序，也用于数据分析或其他求解器模块。这里 `courant` 只返回数值，主程序决定怎样显示它。\n\n## 练习\n\n增加一个函数 `reynolds(speed, diameter, viscosity)`，返回 $UD/\\nu$。使用 $U=1$、$D=0.01$、$\\nu=10^{-6}$，答案应为 10000。函数类型可继续使用 `double`，调用时明确三项输入的顺序。\n\n再增加 `timeStepForCourant(targetCo, spacing, speed)`，根据目标 Courant 数返回 $\\Delta t=Co\\Delta x/U$。对于目标 0.5、网格宽度 0.01、速度 2，答案为 0.0025 秒。将这个返回值传给 `courant`，应重新得到 0.5，这种往返计算便于检查公式实现。\n",
+    "track": "C++ 入门",
+    "series": "C++ 基础",
+    "sort_order": 503,
+    "status": "published",
+    "cover_url": "/assets/diagrams/cpp-04.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "C++17",
+      "source": "FoamLab 原创示例；教学顺序参考 Wolf Dynamics: C++ A Crash Introduction 与菜鸟教程 C++",
+      "prerequisite": "C++ 03",
+      "duration": "35–50 分钟",
+      "downloads": [
+        {
+          "label": "C++ 04 示例源码",
+          "url": "/downloads/cpp/cpp-04.zip",
+          "description": "包含本课完整源码、编译命令与预期输出。",
+          "kind": "source",
+          "size_bytes": 775,
+          "sha256": "96ed4c80b960e44402ff6bccc89dc90dca5e1ff54d0f2eb37e0c84f75313d6c4"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "cpp-intro-2026-10-02-v1"
+    }
+  },
+  {
+    "slug": "cpp-05",
+    "kind": "lesson",
+    "title": "C++ 05 · 引用、指针与 const",
+    "summary": "比较按值和按引用传递，理解地址、解引用、只读访问与对象生命周期。",
+    "body": "函数有时只需要读取数据，有时需要直接修改调用者的变量。C++ 用值、引用和指针表达这些不同需求。OpenFOAM 中经常把网格和场通过引用传入函数，因此理解它们有助于判断一次调用会改变哪些对象。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/diagrams/cpp-05.svg\" alt=\"值、引用与指针\" loading=\"lazy\"><figcaption>值、引用与指针</figcaption></figure>\n\n## 完整示例：三种访问方式\n\n保存以下程序为 `main.cpp`，按前面的方法编译运行：\n\n```cpp\n#include <iostream>\n\nvoid scaleValue(double value)\n{\n    value *= 2.0;\n    std::cout << \"inside value = \" << value << '\\n';\n}\n\nvoid scaleReference(double& value)\n{\n    value *= 2.0;\n}\n\nint main()\n{\n    double speed = 1.0;\n    scaleValue(speed);\n    std::cout << \"after value = \" << speed << '\\n';\n    scaleReference(speed);\n    std::cout << \"after reference = \" << speed << '\\n';\n\n    double* pointer = &speed;\n    *pointer = 3.0;\n    const double& readOnly = speed;\n    std::cout << \"through pointer = \" << speed << '\\n';\n    std::cout << \"read-only view = \" << readOnly << '\\n';\n    return 0;\n}\n```\n\n输出为：\n\n```text\ninside value = 2\nafter value = 1\nafter reference = 2\nthrough pointer = 3\nread-only view = 3\n```\n\n每一行都对应一次具体修改。函数参数是否带 `&`，会直接影响主程序中的 `speed`。\n\n## 按值传递创建副本\n\n`scaleValue(double value)` 接收一个数值副本。主程序的 `speed` 为 1，函数内的 `value` 开始也为 1；执行乘法后，函数内变为 2，而主程序仍为 1。\n\n按值传递适合小数值和希望独立处理的输入。例如计算面积时，函数可以接收半径副本并返回面积，调用者的半径保持原值。\n\n## 引用是已有对象的另一个名称\n\n`scaleReference(double& value)` 中的 `&` 表示引用。调用 `scaleReference(speed)` 后，函数中的 `value` 直接引用主程序的 `speed`，因此乘法会把原变量改为 2。\n\n也可以在同一个函数中定义引用：\n\n```cpp\ndouble& alias = speed;\nalias = 4.0;\n```\n\n这次赋值会改变 `speed`。引用在初始化时绑定到一个已有对象，之后通过引用赋值是在修改该对象。引用适合表达“这个参数必需存在，并允许在函数中修改”。\n\n## 指针保存地址\n\n`double* pointer = &speed;` 定义一个指向 `double` 的指针。这里左侧 `*` 属于指针类型，右侧 `&speed` 取得变量地址。\n\n下一行 `*pointer = 3.0;` 对指针进行解引用，访问该地址处的 `double` 对象，并把它改成 3。相同符号在不同位置具有不同用途，应结合声明还是表达式来阅读。\n\n指针可以改为指向另一个对象，也可以用 `nullptr` 表示当前没有对象：\n\n```cpp\ndouble* optionalValue = nullptr;\nif (optionalValue != nullptr)\n{\n    std::cout << *optionalValue << '\\n';\n}\n```\n\n检查通过后再解引用，能够避免访问空地址。引用更适合必需对象，指针可以表达可选对象和可改变的指向关系。\n\n## const 怎样限制修改\n\n`const double& readOnly = speed;` 提供只读访问方式。通过 `readOnly` 可以读取当前值，尝试通过它赋值会产生编译错误。`speed` 本身仍可通过其他允许修改的名称更新，引用读取时会看到新的值。\n\n对于较大的对象，`const T&` 常用于函数输入：既可避免复制，又说明函数通过这个参数只读取数据。需要修改对象时用 `T&`；需要独立副本时用 `T`。\n\n| 参数形式 | 是否复制对象 | 通过参数修改原对象 |\n| --- | --- | --- |\n| `T value` | 按值传递 | 修改的是副本 |\n| `T& value` | 引用原对象 | 可以 |\n| `const T& value` | 引用原对象 | 只读 |\n| `T* value` | 复制地址 | 指向有效对象时可以 |\n\n指针还有两种常见限定：`const double* p` 表示通过 `p` 只读对象，`double* const p` 表示指针自身保持指向不变。阅读时分别判断“对象能否修改”和“指向能否改变”。\n\n## 生命周期与悬空访问\n\n局部变量离开所在作用域后结束生命周期。返回局部变量的指针或引用，会让调用者拿到已经失效的访问方式。例如函数内部临时创建的 `double local`，只能在其有效生命周期内通过地址使用。\n\n希望从函数获得新数值时，直接返回 `double`。需要修改已有对象时，让调用者创建对象并传入引用。较复杂的动态对象通常由容器或智能指针管理，第八课会使用 `std::unique_ptr`。\n\n## 练习\n\n写一个 `swapValues(double& a, double& b)`，用临时变量交换两个数。输入 `a=1`、`b=3`，调用后应为 `a=3`、`b=1`。答案要点是两个参数都通过引用传递，先保存原来的 `a`，再依次赋值。\n\n再写一个 `double half(double value)`，返回一半数值。比较它与 `void halve(double& value)`：前者由调用者决定如何保存返回值，后者直接修改传入变量。接口表达清楚，阅读代码时就能预期修改范围。\n",
+    "track": "C++ 入门",
+    "series": "C++ 基础",
+    "sort_order": 504,
+    "status": "published",
+    "cover_url": "/assets/diagrams/cpp-05.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "C++17",
+      "source": "FoamLab 原创示例；教学顺序参考 Wolf Dynamics: C++ A Crash Introduction 与菜鸟教程 C++",
+      "prerequisite": "C++ 04",
+      "duration": "35–50 分钟",
+      "downloads": [
+        {
+          "label": "C++ 05 示例源码",
+          "url": "/downloads/cpp/cpp-05.zip",
+          "description": "包含本课完整源码、编译命令与预期输出。",
+          "kind": "source",
+          "size_bytes": 829,
+          "sha256": "86523f4b93ac0c2cf731d0ed95da76660f06a6e5b01c34ec7e75ae9c72e938ef"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "cpp-intro-2026-10-02-v1"
+    }
+  },
+  {
+    "slug": "cpp-06",
+    "kind": "lesson",
+    "title": "C++ 06 · 数组、vector 与 string",
+    "summary": "保存一组测点数据，学习索引、范围循环、容器大小、字符串和边界检查。",
+    "body": "测点速度、单元压力和残差历史都包含一组数据。`std::vector` 可以保存数量可变、类型相同的元素；`std::string` 用于保存和处理文本。它们由标准库管理存储，适合从简单程序逐步扩展到文件数据处理。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/diagrams/cpp-06.svg\" alt=\"容器中的索引与值\" loading=\"lazy\"><figcaption>容器中的索引与值</figcaption></figure>\n\n## 完整示例：计算平均速度\n\n下面的 `main.cpp` 保存四个速度并计算算术平均：\n\n```cpp\n#include <iostream>\n#include <string>\n#include <vector>\n\nint main()\n{\n    const std::string caseName = \"channel\";\n    std::vector<double> speeds{1.0, 2.0, 3.0};\n    speeds.push_back(4.0);\n\n    double total = 0.0;\n    for (double speed : speeds)\n    {\n        total += speed;\n    }\n    const double mean = total/static_cast<double>(speeds.size());\n\n    std::cout << \"Case: \" << caseName << '\\n';\n    std::cout << \"Count: \" << speeds.size() << '\\n';\n    std::cout << \"First: \" << speeds.at(0) << '\\n';\n    std::cout << \"Mean: \" << mean << '\\n';\n    return 0;\n}\n```\n\n使用 `g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp -o samples` 编译，执行 `./samples`，输出：\n\n```text\nCase: channel\nCount: 4\nFirst: 1\nMean: 2.5\n```\n\n`speeds` 开始包含 1、2、3，`push_back(4.0)` 在末尾增加第四项。随后循环累加，再除以元素数量。\n\n## 索引从零开始\n\n四个元素的索引依次为 0、1、2、3。可以使用下标访问：\n\n```cpp\nspeeds[0] = 1.5;\n```\n\n修改后第一个速度变为 1.5，其余元素保持原值。索引应满足 `0 <= index < speeds.size()`，最后一个元素的编号比元素总数小 1。\n\n`speeds.at(index)` 会检查索引范围，超出范围时抛出异常；`speeds[index]` 提供直接下标访问，需要调用者保证合法范围。初次检查数据处理逻辑时，`at()` 有助于尽早发现越界。\n\n## 两种遍历方式\n\n只需要逐个读取元素时，可用范围循环：\n\n```cpp\nfor (double speed : speeds)\n{\n    total += speed;\n}\n```\n\n每轮把一个元素的值交给局部变量 `speed`。如果需要直接修改容器中的每个元素，则使用引用：\n\n```cpp\nfor (double& speed : speeds)\n{\n    speed *= 0.5;\n}\n```\n\n循环结束后容器内所有速度都减半。`const double&` 适合通过只读引用遍历；对于体积较大的对象，可避免每轮复制。\n\n需要同时输出测点编号时，使用索引循环：\n\n```cpp\nfor (std::size_t i = 0; i < speeds.size(); ++i)\n{\n    std::cout << i << ' ' << speeds[i] << '\\n';\n}\n```\n\n`std::size_t` 是标准库表示大小和索引时常用的无符号类型。它从零开始递增时较方便；需要倒序循环时，应特别考虑减到零后的范围，或使用反向迭代器。\n\n## size、resize 与 reserve\n\n| 操作 | 作用 |\n| --- | --- |\n| `size()` | 返回当前元素数量 |\n| `empty()` | 检查是否没有元素 |\n| `push_back(value)` | 在末尾增加一个元素 |\n| `resize(n)` | 把元素数量调整为 n |\n| `reserve(n)` | 预留容纳至少 n 个元素的空间 |\n\n`reserve` 可以减少反复扩容的成本，但元素数量仍由 `size()` 决定。只调用 `reserve(100)` 后，仍应通过 `push_back` 或 `resize` 创建实际元素，再访问相应索引。\n\n扩容时 `vector` 可能重新分配存储，先前保存的元素指针、引用和迭代器可能失效。需要长期按位置访问时，可以保留索引，并在使用前根据当前容器取得元素。\n\n## 固定长度数据与 array\n\n三维坐标通常始终包含三个分量，可以使用 `std::array`：\n\n```cpp\n#include <array>\nstd::array<double, 3> point{0.1, 0.2, 0.3};\n```\n\n这里长度 3 是类型的一部分。`array` 适合固定长度的小型数据，`vector` 适合运行时决定数量的列表。二者都支持索引和范围循环。\n\n## 字符串怎样使用\n\n`std::string caseName = \"channel\";` 保存算例名称。字符串可以连接、比较和查询长度：\n\n```cpp\nstd::string logName = caseName + \".log\";\nstd::cout << logName << '\\n';\n```\n\n结果为 `channel.log`。读取带空格的一整行时使用 `std::getline`，读取由空格分隔的名称时可以使用流提取。文件读取在第十课给出完整例子。\n\n## 平均值的含义与空数据\n\n本例四个测点按相同权重平均，得到 2.5。单元体积不同的场统计需要使用体积权重，例如 $\\sum_i U_iV_i/\\sum_iV_i$。\n\n当数据来自文件时，列表可能为空，求平均前应检查 `empty()`，再决定报告错误还是返回可选结果。用空列表的长度作除数会产生无效运算。\n\n## 练习\n\n把所有速度减半，再计算平均值，答案应为 1.25。增加第五个速度 5 后，用原始五个数计算平均值，答案为 3。\n\n再增加一组体积 `{1,1,2,2}`，与四个速度一一对应。体积加权平均为 $(1+2+6+8)/6=17/6$。答案要点是分别累加加权分子与总体积，并检查两组列表长度一致。\n",
+    "track": "C++ 入门",
+    "series": "C++ 基础",
+    "sort_order": 505,
+    "status": "published",
+    "cover_url": "/assets/diagrams/cpp-06.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "C++17",
+      "source": "FoamLab 原创示例；教学顺序参考 Wolf Dynamics: C++ A Crash Introduction 与菜鸟教程 C++",
+      "prerequisite": "C++ 05",
+      "duration": "35–50 分钟",
+      "downloads": [
+        {
+          "label": "C++ 06 示例源码",
+          "url": "/downloads/cpp/cpp-06.zip",
+          "description": "包含本课完整源码、编译命令与预期输出。",
+          "kind": "source",
+          "size_bytes": 838,
+          "sha256": "35fd7a069916d7f1e772eb9a3775b87a45c634944f1331f6257817804b051a0b"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "cpp-intro-2026-10-02-v1"
+    }
+  },
+  {
+    "slug": "cpp-07",
+    "kind": "lesson",
+    "title": "C++ 07 · 类、构造函数与数据封装",
+    "summary": "用单元质量类组织体积、密度和计算方法，理解构造、访问控制与参数检查。",
+    "body": "类把一组相关数据和操作组织在一起。一个单元可以保存体积与密度，并提供计算质量的方法。使用者创建单元对象后，通过公开接口读取结果或更新允许修改的参数。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/diagrams/cpp-07.svg\" alt=\"Cell 对象的接口\" loading=\"lazy\"><figcaption>Cell 对象的接口</figcaption></figure>\n\n## 完整示例：单元质量\n\n保存以下程序为 `main.cpp`：\n\n```cpp\n#include <iostream>\n#include <stdexcept>\n\nclass Cell\n{\nprivate:\n    double volume_;\n    double density_;\n\npublic:\n    Cell(double volume, double density)\n    : volume_(volume), density_(density)\n    {\n        if (volume_ <= 0.0 || density_ <= 0.0)\n        {\n            throw std::invalid_argument(\"Volume and density must be positive.\");\n        }\n    }\n\n    double mass() const\n    {\n        return volume_*density_;\n    }\n\n    void setDensity(double density)\n    {\n        if (density <= 0.0)\n        {\n            throw std::invalid_argument(\"Density must be positive.\");\n        }\n        density_ = density;\n    }\n};\n\nint main()\n{\n    Cell cell(0.001, 1000.0);\n    std::cout << \"mass = \" << cell.mass() << \" kg\\n\";\n    cell.setDensity(800.0);\n    std::cout << \"new mass = \" << cell.mass() << \" kg\\n\";\n    return 0;\n}\n```\n\n编译命令仍为 `g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp -o cell`。运行 `./cell` 后输出：\n\n```text\nmass = 1 kg\nnew mass = 0.8 kg\n```\n\n体积为 $0.001\\,\\mathrm{m^3}$、密度为 $1000\\,\\mathrm{kg/m^3}$，质量为 1 千克。密度改为 800 后，体积保持原值，质量变为 0.8 千克。\n\n## 类与对象\n\n`class Cell` 定义一种类型，描述这种对象具有哪些数据和操作。`Cell cell(0.001, 1000.0);` 创建一个具体对象，并提供初始体积和密度。\n\n程序可以创建多个独立对象：\n\n```cpp\nCell waterCell(0.001, 1000.0);\nCell airCell(0.001, 1.2);\n```\n\n它们共用同一套成员函数定义，各自保存自己的数据。修改 `waterCell` 的密度时，`airCell` 保持不变。\n\n类定义的最后一个 `}` 后面需要分号。成员函数在类内定义时，函数体结束的大括号后通常无需额外分号。\n\n## private 与 public\n\n`private` 部分保存内部数据。外部通过 `cell.volume_` 直接访问会产生编译错误；`public` 部分提供允许使用的接口，如 `mass()` 和 `setDensity()`。\n\n让密度通过 `setDensity()` 更新，可以在一处集中检查参数。当程序中有许多调用位置时，它们都会经过同样的正值检查。\n\n成员变量末尾的下划线是命名约定，用于区分成员 `density_` 与参数 `density`。它没有额外的语言功能，但能使赋值关系更清楚。\n\n## 构造函数与初始化列表\n\n构造函数与类同名，负责创建对象时的初始化：\n\n```cpp\nCell(double volume, double density)\n: volume_(volume), density_(density)\n```\n\n冒号后是成员初始化列表。它先用参数初始化数据，再进入大括号执行检查。初始化较复杂成员、引用和常量成员时，这种写法尤其重要。\n\n成员实际初始化顺序由它们在类中的声明顺序决定。这里按 `volume_`、`density_` 的顺序编写列表，与声明保持一致，便于阅读和维护。\n\n## const 成员函数\n\n`double mass() const` 读取体积与密度并返回乘积。末尾的 `const` 表明这个操作通过当前对象只读取其常规数据，因此也可以由只读对象调用。\n\n`setDensity()` 会修改对象状态，所以没有这个限定。读源码时，先看参数与 `const`，通常就能判断一个函数是查询数据还是更新数据。\n\n如果需要让函数读取一个已有单元，可以使用 `const Cell&` 参数，既避免复制又保留只读语义。\n\n## 无效参数与异常\n\n示例使用 `throw std::invalid_argument(...)` 报告无效参数。异常会离开当前操作，交给外层处理。可以在主程序中捕获：\n\n```cpp\ntry\n{\n    Cell invalidCell(0.0, 1000.0);\n    std::cout << invalidCell.mass() << '\\n';\n}\ncatch (const std::exception& error)\n{\n    std::cerr << error.what() << '\\n';\n}\n```\n\n体积为零时，构造函数报告错误，输出说明文字；后面的质量计算不会执行。这样对象在正常创建成功后，就满足体积和密度为正的约定。\n\n大型程序可在读取参数时提供更完整的错误信息，例如具体文件、条目名和输入值。检查的位置应尽量接近错误来源。\n\n## 对象生命周期\n\n局部对象进入作用域时构造，离开作用域时析构。本例只保存两个浮点数，默认析构行为已足够。拥有文件、内存或其他资源的类型，通常由其成员对象在析构时释放资源。\n\n标准容器和智能指针利用这种生命周期管理资源。后面将用智能指针保存不同类型的边界对象，程序结束时会自动完成销毁。\n\n## 练习\n\n增加 `double volume() const` 和 `double density() const` 两个查询函数，分别返回对应成员。答案要点是只读函数返回数值，仍保持成员本身私有。\n\n再增加 `setVolume(double volume)`，采用与密度相同的正值检查。将体积改为 `0.002`、密度保持 800，预期质量为 1.6 千克。最后尝试传入负体积，在 `try/catch` 中显示错误说明。\n",
+    "track": "C++ 入门",
+    "series": "C++ 基础",
+    "sort_order": 506,
+    "status": "published",
+    "cover_url": "/assets/diagrams/cpp-07.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "C++17",
+      "source": "FoamLab 原创示例；教学顺序参考 Wolf Dynamics: C++ A Crash Introduction 与菜鸟教程 C++",
+      "prerequisite": "C++ 06",
+      "duration": "35–50 分钟",
+      "downloads": [
+        {
+          "label": "C++ 07 示例源码",
+          "url": "/downloads/cpp/cpp-07.zip",
+          "description": "包含本课完整源码、编译命令与预期输出。",
+          "kind": "source",
+          "size_bytes": 884,
+          "sha256": "3b6f26440391843567418954fe308cdc4d2fd8afe301bfc8276f71b8d69c617f"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "cpp-intro-2026-10-02-v1"
+    }
+  },
+  {
+    "slug": "cpp-08",
+    "kind": "lesson",
+    "title": "C++ 08 · 继承、虚函数与多态",
+    "summary": "实现固定值与线性变化两种边界模型，学习统一接口、override 和智能指针。",
+    "body": "不同边界模型都可以提供“给定时刻的边界值”这个操作。固定值模型返回常数，线性变化模型返回初值加变化率乘时间。继承与虚函数允许调用者通过统一接口使用这些模型。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/diagrams/cpp-08.svg\" alt=\"基类与具体模型\" loading=\"lazy\"><figcaption>基类与具体模型</figcaption></figure>\n\n## 完整示例：两种边界模型\n\n下面是独立的标准 C++ 程序，保存为 `main.cpp`：\n\n```cpp\n#include <iostream>\n#include <memory>\n\nclass BoundaryValue\n{\npublic:\n    virtual ~BoundaryValue() = default;\n    virtual double value(double time) const = 0;\n};\n\nclass FixedValue : public BoundaryValue\n{\n    double value_;\n\npublic:\n    explicit FixedValue(double value) : value_(value) {}\n    double value(double) const override\n    {\n        return value_;\n    }\n};\n\nclass RampValue : public BoundaryValue\n{\n    double initial_;\n    double rate_;\n\npublic:\n    RampValue(double initial, double rate)\n    : initial_(initial), rate_(rate) {}\n\n    double value(double time) const override\n    {\n        return initial_ + rate_*time;\n    }\n};\n\nvoid printAtTime(const BoundaryValue& boundary, double time)\n{\n    std::cout << boundary.value(time) << '\\n';\n}\n\nint main()\n{\n    FixedValue fixed(3.0);\n    std::cout << \"fixed: \";\n    printAtTime(fixed, 2.0);\n\n    std::unique_ptr<BoundaryValue> ramp = std::make_unique<RampValue>(1.0, 0.5);\n    std::cout << \"ramp: \";\n    printAtTime(*ramp, 2.0);\n    return 0;\n}\n```\n\n用 `g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp -o boundaries` 编译并运行。输出：\n\n```text\nfixed: 3\nramp: 2\n```\n\n固定值模型在任意时刻返回 3；线性模型在 $t=2$ 时返回 $1+0.5\\times2=2$。\n\n## 基类定义共同接口\n\n`BoundaryValue` 中的 `value(double time)` 规定所有模型都提供同样的查询接口。返回类型为 `double`，输入为时间。\n\n`virtual` 表示通过基类引用或指针调用时，根据实际对象类型选择实现。末尾的 `= 0` 表示纯虚函数，要求具体派生类给出实现。包含未实现纯虚函数的类属于抽象类，用于表达接口。\n\n这里的基类只关心能否返回边界值，具体数值怎样计算由各个模型负责。\n\n## 派生类实现不同公式\n\n`class FixedValue : public BoundaryValue` 表示固定值类公开继承基类接口。它保存一个 `value_`，查询时返回这个常数。函数参数只写类型 `double`，表示实现接受时间参数但不需要使用它。\n\n`RampValue` 保存初值与变化率，查询时计算：\n\n$$\nu(t)=u_0+at.\n$$\n\n`override` 要求编译器确认这个函数确实覆盖了基类虚函数。参数类型或末尾的 `const` 写错时，编译器会指出接口不匹配。\n\n## 多态调用发生在哪里\n\n```cpp\nvoid printAtTime(const BoundaryValue& boundary, double time)\n```\n\n这个函数接收基类的只读引用。传入 `FixedValue` 时，`boundary.value(time)` 调用固定值实现；传入 `RampValue` 时，调用线性实现。函数本身保持相同。\n\n接口通过引用传递，保留了实际派生对象的类型。把派生对象复制成基类对象会丢失派生部分，通常称为对象切片；抽象基类本身也无法直接构造。因此多态接口通常使用基类引用或指针。\n\n## 智能指针管理对象\n\n`std::make_unique<RampValue>(1.0, 0.5)` 创建一个线性模型，`std::unique_ptr<BoundaryValue>` 保存其独占所有权。变量离开作用域时，智能指针自动销毁对象。\n\n`*ramp` 取得它指向的对象，传入 `printAtTime`。也可以写 `ramp->value(2.0)`，箭头表示通过指针访问成员。\n\n基类声明 `virtual ~BoundaryValue() = default`，使通过基类指针销毁对象时能够执行正确的派生析构过程。对于设计为多态使用的基类，这是重要的接口组成。\n\n## 为什么构造函数使用 explicit\n\n`FixedValue` 的构造函数只有一个参数，`explicit` 要求创建对象时明确写出这个构造意图。例如 `FixedValue fixed(3.0);` 清楚表示从数值创建边界模型，可以减少其他表达式中意外发生的隐式转换。\n\n模型参数在构造时确定，查询函数保持只读。若需要运行中修改参数，可以另行提供检查明确的更新接口。\n\n## 与 OpenFOAM 的联系\n\nOpenFOAM 的不同边界条件也通过共同基类参与求解。字典中的类型名称最终对应某个具体类，求解器通过统一接口更新边界值。\n\n这个标准 C++ 示例解释的是继承和虚函数机制。OpenFOAM 还需要运行时类型注册、字典构造、网格映射和场写出等配套接口，这些内容在自定义边界条件课程中继续展开。\n\n## 练习\n\n增加 `SineValue` 类，保存均值、幅值和频率，返回 $u(t)=u_0+A\\sin(2\\pi ft)$。需要包含 `<cmath>`，并使用一个明确的圆周率常量。\n\n当均值为 1、幅值为 2、频率为 1 时，$t=0.25$ 的结果为 3，$t=0.75$ 的结果为 -1。仍用同一个 `printAtTime` 调用，验证新增模型能直接使用已有接口。\n\n第二个练习把线性模型的变化率改为 0。它在所有时刻返回初值，结果应与相同数值的固定模型一致。\n",
+    "track": "C++ 入门",
+    "series": "C++ 基础",
+    "sort_order": 507,
+    "status": "published",
+    "cover_url": "/assets/diagrams/cpp-08.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "C++17",
+      "source": "FoamLab 原创示例；教学顺序参考 Wolf Dynamics: C++ A Crash Introduction 与菜鸟教程 C++",
+      "prerequisite": "C++ 07",
+      "duration": "35–50 分钟",
+      "downloads": [
+        {
+          "label": "C++ 08 示例源码",
+          "url": "/downloads/cpp/cpp-08.zip",
+          "description": "包含本课完整源码、编译命令与预期输出。",
+          "kind": "source",
+          "size_bytes": 938,
+          "sha256": "7370cc17768dead906cdb3d4174df42171508b069e58f747d89e246860fb10da"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "cpp-intro-2026-10-02-v1"
+    }
+  },
+  {
+    "slug": "cpp-09",
+    "kind": "lesson",
+    "title": "C++ 09 · 模板、容器与泛型函数",
+    "summary": "编写同时适用于整数和浮点数的求和函数，认识模板实例化、map 和标准算法。",
+    "body": "模板允许一段代码根据类型生成相应实现。整数列表和浮点列表都需要求和时，可以把共同操作写一次，让编译器分别处理元素类型。OpenFOAM 的场和容器大量使用这种机制。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/diagrams/cpp-09.svg\" alt=\"模板的类型实例化\" loading=\"lazy\"><figcaption>模板的类型实例化</figcaption></figure>\n\n## 完整示例：通用求和\n\n保存以下代码为 `main.cpp`：\n\n```cpp\n#include <iostream>\n#include <map>\n#include <string>\n#include <vector>\n\ntemplate<class T>\nT sumValues(const std::vector<T>& values)\n{\n    T total{};\n    for (const T& value : values)\n    {\n        total += value;\n    }\n    return total;\n}\n\nint main()\n{\n    const std::vector<int> counts{1, 2, 3};\n    const std::vector<double> speeds{0.5, 1.5, 2.0};\n    const std::map<std::string, double> properties\n    {\n        {\"nu\", 0.01},\n        {\"rho\", 1000.0}\n    };\n\n    std::cout << \"integer sum = \" << sumValues(counts) << '\\n';\n    std::cout << \"floating sum = \" << sumValues(speeds) << '\\n';\n    std::cout << \"nu = \" << properties.at(\"nu\") << '\\n';\n    return 0;\n}\n```\n\n编译运行后输出：\n\n```text\ninteger sum = 6\nfloating sum = 4\nnu = 0.01\n```\n\n编译命令为 `g++ -std=c++17 -Wall -Wextra -Wpedantic main.cpp -o templates`，运行命令为 `./templates`。\n\n## T 表示什么\n\n`template<class T>` 声明一个类型参数。函数中的 `T` 会根据调用时的实参确定：传入 `std::vector<int>` 时，`T` 为 `int`；传入 `std::vector<double>` 时，`T` 为 `double`。\n\n因此编译器可以生成相应的求和函数。调用处通常能够自动推导类型，也可以显式写出 `sumValues<double>(speeds)`。\n\n`T total{}` 对数值类型进行值初始化，得到零。循环用 `+=` 累加，最后返回同一类型的结果。模板要求所用类型支持这些操作；选择其他自定义类型时，也需要满足对应构造和运算要求。\n\n## const 引用为什么适合容器参数\n\n函数接收 `const std::vector<T>&`，表示读取已有容器。容器内容很多时，通过引用可以避免复制；`const` 清楚表达这个函数只统计数据。\n\n范围循环同样使用 `const T&`。对于简单数值，按值读取成本很低；对于较大对象，这种写法仍可避免每次循环复制元素。\n\n## 返回类型与整数计算\n\n当前函数做求和，返回元素类型较自然。如果改成平均值，整数输入需要特别处理。直接用整数总和除以整数数量，会执行整数除法。\n\n对于数值平均，可以明确返回 `double`，并将总和或数量转换为浮点类型。泛型代码仍需要清楚的数学语义：返回类型影响计算精度和调用者能够得到的信息。\n\n空列表的求和按这里的实现返回零；平均值对空列表则需要额外约定或报错，因为分母为零。\n\n## 用名称查找参数：map\n\n`std::map<std::string, double>` 将名称与浮点数关联，例如 `nu` 对应 0.01。它与按整数位置访问的 `vector` 适合不同场景：\n\n| 容器 | 访问依据 | 例子 |\n| --- | --- | --- |\n| `vector<double>` | 从零开始的索引 | 第 5 个测点速度 |\n| `map<string,double>` | 具有顺序的键 | 名为 `nu` 的参数 |\n| `unordered_map<string,double>` | 哈希键 | 频繁按名称查找 |\n\n`properties.at(\"nu\")` 读取已有项，名称不存在时抛出异常。对于可修改的 `map`，`operator[]` 在键缺失时会创建默认项。读取必需物性时，使用 `at()` 或 `find()` 更容易发现漏填参数。\n\n先检查可选参数是否存在，可以写：\n\n```cpp\nauto position = properties.find(\"mu\");\nif (position != properties.end())\n{\n    std::cout << position->second << '\\n';\n}\n```\n\n`auto` 根据表达式推导变量类型；迭代器的 `first` 是键，`second` 是值。`end()` 表示查找范围末尾，用来判断没有找到对应项。\n\n## 标准算法可以减少重复循环\n\n标准库提供了求和、排序和查找等算法。例如包含 `<numeric>` 后，可以写：\n\n```cpp\ndouble total = std::accumulate(speeds.begin(), speeds.end(), 0.0);\n```\n\n第三个参数 `0.0` 是初始累加值，并影响累加类型。这里使用浮点初值，使浮点数据按相应类型累加。`begin()` 与 `end()` 给出遍历区间。\n\n使用算法前先理解它的输入范围、返回类型和空范围行为，之后就能用较少代码表达清楚的操作。\n\n## 模板定义放在哪里\n\n编译器在实例化模板时需要看到实现，因此常把模板定义放在头文件。普通非模板函数通常可以在头文件声明、在一个 `.cpp` 中定义；模板的组织方式则要考虑实例化时实现是否可见。\n\n阅读 OpenFOAM 时，`List<scalar>`、`Field<vector>` 等写法都带有类型参数。先把尖括号中的参数与实际元素类型对应，再阅读容器或算法操作，会更容易理解。\n\n## 练习\n\n增加 `std::vector<double> values{0.1,0.2,0.3}`，输出求和结果，预期接近 0.6。若用更多位数显示可能看到浮点表示误差，可通过绝对误差容差判断。\n\n再给参数表增加 `mu=0.001`，读取 `rho=1000` 并计算 `nu=mu/rho`，答案为 $10^{-6}$。使用 `at()` 读取必需参数，并尝试拼错键名，观察缺失输入如何被报告。\n",
+    "track": "C++ 入门",
+    "series": "C++ 基础",
+    "sort_order": 508,
+    "status": "published",
+    "cover_url": "/assets/diagrams/cpp-09.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "C++17",
+      "source": "FoamLab 原创示例；教学顺序参考 Wolf Dynamics: C++ A Crash Introduction 与菜鸟教程 C++",
+      "prerequisite": "C++ 08",
+      "duration": "35–50 分钟",
+      "downloads": [
+        {
+          "label": "C++ 09 示例源码",
+          "url": "/downloads/cpp/cpp-09.zip",
+          "description": "包含本课完整源码、编译命令与预期输出。",
+          "kind": "source",
+          "size_bytes": 873,
+          "sha256": "e53f69db19e9d19fd47762f6ebd4617cbfc271bc9f8a19ee187e505d30b18a48"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "cpp-intro-2026-10-02-v1"
+    }
+  },
+  {
+    "slug": "cpp-10",
+    "kind": "lesson",
+    "title": "C++ 10 · 多文件项目、文件输入与调试",
+    "summary": "把数据统计拆成头文件、实现和主程序，读取文件并区分编译、链接与运行错误。",
+    "body": "程序变长后，可以把通用计算放进独立文件，主程序负责输入、调用和输出。本课制作一个读取测点数据并计算平均值的小工具，把前面的函数、容器、异常和文件组织配合起来。\n\n<figure class=\"lesson-figure\"><img src=\"/assets/diagrams/cpp-10.svg\" alt=\"多文件构建\" loading=\"lazy\"><figcaption>多文件构建</figcaption></figure>\n\n## 项目包含哪些文件\n\n```text\ncpp-10/\n├── main.cpp          读取数据并调用统计函数\n├── statistics.hpp    声明统计函数\n├── statistics.cpp    实现统计函数\n└── samples.dat       输入数据\n```\n\n四个文件放在同一个目录。课程下载包已按这个结构准备。\n\n## 头文件：statistics.hpp\n\n```cpp\n#ifndef FOAMLAB_STATISTICS_HPP\n#define FOAMLAB_STATISTICS_HPP\n\n#include <vector>\n\ndouble meanValue(const std::vector<double>& values);\n\n#endif\n```\n\n头文件说明函数接收什么、返回什么，调用者包含它后即可检查函数接口。`#ifndef`、`#define`、`#endif` 组成头文件保护，避免同一编译单元反复包含同一组声明。\n\n## 实现文件：statistics.cpp\n\n```cpp\n#include \"statistics.hpp\"\n#include <stdexcept>\n\ndouble meanValue(const std::vector<double>& values)\n{\n    if (values.empty())\n    {\n        throw std::invalid_argument(\"The input data is empty.\");\n    }\n    double total = 0.0;\n    for (double value : values)\n    {\n        total += value;\n    }\n    return total/static_cast<double>(values.size());\n}\n```\n\n实现文件包含自己的头文件，使声明与定义在编译时保持一致。函数先检查空列表，再累加并除以数量。空数据通过异常交给调用者处理，合法输入返回平均值。\n\n## 主程序：main.cpp\n\n```cpp\n#include \"statistics.hpp\"\n#include <exception>\n#include <fstream>\n#include <iostream>\n#include <vector>\n\nint main()\n{\n    std::ifstream input(\"samples.dat\");\n    if (!input)\n    {\n        std::cerr << \"Cannot open samples.dat\\n\";\n        return 1;\n    }\n\n    std::vector<double> values;\n    double value = 0.0;\n    while (true)\n    {\n        input >> std::ws;\n        if (input.eof())\n        {\n            break;\n        }\n        if (!(input >> value))\n        {\n            std::cerr << \"Input contains an invalid number.\\n\";\n            return 1;\n        }\n        values.push_back(value);\n    }\n\n    try\n    {\n        const double mean = meanValue(values);\n        std::cout << \"Count: \" << values.size() << '\\n';\n        std::cout << \"Mean: \" << mean << '\\n';\n    }\n    catch (const std::exception& error)\n    {\n        std::cerr << error.what() << '\\n';\n        return 1;\n    }\n    return 0;\n}\n```\n\n`std::ifstream` 打开输入文件，离开作用域时自动关闭。相对路径 `samples.dat` 相对于程序运行时的当前目录，因此执行程序前进入项目目录即可。\n\n每轮先执行 `input >> std::ws`，跳过空格、换行和制表符。如果此时到达文件末尾，说明已经没有下一项数据，`break` 结束循环。空文件和末尾只有空白的文件也按这个顺序处理。\n\n还有内容时，`input >> value` 尝试读取一个 `double`。提取成功后才调用 `push_back`；遇到字母、不完整的数字或超出 `double` 范围的数值，立即输出格式错误并返回 1。例如，`3e` 缺少指数，`1e9999` 超出可表示范围。\n\n这里把“读取前检查末尾”和“读取时检查失败”分开。失败的数字提取也可能同时到达文件末尾；在提取失败后只检查 `eof()`，会漏掉末尾的 `3e` 和 `1e9999`。随后调用 `meanValue`，空数据由函数抛出异常，在 `catch` 中显示错误。\n\n## 输入与预期输出\n\n在 `samples.dat` 中放入：\n\n```text\n1\n2\n3\n4\n```\n\n这些数字也可以由空格分隔。程序按照流提取读取浮点数，对空格和换行采用相同的分隔处理。\n\n编译两个源文件并运行：\n\n```bash\ng++ -std=c++17 -Wall -Wextra -Wpedantic -g -O0 \\\n    main.cpp statistics.cpp -o statistics\n./statistics\n```\n\n输出为：\n\n```text\nCount: 4\nMean: 2.5\n```\n\n`-g` 保留调试信息，`-O0` 关闭优化，便于调试时对应源码语句。发布程序时可以采用适当优化选项，但先确认程序逻辑与输入处理正确。\n\n## 编译与链接分别完成什么\n\n每个 `.cpp` 可以先编译成目标文件，再链接：\n\n```bash\ng++ -std=c++17 -Wall -Wextra -Wpedantic -g -O0 -c main.cpp\ng++ -std=c++17 -Wall -Wextra -Wpedantic -g -O0 -c statistics.cpp\ng++ main.o statistics.o -o statistics\n```\n\n`-c` 表示只编译，不生成最终可执行程序。`main.o` 中保留对 `meanValue` 的调用，`statistics.o` 提供它的实现，链接器把它们组合起来。\n\n头文件供编译器读取接口，参与构建的 `.cpp` 提供实现。只编译 `main.cpp` 时，可能出现 `undefined reference to meanValue`，应把实现文件一起交给链接器。\n\n一个可执行程序有一个 `main` 入口。多个独立练习各有自己的 `main.cpp` 时，应分别编译，避免把它们同时链接成同一个程序。\n\n## 三类错误如何定位\n\n| 阶段 | 典型问题 | 检查位置 |\n| --- | --- | --- |\n| 编译 | 语法错误、参数类型不匹配、找不到头文件 | 报错行、函数声明、包含路径 |\n| 链接 | `undefined reference`、重复定义 | 参与链接的源文件及定义数量 |\n| 运行 | 找不到输入、输入格式错误、空数据 | 当前目录、数据内容、错误输出 |\n\n修改头文件后，所有依赖它的源文件都应重新编译。项目变大时由构建工具管理依赖关系；OpenFOAM 使用 `wmake` 和 `Make/files`、`Make/options` 完成相应工作。\n\n## 用断点观察函数输入\n\n安装并配置 GDB 后，可以在终端运行：\n\n```text\ngdb ./statistics\nbreak meanValue\nrun\nnext\ncontinue\nquit\n```\n\n`break` 在函数处设置断点，`run` 启动程序，`next` 执行下一条源码语句，`continue` 继续运行。支持容器显示的调试环境中，可以查看 `values` 的内容与大小，以及循环中的 `total`。\n\n调试时先确认输入，再观察中间值，最后比较返回值。程序能正常结束而结果错误时，这种过程比只查看最终输出更容易找出错误发生的位置。\n\n## 练习与答案要点\n\n将数据改成 `2 4 6 8`，答案应为 5。再分别测试下面几组输入，观察终端输出和退出码：\n\n| `samples.dat` 内容 | 预期结果 | 退出码 |\n| --- | --- | --- |\n| `1 2 3 4` | `Count: 4`、`Mean: 2.5` | 0 |\n| 空文件 | `The input data is empty.` | 1 |\n| `1 2 abc 4` | `Input contains an invalid number.` | 1 |\n| `1 2 3e` | `Input contains an invalid number.` | 1 |\n| `1 2 1e9999` | `Input contains an invalid number.` | 1 |\n\n最后两组输入可以分别保存为带换行和不带换行的文件，两种情况下都应报告格式错误。\n\n再增加一个 `maximumValue` 函数，求列表最大值。答案要点是先检查空列表，用第一个值初始化最大值，再遍历剩余元素比较。对全部为负数的数据，使用零初始化最大值会产生错误，因此这个练习能检验初始化是否合理。\n\n完成本系列后，可进入 [OpenFOAM 编程入门](/read/?slug=programming-00)，把标准 C++ 中的函数、类与容器对应到 OpenFOAM 的程序、场和网格对象。\n",
+    "track": "C++ 入门",
+    "series": "C++ 基础",
+    "sort_order": 509,
+    "status": "published",
+    "cover_url": "/assets/diagrams/cpp-10.svg",
+    "owner": "FoamLab",
+    "metadata": {
+      "version": "C++17",
+      "source": "FoamLab 原创示例；教学顺序参考 Wolf Dynamics: C++ A Crash Introduction 与菜鸟教程 C++",
+      "prerequisite": "C++ 09",
+      "duration": "35–50 分钟",
+      "downloads": [
+        {
+          "label": "C++ 10 示例源码",
+          "url": "/downloads/cpp/cpp-10.zip",
+          "description": "包含本课完整源码、编译命令与预期输出。附 samples.dat 输入文件。",
+          "kind": "source",
+          "size_bytes": 1609,
+          "sha256": "683e3bcf9a38d19234d0bbbbd5d9325e2b9e9631bafd0c04ade0a7cad40690f3"
+        }
+      ],
+      "topics": [],
+      "editorial_revision": "cpp-intro-2026-10-02-v1"
+    }
+  }
+]

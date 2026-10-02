@@ -1,10 +1,11 @@
 ---
 title: "第 17 章　system/ 下的其他字典"
 layout: reference
-description: "OpenCFD v2512 system/ 下的其他字典；包含原理、示例与版本核对。"
+description: "system/ 下的其他字典：用法与配置实例。"
+cms_slug: "reference-guide-17"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>17.1 decomposeParDict（并行分区）</h2>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><h2>17.1 decomposeParDict（并行分区）</h2>
 <pre><code class="language-plaintext">numberOfSubdomains  8;          // 必须等于 mpirun -np 的数字
 
 method              scotch;     // 分区算法
@@ -214,4 +215,3 @@ origin      (0.5 0.5 0);
 radius      0.15;
 direction   (1 0 0);</code></pre>
 <p>比 setFields 精细：界面所在单元会得到精确的部分体积分数（而不是 0 或 1），用于界面收敛性验证。</p>
-{% endraw %}

@@ -1,19 +1,11 @@
 ---
-title: "mpirunDebug  记录 MPI 分进程日志或启动调试"
+title: "mpirunDebug · 计算前完成分区"
 layout: reference
 description: "计算前完成分区。图形调试模式需配置 xterm 及对应调试器。"
+cms_slug: "command-mpirundebug"
 ---
-{% raw %}
-<div class="source-note">v2512 脚本源码已收录；未执行脚本。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>计算前完成分区。图形调试模式需配置 xterm 及对应调试器。</p><h2>v2512 源码中的用途</h2><p>Invoke mpirun with separate per-processor log files etc. Requires bash on all processors.</p><h2>使用入口</h2><pre><code class="language-bash">mpirunDebug -log -np 4 simpleFoam -parallel</code></pre><h2>使用条件与核对</h2><p>计算前完成分区。图形调试模式需配置 xterm 及对应调试器。 用法：mpirunDebug [选项] -np N 程序 参数 示例：mpirunDebug -log -np 4 simpleFoam -parallel
-Invoke mpirun with separate per-processor log files etc. Requires bash on all processors.
-本条基于固定版本脚本源码，运行前检查帮助与依赖。
-源码帮助选项：-clean -decompose-dict -decomposeParDict -help -local -log -method -no-core -normal -quick -remote -spawn -valgrind -xlog -xvalgrind -yes</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/mpirundebug.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 script source evidence
-Command: mpirunDebug
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/mpirunDebug
 
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-Usage: mpirunDebug [OPTION] -np &lt;N&gt; &lt;executable&gt; &lt;args&gt;
+<p>计算前完成分区。图形调试模式需配置 xterm 及对应调试器。</p><h2>用法</h2><pre><code class="language-bash">mpirunDebug -log -np 4 simpleFoam -parallel</code></pre><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-method=MODE</td><td>The run mode</td></tr><tr><td>-spawn=TYPE</td><td>Spawn type: (1) local (2) remote</td></tr><tr><td>-yes</td><td>Start without additional prompting</td></tr><tr><td>-local</td><td>Same as -spawn=1</td></tr><tr><td>-remote</td><td>Same as -spawn=2</td></tr><tr><td>-clean</td><td>Remove log and startup files</td></tr><tr><td>-no-core</td><td>Restrict core dump to 0 size</td></tr><tr><td>-quick</td><td>Valgrind with &#x27;summary&#x27; (not &#x27;full&#x27;) and use -no-core</td></tr><tr><td>-decompose-dict=&lt;file&gt;</td><td>Specific decomposeParDict name</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-decomposeParDict &lt;file&gt;</td><td>使用指定的并行分解字典。</td></tr><tr><td>-normal</td><td>= -method=0</td></tr><tr><td>-log</td><td>= -method=3</td></tr><tr><td>-xlog</td><td>= -method=4  (log + xterm)</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: mpirunDebug [OPTION] -np &lt;N&gt; &lt;executable&gt; &lt;args&gt;
 
 options:
   -method=MODE  The run mode
@@ -44,5 +36,4 @@ Common shortcuts. Sets default spawn to -local, add -yes.
   -log          = -method=3
   -xlog         = -method=4  (log + xterm)
   -valgrind     = -method=5l (valgrind + log)
-  -xvalgrind    = -method=5  (valgrind + xterm)</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/mpirunDebug">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+  -xvalgrind    = -method=5  (valgrind + xterm)</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/mpirunDebug">源码与说明</a> · <a href="/assets/command-help/mpirundebug.txt">帮助文本</a></p>

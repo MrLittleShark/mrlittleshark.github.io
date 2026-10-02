@@ -1,43 +1,41 @@
 ---
-title: "system/controlDict → functions → yPlus · yPlus"
+title: "yPlus"
 layout: reference
-description: "表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。"
+description: "根据流场和近壁模型计算壁面的无量纲距离 y+，用于检查近壁网格。"
 dictionary: true
+cms_slug: "dictionary-yplus"
 ---
-{% raw %}
-<div class="source-note">适用版本：OpenCFD OpenFOAM v2512。示例逐字提取自固定版本源码，未宣称本页每个算例均已完整运行。配置文件是算例的一部分，不能脱离网格、模型、初始场与依赖文件单独使用。</div><p>表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。</p><figure><img src="/assets/diagrams/reference-7.svg" alt="函数对象配置的数据依赖关系" loading="lazy"><figcaption>配置关系示意图。箭头表示准备与检查顺序，不表示求解器对所有文件采用固定读取顺序。</figcaption></figure><h2>配置原理与基础示例</h2><p class="source-note">配置位置：<code>system/controlDict → functions → yPlus</code>。下文为参考示例与说明，片段需按求解器、字段、边界名称及几何条件补充；各文件不能任意组合为一个完整算例。</p><h2>关键条目索引</h2><p><code>type</code> · <code>yPlus</code> · <code>libs</code> · <code>executeControl</code> · <code>writeControl</code></p><h2>关联命令</h2><p><a href="/commands/?q=simpleFoam">simpleFoam</a> · <a href="/commands/?q=postProcess">postProcess</a></p><h2>本机核对</h2><pre><code class="language-bash">printf '%s\n' &quot;$WM_PROJECT_VERSION&quot;
-foamDictionary system/controlDict -entry functions -value
-simpleFoam -help</code></pre><h2>10.6 统计量与派生场</h2><div class="table-scroll"><table>
-<tr><th>类型</th><th>主要参数</th><th>配置与调用示例</th></tr>
-<tr><td>fieldAverage</td><td>fields 下每场的 mean、prime2Mean、base</td><td>U { mean on; prime2Mean on; base time; }；生成 UMean 等</td></tr>
-<tr><td>fieldMinMax</td><td>fields、location、mode</td><td>fields (p U); location true;，输出极值及位置</td></tr>
-<tr><td>volFieldValue</td><td>regionType、name、operation、fields</td><td>regionType all; operation volAverage; fields (T);</td></tr>
-<tr><td>surfaceFieldValue</td><td>regionType patch、name、operation、fields</td><td>name outlet; operation sum; fields (phi);，输出带法向符号的通量</td></tr>
-<tr><td>solverInfo</td><td>fields</td><td>fields (p U);，记录各方程初始残差</td></tr>
-<tr><td>yPlus</td><td>湍流模型及壁面量</td><td>simpleFoam -postProcess -func yPlus -latestTime</td></tr>
-<tr><td>wallShearStress</td><td>patches、writeControl</td><td>simpleFoam -postProcess -func wallShearStress -latestTime</td></tr>
-<tr><td>wallHeatFlux</td><td>热模型和壁面</td><td>通过相应传热求解器 -postProcess -func wallHeatFlux</td></tr>
-<tr><td>CourantNo</td><td>通量及密度条件</td><td>postProcess -func CourantNo -latestTime，读取所需通量等场</td></tr>
-<tr><td>mag、grad、div</td><td>操作字段</td><td>postProcess -func &#x27;mag(U)&#x27; -latestTime</td></tr>
-<tr><td>vorticity、Q</td><td>速度梯度派生量</td><td>postProcess -func vorticity -latestTime</td></tr>
-<tr><td>MachNo</td><td>速度和热物性声速</td><td>通过可压缩求解器 -postProcess -func MachNo</td></tr>
-<tr><td>streamLine</td><td>seedSampleSet、direction、lifeTime、trackLength 等</td><td>foamGetDict streamlines 获取模板，随后配置种子点</td></tr>
-</table></div>
-<p>表中名称包括函数对象类型和预配置函数。postProcess -list 列出可直接通过 -func 调用的预配置名称；其余类型按 functions 子字典配置。</p>
-<pre><code class="language-openfoam">statistics
+
+<p>根据流场和近壁模型计算壁面的无量纲距离 y+，用于检查近壁网格。</p><p>位置：<code>system/controlDict → functions → yPlus</code></p><p><code>yPlus</code> 计算壁面附近的无量纲距离，用于判断第一层单元与近壁模型的配合情况：</p>
+<p>\[
+y^+=\frac{u_\tau y}{\nu},\qquad u_\tau=\sqrt{|\tau_w|/\rho}.
+\]</p>
+<p>这里 \(y\) 是壁面到第一层单元中心的距离。具体计算路径会使用所选湍流模型及壁面函数提供的信息。</p>
+<h3>示例：求解时写出 y⁺</h3>
+<p>在已有湍流模型的 <code>system/controlDict/functions</code> 中加入：</p>
+<pre><code class="language-foam">wallResolution
 {
-    type fieldAverage;
-    libs (&quot;libfieldFunctionObjects.so&quot;);
-    timeStart 0.2;
-    executeControl timeStep;
-    executeInterval 1;
+    type yPlus;
+    libs (fieldFunctionObjects);
     writeControl writeTime;
-    fields
-    (
-        U { mean on; prime2Mean on; base time; }
-        p { mean on; prime2Mean off; base time; }
-    );
-}</code></pre><h2>从真实配置理解关键条目</h2><div class="table-scroll"><table><thead><tr><th>条目</th><th>含义与使用条件</th></tr></thead><tbody><tr><td>application</td><td>供运行脚本查询的求解器名称；直接在终端执行程序时，以执行的命令为准。</td></tr><tr><td>writeControl</td><td>输出触发方式，其值决定 writeInterval 表示步数、物理时间或时钟时间。</td></tr><tr><td>writeInterval</td><td>输出间隔，需要结合 writeControl 理解单位与触发时刻。</td></tr><tr><td>functions</td><td>函数对象实例集合，可以记录残差、采样、积分或计算派生量。</td></tr><tr><td>type</td><td>运行时选择的模型或操作类型，同一个关键字在不同子字典中具有不同注册表。</td></tr><tr><td>libs</td><td>额外加载的共享库。函数对象或自定义边界未注册时，应检查库名与编译版本。</td></tr><tr><td>fields</td><td>目标场列表。场名、数据类型和计算时刻必须满足相应函数对象的要求。</td></tr><tr><td>patches</td><td>参与该操作的边界列表，必须对应网格中的实际 patch 名称。</td></tr><tr><td>rho</td><td>密度或密度场引用；是否为量纲标量、常量或场名由模型定义。</td></tr><tr><td>region</td><td>目标网格区域名称；多区域场与网格路径中应保持一致。</td></tr><tr><td>executeControl</td><td>函数对象执行触发方式，与写出频率可以不同。</td></tr></tbody></table></div><h3>教程保留的参数注释</h3><p>下面的英文说明直接来自本页选取的 v2512 文件注释。条目含义受其所在子字典限制，不能仅凭相同键名推断为同一个参数。</p><div class="table-scroll"><table><thead><tr><th>条目</th><th>源码注释</th></tr></thead><tbody><tr><td>result</td><td>Optional entries</td></tr><tr><td>CofR</td><td>bump midpoint</td></tr><tr><td>lRef</td><td>length of bump</td></tr><tr><td>Aref</td><td>mesh span = 2, bump height = 0.05; 2*0.05=0.1</td></tr></tbody></table></div><h2>v2512 完整示例与对照</h2><p>共选取 3 份不同配置，保留文件头、注释和 include 指令。相对路径引用的文件仍需从对应教程目录取得。对照时先比较 application、模型名称和字段，再比较数值参数。</p><h3>示例 1 · incompressible/simpleFoam/turbulentFlatPlate/setups.orig/common</h3><p>原始路径：<code>tutorials/incompressible/simpleFoam/turbulentFlatPlate/setups.orig/common/system/controlDict</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/turbulentFlatPlate/setups.orig/common/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/yplus/1-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/turbulentFlatPlate/setups.orig/common">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+    log true;
+}
+</code></pre>
+<p><code>writeTime</code> 随整场结果保存 <code>yPlus</code> 字段，<code>log true</code> 打印各壁面的统计。可以在 ParaView 中只显示目标壁面，用 <code>yPlus</code> 着色，定位分离、再附着和局部加速附近的变化。</p>
+<p>对已完成的 <code>simpleFoam</code> 案例也可执行：</p>
+<pre><code class="language-bash">simpleFoam -postProcess -func yPlus -latestTime
+</code></pre>
+<p>求解器的后处理模式会构造所需模型，<code>-latestTime</code> 指定最新结果。若提示模型或字段缺失，先检查 <code>turbulenceProperties</code> 和对应 <code>k</code>、<code>omega</code>、<code>epsilon</code> 等场。</p>
+<p>解析近壁区常从 \(y^+\approx1\) 设计；传统高雷诺数壁面函数通常安排在适合壁面律的区域。查看分布时同时记录首层厚度、总层厚和覆盖情况，便于解释壁面剪切与热流的网格敏感性。</p>
+<h2>完整案例配置</h2><p>以下文件保留原始注释。需要配套网格、初始场或 include 文件时，从相应案例目录一起取得。</p><details class="reference-example" open><summary>示例 1 · incompressible/simpleFoam/turbulentFlatPlate/setups.orig/common</summary><p>湍流平板算例输出各壁面的 y⁺，检查近壁分辨率与壁面处理是否匹配。</p>
+<ul>
+<li><code>type yPlus</code>、<code>libs (fieldFunctionObjects)</code> 启用计算。</li>
+<li><code>writeFields yes</code> 保存空间分布。v2512 的 yPlus 遍历所有壁面；文件中的 <code>patches (fixedWall)</code> 不限制该对象的计算范围，可在结果中单独查看 fixedWall。</li>
+<li><code>writeControl writeTime</code> 跟随每 100 步的主场写出。</li>
+<li>配置还输出速度极值、单元中心和壁面剪应力，便于联合分析。</li>
+</ul>
+<p>调整首层高度后比较沿壁 y⁺ 分布和摩阻系数，目标范围应由选定湍流模型与壁面处理确定。</p>
+<p><a href="/assets/examples/v2512/yplus/1-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/turbulentFlatPlate/setups.orig/common/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/turbulentFlatPlate/setups.orig/common">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -107,7 +105,15 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><p>本例包含外部引用：&quot;writeCellCentres&quot;；&quot;wallShearStress&quot;。下载单个文件不会自动取得这些依赖。</p><h3>示例 2 · incompressible/simpleFoam/bump2D/setups.orig/common</h3><p>原始路径：<code>tutorials/incompressible/simpleFoam/bump2D/setups.orig/common/system/controlDict</code>；求解器：<code>simpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/bump2D/setups.orig/common/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/yplus/2-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/bump2D/setups.orig/common">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 2 · incompressible/simpleFoam/bump2D/setups.orig/common</summary><p>bump2D 用 y⁺、壁面剪应力、压力系数与总载荷共同检查凸起壁面附近流动。</p>
+<ul>
+<li>yPlus 开启 <code>writeFields yes</code> 并在 writeTime 保存。</li>
+<li>wallShearStress 对 <code>bump</code> patch 输出壁面剪切。</li>
+<li>pressure 函数对象以 <code>UInf (69.44 0 0)</code>、<code>rhoInf 1</code> 等参考量计算 Cp。</li>
+<li>主场每 100 次迭代写出，最多保留最近 3 份结果。</li>
+</ul>
+<p>改变近壁网格后同时比较 y⁺、Cp 和分离位置，保留同一参考速度与几何尺度。</p>
+<p><a href="/assets/examples/v2512/yplus/2-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/bump2D/setups.orig/common/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/simpleFoam/bump2D/setups.orig/common">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -219,7 +225,15 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><h3>示例 3 · incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase</h3><p>原始路径：<code>tutorials/incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase/system/controlDict</code>；求解器：<code>pimpleFoam</code></p><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase/system/controlDict">查看固定版本源码</a> · <a href="/assets/examples/v2512/yplus/3-controlDict.txt">下载完整配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase">查看配套目录</a></p><pre><code class="language-openfoam">/*--------------------------------*- C++ -*----------------------------------*\
+// ************************************************************************* //</code></pre></details><details class="reference-example"><summary>示例 3 · incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase</summary><p>绕立方体的 LES 完整算例把近壁分辨率、涡结构和时间统计一并输出。</p>
+<ul>
+<li>yPlus 使用 <code>fieldFunctionObjects</code>，<code>writeFields yes</code> 保存场。</li>
+<li><code>writeControl writeTime</code> 跟随主场，每 100 步写出；固定 <code>deltaT 0.002</code> 时对应 0.2 s。</li>
+<li>fieldAverage 从 <code>timeStart 10</code> 开始，对 U、p 计算均值和二阶脉动量。</li>
+<li>Q、vorticity 与 DESField 提供流动结构和模型区域信息。</li>
+</ul>
+<p>比较壁面模型或网格时固定统计时段，再看 y⁺、平均流动与波动强度是否共同变化。</p>
+<p><a href="/assets/examples/v2512/yplus/3-controlDict.txt">下载配置</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase/system/controlDict">源码</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pimpleFoam/LES/surfaceMountedCube/fullCase">案例目录</a></p><pre><code class="language-foam">/*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  v2512                                 |
@@ -351,9 +365,4 @@ functions
 }
 
 
-// ************************************************************************* //</code></pre><p>本例包含外部引用：&quot;sample&quot;。下载单个文件不会自动取得这些依赖。</p><h2>配套命令与验证次序</h2><p><a href="/commands/simplefoam/">simpleFoam</a> · <a href="/commands/postprocess/">postProcess</a></p><pre><code class="language-bash"># 在完整算例目录中检查；解析成功不等于模型和物理设置正确
-printf &#x27;%s\n&#x27; &quot;&#36;WM_PROJECT_VERSION&quot;
-foamDictionary &quot;system/controlDict&quot; -keywords
-# 如包含 #codeStream / #calc，展开时可能编译或执行算例代码；先阅读其内容
-# foamDictionary &quot;system/controlDict&quot; -expand</code></pre><div class="table-scroll"><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table></div><h2>来源与许可</h2><p>本页完整源码示例来自 <a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/">OpenFOAM-v2512 官方标签</a>，保留原文件版权头，适用 <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0 或更新版本许可</a>。图示为本站绘制，配置解释由本站整理。安装缺失的模块、模型或库需单独核对。</p>
-{% endraw %}
+// ************************************************************************* //</code></pre></details><h2>相关命令</h2><p><a href="/commands/simplefoam/">simpleFoam</a> · <a href="/commands/postprocess/">postProcess</a></p><h2>常见问题</h2><table><thead><tr><th>现象</th><th>检查方法</th></tr></thead><tbody><tr><td>函数对象未执行</td><td>核对 libs、type、enabled、executeControl 与选定时间；求解器创建的模型对象可能是必要依赖。</td></tr><tr><td>输出路径找不到</td><td>检查 postProcessing/实例名/起始时刻，部分函数对象把场写入常规时间目录。</td></tr><tr><td>统计量定义不一致</td><td>明确面积/体积/时间加权，检查 fields、operation 与 base 的含义。</td></tr></tbody></table><p class="figure-source">配置来源：<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials">OpenFOAM v2512 教程</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/COPYING">GPL-3.0-or-later</a>。</p>

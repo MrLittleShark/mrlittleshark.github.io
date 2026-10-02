@@ -1,0 +1,65 @@
+[
+  {
+    "dictionary": "thermophysicalProperties",
+    "path": "tutorials/heatTransfer/buoyantPimpleFoam/hotRoom/constant/thermophysicalProperties",
+    "download": "/assets/examples/v2512/thermophysicalproperties/authored-hotRoom-thermophysicalProperties.txt",
+    "sha256": "a8ce5be6e025a285ed002ccf73891189c0581959c2fb95795b0f0c1aa8b5c64c",
+    "lines": 49,
+    "case": "tutorials/heatTransfer/buoyantPimpleFoam/hotRoom",
+    "application": "buoyantPimpleFoam"
+  },
+  {
+    "dictionary": "thermophysicalProperties",
+    "path": "tutorials/heatTransfer/chtMultiRegionFoam/multiRegionHeater/constant/heater/thermophysicalProperties",
+    "download": "/assets/examples/v2512/thermophysicalproperties/authored-multiRegionHeater-solid-thermophysicalProperties.txt",
+    "sha256": "18b0c2618b5d23efe015815d279997086436244b33d38a89424d1672c0ce2a81",
+    "lines": 50,
+    "case": "tutorials/heatTransfer/chtMultiRegionFoam/multiRegionHeater",
+    "application": "chtMultiRegionFoam"
+  },
+  {
+    "dictionary": "radiationProperties",
+    "path": "tutorials/heatTransfer/chtMultiRegionSimpleFoam/multiRegionHeaterRadiation/constant/topAir/radiationProperties",
+    "download": "/assets/examples/v2512/radiationproperties/authored-multiRegionHeater-viewFactor-radiationProperties.txt",
+    "sha256": "a933f4ec6e563a3ecfa79e88997b04e13ca0aeb61f6646b8f998d445bb7187ff",
+    "lines": 38,
+    "case": "tutorials/heatTransfer/chtMultiRegionSimpleFoam/multiRegionHeaterRadiation",
+    "application": "chtMultiRegionSimpleFoam"
+  },
+  {
+    "dictionary": "radiationProperties",
+    "path": "tutorials/heatTransfer/buoyantSimpleFoam/hotRadiationRoom/constant/radiationProperties",
+    "download": "/assets/examples/v2512/radiationproperties/authored-hotRadiationRoom-P1-radiationProperties.txt",
+    "sha256": "8291e167df96f05a62b3d85cb8f1b426d165247be4accfcdeb29099c3974835a",
+    "lines": 38,
+    "case": "tutorials/heatTransfer/buoyantSimpleFoam/hotRadiationRoom",
+    "application": "buoyantSimpleFoam"
+  },
+  {
+    "dictionary": "dynamicMeshDict",
+    "path": "tutorials/incompressible/pimpleFoam/laminar/mixerVesselAMI2D/mixerVesselAMI2D/constant/dynamicMeshDict",
+    "download": "/assets/examples/v2512/dynamicmeshdict/authored-mixerVesselAMI2D-dynamicMeshDict.txt",
+    "sha256": "640f0ae14a1a17dd9bd2b51aa36be8f385b8491756d075e2b1343ba8bce7b8cf",
+    "lines": 30,
+    "case": "tutorials/incompressible/pimpleFoam/laminar/mixerVesselAMI2D/mixerVesselAMI2D",
+    "application": "pimpleFoam"
+  },
+  {
+    "dictionary": "fvOptions",
+    "path": "tutorials/incompressible/pimpleFoam/LES/periodicHill/steadyState/system/fvOptions",
+    "download": "/assets/examples/v2512/fvoptions/authored-periodicHill-meanVelocityForce-fvOptions.txt",
+    "sha256": "10a7f3242db21f1a2a9cf781bb8369b8112d8b1b26a1fb761b3ece27098b641e",
+    "lines": 29,
+    "case": "tutorials/incompressible/pimpleFoam/LES/periodicHill/steadyState",
+    "application": "simpleFoam"
+  },
+  {
+    "dictionary": "fvOptions",
+    "path": "tutorials/incompressible/pisoFoam/laminar/porousBlockage/constant/fvOptions",
+    "download": "/assets/examples/v2512/fvoptions/authored-porousBlockage-DarcyForchheimer-fvOptions.txt",
+    "sha256": "4018b5017648ce8c2109e37125ea6612459cff76288c8dc6f719b5182b202efe",
+    "lines": 46,
+    "case": "tutorials/incompressible/pisoFoam/laminar/porousBlockage",
+    "application": "pisoFoam"
+  }
+]

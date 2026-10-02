@@ -1,19 +1,11 @@
 ---
-title: "foamJob  启动后台计算并记录日志"
+title: "foamJob · 默认日志名为 log"
 layout: reference
 description: "默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。"
+cms_slug: "command-foamjob"
 ---
-{% raw %}
-<div class="source-note">v2512 脚本源码已收录；未执行脚本。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。</p><h2>v2512 源码中的用途</h2><p>Run an OpenFOAM job in background. Redirects the output to &#x27;log&#x27; in the case directory.</p><h2>使用入口</h2><pre><code class="language-bash">foamJob -log-app simpleFoam</code></pre><h2>使用条件与核对</h2><p>默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。 用法：foamJob [选项] 应用 [应用参数] 示例：foamJob -log-app simpleFoam
-Run an OpenFOAM job in background. Redirects the output to &#x27;log&#x27; in the case directory.
-本条基于固定版本脚本源码，运行前检查帮助与依赖。
-源码帮助选项：-append -case -help -log -log-app -no-check -no-log -parallel -screen -wait</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/foamjob.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 script source evidence
-Command: foamJob
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamJob
 
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-Usage: foamJob [OPTION] &lt;application&gt; ...
+<p>默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。</p><h2>用法</h2><pre><code class="language-bash">foamJob -log-app simpleFoam</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">foamJob -log-app simpleFoam -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-screen</td><td>also send output to screen</td></tr><tr><td>-append</td><td>append to existing log file instead of overwriting it</td></tr><tr><td>-log=FILE</td><td>specify the log file</td></tr><tr><td>-log-app</td><td>Use log.{appName} for the log file</td></tr><tr><td>-no-check</td><td>run without fewer checks (eg, processor dirs etc)</td></tr><tr><td>-no-log</td><td>run without log file</td></tr><tr><td>-wait</td><td>wait for execution to complete (when not using -screen)</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamJob [OPTION] &lt;application&gt; ...
 options:
   -case &lt;dir&gt;       specify alternative case directory, default is the cwd
   -parallel         run in parallel (with mpirun)
@@ -27,5 +19,4 @@ options:
   -help             print the usage
 
 Run an OpenFOAM job in background, redirecting output to a &#x27;log&#x27; file
-in the case directory</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamJob">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+in the case directory</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/foamJob">源码与说明</a> · <a href="/assets/command-help/foamjob.txt">帮助文本</a></p>

@@ -4,10 +4,10 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'.openfoam-work/repla
 (async()=>{const browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage({viewport:{width:1440,height:1050}});const errors=[],checks=[];page.on('pageerror',e=>errors.push(e.message));
 async function go(route,ready){await page.goto(origin+route,{waitUntil:'networkidle'});if(ready)await page.locator(ready).first().waitFor({timeout:20000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,'horizontal overflow '+route);checks.push(route);console.log('PASS '+route);}
 await go('/','.science-hero');assert.equal(await page.locator('h1').count(),1);assert(!await page.locator('main').innerText().then(x=>x.includes('图片应该解释结果')||x.includes('把问题描述清楚')));await page.screenshot({path:path.join(out,'home-final-desktop.png'),fullPage:true,animations:'disabled'});
-for(const [route,count] of [['courses',46],['programming',17],['tools',6],['resources',7],['authors',1],['assignments',3],['announcements',1],['recommendations',15]]){await go('/'+route+'/','.lab-card');assert((await page.locator('.lab-card').count())>=count,route+' count');}
-await go('/courses/','.lab-card-download');assert.equal(await page.locator('.lab-card-download').count(),46);
-await go('/topics/','.topic-collection');assert.equal(await page.locator('.topic-collection').count(),4);
-for(const key of ['turbulence','multiphase','meshing','dynamic-mesh']){
+for(const [route,count] of [['courses',72],['programming',20],['linux',8],['cpp',10],['tools',6],['resources',8],['authors',2],['assignments',3],['announcements',1],['recommendations',15]]){await go('/'+route+'/','.lab-card');assert((await page.locator('.lab-card').count())>=count,route+' count');}
+await go('/courses/','.lab-card-download');assert.equal(await page.locator('.lab-card-download').count(),72);
+await go('/topics/','.topic-collection');assert.equal(await page.locator('.topic-collection').count(),5);
+for(const key of ['finite-volume','turbulence','multiphase','meshing','dynamic-mesh']){
  await go('/topics/'+key+'/','#topic-cases');assert((await page.locator('#topic-courses .lab-card').count())>0);assert((await page.locator('#topic-cases [download]').count())>0);assert.equal(await page.locator('.math-error').count(),0);
 }
 await page.locator('.figure-viewable').first().click();assert(await page.locator('#figure-dialog').evaluate(e=>e.open));await page.waitForFunction(()=>document.querySelector('.figure-dialog-image img')?.naturalWidth>0);assert((await page.locator('.figure-dialog-source').innerText()).includes('Wolf Dynamics'));await page.keyboard.press('Escape');
@@ -19,8 +19,8 @@ await go('/commands/?q=checkMesh','.command-card');assert(await page.getByRole('
 await go('/commands/blockmesh/','[data-cms-slug] .prose');await page.locator('#cms-reference-comments').waitFor({timeout:20000});assert(!(await page.locator('main').innerText()).includes('内容尚未发布'));assert((await page.locator('.prose pre').count())>0);
 await go('/dictionaries/?q=locationInMesh','.dictionary-card');assert((await page.locator('.dictionary-card').count())>0);
 const dicts=JSON.parse(fs.readFileSync(path.join(root,'source-openfoam/assets/dictionaries.json'),'utf8'));await go(dicts.find(x=>x.name==='controlDict').url,'[data-cms-slug] .prose');assert((await page.locator('.prose pre').count())>=2);
-await go('/support/','.support-inactive');assert.equal(await page.locator('.support-option').count(),0);
-await go('/design/','.prose');assert((await page.locator('.prose').innerText()).includes('17 px'));
+await go('/support/','.support-option');assert.equal(await page.locator('.support-option').count(),2);
+await go('/admin/design/','#admin-document-state [data-lab-login]');assert(await page.locator('#admin-document-content').isHidden());assert(!(await page.locator('main').innerText()).includes('17 px'));
 await go('/community/','#new-topic');assert(await page.locator('#new-topic').isVisible());
 await go('/admin/','[data-lab-login]');assert((await page.locator('#cms-root').innerText()).includes('GitHub'));
 await go('/account/','#sign-in');await page.evaluate(()=>window.foamAuth.ready);assert(await page.locator('#sign-in').isEnabled());assert(await page.locator('[name=display_name]').isDisabled());

@@ -1,26 +1,11 @@
 ---
-title: "stitchMesh  缝合两个网格边界"
+title: "stitchMesh · -perfect 要求几何匹配；其余接口可按相应条件采用 -partial 或 -integra"
 layout: reference
 description: "-perfect 要求几何匹配；其余接口可按相应条件采用 -partial 或 -integral。"
+cms_slug: "command-stitchmesh"
 ---
-{% raw %}
-<div class="source-note">v2512 帮助命令退出码 0。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>-perfect 要求几何匹配；其余接口可按相应条件采用 -partial 或 -integral。</p><h2>v2512 源码中的用途</h2><p>&#x27;Stitches&#x27; a mesh. Takes a mesh and two patches and merges the faces on the two patches (if geometrically possible) so the faces become internal. Can do - &#x27;perfect&#x27; match: faces and points on patches align exactly. Order might be different though. - &#x27;integral&#x27; match: where the surfaces on both patches exactly match but the individual faces not - &#x27;partial&#x27; match: where the non-overlapping part of the surface remains in the respective patch. Note : Is just a front-end to perfectInterface/slidingInterface. Comparable to running a meshModifier of the form (if masterPatch is called &quot;M&quot; and slavePatch &quot;S&quot;):</p><h2>使用入口</h2><pre><code class="language-bash">stitchMesh -perfect sideA sideB -overwrite</code></pre><h2>使用条件与核对</h2><p>-perfect 要求几何匹配；其余接口可按相应条件采用 -partial 或 -integral。 用法：stitchMesh [选项] 主patch 从patch 示例：stitchMesh -perfect sideA sideB -overwrite
-源码说明：&#x27;Stitches&#x27; a mesh. Takes a mesh and two patches and merges the faces on the two patches (if geometrically possible) so the faces become internal. Can do - &#x27;perfect&#x27; match: faces and points on patches align exactly. Order might be different though. - &#x27;integral&#x27; match: where the surfaces on both patches exactly match but the individual faces not - &#x27;partial&#x27; match: where the non-overlapping part of the surface remains in the respective patch. Note : Is just a front-end to perfectInterface/slidingInterface. Comparable to running a meshModifier of the form (if masterPatch is called &quot;M&quot; and slavePatch &quot;S&quot;):
-核验范围：v2512 帮助命令退出码 0；未据此宣称完整算例通过。
-已记录的选项：-case -debug-switch -dict -doc -doc-source -fileHandler -help -help-compat -help-full -help-man -help-notes -info-switch -integral -intermediate -lib -no-libs -opt-switch -overwrite -partial -perfect -region -toleranceDict</p><h2>同版本官方教程</h2><p>以下链接直接指向 OpenFOAM-v2512 标签中的教程目录。先阅读 Allrun 确定网格生成、初始化和依赖，再在自己的工作目录运行。列出教程不表示本网站已执行它的全部计算。</p><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/stitchMesh/simple-cube1">mesh/stitchMesh/simple-cube1</a></li></ul><pre><code class="language-bash">mkdir -p &quot;&#36;FOAM_RUN&quot;
-cd &quot;&#36;FOAM_RUN&quot;
-# 先选择一个尚不存在的新目录；保留原教程
-cp -r &quot;&#36;FOAM_TUTORIALS/mesh/stitchMesh/simple-cube1&quot; ./stitchMesh-study
-cd ./stitchMesh-study
-ls
-# 查看运行流程后，再决定执行哪些步骤
-sed -n &#x27;1,200p&#x27; Allrun</code></pre><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/stitchmesh.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 command reference
-Command: stitchMesh
-Evidence: help-verified
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/stitchMesh/stitchMesh.C
 
-
-Usage: stitchMesh [OPTIONS] [&lt;master&gt; &lt;slave&gt;]
+<p>-perfect 要求几何匹配；其余接口可按相应条件采用 -partial 或 -integral。</p><h2>用法</h2><pre><code class="language-bash">stitchMesh -perfect sideA sideB -overwrite</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">stitchMesh -perfect sideA sideB -overwrite -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-integral</td><td>Couple integral master/slave patches (2 argument mode: default)</td></tr><tr><td>-intermediate</td><td>Write intermediate stages, not just the final result</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-partial</td><td>Couple partially overlapping master/slave patches (2 argument mode)</td></tr><tr><td>-perfect</td><td>Couple perfectly aligned master/slave patches (2 argument mode)</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><h2>配套算例</h2><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/stitchMesh/simple-cube1">mesh/stitchMesh/simple-cube1</a></li></ul><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: stitchMesh [OPTIONS] [&lt;master&gt; &lt;slave&gt;]
 Arguments:
   &lt;master&gt;          The master patch name (non-dictionary mode)
   &lt;slave&gt;           The slave patch name (non-dictionary mode)
@@ -67,5 +52,4 @@ two arguments (master/slave patch names).
 
 Using: OpenFOAM-2512 (2512) - visit www.openfoam.com
 Build: _bd2b6720-20260127
-Arch:  LSB;label=32;scalar=64</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/stitchMesh/stitchMesh.C">对应源码或配套工具文档</a> · <a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/stitchMesh/Make/files">Make/files 编译目标</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+Arch:  LSB;label=32;scalar=64</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/utilities/mesh/manipulation/stitchMesh/stitchMesh.C">源码与说明</a> · <a href="/assets/command-help/stitchmesh.txt">帮助文本</a></p>

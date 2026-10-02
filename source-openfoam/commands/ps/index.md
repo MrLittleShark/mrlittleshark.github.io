@@ -1,8 +1,8 @@
 ---
-title: "ps"
+title: "ps · 查看当前用户的进程"
 layout: reference
 description: "查看当前用户的进程。"
+cms_slug: "command-ps"
 ---
-{% raw %}
-<div class="source-note">配套命令说明；不计入 278 个核心编译目标。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>查看当前用户的进程。</p><h2>使用入口</h2><pre><code class="language-bash">ps -u &quot;&#36;USER&quot;</code></pre><h2>使用条件与核对</h2><p>查看当前用户的进程。 示例中的算例名、路径与主机名须按实际环境替换。</p><h2>来源与版本边界</h2><p><a href="https://gitlab.com/procps-ng/procps">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+
+<p>查看当前用户的进程。</p><h2>用法</h2><pre><code class="language-bash">ps -u &quot;$USER&quot;</code></pre><h2>参考</h2><p><a href="https://gitlab.com/procps-ng/procps">源码与说明</a></p>

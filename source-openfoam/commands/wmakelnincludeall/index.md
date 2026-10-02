@@ -1,20 +1,12 @@
 ---
-title: "wmakeLnIncludeAll · OpenFOAM 官方脚本"
+title: "wmakeLnIncludeAll · 为目录树中的库生成 lnInclude 链接目录"
 layout: reference
-description: "Find directories with a 'Make/files' containing a 'LIB =' directive and execute 'wmakeLnInclude' for each one"
+description: "为目录树中的库生成 lnInclude 链接目录。"
+cms_slug: "command-wmakelnincludeall"
 ---
-{% raw %}
-<div class="source-note">v2512 脚本源码已收录；未执行脚本。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div><p>Find directories with a &#x27;Make/files&#x27; containing a &#x27;LIB =&#x27; directive and execute &#x27;wmakeLnInclude&#x27; for each one</p><h2>v2512 源码中的用途</h2><p>Find directories with a &#x27;Make/files&#x27; containing a &#x27;LIB =&#x27; directive and execute &#x27;wmakeLnInclude&#x27; for each one</p><h2>使用入口</h2><pre><code class="language-bash"># 查看安装中的脚本；这条命令不会执行脚本
-sed -n &#x27;1,180p&#x27; &quot;&#36;WM_PROJECT_DIR/wmake/wmakeLnIncludeAll&quot;</code></pre><h2>使用条件与核对</h2><p>
-Find directories with a &#x27;Make/files&#x27; containing a &#x27;LIB =&#x27; directive and execute &#x27;wmakeLnInclude&#x27; for each one
-本条基于固定版本脚本源码，运行前检查帮助与依赖。
-源码帮助选项：-extra -f -help -j -jN -no-extra -u</p><h2>完整帮助与证据文件</h2><p><a href="/assets/command-help/wmakelnincludeall.txt">下载或打开帮助文本</a></p><details><summary>展开完整帮助文本</summary><pre><code class="language-plaintext">OpenFOAM v2512 script source evidence
-Command: wmakeLnIncludeAll
-Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmakeLnIncludeAll
 
-以下为源码中的帮助文本（保留 shell 占位符），并非本机运行输出。
-
-Usage: wmakeLnIncludeAll [OPTION] [dir1 .. dirN]
+<p>为目录树中的库生成 lnInclude 链接目录。</p><h2>用法</h2><pre><code class="language-bash"># 查看安装中的脚本；这条命令不会执行脚本
+sed -n &#x27;1,180p&#x27; &quot;$WM_PROJECT_DIR/wmake/wmakeLnIncludeAll&quot;</code></pre><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-f | -force</td><td>Force remove of existing lnInclude before recreating</td></tr><tr><td>-u | -update</td><td>Update existing lnInclude directories</td></tr><tr><td>-j</td><td>Use all local cores/hyperthreads</td></tr><tr><td>-jN | -j N</td><td>Use N cores/hyperthreads</td></tr><tr><td>-extra</td><td>Also include all source files in lnInclude/</td></tr><tr><td>-no-extra</td><td>Do not include all source files in lnInclude/ [default]</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wmakeLnIncludeAll [OPTION] [dir1 .. dirN]
 
 options:
   -f | -force       Force remove of existing lnInclude before recreating
@@ -26,5 +18,4 @@ options:
   -help             Display short help and exit
 
 Find directories with a &#x27;Make/files&#x27; containing a &#x27;LIB =&#x27; directive
-and execute &#x27;wmakeLnInclude&#x27; for each.</code></pre></details><h2>来源与版本边界</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmakeLnIncludeAll">对应源码或配套工具文档</a></p><p>核心范围固定为官方 OpenFOAM-v2512 仓库的 applications/solvers 与 applications/utilities。独立模块、第三方扩展、个人编译工具与 shell 配套入口分别标注，不以一个命令总数代表所有 OpenFOAM 生态工具。</p>
-{% endraw %}
+and execute &#x27;wmakeLnInclude&#x27; for each.</code></pre></details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/wmake/wmakeLnIncludeAll">源码与说明</a> · <a href="/assets/command-help/wmakelnincludeall.txt">帮助文本</a></p>

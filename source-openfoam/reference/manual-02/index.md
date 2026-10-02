@@ -1,10 +1,11 @@
 ---
 title: "02 系统命令与辅助工具"
 layout: reference
-description: "OpenCFD v2512 系统命令与辅助工具；包含原理、示例与版本核对。"
+description: "系统命令与辅助工具：用法与配置实例。"
+cms_slug: "reference-manual-02"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>系统工具用于环境检查、字典操作、模板获取、算例复制和代码生成。目录别名见第 11 章。相关源码位于 bin 和 applications/utilities/miscellaneous。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>系统工具用于环境检查、字典操作、模板获取、算例复制和代码生成。目录别名见第 11 章。相关源码位于 bin 和 applications/utilities/miscellaneous。</p>
 <h2>foamGetDict  复制配置字典模板  源码</h2>
 <p>默认写入 system，*Properties 通常写入 constant。-target 指定目标目录，-force 覆盖已有文件。</p>
 <p>用法：foamGetDict [选项] 文件名</p>
@@ -20,7 +21,7 @@ description: "OpenCFD v2512 系统命令与辅助工具；包含原理、示例�
 <h2>foamSearch  搜索各算例字典中的指定条目  源码</h2>
 <p>键路径以点号分隔，-count 统计相同配置的出现次数。</p>
 <p>用法：foamSearch [目录] 键路径 文件名</p>
-<pre><code class="language-plaintext">示例：foamSearch "&#36;FOAM_TUTORIALS" ddtSchemes.default fvSchemes</code></pre>
+<pre><code class="language-plaintext">示例：foamSearch "$FOAM_TUTORIALS" ddtSchemes.default fvSchemes</code></pre>
 <h2>foamEtcFile  按配置层级查找 etc 文件  源码</h2>
 <p>按用户、站点和安装目录搜索并输出文件路径。-all 列出全部匹配项，-list 列出搜索目录。</p>
 <p>用法：foamEtcFile [选项] 相对文件</p>
@@ -80,7 +81,7 @@ description: "OpenCFD v2512 系统命令与辅助工具；包含原理、示例�
 <h2>foamCleanPath  清理路径列表  源码</h2>
 <p>删除重复项或指定条目后输出路径文本，当前 shell 的 PATH 保持不变。</p>
 <p>用法：foamCleanPath [选项] 路径 [过滤项]</p>
-<pre><code class="language-plaintext">示例：foamCleanPath "&#36;PATH"</code></pre>
+<pre><code class="language-plaintext">示例：foamCleanPath "$PATH"</code></pre>
 <h2>foamHasLibrary  检查共享库能否加载  源码</h2>
 <p>-detail 输出详细信息。</p>
 <p>用法：foamHasLibrary 库名列表 [选项]</p>
@@ -97,4 +98,3 @@ description: "OpenCFD v2512 系统命令与辅助工具；包含原理、示例�
 <p>用于迁移旧版算例。</p>
 <p>用法：foamUpgradeCyclics [选项]</p>
 <pre><code class="language-plaintext">示例：foamUpgradeCyclics</code></pre>
-{% endraw %}

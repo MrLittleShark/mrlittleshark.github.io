@@ -1,10 +1,11 @@
 ---
 title: "04 求解器与并行计算"
 layout: reference
-description: "OpenCFD v2512 求解器与并行计算；包含原理、示例与版本核对。"
+description: "求解器与并行计算：用法与配置实例。"
+cms_slug: "reference-manual-04"
 ---
-{% raw %}
-<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img src="/assets/diagrams/reference-workflow.svg" alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy"><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>求解前完成初始场设置；并行计算还需进行网格分区。随后启动与物理模型对应的求解器，并通过日志监测迭代过程。controlDict 中的 application 供运行脚本选择程序，终端直接调用时执行指定的求解器。</p>
+
+<div class="source-note">本章由用户提供的两份 v2512 参考文档整理，并结合 OpenFOAM-v2512 源码修订。它提供主题说明；具体程序选项、安装缺失状态与完整配置示例请交叉查看 <a href="/commands/">命令库</a>和 <a href="/dictionaries/">配置库</a>。</div><figure><img alt="算例准备、网格检查、求解监测与后处理验证的关系" loading="lazy" src="/assets/diagrams/reference-workflow.svg"/><figcaption>通用算例工作流示意。检查步骤围绕版本、网格、守恒和可复现性展开。</figcaption></figure><p>求解前完成初始场设置；并行计算还需进行网格分区。随后启动与物理模型对应的求解器，并通过日志监测迭代过程。controlDict 中的 application 供运行脚本选择程序，终端直接调用时执行指定的求解器。</p>
 <h3>4.1 作业启动与并行工具</h3>
 <h2>foamJob  启动后台计算并记录日志  源码</h2>
 <p>默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。</p>
@@ -383,4 +384,3 @@ description: "OpenCFD v2512 求解器与并行计算；包含原理、示例与�
 <p>solidEquilibriumDisplacementFoam  稳态小应变线弹性固体平衡及可选热应力  源码</p>
 <pre><code class="language-plaintext">用法：solidEquilibriumDisplacementFoam [-case 目录] [该程序支持的选项]
 示例：solidEquilibriumDisplacementFoam &gt; log.solidEquilibriumDisplacementFoam 2&gt;&amp;1</code></pre>
-{% endraw %}
