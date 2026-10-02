@@ -1,87 +1,99 @@
-/* The pet is a small, movable layer; document flow stays unchanged. */
-.panda-art{display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
-.panda-pixel-art{image-rendering:crisp-edges;image-rendering:pixelated}
-.panda-profile-visual canvas{width:192px;height:216px}
-.panda-home-portrait{image-rendering:pixelated}
-.brand-mark canvas{width:42px;height:42px}
-.panda-note-label canvas{width:24px;height:24px;flex:none}
-.panda-accessory,.panda-master-brows,.panda-sleep-marks,.panda-sparkles{display:none}
-[data-outfit=scarf] .panda-scarf,[data-outfit=goggles] .panda-goggles,[data-outfit=coat] .panda-coat,[data-outfit=backpack] .panda-backpack,[data-outfit=cap] .panda-cap,[data-form=master] .panda-master-brows{display:block}
-[data-form=explorer] .panda-character{transform:translateY(-5px) scale(.94,1.03);transform-origin:120px 240px}
-[data-form=explorer] .panda-torso{transform:scale(.88,1.08);transform-origin:120px 200px}
-[data-form=explorer] .panda-foot-left{transform:translate(18px,7px)}
-[data-form=explorer] .panda-foot-right{transform:translate(-18px,7px)}
-[data-form=explorer] .panda-head{transform:translateY(-12px) scale(.94);transform-origin:120px 90px}
-[data-form=master] .panda-torso{transform:scale(1.07,1);transform-origin:120px 200px}
-[data-form=master] .panda-head{transform:translateY(-7px)}
-.panda-character{transform-origin:120px 225px}
-.panda-head{transform-origin:120px 133px}
-.panda-arm-right{transform-origin:172px 145px}
-.panda-arm-left{transform-origin:66px 145px}
-.panda-eyes{transform-origin:120px 87px;animation:panda-blink 7s infinite}
-.panda-pupils{transform:translate(var(--look-x,0px),var(--look-y,0px));transition:transform .12s}
-.panda-pet{position:fixed;width:126px;height:181px;z-index:42;isolation:isolate;touch-action:auto;user-select:none;filter:drop-shadow(0 5px 7px #162e2020)}
+/* Floating companion and the "我的熊猫" panel. The character itself lives in panda-character.css. */
+.panda-pet{position:fixed;width:120px;z-index:42;isolation:isolate;touch-action:auto;user-select:none}
 .panda-pet[hidden],.panda-dock[hidden],.panda-bubble[hidden]{display:none!important}
-.panda-grab{padding:0;border:0;width:126px;height:137px;background:none!important;box-shadow:none!important;display:block;cursor:grab;touch-action:none;-webkit-user-select:none}
-.panda-grab:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:40%}
+.panda-grab{display:block;width:120px;height:135px;padding:0;border:0;background:none!important;box-shadow:none!important;cursor:grab;touch-action:none;-webkit-user-select:none;filter:drop-shadow(0 6px 8px rgba(20,45,35,.14))}
+.panda-grab:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:30%}
 .panda-pet.is-dragging .panda-grab{cursor:grabbing}
-.is-dragging .panda-character{transform:rotate(-8deg)}
-.is-curious .panda-head{transform:rotate(-5deg);transition:transform .25s}
-.panda-nameplate{display:flex;align-items:center;justify-content:center;gap:6px;font:11px/1.5 var(--font);color:var(--ink);background:var(--panda-surface,#fffdf7);border:1px solid var(--line);border-radius:20px;padding:3px 8px;max-width:126px;white-space:nowrap}
-.panda-nameplate span{overflow:hidden;text-overflow:ellipsis;max-width:74px}.panda-nameplate b{color:var(--accent);font-size:10px}
-.panda-tools{display:flex;gap:5px;justify-content:center;padding-top:4px}
-.panda-tools button{background:var(--panda-surface,#fffdf7);color:var(--accent);border:1px solid var(--line);border-radius:50%;width:27px;height:27px;padding:0;line-height:1;font-size:18px}
-.panda-tools button:disabled{cursor:default;opacity:.55}
-.panda-bubble{position:absolute;bottom:calc(100% + 12px);width:292px;max-width:calc(100vw - 24px);padding:15px 32px 14px 17px;background:var(--panda-surface,#fffdf7);border:1px solid var(--line);border-radius:18px 18px 18px 6px;box-shadow:0 8px 35px #18372b1a;color:var(--ink);user-select:text;filter:none}
-.panda-bubble.below{bottom:auto;top:calc(100% + 12px);border-radius:6px 18px 18px 18px}
-.panda-bubble strong{color:var(--accent);font-size:12px;letter-spacing:.05em}
-.panda-bubble{overflow:auto}
-.panda-bubble p{font-size:14px;line-height:1.8;margin:6px 0 8px;overflow-wrap:anywhere}
-.panda-bubble-close{position:absolute;right:8px;top:8px;border:0;background:none;color:var(--muted);width:26px;height:26px;padding:0;font-size:20px}
-.panda-tip-search{border:0;background:none;color:var(--accent);padding:0;font-size:12px;text-decoration:underline;text-underline-offset:3px}
-.panda-dock{position:fixed;right:18px;bottom:18px;z-index:42;background:var(--panda-surface,#fffdf7);border:1px solid var(--line);border-radius:50%;width:48px;height:48px;padding:6px;box-shadow:0 3px 12px #173b2615}
-[data-action=sleep] .panda-eyes{animation:none;transform:scaleY(.12)}
-[data-action=sleep] .panda-head{animation:panda-nod 2s ease-in-out infinite}
-[data-action=sleep] .panda-sleep-marks{display:block;animation:panda-spark 2s ease-in-out infinite}
-.panda-account{margin:28px 0 36px;padding:28px;border:1px solid var(--line);background:var(--panda-surface,#fffdf7);border-radius:22px;scroll-margin-top:100px}
-.panda-account-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.panda-account-head h2{margin:4px 0 0;font-size:24px}.panda-level-tag{background:var(--mint);color:var(--accent);font:bold 17px var(--mono);padding:9px 15px;border-radius:30px}
-.panda-account-grid{display:grid;grid-template-columns:210px minmax(0,1fr);gap:32px;align-items:center}
-.panda-profile-visual{background:radial-gradient(ellipse at center,var(--mint),transparent 70%);display:flex;align-items:center;flex-direction:column;padding:8px}
-.panda-profile-visual svg{width:175px;height:190px}.panda-profile-visual>strong{font-size:18px;margin-top:6px}.panda-profile-visual>span{font-size:12px;color:var(--muted);margin-top:4px}
-.panda-xp-label{display:flex;justify-content:space-between;gap:12px;font-size:14px}.panda-xp-label span{color:var(--muted);font-family:var(--mono)}
-.panda-xp-track{background:var(--mint);height:10px;border-radius:20px;overflow:hidden;margin-top:12px}.panda-xp-track>span{display:block;height:100%;background:linear-gradient(90deg,#70b19a,#398972);border-radius:20px;transition:width .3s}
-.panda-growth>.muted{font-size:12px;margin:8px 0 16px}.panda-account-actions{display:flex;flex-wrap:wrap;gap:9px}.panda-instructions{font-size:13px;color:var(--muted);margin:14px 0}
-#panda-settings{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px}#panda-settings>label:first-child{font-size:12px;display:flex;flex-direction:column;gap:5px}#panda-settings input[name=name]{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:9px 10px;width:180px;max-width:100%;font-size:14px}
-.panda-check{display:flex;align-items:center;gap:4px;font-size:12px;padding-bottom:9px}.panda-check input{accent-color:var(--accent)}
-.panda-form-status{font-size:13px;color:var(--accent);margin:8px 0 0}
-.panda-collection-head{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding-top:24px;margin-top:24px;margin-bottom:15px}.panda-collection-head h3{margin:0;font-size:17px}.panda-collection-head small{font-size:12px;color:var(--muted);margin-left:6px;font-weight:400}
-.panda-tabs{display:flex;background:var(--mint);padding:4px;border-radius:25px;gap:3px}.panda-tabs button{font-size:13px;background:transparent;border:0;border-radius:22px;padding:7px 15px;color:var(--muted)}.panda-tabs [aria-pressed=true]{background:var(--panda-surface,#fffdf7);color:var(--accent);box-shadow:0 1px 4px #233c2110}
+.panda-pet.is-dragging .pa-mover{transform:rotate(-8deg)}
+.panda-pet.is-curious:not([data-action]) .pa-head{transform:rotate(-5deg)}
+.panda-nameplate{display:flex;align-items:center;justify-content:center;gap:6px;margin:2px auto 0;width:max-content;max-width:120px;padding:3px 10px;border:1px solid var(--line);border-radius:20px;background:var(--surface,#fffefb);color:var(--ink);font:12px/1.5 var(--font);white-space:nowrap;box-shadow:var(--shadow)}
+.panda-nameplate span{overflow:hidden;text-overflow:ellipsis;max-width:70px}
+.panda-nameplate b{color:var(--accent);font-size:11px}
+.panda-tools{display:flex;gap:4px;justify-content:center;padding-top:5px;opacity:.0;transform:translateY(-4px);transition:opacity .18s,transform .18s}
+.panda-pet:is(:hover,:focus-within) .panda-tools,.panda-pet .panda-tools:has([aria-expanded=true]){opacity:1;transform:none}
+@media(hover:none){.panda-tools{opacity:1;transform:none}}
+.panda-tools button{display:grid;place-items:center;width:28px;height:28px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface,#fffefb);color:var(--accent);box-shadow:var(--shadow)}
+.panda-tools button svg{width:15px;height:15px}
+.panda-tools button:hover{background:var(--mint)}
+.panda-tools button:disabled{cursor:default;opacity:.5}
+.panda-bubble{position:absolute;bottom:calc(100% + 12px);width:292px;max-width:calc(100vw - 24px);padding:14px 34px 13px 16px;overflow:auto;border:1px solid var(--line);border-radius:16px 16px 16px 6px;background:var(--surface,#fffefb);box-shadow:0 10px 32px rgba(20,45,35,.14);color:var(--ink);user-select:text}
+.panda-bubble.below{bottom:auto;top:calc(100% + 12px);border-radius:6px 16px 16px 16px}
+.panda-bubble strong{color:var(--accent);font-size:12px;letter-spacing:.04em}
+.panda-bubble p{font-size:14px;line-height:1.8;margin:4px 0 8px;overflow-wrap:anywhere}
+.panda-bubble-close{position:absolute;right:8px;top:8px;width:26px;height:26px;padding:0;border:0;background:none;color:var(--muted);font-size:20px}
+.panda-tip-search{padding:0;border:0;background:none;color:var(--accent);font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.panda-dock{position:fixed;right:18px;bottom:18px;z-index:42;width:52px;height:52px;padding:4px 3px 2px;border:1px solid var(--line);border-radius:50%;background:var(--surface,#fffefb);box-shadow:0 4px 14px rgba(20,45,35,.14)}
+.panda-dock:hover{background:var(--mint)}
+
+/* account panel */
+.panda-account{margin:28px 0 36px;padding:28px;border:1px solid var(--line);border-radius:20px;background:var(--surface,#fffefb);box-shadow:var(--shadow);scroll-margin-top:100px}
+.panda-account-loading{color:var(--muted)}
+.panda-account-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.panda-account-head h2{margin:4px 0 0;font-size:24px}
+.panda-level-tag{padding:7px 14px;border-radius:30px;background:var(--mint);color:var(--accent);font:700 16px var(--mono)}
+.panda-account-grid{display:grid;grid-template-columns:220px minmax(0,1fr);gap:32px;align-items:center}
+.panda-profile-visual{display:flex;flex-direction:column;align-items:center;padding:14px 8px 12px;border-radius:18px;background:radial-gradient(ellipse at 50% 60%,var(--mint),transparent 72%)}
+.panda-profile-visual .panda-art{width:190px;height:214px}
+.panda-profile-visual>strong{font-size:18px;margin-top:4px}
+.panda-profile-visual>span{font-size:13px;color:var(--muted);margin-top:2px}
+.panda-xp-label{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.panda-xp-label span{color:var(--muted);font-family:var(--mono)}
+.panda-xp-track{height:10px;margin-top:10px;overflow:hidden;border-radius:20px;background:var(--mint)}
+.panda-xp-track>span{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,#6db69a,var(--accent));transition:width .3s}
+.panda-growth>.muted{font-size:13px;margin:8px 0 14px}
+.panda-account-actions{display:flex;flex-wrap:wrap;gap:9px}
+.panda-instructions{font-size:13px;color:var(--muted);margin:14px 0;line-height:1.8}
+#panda-settings{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px}
+#panda-settings>label:first-child{display:flex;flex-direction:column;gap:5px;font-size:13px}
+#panda-settings input[name=name]{width:180px;max-width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);font-size:14px}
+.panda-check{display:flex;align-items:center;gap:5px;padding-bottom:10px;font-size:13px}
+.panda-check input,.panda-local-options input,.panda-menu-sound input{accent-color:var(--accent)}
+.panda-form-status{margin:8px 0 0;font-size:13px;color:var(--accent)}
+.panda-next-reward{margin:14px 0;padding:12px 15px;border:1px solid var(--line);border-radius:12px;background:var(--mint);font-size:14px;line-height:1.8}
+.panda-next-reward strong{color:var(--accent)}
+.panda-next-reward span{display:block;color:var(--muted);font-size:13px}
+.panda-collection-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:24px 0 15px;padding-top:24px;border-top:1px solid var(--line)}
+.panda-collection-head h3{margin:0;font-size:17px}
+.panda-collection-head small{margin-left:6px;font-size:13px;font-weight:400;color:var(--muted)}
+.panda-tabs{display:flex;gap:3px;padding:4px;border-radius:25px;background:var(--mint)}
+.panda-tabs button{padding:7px 15px;border:0;border-radius:22px;background:transparent;color:var(--muted);font-size:13px}
+.panda-tabs [aria-pressed=true]{background:var(--surface,#fffefb);color:var(--accent);box-shadow:0 1px 4px rgba(20,45,35,.1)}
 .panda-collection{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
-.panda-item{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:15px;display:flex;flex-direction:column;align-items:center;padding:10px 8px 14px;min-width:0;line-height:1.5}
-.panda-item:hover:not(:disabled){border-color:var(--accent);box-shadow:0 3px 12px #23574010}.panda-item[aria-pressed=true]{border:2px solid var(--accent);padding:9px 7px 13px;background:var(--mint)}
-.panda-item:disabled{cursor:default;opacity:1}.panda-item.locked .panda-item-preview{opacity:.42;filter:grayscale(.7)}
-.panda-item-preview{display:block;width:80px;height:87px;margin-bottom:8px}.panda-item>strong{font-size:13px}.panda-item>span:not(.panda-item-preview){font-size:11px;line-height:1.6;color:var(--muted);margin:5px 0 8px}.panda-item>small{font-size:11px;color:var(--accent);margin-top:auto}
-[data-preview-action=wave] .panda-arm-right{transform:rotate(-100deg)}[data-preview-action=sleep] .panda-eyes{transform:scaleY(.12)}[data-preview-action=sleep] .panda-sleep-marks{display:block}[data-preview-action=jump] .panda-character{transform:translateY(-15px)}[data-preview-action=roll] .panda-character{transform:rotate(-32deg)}[data-preview-action=dance] .panda-character{transform:rotate(12deg)}[data-preview-action=dance] .panda-sparkles{display:block}
-.panda-rules,.panda-history{border-top:1px solid var(--line);margin-top:20px;padding-top:15px;font-size:13px;color:var(--muted)}.panda-rules summary,.panda-history summary{cursor:pointer;color:var(--ink);font-weight:600;padding:4px 0}.panda-rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding-top:10px;line-height:1.9}.panda-rules ul{padding-left:20px;margin:0}.panda-history ul{list-style:none;padding:10px 0 0;margin:0}.panda-history li{display:flex;gap:16px;padding:8px 0}.panda-history time{margin-left:auto}.panda-history b{min-width:45px;color:var(--accent);text-align:right}
-.panda-next-reward{margin:16px 0;padding:12px 15px;background:var(--mint);border:1px solid var(--line);border-radius:12px;font-size:13px;line-height:1.8}
-.panda-next-reward strong{color:var(--accent)}.panda-next-reward span{display:block;color:var(--muted);font-size:12px}
-.panda-evolution{border-top:1px solid var(--line);margin-top:24px;padding-top:16px}.panda-evolution>summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--ink);padding:6px 0}.panda-evolution>summary small{font-size:11px;color:var(--muted);font-weight:400;margin-left:9px}
-.panda-growth-stages{list-style:none;padding:12px 0 0;margin:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.panda-growth-stages li{border:1px solid var(--line);border-radius:12px;text-align:center;padding:12px 8px;min-width:0;background:var(--bg)}.panda-growth-stages .panda-item-preview{margin:0 auto 7px;width:96px;height:108px;max-width:100%}.panda-growth-stages strong{display:block;font-size:13px}.panda-growth-stages small{display:block;color:var(--muted);font-size:11px;margin-top:6px}.panda-growth-stages button{margin-top:9px;border:1px solid var(--line);border-radius:8px;background:var(--mint);color:var(--accent);padding:5px 10px;font-size:12px}.panda-growth-stages [aria-current=true]{border-color:var(--accent);background:var(--mint)}
-.panda-pet.is-evolving canvas,.panda-profile-visual.is-evolving canvas{animation:panda-evolve .85s ease-in-out}
-@keyframes panda-evolve{0%,100%{filter:none}45%{filter:brightness(1.4) drop-shadow(0 0 7px #e5c46f);transform:translateY(-3px)}}
-@media(max-width:700px){.panda-growth-stages{grid-template-columns:repeat(2,minmax(0,1fr))}.panda-profile-visual canvas{width:160px;height:180px}.panda-tabs{flex-wrap:wrap}.panda-tabs button{padding:6px 12px}}
-@keyframes panda-blink{0%,42%,45%,100%{transform:scaleY(1)}43%,44%{transform:scaleY(.1)}}
-@keyframes panda-wave{0%,100%{transform:rotate(-8deg)}35%{transform:rotate(-112deg)}70%{transform:rotate(-76deg)}}
-@keyframes panda-jump{0%,100%{transform:translateY(0) scale(1)}25%{transform:translateY(4px) scale(1.05,.94)}55%{transform:translateY(-25px) scale(.98,1.03)}}
-@keyframes panda-roll{0%,100%{transform:rotate(0)}30%{transform:rotate(-25deg) translateX(-8px)}80%{transform:rotate(360deg)}}
-@keyframes panda-dance{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg) translateY(-6px)}}
-@keyframes panda-nod{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(3deg) translateY(3px)}}
-@keyframes panda-spark{0%,100%{opacity:.3}50%{opacity:1}}
-[data-quiet=true] .panda-art *{animation:none!important;transition:none!important}
-[data-quiet=true].is-curious .panda-head{transform:none}
-[data-quiet=true] .panda-pupils{transform:none}
+.panda-item{display:flex;flex-direction:column;align-items:center;min-width:0;padding:10px 8px 14px;border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink);line-height:1.5;transition:border-color .15s,box-shadow .15s}
+.panda-item:hover:not(:disabled){border-color:var(--accent);box-shadow:0 4px 14px rgba(20,45,35,.08)}
+.panda-item[aria-pressed=true]{padding:9px 7px 13px;border:2px solid var(--accent);background:var(--mint)}
+.panda-item:disabled{cursor:default;opacity:1}
+.panda-item.locked .panda-item-preview{opacity:.4;filter:grayscale(.8)}
+.panda-item-preview{display:block;width:92px;height:104px;margin-bottom:6px}
+.panda-item>strong{font-size:14px}
+.panda-item>span:not(.panda-item-preview){margin:4px 0 8px;font-size:12px;line-height:1.6;color:var(--muted);text-align:center}
+.panda-item>small{margin-top:auto;font-size:12px;color:var(--accent)}
+.panda-rules,.panda-history{margin-top:20px;padding-top:15px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+.panda-rules summary,.panda-history summary{padding:4px 0;color:var(--ink);font-weight:600;cursor:pointer}
+.panda-rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding-top:10px;line-height:1.9}
+.panda-rules ul{margin:0;padding-left:20px}
+.panda-history ul{list-style:none;margin:0;padding:10px 0 0}
+.panda-history li{display:flex;gap:16px;padding:8px 0}
+.panda-history time{margin-left:auto}
+.panda-history b{min-width:45px;color:var(--accent);text-align:right}
+.panda-evolution{margin-top:24px;padding-top:16px;border-top:1px solid var(--line)}
+.panda-evolution>summary{padding:6px 0;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer}
+.panda-evolution>summary small{margin-left:9px;font-size:12px;font-weight:400;color:var(--muted)}
+.panda-growth-stages{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:0;padding:12px 0 0;list-style:none}
+.panda-growth-stages li{min-width:0;padding:12px 8px;border:1px solid var(--line);border-radius:14px;background:var(--bg);text-align:center}
+.panda-growth-stages .panda-item-preview{width:100px;height:113px;max-width:100%;margin:0 auto 6px}
+.panda-growth-stages strong{display:block;font-size:14px}
+.panda-growth-stages small{display:block;margin-top:5px;font-size:12px;color:var(--muted)}
+.panda-growth-stages button{margin-top:9px;padding:5px 12px;border:1px solid var(--line);border-radius:8px;background:var(--mint);color:var(--accent);font-size:12px}
+.panda-growth-stages [aria-current=true]{border-color:var(--accent);background:var(--mint)}
+.panda-pet.is-evolving .panda-art,.panda-profile-visual.is-evolving .panda-art{animation:panda-evolve .85s ease-in-out}
+@keyframes panda-evolve{0%,100%{filter:none}45%{filter:brightness(1.25) drop-shadow(0 0 8px #e5c46f);transform:translateY(-3px)}}
+[data-quiet=true] .panda-art *{animation:none!important}
+[data-quiet=true] .pa-pupils{transform:none}
 body:has(dialog[open]) .panda-pet,body.nav-open .panda-pet,body:has(dialog[open]) .panda-dock{visibility:hidden}
 @media(max-width:1100px){.panda-collection{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:600px){.panda-account{padding:20px 16px}.panda-account-grid{grid-template-columns:1fr;gap:14px}.panda-profile-visual svg{width:130px;height:142px}.panda-collection{grid-template-columns:repeat(2,minmax(0,1fr))}.panda-collection-head{align-items:flex-start;flex-direction:column;gap:12px}.panda-rules-grid{grid-template-columns:1fr;gap:10px}.panda-pet{width:102px;height:163px}.panda-grab{width:102px;height:111px}.panda-tools button{width:30px;height:30px}.panda-nameplate{font-size:10px;padding:2px 6px}.panda-instructions{font-size:12px}}
-@media(prefers-reduced-motion:reduce){.panda-art *,.panda-xp-track>span{animation:none!important;transition:none!important}.is-curious .panda-head,.panda-pupils{transform:none!important}}
+@media(max-width:700px){.panda-growth-stages{grid-template-columns:repeat(2,minmax(0,1fr))}.panda-tabs{flex-wrap:wrap}.panda-tabs button{padding:6px 12px}}
+@media(max-width:600px){.panda-account{padding:20px 16px}.panda-account-grid{grid-template-columns:1fr;gap:14px}.panda-profile-visual .panda-art{width:150px;height:169px}.panda-collection{grid-template-columns:repeat(2,minmax(0,1fr))}.panda-collection-head{flex-direction:column;align-items:flex-start;gap:12px}.panda-rules-grid{grid-template-columns:1fr;gap:10px}.panda-pet{width:92px}.panda-grab{width:92px;height:104px}.panda-nameplate{font-size:11px;padding:2px 8px}.panda-instructions{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.panda-xp-track>span,.panda-tools{transition:none}}
+.panda-pet{transition:opacity .25s,transform .25s}
+.panda-pet.is-away{opacity:0;transform:translateY(12px) scale(.9);pointer-events:none}

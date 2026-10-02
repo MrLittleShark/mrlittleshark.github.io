@@ -1,7 +1,7 @@
 'use strict';
 (() => {
- const main=document.querySelector('#main');if(!main)return;
- const dock=document.createElement('details');dock.className='page-outline';dock.innerHTML='<summary aria-label="打开本页跳转目录"><span aria-hidden="true">☷</span> 本页目录</summary><nav aria-label="本页跳转目录"></nav>';
+ const main=document.querySelector('#main');if(!main||main.querySelector('.fl-home'))return;
+ const dock=document.createElement('details');dock.className='page-outline';dock.innerHTML='<summary aria-label="打开本页跳转目录"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg> 本页目录</summary><nav aria-label="本页跳转目录"></nav>';
  const toolbar=document.createElement('div');toolbar.className='page-outline-toolbar';
  main.before(toolbar);toolbar.append(dock);
  const topbar=document.querySelector('.topbar'),root=document.documentElement;

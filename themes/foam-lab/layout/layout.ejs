@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title><%= page.title || 'OpenFOAM 学习站' %> · FoamLab</title>
-  <meta name="description" content="<%= page.description || 'OpenFOAM v2512 中文学习社区，系统课程、命令与配置参考、编程实例和公开讨论。' %>">
-  <meta name="theme-color" content="#1d4874">
+  <meta name="description" content="<%= page.description || 'OpenFOAM v2512 中文学习站：系统课程、命令与配置速查、编程实例和公开讨论。' %>">
+  <meta name="theme-color" content="#f6f5f0" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#111816" media="(prefers-color-scheme: dark)">
   <% if(page.noindex || page.admin_only || page.section==='admin'){ %><meta name="robots" content="noindex, nofollow"><% } %>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-  <link rel="preload" href="/assets/panda-sprites-v2.webp" as="image">
   <script src="/assets/appearance.js"></script>
   <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
@@ -23,9 +22,10 @@
   <link rel="stylesheet" href="/assets/reader.css">
   <link rel="stylesheet" href="/assets/page-outline.css">
   <link rel="stylesheet" href="/assets/navigation.css">
-  <link rel="stylesheet" href="/assets/panda-theme.css">
   <link rel="stylesheet" href="/assets/panda-pet.css">
   <link rel="stylesheet" href="/assets/panda-animation.css">
+  <link rel="stylesheet" href="/assets/panda-character.css">
+  <link rel="stylesheet" href="/assets/foamlab-theme.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -44,15 +44,36 @@
   <script src="/assets/panda-motion.js" defer></script>
   <script src="/assets/panda-particles.js" defer></script>
   <script src="/assets/panda-pet.js" defer></script>
-  <script src="/assets/panda-pixels.js" defer></script>
   <script src="/assets/panda-notes.js" defer></script>
 </head>
 <body data-section="<%= page.section || page.layout || '' %>" data-lesson="<%= page.lesson_id || '' %>">
 <a class="skip" href="#main">跳到主要内容</a>
 <aside class="sidebar" id="sidebar">
   <button class="icon-button sidebar-close" type="button" data-close-nav aria-label="关闭导航">×</button>
-  <a class="brand" href="/"><span class="brand-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="#283738"/><circle cx="37" cy="11" r="9" fill="#283738"/><ellipse cx="24" cy="26" rx="22" ry="20" fill="#fffcf4" stroke="#d3decd"/><ellipse cx="15" cy="24" rx="6" ry="8" fill="#283738" transform="rotate(25 15 24)"/><ellipse cx="33" cy="24" rx="6" ry="8" fill="#283738" transform="rotate(-25 33 24)"/><circle cx="16" cy="23" r="2" fill="white"/><circle cx="32" cy="23" r="2" fill="white"/><path d="M21 32q3-3 6 0l-3 4Z" fill="#283738"/><path d="M24 35q-3 5-7 1m7-1q3 5 7 1" fill="none" stroke="#283738" stroke-width="1.5"/></svg></span><span>FoamLab<small>熊猫带你学 OpenFOAM</small></span></a>
-  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch">.com</span></div>
+  <a class="brand" href="/"><span class="brand-mark"><svg class="panda-art panda-face" viewBox="26 22 108 92" aria-hidden="true" focusable="false"><g class="pa-char"><g class="pa-head">
+  <circle class="pk" cx="44" cy="40" r="15"/><circle class="pk" cx="116" cy="40" r="15"/><circle class="pa-ear-in" cx="45" cy="41" r="7"/><circle class="pa-ear-in" cx="115" cy="41" r="7"/>
+  <g class="pa-o pa-o-headphones pa-hp-band"><path class="pa-hp" d="M38 64c0-34 84-34 84 0" fill="none"/></g>
+  <path class="pw pa-line" d="M80 30c-30 0-48 18-48 42 0 22 20 36 48 36s48-14 48-36c0-24-18-42-48-42z"/>
+  <path class="ps" d="M118 82c-4 14-18 22-38 22 24 4 44-6 46-22 0-4-2-6-8 0z"/>
+  <path class="pk" d="M50 64c4-10 16-12 20-4 4 7 2 18-6 22-8 3-18-6-14-18z"/><path class="pk" d="M110 64c-4-10-16-12-20-4-4 7-2 18 6 22 8 3 18-6 14-18z"/>
+  <g class="pa-eyes pa-eyes-open"><g class="pa-pupils"><circle class="pa-eye-white" cx="62" cy="70" r="6.4"/><circle class="pa-pupil" cx="62.6" cy="70.6" r="4.6"/><circle class="pa-eye-glint" cx="64.4" cy="68.4" r="1.8"/><circle class="pa-eye-white" cx="98" cy="70" r="6.4"/><circle class="pa-pupil" cx="97.4" cy="70.6" r="4.6"/><circle class="pa-eye-glint" cx="99.2" cy="68.4" r="1.8"/></g></g>
+  <g class="pa-eyes pa-eyes-happy"><path class="pa-eye-arc" d="M55 72q7-8 14 0M91 72q7-8 14 0"/></g>
+  <g class="pa-eyes pa-eyes-closed"><path class="pa-eye-arc" d="M55 70q7 6 14 0M91 70q7 6 14 0"/></g>
+  <ellipse class="pa-cheek" cx="50" cy="88" rx="7" ry="4.2"/><ellipse class="pa-cheek" cx="110" cy="88" rx="7" ry="4.2"/>
+  <path class="pk" d="M74.5 81.5c0-2 2-3 5.5-3s5.5 1 5.5 3c0 2.5-3 4.6-5.5 4.6s-5.5-2.1-5.5-4.6z"/>
+  <g class="pa-mouth pa-mouth-smile"><path class="pa-mouth-line" d="M80 86v2.6M73.5 88c2 3 5 3 6.5.6 1.5 2.4 4.5 2.4 6.5-.6"/></g>
+  <g class="pa-mouth pa-mouth-open"><path class="pa-mouth-fill" d="M74 89c0 6 3 9 6 9s6-3 6-9c-3 1.6-9 1.6-12 0z"/><path class="pa-tongue" d="M76.6 95c1.6-1.6 5.2-1.6 6.8 0-1 1.6-2.2 2.2-3.4 2.2s-2.4-.6-3.4-2.2z"/></g>
+  <g class="pa-f pa-f-master"><path class="pa-tuft" d="M72 34c0-9 10-13 16-8-6 1-8 4-6 9-4-4-7-3-10-1z"/><g class="pa-glasses"><circle cx="62" cy="71" r="11"/><circle cx="98" cy="71" r="11"/><path d="M73 70q7-4 14 0M51 68l-12-4M109 68l12-4"/></g></g>
+  <g class="pa-o pa-o-goggles"><path class="pa-goggle-band" d="M33 50c30-10 64-10 94 0"/><circle class="pa-goggle pa-line" cx="66" cy="44" r="10"/><circle class="pa-goggle pa-line" cx="94" cy="44" r="10"/><path class="pa-goggle-glint" d="M61 40q3-3 7-2M89 40q3-3 7-2"/></g>
+  <g class="pa-o pa-o-headphones"><rect class="pa-hp-cup" x="26" y="58" width="14" height="24" rx="7"/><rect class="pa-hp-cup" x="120" y="58" width="14" height="24" rx="7"/></g>
+  <g class="pa-o pa-o-flower"><g transform="translate(112 30)"><ellipse class="pa-petal" cx="0" cy="-5.5" rx="4" ry="5.5" transform="rotate(0)"/><ellipse class="pa-petal" cx="0" cy="-5.5" rx="4" ry="5.5" transform="rotate(72)"/><ellipse class="pa-petal" cx="0" cy="-5.5" rx="4" ry="5.5" transform="rotate(144)"/><ellipse class="pa-petal" cx="0" cy="-5.5" rx="4" ry="5.5" transform="rotate(216)"/><ellipse class="pa-petal" cx="0" cy="-5.5" rx="4" ry="5.5" transform="rotate(288)"/><circle class="pa-gold" r="3.4"/></g></g>
+  <g class="pa-hat pa-f pa-f-engineer pa-hat-hard"><path class="pa-hardhat pa-line" d="M46 40c0-20 16-30 34-30s34 10 34 30z"/><rect class="pa-hardhat pa-line" x="40" y="37" width="80" height="7" rx="3.5"/><path class="pa-hardhat-ridge" d="M80 12v24"/></g>
+  <g class="pa-hat pa-o pa-o-cap"><path class="pa-capbase pa-line" d="M56 34c0-8 48-8 48 0v8c-14-4-34-4-48 0z"/><path class="pa-capboard pa-line" d="M80 14l40 12-40 12-40-12z"/><path class="pa-tassel" d="M114 27v18"/><circle class="pa-gold" cx="114" cy="47" r="3"/></g>
+  <g class="pa-hat pa-o pa-o-strawhat"><ellipse class="pa-straw pa-line" cx="80" cy="36" rx="50" ry="10"/><path class="pa-straw pa-line" d="M58 34c0-16 10-24 22-24s22 8 22 24c-14 3-30 3-44 0z"/><path class="pa-straw-band" d="M58 30c14 3 30 3 44 0"/></g>
+  <g class="pa-hat pa-o pa-o-raincoat"><path class="pa-rain pa-line" d="M40 38c4-16 20-26 40-26s36 10 40 26c-24-6-56-6-80 0z"/><path class="pa-rain pa-line" d="M34 40c28-8 64-8 92 0l-4 6c-26-6-58-6-84 0z"/></g>
+  <g class="pa-hat pa-o pa-o-wizard"><path class="pa-wizard pa-line" d="M54 36c8-12 16-28 34-34-4 10-2 20 18 34z"/><ellipse class="pa-wizard pa-line" cx="80" cy="37" rx="34" ry="6"/><path class="pa-gold" d="M84 16l2 4.4 4.8.6-3.5 3.3.9 4.8-4.2-2.3-4.2 2.3.9-4.8-3.5-3.3 4.8-.6z"/></g>
+  </g></g></svg></span><span>FoamLab<small>熊猫带你学 OpenFOAM</small></span></a>
+  <div class="version"><span class="status-dot"></span> OpenFOAM <strong>v2512</strong><span class="branch" title="openfoam.com（OpenCFD）发行版">ESI 版</span></div>
   <nav aria-label="主要导航">
     <div class="nav-label">学习空间</div>
     <%- partial('_partial/learning-nav') %>

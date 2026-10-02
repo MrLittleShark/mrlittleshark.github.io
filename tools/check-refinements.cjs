@@ -46,7 +46,7 @@ const assets = {
     }));
     assert.equal(initial.overflow, false);
     assert.equal(initial.theme, scenario.theme);
-    assert.match(initial.background, /site-streamlines/);
+    assert.match(initial.background, /linear-gradient/);
     assert.match(initial.selected, /inset/);
     await page.screenshot({path: path.join(output, `${scenario.name}.png`), fullPage: true});
 

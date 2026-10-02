@@ -12,21 +12,21 @@
 
 ## 文件
 
-- `themes/foam-lab/source/assets/panda-art.js`：像素画布入口。
-- `panda-pixels.js`：像素角色部件、逐帧姿态、装饰与服饰。逻辑坐标为 64 × 72，实际画布为 128 × 144，动画每秒 12 帧，颜色与透明度量化后按最近邻显示。
-- `panda-sprites-v2.webp`：原创熊猫图集，包含四种表情、身体、手掌、脚掌与竹叶。首页、悬浮宠物、个人中心和提示图标共用该图集；生成提示词保存在 `tools/artwork/panda-sprites-v2.prompt.json`。图集未加载时使用本地绘制造型。
+- `themes/foam-lab/source/assets/panda-art.js`：矢量熊猫。所有部件（身体、四肢、表情、5 种形态、13 件服饰、7 种场景、动作道具）画在同一个 160 × 180 的 SVG 中，`window.foamPandaArt(faceOnly)` 返回整只熊猫或头像。
+- `panda-character.css`：配色（含暗色）、按 `data-form`/`data-outfit`/`data-decoration` 显示部件、按 `data-action` 播放 17 组 CSS 动画；`data-preview-action` 显示静态关键帧，用于收藏预览。帽子互斥：服饰帽子优先于形态帽子，航天头盔优先于所有帽子。
+- 旧的像素版（`panda-pixels.js`、`panda-sprites-v2.webp`）已不再加载，可以删除。
 - `tools/panda-catalog.json`：42 项收藏的标题、说明与等级，供迁移核对和隔离测试使用；实际权限仍以数据库为准。
 - `panda-animation.css`：动作菜单和点击粒子的界面样式。
 - `panda-motion.js`：动画时长、取消与 Web Audio 旋律。
 - `panda-pet.js`：登录、拖动、搜索、动作菜单、成长收藏。
 - `panda-particles.js`：点击反馈及设备偏好。
-- `panda-theme.css`：竹林背景、亮暗色与首页。
-- `source-openfoam/assets/covers/panda-bamboo-valley-v1.webp`：背景图，约 277 KiB；相邻 `.prompt.json` 保存生成说明。
+- `foamlab-theme.css`：全站配色与表面样式（取代原 `panda-theme.css`，后者已不再加载）。
+- 竹林照片背景已停用，页面背景改为浅色网格纹理。
 
 ## 检查
 
-`node tools/check-panda-growth.cjs` 检查成长路线、全部收藏的外观、装饰保存和像素帧；`node tools/check-panda.cjs` 检查原有宠物功能；`node tools/check-panda-animation.cjs` 检查新动作的连续帧、音效开关、粒子数量、手机菜单和暗色首页。截图保存在 `.openfoam-work/panda/`。
+`node tools/check-panda-growth.cjs` 检查成长路线、全部收藏的外观差异和装饰保存；`node tools/check-panda.cjs` 检查宠物功能；`node tools/check-panda-animation.cjs` 检查 17 组动作确实在动、音效开关、粒子数量、手机菜单和暗色首页。截图保存在 `.openfoam-work/panda/`。
 
 `supabase/tests/panda-companion.sql` 使用事务回滚测试账号及内容，检查经验、解锁、权限和重复操作。新增动作对应迁移 `20261002100304_panda_action_expansion.sql`；像素养成扩展对应 `20261002103139_panda_pixel_growth.sql`。装饰保存在 `foamlab_pets.decoration`，仍通过受权限保护的装备 RPC 更新。
 
-竹林背景使用内置 ImageGen 生成，提示词和最终文件分别保存在 `source-openfoam/assets/covers/panda-bamboo-valley-v1.prompt.json` 与 `panda-bamboo-valley-v1.webp`。熊猫的像素造型由本站绘制，未使用游戏素材。
+熊猫是本站原创的矢量造型，未使用游戏或第三方素材。首页上，熊猫出现在视口内时，右下角的悬浮熊猫会暂时隐藏，避免同屏出现两只。

@@ -127,7 +127,7 @@ Wolf 图源索引为 `tools/content/wolf-figures.json`，图片位于 `source-op
 
 正文公式使用 TeX，推荐 `\(...\)` 与 `\[...\]`。静态页面在构建时渲染，CMS 正文在浏览器中处理；编辑时先预览，排除语法错误。代码块标明 `bash`、`openfoam`、`cpp`、`python`、`makefile` 等语言，保留可复制的原文。图片应区分教学示意、资料原图、生成式封面与真实计算图。
 
-界面使用蓝色体系并支持亮色、暗色、跟随系统。中文正文、标题和代码使用不同字体层级；Noto 字体子集及许可证随站点托管，新增罕见字由系统字体回退。具体字号、行距、对比度和响应式规则见 [字体与界面设计规范](tools/content/authored-pages/site-design.md)，管理员线上入口为 `/admin/design/`。封面为 CFD 主题生成式插图，不表示真实计算结果。
+界面采用“纸张底色 + 墨绿”主题（`themes/foam-lab/source/assets/foamlab-theme.css`，最后加载），支持亮色、暗色、跟随系统。中文正文、标题和代码使用不同字体层级；Noto 字体子集及许可证随站点托管，新增罕见字由系统字体回退。具体字号、行距、对比度和响应式规则见 [字体与界面设计规范](tools/content/authored-pages/site-design.md)，管理员线上入口为 `/admin/design/`。首页插图是矢量熊猫与按圆柱绕流势流公式画的流线，均为示意，不表示计算结果。
 
 ## 检查与备份
 
@@ -154,6 +154,8 @@ node tools/check-refinements.cjs
 
 每页右上角提供跳转目录；标题上方的返回按钮保留进入详情前的关键词与筛选。表格铺满正文宽度，窄屏按表格局部横向滚动。页脚支持作者使用悬停二维码，移动设备点击打开，点击空白关闭；收款码由管理员站点设置维护。
 
-飞机背景与封面文件：`source-openfoam/assets/covers/foamlab-aircraft-background-v1.png`；生成提示与使用方式见 `tools/content/aircraft-background-design.md`。
+页面背景为浅色网格纹理（纯 CSS），不再使用照片背景。`source-openfoam/assets/covers/` 下的飞机、竹林背景图目前未被页面引用，仅作存档。
+
+正文示意图由 `tools/content/draw-diagrams.py` 统一绘制：24 张 `core-*` 概念图逐张手绘，`cpp-*`、`programming-*`、`reference-*` 流程图的文字来自 `tools/content/diagram-flows.json`。`build-core.py` 等旧生成器仍会写出旧版图，重跑它们之后要再运行一次 `python tools/content/draw-diagrams.py`。
 
 追加内容与界面检查：`node tools/check-editorial.cjs`、`node tools/check-editorial-ui.cjs`。示例源码保持原文件；补充说明由 `reference-example-notes.json` 管理。

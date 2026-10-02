@@ -1,6 +1,6 @@
 ## RANS 与 LES
 
-计算平均压降、阻力或换热量时，RANS 是常见起点。它对流动方程作平均，用湍流模型计算雷诺应力等未知量。LES 则直接计算较大的涡，并用亚格子模型描述较小尺度的作用，需要更细的网格和时间步。
+如果关心的是平均压降、阻力或换热量，RANS 通常是起点：它对流动方程做平均，用湍流模型封闭雷诺应力等未知量。LES 则直接算出较大的涡，只用亚格子模型描述小尺度的作用，代价是更细的网格和更小的时间步。
 
 <figure class="wolf-figure"><img src="/assets/wolf/wolf-turbulence-rans-les-fields.png" alt="RANS 平均场与 LES 瞬时结构" loading="lazy"><figcaption><strong>RANS 平均场与 LES 瞬时结构</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 27 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>
 

@@ -1,8 +1,8 @@
-OpenFOAM 的一次计算通常包括准备文件、生成网格、运行求解器和查看结果。这里用顶盖驱动方腔完成这四步。
+用 OpenFOAM 做一次计算，一般分四步：准备文件、生成网格、运行求解器、查看结果。这一页用顶盖驱动方腔，带你把这四步走一遍。
 
 ## 加载环境
 
-以下命令在 Linux 终端运行。还未安装时，先阅读[安装课程](/read/?slug=start-openfoam-v2512)；第一次接触终端，可以从 [Linux 入门](/linux/)开始。
+以下命令都在 Linux 终端里运行。还没安装的话，先看[安装课程](/read/?slug=start-openfoam-v2512)；第一次用终端，可以从 [Linux 入门](/linux/)开始。
 
 ```bash
 source /usr/lib/openfoam/openfoam2512/etc/bashrc
@@ -10,7 +10,7 @@ echo "$WM_PROJECT_VERSION"
 icoFoam -help
 ```
 
-第一行适用于安装到该路径的 Ubuntu 软件包。其他安装位置请替换为实际的 `etc/bashrc`。第二行应输出 `v2512`；第三行显示方腔所用求解器的参数。
+第一行对应 Ubuntu 软件包的默认安装路径，装在别处的话，换成实际的 `etc/bashrc`。第二行应输出 `v2512`；第三行显示方腔所用求解器 `icoFoam` 的参数。
 
 ## 复制方腔算例
 
@@ -22,7 +22,7 @@ cd cavity-first
 ls
 ```
 
-`cp -r` 复制整个目录，`cavity-first` 是本次练习的名称。若已经用过这个名称，换一个新名称。复制后可以看到三个主要目录：
+`cp -r` 复制整个目录，`cavity-first` 是这次练习的名字（用过的话就换一个）。复制后能看到三个主要目录：
 
 | 目录 | 本例包含什么 |
 | --- | --- |
@@ -37,11 +37,11 @@ blockMesh
 checkMesh
 ```
 
-`blockMesh` 按 `system/blockMeshDict` 生成 $20\times20\times1$ 个单元。`checkMesh` 随后检查连接与几何，正常输出包含 `Mesh OK`。
+`blockMesh` 按 `system/blockMeshDict` 生成 $20\times20\times1$ 个单元，`checkMesh` 再检查网格的连接和几何，正常的话输出里会有 `Mesh OK`。
 
 ![方腔网格](/assets/science/cavity-mesh.png)
 
-本例是二维方腔。厚度方向只有一层单元，前后边界设置为 `empty`；顶盖以 $1\,\mathrm{m/s}$ 沿水平方向运动，其余壁面静止。
+这是一个二维方腔：厚度方向只有一层单元，前后边界设为 `empty`；顶盖以 $1\,\mathrm{m/s}$ 向右运动，其余壁面静止。
 
 ## 运行计算
 
@@ -50,9 +50,9 @@ icoFoam > log.icoFoam 2>&1
 tail -n 20 log.icoFoam
 ```
 
-第一行运行求解器，把输出与错误信息保存到 `log.icoFoam`。程序结束后，第二行显示日志最后 20 行。计算至 $0.5\,\mathrm{s}$，结果按 `controlDict` 中的写出间隔保存在时间目录中。
+第一行运行求解器，把输出和错误信息都存进 `log.icoFoam`；算完后，第二行显示日志的最后 20 行。计算到 $0.5\,\mathrm{s}$ 结束，结果按 `controlDict` 中的写出间隔存进各个时间目录。
 
-日志中的 `Time` 是当前时刻，`Solving for` 后是所求的场，`Initial residual` 和 `Final residual` 是线性方程求解前后的残差。各项的计算含义在[方腔课程](/read/?slug=first-cavity-result)中展开。
+日志中，`Time` 是当前时刻，`Solving for` 后面是正在求解的场，`Initial residual` 和 `Final residual` 是线性方程求解前后的残差。每一项的具体含义，[方腔课程](/read/?slug=first-cavity-result)里会详细解释。
 
 ## 查看速度场
 
@@ -60,17 +60,17 @@ tail -n 20 log.icoFoam
 paraFoam -builtin
 ```
 
-在 ParaView 中点击 **Apply**，切换到最后一个时刻，着色字段选择 **U → Magnitude**。可以看到顶盖驱动的回流。
+在 ParaView 中点 **Apply**，切换到最后一个时刻，着色选 **U → Magnitude**，就能看到顶盖带动的回流。
 
 ![方腔速度大小](/assets/science/cavity-velocity.png)
 
-若计算在无图形界面的服务器上进行，可创建读取入口，再把算例复制到安装了 ParaView 的电脑：
+如果在没有图形界面的服务器上计算，可以先建一个读取入口文件，再把整个算例复制到装有 ParaView 的电脑上：
 
 ```bash
 touch cavity.foam
 ```
 
-打开 `cavity.foam` 时，保留同目录下的网格和结果文件。
+打开 `cavity.foam` 时，同目录下的网格和结果文件要一起带上。
 
 ## 接着学什么
 

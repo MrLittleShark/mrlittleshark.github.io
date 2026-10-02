@@ -1,5 +1,5 @@
 ---
-title: "配置文件与 Dict 索引"
+title: "配置与字典"
 layout: "dictionaries"
 section: "dictionaries"
 ---

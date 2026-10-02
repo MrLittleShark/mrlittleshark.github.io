@@ -3,5 +3,5 @@ title: 资源推荐
 layout: catalog
 section: recommendations
 eyebrow: SELECTED TECHNICAL RESOURCES
-description: 按官方文档、教程、源码、网格、可视化与社区分类浏览 OpenFOAM 相关资源，查看用途、版本范围与原始入口。
+description: 按类别整理的 OpenFOAM 相关资源：官方文档、教程、源码、网格、可视化与社区。每条都注明用途、适用版本和原始链接。
 ---
