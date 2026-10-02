@@ -35,15 +35,9 @@
 .panda-bubble-close{position:absolute;right:8px;top:8px;border:0;background:none;color:var(--muted);width:26px;height:26px;padding:0;font-size:20px}
 .panda-tip-search{border:0;background:none;color:var(--accent);padding:0;font-size:12px;text-decoration:underline;text-underline-offset:3px}
 .panda-dock{position:fixed;right:18px;bottom:18px;z-index:42;background:var(--panda-surface,#fffdf7);border:1px solid var(--line);border-radius:50%;width:48px;height:48px;padding:6px;box-shadow:0 3px 12px #173b2615}
-.panda-pet[data-action=wave] .panda-arm-right{animation:panda-wave .55s ease-in-out 3}
-.panda-pet[data-action=jump] .panda-character{animation:panda-jump .7s ease-in-out 2}
-.panda-pet[data-action=jump] .panda-sparkles{display:block;animation:panda-spark .7s ease-in-out 2}
-.panda-pet[data-action=roll] .panda-character{animation:panda-roll 1.6s ease-in-out}
-.panda-pet[data-action=dance] .panda-character{animation:panda-dance .45s ease-in-out 4}
-.panda-pet[data-action=dance] .panda-arm-left{animation:panda-wave .45s ease-in-out 4 reverse}
-.panda-pet[data-action=sleep] .panda-eyes{animation:none;transform:scaleY(.12)}
-.panda-pet[data-action=sleep] .panda-head{animation:panda-nod 2s ease-in-out infinite}
-.panda-pet[data-action=sleep] .panda-sleep-marks{display:block;animation:panda-spark 2s ease-in-out infinite}
+[data-action=sleep] .panda-eyes{animation:none;transform:scaleY(.12)}
+[data-action=sleep] .panda-head{animation:panda-nod 2s ease-in-out infinite}
+[data-action=sleep] .panda-sleep-marks{display:block;animation:panda-spark 2s ease-in-out infinite}
 .panda-account{margin:28px 0 36px;padding:28px;border:1px solid var(--line);background:var(--panda-surface,#fffdf7);border-radius:22px;scroll-margin-top:100px}
 .panda-account-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .panda-account-head h2{margin:4px 0 0;font-size:24px}.panda-level-tag{background:var(--mint);color:var(--accent);font:bold 17px var(--mono);padding:9px 15px;border-radius:30px}

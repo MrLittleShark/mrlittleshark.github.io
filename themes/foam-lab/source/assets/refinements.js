@@ -16,6 +16,7 @@
   document.addEventListener('pointercancel', () => { pointerStart = undefined; }, { passive: true });
 
   document.addEventListener('click', event => {
+    if (window.foamPandaParticles) return;
     if (reducedMotion.matches || forcedColours.matches || !event.isTrusted || event.detail === 0) return;
     if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     const target = event.target instanceof Element ? event.target : null;

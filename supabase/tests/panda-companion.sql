@@ -18,7 +18,10 @@ do $$
 declare s jsonb; rejected boolean; i integer;
 begin
  s:=public.foamlab_pet(); assert (s->'pet'->>'xp')::integer=0,'Initial XP';
- assert jsonb_array_length(s->'items')=14,'Catalog';
+ assert jsonb_array_length(s->'items')=21,'Catalog';
+ s:=public.foamlab_pet('equip','{"id":"crawl"}');assert s->'pet'->>'action'='crawl','Crawl at level one';
+ s:=public.foamlab_pet('equip','{"id":"sing"}');assert s->'pet'->>'action'='sing','Singing at level one';
+ rejected:=false;begin perform public.foamlab_pet('equip','{"id":"spin"}');exception when raise_exception then rejected:=true;end;assert rejected,'Locked dance';
  s:=public.foamlab_pet('checkin'); assert (s->>'awarded')::integer=10,'First check-in';
  s:=public.foamlab_pet('checkin'); assert (s->>'awarded')::integer=0 and (s->'pet'->>'xp')::integer=10,'Duplicate check-in';
  rejected:=false;begin update public.foamlab_pets set xp=999999 where user_id=auth.uid();exception when insufficient_privilege then rejected:=true;end;assert rejected,'Client forged XP';

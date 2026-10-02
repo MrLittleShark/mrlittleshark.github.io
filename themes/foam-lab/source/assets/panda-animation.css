@@ -1,0 +1,134 @@
+/* Each action has a body trajectory, limb rhythm and matching facial expression. */
+.panda-microphone,.panda-mouth-open,.panda-happy-eyes,.panda-music-notes{display:none}
+.panda-foot-left{transform-origin:75px 217px}.panda-foot-right{transform-origin:165px 217px}.panda-ear-left{transform-origin:65px 40px}.panda-ear-right{transform-origin:175px 40px}
+.panda-mouth-open{transform-origin:120px 126px}
+.panda-pet:not([data-action]) .panda-character{animation:panda-breathe 4.8s ease-in-out infinite}
+.panda-pet:not([data-action]) .panda-head{animation:panda-idle-look 8s ease-in-out infinite}
+.panda-pet.is-curious:not([data-action]) .panda-head{animation:none;transform:rotate(-7deg) translateY(-3px)}
+.panda-pet.is-curious .panda-ear-right{animation:panda-ear-twitch .55s ease-in-out}
+.panda-pet.is-dragging .panda-character{animation:panda-dangle .7s ease-in-out infinite;transform-origin:120px 75px}
+[data-action] .panda-bamboo{opacity:0;transition:opacity .15s}
+[data-action=munch] .panda-bamboo,[data-action=wave] .panda-bamboo,[data-action=sleep] .panda-bamboo{opacity:1}
+:is([data-action=cheer],[data-action=dance],[data-action=sway],[data-action=roll]) .panda-happy-eyes{display:block}
+:is([data-action=cheer],[data-action=dance],[data-action=sway],[data-action=roll]) .panda-eyes{opacity:0}
+[data-action=wave] .panda-arm-right{animation:panda-wave-v2 .6s ease-in-out 4}
+[data-action=wave] .panda-head{animation:panda-greet-head 1.2s ease-in-out 2}
+[data-action=wave] .panda-foot-right{animation:panda-tap-foot .6s ease-in-out 4}
+[data-action=jump] .panda-character{animation:panda-hop-v2 1.2s cubic-bezier(.28,.03,.32,1) 2}
+[data-action=jump] .panda-arm-right{animation:panda-hop-arm 1.2s ease-in-out 2}
+[data-action=jump] .panda-arm-left{animation:panda-hop-arm-left 1.2s ease-in-out 2}
+[data-action=jump] .panda-shadow{animation:panda-shadow-hop 1.2s ease-in-out 2;transform-origin:120px 244px}
+[data-action=roll] .panda-character{animation:panda-tumble 3.3s cubic-bezier(.3,.1,.25,1) both;transform-origin:120px 140px}
+[data-action=roll] .panda-arm-left{animation:panda-tuck-left 3.3s ease-in-out both}
+[data-action=roll] .panda-arm-right{animation:panda-tuck-right 3.3s ease-in-out both}
+[data-action=roll] .panda-foot-left{animation:panda-tuck-foot 3.3s ease-in-out both}
+[data-action=roll] .panda-foot-right{animation:panda-tuck-foot 3.3s ease-in-out both}
+[data-action=dance] .panda-character{animation:panda-two-step .7s ease-in-out 6}
+[data-action=dance] .panda-foot-left{animation:panda-kick-left .7s ease-in-out 6}
+[data-action=dance] .panda-foot-right{animation:panda-kick-right .7s ease-in-out 6}
+[data-action=dance] .panda-arm-left{animation:panda-swing-left .7s ease-in-out 6}
+[data-action=dance] .panda-arm-right{animation:panda-swing-right .7s ease-in-out 6}
+[data-action=dance] .panda-head{animation:panda-counter-head .7s ease-in-out 6}
+[data-action=crawl] .panda-character{animation:panda-crawl-body .8s ease-in-out 6;transform-origin:120px 205px}
+[data-action=crawl] .panda-head{animation:panda-crawl-head .8s ease-in-out 6;transform-origin:120px 110px}
+[data-action=crawl] .panda-arm-left{animation:panda-front-paw .8s ease-in-out 6}
+[data-action=crawl] .panda-arm-right{animation:panda-front-paw .8s -.4s ease-in-out 6}
+[data-action=crawl] .panda-foot-left{animation:panda-rear-paw .8s -.4s ease-in-out 6}
+[data-action=crawl] .panda-foot-right{animation:panda-rear-paw .8s ease-in-out 6}
+[data-action=sing] .panda-microphone,[data-action=sing] .panda-mouth-open,[data-action=sing] .panda-music-notes{display:block}
+[data-action=sing] .panda-mouth-rest{display:none}
+[data-action=sing] .panda-character{animation:panda-song-bounce .65s ease-in-out 8}
+[data-action=sing] .panda-head{animation:panda-song-head 1.3s ease-in-out 4}
+[data-action=sing] .panda-arm-right{animation:panda-mic-hold .65s ease-in-out 8}
+[data-action=sing] .panda-arm-left{animation:panda-song-conduct 1.3s ease-in-out 4}
+[data-action=sing] .panda-mouth-open{animation:panda-syllables .42s ease-in-out infinite}
+[data-action=sing] .panda-music-notes text{animation:panda-note-float 1.7s ease-out infinite;transform-box:fill-box;transform-origin:center}
+[data-action=sing] .panda-music-notes text:nth-child(2){animation-delay:-.55s;fill:#d4a763}
+[data-action=sing] .panda-music-notes text:nth-child(3){animation-delay:-1.1s}
+[data-action=sway] .panda-character{animation:panda-sway-body 1s ease-in-out 4}
+[data-action=sway] .panda-arm-left{animation:panda-sway-left 1s ease-in-out 4}
+[data-action=sway] .panda-arm-right{animation:panda-sway-right 1s ease-in-out 4}
+[data-action=sway] .panda-head{animation:panda-counter-head 1s ease-in-out 4}
+[data-action=spin] .panda-character{animation:panda-pirouette 3.2s cubic-bezier(.35,.03,.22,1) both;transform-origin:120px 160px;transform-style:preserve-3d}
+[data-action=spin] .panda-arm-left{transform:rotate(65deg)}[data-action=spin] .panda-arm-right{transform:rotate(-65deg)}
+[data-action=spin] .panda-foot-left{transform:translate(25px,0) rotate(-20deg)}[data-action=spin] .panda-foot-right{transform:translate(-20px,0)}
+[data-action=stretch] .panda-character{animation:panda-stretch-body 3.3s ease-in-out both}
+[data-action=stretch] .panda-arm-left{animation:panda-stretch-left 3.3s ease-in-out both}
+[data-action=stretch] .panda-arm-right{animation:panda-stretch-right 3.3s ease-in-out both}
+[data-action=stretch] .panda-head{animation:panda-stretch-head 3.3s ease-in-out both}
+[data-action=stretch] .panda-eyes{transform:scaleY(.25);animation:none}
+[data-action=munch] .panda-arm-left{animation:panda-feed 1.2s ease-in-out 3}
+[data-action=munch] .panda-head{animation:panda-chew-head .6s ease-in-out 6}
+[data-action=munch] .panda-mouth-open{display:block;animation:panda-syllables .3s ease-in-out infinite}
+[data-action=munch] .panda-mouth-rest{display:none}
+[data-action=munch] .panda-bamboo{animation:panda-bamboo-bite 1.2s ease-in-out 3;transform-origin:60px 175px}
+[data-action=cheer] .panda-character{animation:panda-hop-v2 .95s ease-in-out 3}
+[data-action=cheer] .panda-arm-left{animation:panda-celebrate-left .48s ease-in-out 6}
+[data-action=cheer] .panda-arm-right{animation:panda-celebrate-right .48s ease-in-out 6}
+[data-action=cheer] .panda-sparkles{display:block;animation:panda-spark .48s ease-in-out 6}
+[data-preview-action=crawl] .panda-character{transform:translate(0,24px) scale(1.06,.75)}
+[data-preview-action=sing] .panda-music-notes,[data-preview-action=sing] .panda-mouth-open,[data-preview-action=sing] .panda-microphone{display:block}
+[data-preview-action=sing] .panda-mouth-rest{display:none}
+[data-preview-action=sway] .panda-arm-left,[data-preview-action=stretch] .panda-arm-left,[data-preview-action=cheer] .panda-arm-left{transform:rotate(135deg)}
+[data-preview-action=sway] .panda-arm-right,[data-preview-action=stretch] .panda-arm-right,[data-preview-action=cheer] .panda-arm-right{transform:rotate(-135deg)}
+[data-preview-action=munch] .panda-arm-left{transform:translate(12px,-8px) rotate(35deg)}
+[data-preview-action=spin] .panda-character{transform:rotate(-12deg) scaleX(.75)}
+@keyframes panda-breathe{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1.5px) scale(1.01,.99)}}
+@keyframes panda-idle-look{0%,65%,100%{transform:rotate(0)}72%,83%{transform:rotate(3deg) translateY(-2px)}90%{transform:rotate(-2deg)}}
+@keyframes panda-ear-twitch{30%{transform:rotate(18deg)}65%{transform:rotate(-8deg)}}
+@keyframes panda-dangle{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes panda-wave-v2{0%,100%{transform:rotate(-25deg)}25%,75%{transform:rotate(-125deg)}50%{transform:rotate(-80deg)}}
+@keyframes panda-greet-head{0%,100%{transform:rotate(0)}50%{transform:rotate(-9deg) translateY(2px)}}
+@keyframes panda-tap-foot{0%,100%{transform:rotate(0)}50%{transform:rotate(-16deg) translateY(-4px)}}
+@keyframes panda-hop-v2{0%,100%{transform:translateY(0) scale(1)}16%{transform:translateY(7px) scale(1.09,.87)}40%{transform:translateY(-27px) scale(.93,1.04)}56%{transform:translateY(-33px) scale(.96,1.02)}82%{transform:translateY(4px) scale(1.08,.92)}92%{transform:translateY(-3px) scale(.99,1.01)}}
+@keyframes panda-hop-arm{0%,100%{transform:rotate(0)}40%,65%{transform:rotate(-100deg)}}
+@keyframes panda-hop-arm-left{0%,100%{transform:rotate(0)}40%,65%{transform:rotate(100deg)}}
+@keyframes panda-shadow-hop{0%,100%{transform:scaleX(1);opacity:.12}50%{transform:scaleX(.65);opacity:.06}}
+@keyframes panda-tumble{0%{transform:rotate(0)}15%{transform:translate(-10px,6px) rotate(-22deg) scale(.94)}28%{transform:translate(-16px,8px) rotate(30deg) scale(.9)}52%{transform:translate(8px,4px) rotate(185deg) scale(.86)}78%{transform:translate(15px,3px) rotate(340deg) scale(.92)}92%{transform:translate(3px,5px) rotate(368deg) scale(1.03,.94)}100%{transform:rotate(360deg)}}
+@keyframes panda-tuck-left{0%,100%{transform:rotate(0)}20%,78%{transform:translate(22px,0) rotate(60deg)}}
+@keyframes panda-tuck-right{0%,100%{transform:rotate(0)}20%,78%{transform:translate(-22px,0) rotate(-60deg)}}
+@keyframes panda-tuck-foot{0%,100%{transform:translateY(0)}20%,78%{transform:translateY(-25px) scale(.8)}}
+@keyframes panda-two-step{0%,100%{transform:translateX(-7px) rotate(-4deg)}25%,75%{transform:translateY(-7px)}50%{transform:translateX(7px) rotate(4deg)}}
+@keyframes panda-kick-left{0%,100%{transform:rotate(-16deg) translateY(-9px)}50%{transform:rotate(0)}}
+@keyframes panda-kick-right{0%,100%{transform:rotate(0)}50%{transform:rotate(16deg) translateY(-9px)}}
+@keyframes panda-swing-left{0%,100%{transform:rotate(65deg)}50%{transform:rotate(-10deg)}}
+@keyframes panda-swing-right{0%,100%{transform:rotate(10deg)}50%{transform:rotate(-65deg)}}
+@keyframes panda-counter-head{0%,100%{transform:rotate(7deg)}50%{transform:rotate(-7deg)}}
+@keyframes panda-crawl-body{0%,100%{transform:translateY(23px) rotate(-8deg) scale(1.05,.77)}50%{transform:translateY(20px) rotate(-5deg) scale(1.08,.8)}}
+@keyframes panda-crawl-head{0%,100%{transform:translate(-8px,13px) rotate(10deg)}50%{transform:translate(-4px,9px) rotate(5deg)}}
+@keyframes panda-front-paw{0%,100%{transform:translate(-9px,21px) rotate(-18deg)}50%{transform:translate(8px,28px) rotate(17deg)}}
+@keyframes panda-rear-paw{0%,100%{transform:translate(9px,-7px) rotate(17deg)}50%{transform:translate(-9px,0) rotate(-17deg)}}
+@keyframes panda-song-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px) scale(1.015,.99)}}
+@keyframes panda-song-head{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg) translateY(-3px)}}
+@keyframes panda-mic-hold{0%,100%{transform:rotate(-36deg) translate(-5px,-6px)}50%{transform:rotate(-43deg) translate(-5px,-6px)}}
+@keyframes panda-song-conduct{0%,100%{transform:rotate(17deg)}50%{transform:rotate(50deg)}}
+@keyframes panda-syllables{0%,100%{transform:scale(1,.6)}50%{transform:scale(.8,1.1)}}
+@keyframes panda-note-float{0%{transform:translate(0,10px) rotate(-8deg);opacity:0}20%{opacity:1}100%{transform:translate(7px,-24px) rotate(12deg);opacity:0}}
+@keyframes panda-sway-body{0%,100%{transform:rotate(-10deg) translateX(-6px)}50%{transform:rotate(10deg) translateX(6px)}}
+@keyframes panda-sway-left{0%,100%{transform:translate(-22px,-20px) rotate(110deg)}50%{transform:translate(-22px,-20px) rotate(150deg)}}
+@keyframes panda-sway-right{0%,100%{transform:translate(22px,-20px) rotate(-150deg)}50%{transform:translate(22px,-20px) rotate(-110deg)}}
+@keyframes panda-pirouette{0%{transform:perspective(350px) rotateY(0) translateY(0)}15%{transform:perspective(350px) rotateY(-15deg) translateY(-3px)}80%{transform:perspective(350px) rotateY(720deg) translateY(-8px)}100%{transform:perspective(350px) rotateY(720deg) translateY(0)}}
+@keyframes panda-stretch-body{0%,100%{transform:scale(1)}35%,65%{transform:translateY(-5px) scale(.96,1.05)}}
+@keyframes panda-stretch-left{0%,100%{transform:rotate(0)}35%,65%{transform:translate(-28px,-32px) rotate(145deg)}}
+@keyframes panda-stretch-right{0%,100%{transform:rotate(0)}35%,65%{transform:translate(28px,-32px) rotate(-145deg)}}
+@keyframes panda-stretch-head{0%,100%{transform:translateY(0)}35%,65%{transform:translateY(-7px) rotate(-6deg)}}
+@keyframes panda-feed{0%,100%{transform:rotate(8deg)}50%{transform:translate(12px,-8px) rotate(42deg)}}
+@keyframes panda-chew-head{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(-1deg) translateY(2px)}}
+@keyframes panda-bamboo-bite{0%,100%{transform:rotate(0)}50%{transform:rotate(8deg) translateY(-4px)}}
+@keyframes panda-celebrate-left{0%,100%{transform:translate(-16px,-10px) rotate(95deg)}50%{transform:translate(-22px,-22px) rotate(155deg)}}
+@keyframes panda-celebrate-right{0%,100%{transform:translate(16px,-10px) rotate(-95deg)}50%{transform:translate(22px,-22px) rotate(-155deg)}}
+.panda-play-menu{position:absolute;width:280px;max-width:calc(100vw - 24px);padding:14px;background:var(--panda-surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 35px #18372b24;overflow:auto;z-index:2}
+.panda-play-menu[hidden]{display:none!important}
+.panda-play-menu>strong{display:block;font-size:13px;margin-bottom:10px;color:var(--accent)}
+.panda-menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.panda-menu-grid button{padding:8px 6px;border:1px solid var(--line);border-radius:9px;background:var(--mint);color:var(--ink);font-size:12px;line-height:1.5}.panda-menu-grid button:disabled{cursor:default;opacity:.45}
+.panda-menu-sound{display:flex;gap:7px;align-items:center;font-size:12px;color:var(--muted);margin-top:12px}.panda-menu-sound input{accent-color:var(--accent)}
+.panda-local-options{display:flex;flex-wrap:wrap;gap:8px 15px;margin-top:14px}.panda-local-options label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}.panda-local-options input{accent-color:var(--accent)}
+.panda-local-options>.muted{font-size:11px;align-self:center}
+.panda-particles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:2147483000;contain:strict}
+.panda-particle{position:absolute;display:block;width:var(--size);height:var(--size);background:#639f8a;border-radius:50%;animation:panda-particle-burst var(--life) var(--delay) cubic-bezier(.12,.7,.2,1) both;will-change:transform,opacity}
+.panda-particle.leaf{border-radius:2px 80% 2px 80%;height:calc(var(--size)*1.6);background:#90b676}.panda-particle.ring{background:transparent;border:1.5px solid #87baca}.panda-particle.star{background:#d7b66b;clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
+@keyframes panda-particle-burst{0%{transform:translate(-50%,-50%) scale(.35);opacity:0}15%{opacity:.95}100%{transform:translate(calc(-50% + var(--px)),calc(-50% + var(--py))) rotate(var(--pr)) scale(.35);opacity:0}}
+[data-quiet=true] .panda-art *,[data-quiet=true].panda-pet:not([data-action]) .panda-art *{animation:none!important;transition:none!important}
+@media(max-width:600px){.panda-tools{gap:4px}.panda-tools button{width:23px;height:28px;font-size:17px}.panda-play-menu{width:265px}}
+@media(prefers-reduced-motion:reduce){.panda-art *{animation:none!important;transition:none!important}.panda-particles{display:none}}
+@media(forced-colors:active){.panda-particles{display:none}}
