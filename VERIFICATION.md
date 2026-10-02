@@ -1,6 +1,17 @@
 # 重构验证记录
 
-## 仓库转移后的本地同步
+## 新域名登录修复与发布
+
+2026-10-02：迁移配置已发布至 foamlabshark/foamlabshark.github.io，源码提交 c4b95ac558cd96b828ecdea7a31d91be6a7650e8。GitHub Pages 工作流 36957567831 已完成且结果为 success。下面的本地同步记录保留的是发布前状态。
+
+- 初次诊断发现 Supabase 未接受新域名的登录返回地址，匿名 OAuth 取消流程被送至旧站根地址。用户保存 Auth URL Configuration 后复测，返回地址已正确保留为 https://foamlabshark.github.io/account/；旧域名请求回退至新站根地址。
+- 实际 Edge 检查账户页和管理页均为 HTTP 200，两个登录按钮均可打开 GitHub 登录表单，均使用新账户页作为返回地址及 PKCE S256。管理入口保存的后续目标为 /admin/，未发现页面脚本错误。检查程序为 tools/check-live-browser.cjs，报告为 .openfoam-work/live-auth-check.json。
+- 3 篇作业和维护手册中的旧链接已通过 supabase/maintenance/repository-domain-transfer.sql 更新，保留其他正文与修订历史。数据库复核旧站链接剩余 0 条；原个人 GitHub 身份对应的管理员角色仍存在。
+- 默认网络环境、直接连接及当前 Edge 代理分别请求首页、账户页、管理页，9 次检查均为 HTTP 200。诊断期间曾出现单次 TLS 连接中止，重试成功；未修改系统代理、浏览器资料或防火墙。该现象与 OAuth 返回地址配置错误分开记录。
+
+验证范围：没有代替用户完成个人 GitHub 授权，也未用管理员身份执行内容写入。本轮确认入口可访问、登录可发起、服务端返回地址正确，以及既有管理员角色保留。匿名取消流程的返回地址报告与网络检查位于 .openfoam-work/login-repair/，不含用户登录凭据。
+
+## 仓库转移后的本地同步（发布前记录）
 
 2026-10-02：已核对新仓库 foamlabshark/foamlabshark.github.io 属于 Organization，源码分支 foamlab-source 的提交为 1d285d000a61c8e5675aa4f2604e15d1391415c2，main 为 086f43e5e3708eedccfb7fd96b7d945763879f65，与本地历史一致。本地两个现用 Git 工作副本的 origin 已更新并 fetch，Hexo 配置、发布保护检查、界面链接、内容源与操作文档已同步到新域名；个人管理员身份与权限条件保持原值。
 
