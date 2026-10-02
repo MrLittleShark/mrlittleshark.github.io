@@ -3,9 +3,10 @@
  const groups=[...document.querySelectorAll('[data-nav-section]')];
  if(!groups.length)return;
  let saved={};try{saved=JSON.parse(localStorage.getItem('foamlab-nav-groups')||'{}');}catch{}
- const toggle=(group,open)=>{const button=group.querySelector('.nav-expand');if(!button)return;button.setAttribute('aria-expanded',String(open));document.getElementById(button.getAttribute('aria-controls')).hidden=!open;};
+ const toggle=(group,open)=>{const button=group.querySelector('.nav-expand');if(!button)return;button.setAttribute('aria-expanded',String(open));const panel=document.getElementById(button.getAttribute('aria-controls'));if(panel)panel.hidden=!open;};
  for(const group of groups){const button=group.querySelector('.nav-expand');if(!button)continue;const key=group.dataset.navSection;if(typeof saved[key]==='boolean')toggle(group,saved[key]);button.addEventListener('click',()=>{const open=button.getAttribute('aria-expanded')!=='true';toggle(group,open);saved[key]=open;try{localStorage.setItem('foamlab-nav-groups',JSON.stringify(saved));}catch{}});}
  function activate(item){
+  if(window.FoamDirectory?.available){if(item)window.FoamDirectory.breadcrumb(item);return;}
   const current=new URL(location.href);let winner=null;
   for(const link of document.querySelectorAll('.nav-subitem')){
    const url=new URL(link.href),specific=[...url.searchParams];

@@ -11,7 +11,7 @@ async function openTab(p,name){if(['roles','modules','settings','backup'].includ
  const row=content('00000000-0000-4000-8000-000000000001','manage-article',{title:'管理验证文章',track:'算例分享',series:'流动笔记',body:'原始正文'});
  f.db.foamlab_content=[row,...Array.from({length:64},(_,i)=>content(`00000000-0000-4000-8000-${String(i+2).padStart(12,'0')}`,'catalog-'+i,{title:'课程 '+i,kind:'lesson',track:'起步与算例',series:'系统课程'}))];
  await ready(p,'/admin/','#cms-new');assert.equal(await p.locator('#cms-table .cms-table-row').count(),25);
- await p.locator('#cms-pager [data-page="2"]').click();assert.match(await p.locator('#cms-pager').textContent(),/第 2/);
+ await p.locator('#cms-pager [data-page="2"]').first().click();assert.match(await p.locator('#cms-pager').textContent(),/第 2/);
  await p.locator('#cms-search').fill('管理验证');assert.equal(await p.locator('#cms-table .cms-table-row').count(),1);
  await p.locator('.cms-title-button').click();await idle(p);assert(await p.locator('.cms-content-list').isHidden());assert.match(await p.locator('#cms-position-label').textContent(),/实践与分享.*算例分享.*流动笔记/);
  await p.locator('[name=body]').fill('尚未保存的正文');await p.locator('#cms-cancel').click();await answer(p,false);await idle(p);assert.equal(await p.locator('[name=body]').inputValue(),'尚未保存的正文');assert.equal(f.writes.length,0);

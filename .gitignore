@@ -14,3 +14,7 @@ server/
 __pycache__/
 *.pyc
 supabase/.temp/
+
+# Local archives are not website source.
+archive/
+.temp/

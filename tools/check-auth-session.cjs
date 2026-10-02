@@ -84,7 +84,7 @@ const waitOut=page=>page.waitForFunction(()=>window.foamAuth&&!window.foamAuth.l
 
   const admin=await fixture(browser,'admin',{persistSession:true});
   await visit(admin.page,'/admin/');await admin.page.locator('#cms-new').waitFor();
-  const adminTab=await admin.context.newPage();await visit(adminTab,'/account/');await adminTab.locator('#profile-admin-link').waitFor();
+  const adminTab=await admin.context.newPage();await visit(adminTab,'/account/');await adminTab.waitForFunction(()=>document.querySelector('#profile-admin-link')?.hidden===false);
   await adminTab.locator('#sign-out').click();await waitOut(adminTab);await waitOut(admin.page);
   assert.equal(await admin.page.locator('#cms-new').count(),0);assert(await adminTab.locator('#profile-admin-link').isHidden());
   checks.push('logout removes administrator controls in every open page');await admin.close();
