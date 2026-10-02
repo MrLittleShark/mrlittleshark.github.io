@@ -1,6 +1,6 @@
 'use strict';
 (() => {
- const mark='<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="#283738"/><circle cx="37" cy="11" r="9" fill="#283738"/><ellipse cx="24" cy="26" rx="22" ry="20" fill="#fffcf4" stroke="#d3decd"/><ellipse cx="15" cy="24" rx="6" ry="8" fill="#283738" transform="rotate(25 15 24)"/><ellipse cx="33" cy="24" rx="6" ry="8" fill="#283738" transform="rotate(-25 33 24)"/><circle cx="16" cy="23" r="2" fill="white"/><circle cx="32" cy="23" r="2" fill="white"/><path d="M21 32q3-3 6 0l-3 4Z" fill="#283738"/></svg>';
+ const mark=window.foamPandaArt(true);
  function enhance(){
   // Restyle a few existing operational explanations without adding duplicate prose.
   const starts=['第一行适用于安装到该路径的 Ubuntu 软件包。','本例是二维方腔。','cp -r 复制整个目录','计算会频繁读写文件，Linux 本地目录','终端显示乱码时，检查文件编码','在另一个终端进入同一算例，执行 tail -f','修改一处打印文本，重新编译并运行。'];

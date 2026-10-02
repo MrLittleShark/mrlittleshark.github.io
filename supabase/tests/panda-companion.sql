@@ -18,10 +18,13 @@ do $$
 declare s jsonb; rejected boolean; i integer;
 begin
  s:=public.foamlab_pet(); assert (s->'pet'->>'xp')::integer=0,'Initial XP';
- assert jsonb_array_length(s->'items')=21,'Catalog';
+ assert s->'pet'->>'decoration'='no-decor','Default scene';
+ assert jsonb_array_length(s->'items')=42,'Catalog';
  s:=public.foamlab_pet('equip','{"id":"crawl"}');assert s->'pet'->>'action'='crawl','Crawl at level one';
  s:=public.foamlab_pet('equip','{"id":"sing"}');assert s->'pet'->>'action'='sing','Singing at level one';
  rejected:=false;begin perform public.foamlab_pet('equip','{"id":"spin"}');exception when raise_exception then rejected:=true;end;assert rejected,'Locked dance';
+ rejected:=false;begin perform public.foamlab_pet('equip','{"id":"pond"}');exception when raise_exception then rejected:=true;end;assert rejected,'Locked decoration';
+ rejected:=false;begin perform public.foamlab_pet('equip','{"id":"astronaut"}');exception when raise_exception then rejected:=true;end;assert rejected,'Locked evolution';
  s:=public.foamlab_pet('checkin'); assert (s->>'awarded')::integer=10,'First check-in';
  s:=public.foamlab_pet('checkin'); assert (s->>'awarded')::integer=0 and (s->'pet'->>'xp')::integer=10,'Duplicate check-in';
  rejected:=false;begin update public.foamlab_pets set xp=999999 where user_id=auth.uid();exception when insufficient_privilege then rejected:=true;end;assert rejected,'Client forged XP';
@@ -67,6 +70,22 @@ update public.foamlab_threads set status='hidden' where id='20000000-0000-4000-8
 select set_config('request.jwt.claim.sub','20000000-0000-4000-8000-000000000001',true);
 set local role authenticated;
 do $$declare s jsonb;begin s:=public.foamlab_pet();assert (s->'pet'->>'xp')::integer=125,'Moderation retracts replies';end $$;
+reset role;
+-- Test every cosmetic through the same authenticated RPC, then return to level 2.
+update public.foamlab_pets set xp=7650 where user_id='20000000-0000-4000-8000-000000000001';
+set local role authenticated;
+do $$declare s jsonb; entry jsonb; rejected boolean:=false;begin
+ s:=public.foamlab_pet();assert (s->>'level')::integer=18,'Level 18 threshold';
+ for entry in select jsonb_array_elements(s->'items') loop
+  s:=public.foamlab_pet('equip',jsonb_build_object('id',entry->>'id'));
+  assert s->'pet'->>(entry->>'category')=entry->>'id','Equipment category saved';
+ end loop;
+ begin update public.foamlab_pets set decoration='pond' where user_id=auth.uid();exception when insufficient_privilege then rejected:=true;end;assert rejected,'Direct decoration write';
+end $$;
+reset role;
+update public.foamlab_pets set xp=125,form='astronaut',outfit='spacesuit',action='experiment',decoration='observatory' where user_id='20000000-0000-4000-8000-000000000001';
+set local role authenticated;
+do $$declare s jsonb;begin s:=public.foamlab_pet();assert s->'pet'->>'form'='cub' and s->'pet'->>'outfit'='none' and s->'pet'->>'action'='wave' and s->'pet'->>'decoration'='no-decor','Equipment follows reduced level';end $$;
 reset role;
 insert into public.foamlab_roles(user_id,role) values('20000000-0000-4000-8000-000000000001','blocked');
 set local role authenticated;

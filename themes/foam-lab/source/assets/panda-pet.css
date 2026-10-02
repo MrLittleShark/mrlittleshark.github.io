@@ -1,5 +1,10 @@
 /* The pet is a small, movable layer; document flow stays unchanged. */
 .panda-art{display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
+.panda-pixel-art{image-rendering:crisp-edges;image-rendering:pixelated}
+.panda-profile-visual canvas{width:192px;height:216px}
+.panda-home-portrait{image-rendering:pixelated}
+.brand-mark canvas{width:42px;height:42px}
+.panda-note-label canvas{width:24px;height:24px;flex:none}
 .panda-accessory,.panda-master-brows,.panda-sleep-marks,.panda-sparkles{display:none}
 [data-outfit=scarf] .panda-scarf,[data-outfit=goggles] .panda-goggles,[data-outfit=coat] .panda-coat,[data-outfit=backpack] .panda-backpack,[data-outfit=cap] .panda-cap,[data-form=master] .panda-master-brows{display:block}
 [data-form=explorer] .panda-character{transform:translateY(-5px) scale(.94,1.03);transform-origin:120px 240px}
@@ -59,6 +64,13 @@
 .panda-item-preview{display:block;width:80px;height:87px;margin-bottom:8px}.panda-item>strong{font-size:13px}.panda-item>span:not(.panda-item-preview){font-size:11px;line-height:1.6;color:var(--muted);margin:5px 0 8px}.panda-item>small{font-size:11px;color:var(--accent);margin-top:auto}
 [data-preview-action=wave] .panda-arm-right{transform:rotate(-100deg)}[data-preview-action=sleep] .panda-eyes{transform:scaleY(.12)}[data-preview-action=sleep] .panda-sleep-marks{display:block}[data-preview-action=jump] .panda-character{transform:translateY(-15px)}[data-preview-action=roll] .panda-character{transform:rotate(-32deg)}[data-preview-action=dance] .panda-character{transform:rotate(12deg)}[data-preview-action=dance] .panda-sparkles{display:block}
 .panda-rules,.panda-history{border-top:1px solid var(--line);margin-top:20px;padding-top:15px;font-size:13px;color:var(--muted)}.panda-rules summary,.panda-history summary{cursor:pointer;color:var(--ink);font-weight:600;padding:4px 0}.panda-rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding-top:10px;line-height:1.9}.panda-rules ul{padding-left:20px;margin:0}.panda-history ul{list-style:none;padding:10px 0 0;margin:0}.panda-history li{display:flex;gap:16px;padding:8px 0}.panda-history time{margin-left:auto}.panda-history b{min-width:45px;color:var(--accent);text-align:right}
+.panda-next-reward{margin:16px 0;padding:12px 15px;background:var(--mint);border:1px solid var(--line);border-radius:12px;font-size:13px;line-height:1.8}
+.panda-next-reward strong{color:var(--accent)}.panda-next-reward span{display:block;color:var(--muted);font-size:12px}
+.panda-evolution{border-top:1px solid var(--line);margin-top:24px;padding-top:16px}.panda-evolution>summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--ink);padding:6px 0}.panda-evolution>summary small{font-size:11px;color:var(--muted);font-weight:400;margin-left:9px}
+.panda-growth-stages{list-style:none;padding:12px 0 0;margin:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.panda-growth-stages li{border:1px solid var(--line);border-radius:12px;text-align:center;padding:12px 8px;min-width:0;background:var(--bg)}.panda-growth-stages .panda-item-preview{margin:0 auto 7px;width:96px;height:108px;max-width:100%}.panda-growth-stages strong{display:block;font-size:13px}.panda-growth-stages small{display:block;color:var(--muted);font-size:11px;margin-top:6px}.panda-growth-stages button{margin-top:9px;border:1px solid var(--line);border-radius:8px;background:var(--mint);color:var(--accent);padding:5px 10px;font-size:12px}.panda-growth-stages [aria-current=true]{border-color:var(--accent);background:var(--mint)}
+.panda-pet.is-evolving canvas,.panda-profile-visual.is-evolving canvas{animation:panda-evolve .85s ease-in-out}
+@keyframes panda-evolve{0%,100%{filter:none}45%{filter:brightness(1.4) drop-shadow(0 0 7px #e5c46f);transform:translateY(-3px)}}
+@media(max-width:700px){.panda-growth-stages{grid-template-columns:repeat(2,minmax(0,1fr))}.panda-profile-visual canvas{width:160px;height:180px}.panda-tabs{flex-wrap:wrap}.panda-tabs button{padding:6px 12px}}
 @keyframes panda-blink{0%,42%,45%,100%{transform:scaleY(1)}43%,44%{transform:scaleY(.1)}}
 @keyframes panda-wave{0%,100%{transform:rotate(-8deg)}35%{transform:rotate(-112deg)}70%{transform:rotate(-76deg)}}
 @keyframes panda-jump{0%,100%{transform:translateY(0) scale(1)}25%{transform:translateY(4px) scale(1.05,.94)}55%{transform:translateY(-25px) scale(.98,1.03)}}
