@@ -1,0 +1,151 @@
+{
+  "01-deforming": {
+    "solver": "pimpleFoam",
+    "end": 0.003,
+    "cells_initial": 1900,
+    "cells_final": 1900,
+    "max_speed": 3.7482911759894004,
+    "mesh_standard": "passed",
+    "min_volume": 2.348396514e-14,
+    "maximum_point_displacement": 0.0030000000000000022,
+    "p_range": [
+      -7.23665,
+      11.6797
+    ],
+    "U_range": [
+      -3.08818,
+      3.42115
+    ]
+  },
+  "02-overset": {
+    "solver": "overPimpleDyMFoam",
+    "end": 0.28,
+    "cells_initial": 881,
+    "cells_final": 881,
+    "max_speed": 2.3745018915905898,
+    "mesh_standard": "passed",
+    "min_volume": 6.249999996e-10,
+    "p_range": [
+      -1.78915,
+      2.93778
+    ],
+    "zoneID_range": [
+      0.0,
+      1.0
+    ],
+    "U_range": [
+      -1.34197,
+      2.37389
+    ],
+    "unclassified_cells": 0,
+    "calculated_interpolated_hole_final": [
+      696,
+      106,
+      79
+    ]
+  },
+  "03-refinement": {
+    "solver": "interFoam",
+    "end": 0.3,
+    "cells_initial": 4032,
+    "cells_final": 8834,
+    "max_speed": 5.2953121032027,
+    "mesh_standard": "passed",
+    "min_volume": 3.051757812e-05,
+    "alpha.water_range": [
+      -3.14668e-12,
+      1.0
+    ],
+    "cellLevel_range": [
+      0.0,
+      1.0
+    ],
+    "p_rgh_range": [
+      -113.18,
+      5932.92
+    ],
+    "U_range": [
+      -3.71085,
+      4.91312
+    ],
+    "water_volume_initial": 0.087890625,
+    "water_volume_final": 0.08789062539441336,
+    "relative_water_volume_drift": 7.913259183725232e-09,
+    "polyhedral_cells_checked": 492,
+    "extended_check_reported_cells": 336,
+    "max_convex_plane_violation_m": 0.0,
+    "extended_geometry_note": "checkConcaveCells also flags coplanar split faces; all vertex half-space tests pass"
+  },
+  "04-ami": {
+    "solver": "pimpleFoam",
+    "end": 0.5,
+    "cells_initial": 3072,
+    "cells_final": 3072,
+    "max_speed": 0.38147612193294617,
+    "mesh_standard": "passed",
+    "min_volume": 3.474541207e-08,
+    "maximum_point_displacement": 0.12000005780640276,
+    "p_range": [
+      -0.00426257,
+      0.0601174
+    ],
+    "U_range": [
+      -0.333438,
+      0.333332
+    ],
+    "ami_weight_min": 1.0,
+    "ami_weight_max": 1.000267764
+  },
+  "05-mrf": {
+    "solver": "simpleFoam",
+    "end": 500,
+    "cells_initial": 3072,
+    "cells_final": 3072,
+    "max_speed": 4.8345205586179905,
+    "mesh_standard": "passed",
+    "min_volume": 3.474541225e-08,
+    "mesh_coordinates_unchanged": true,
+    "epsilon_range": [
+      0.412906,
+      416.644
+    ],
+    "k_range": [
+      0.0142442,
+      1.93869
+    ],
+    "p_range": [
+      -0.502917,
+      15.8849
+    ],
+    "U_range": [
+      -4.7201,
+      4.72013
+    ],
+    "p_initial_residual_final": 0.0003561517216,
+    "Ux_initial_residual_final": 1.537770598e-05,
+    "Uy_initial_residual_final": 1.538414038e-05
+  },
+  "06-srf": {
+    "solver": "SRFSimpleFoam",
+    "end": 1000,
+    "cells_initial": 33600,
+    "cells_final": 33600,
+    "max_speed": 14.708706673994149,
+    "mesh_standard": "passed",
+    "min_volume": 8.182072209e-09,
+    "mesh_coordinates_unchanged": true,
+    "p_range": [
+      -44.2487,
+      74.8738
+    ],
+    "U_range": [
+      -14.2483,
+      6.63054
+    ],
+    "Urel_range": [
+      -14.2483,
+      10.4486
+    ],
+    "absolute_relative_identity_max_error_m_s": 5.2606395052769974e-05
+  }
+}
