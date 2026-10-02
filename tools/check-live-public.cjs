@@ -4,9 +4,9 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'.openfoam-work/repla
 (async()=>{const browser=await chromium.launch({channel:'msedge',headless:true});const page=await browser.newPage({viewport:{width:1440,height:1050}});const errors=[],checks=[];page.on('pageerror',e=>errors.push(e.message));
 async function go(route,ready){await page.goto(origin+route,{waitUntil:'networkidle'});if(ready)await page.locator(ready).first().waitFor({timeout:20000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,'horizontal overflow '+route);checks.push(route);console.log('PASS '+route);}
 await go('/','.science-hero');assert.equal(await page.locator('h1').count(),1);assert(!await page.locator('main').innerText().then(x=>x.includes('图片应该解释结果')||x.includes('把问题描述清楚')));await page.screenshot({path:path.join(out,'home-final-desktop.png'),fullPage:true,animations:'disabled'});
-for(const [route,count] of [['courses',72],['programming',20],['linux',8],['cpp',10],['tools',6],['resources',8],['authors',2],['assignments',3],['announcements',1],['recommendations',15]]){await go('/'+route+'/','.lab-card');assert((await page.locator('.lab-card').count())>=count,route+' count');}
-await go('/courses/','.lab-card-download');assert.equal(await page.locator('.lab-card-download').count(),72);
-await go('/topics/','.topic-collection');assert.equal(await page.locator('.topic-collection').count(),5);
+for(const [route,count] of [['courses',30],['programming',20],['linux',8],['cpp',10],['tools',6],['resources',23],['sharing',2],['assignments',3],['announcements',1],['recommendations',15]]){await go('/'+route+'/','.lab-card');assert((await page.locator('.lab-card').count())>=count,route+' count');}
+await go('/courses/','.lab-card-download');assert.equal(await page.locator('.lab-card-download').count(),30);
+await go('/topics/','.topic-collection');assert.equal(await page.locator('.topic-collection').count(),6);
 for(const key of ['finite-volume','turbulence','multiphase','meshing','dynamic-mesh']){
  await go('/topics/'+key+'/','#topic-cases');assert((await page.locator('#topic-courses .lab-card').count())>0);assert((await page.locator('#topic-cases [download]').count())>0);assert.equal(await page.locator('.math-error').count(),0);
 }
