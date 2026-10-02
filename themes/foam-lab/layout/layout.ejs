@@ -7,8 +7,6 @@
   <meta name="theme-color" content="#f6f5f0" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#111816" media="(prefers-color-scheme: dark)">
   <% if(page.noindex || page.admin_only || page.section==='admin'){ %><meta name="robots" content="noindex, nofollow"><% } %>
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
-  <link rel="preload" as="image" href="/assets/covers/panda-fluid-background-v1.webp" media="(min-width: 761px)">
-  <link rel="preload" as="image" href="/assets/covers/panda-fluid-background-mobile-v1.webp" media="(max-width: 760px)">
   <script src="/assets/appearance.js"></script>
   <link rel="stylesheet" href="/assets/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/assets/site.css">
@@ -49,7 +47,6 @@
   <script src="/assets/panda-notes.js" defer></script>
 </head>
 <body data-section="<%= page.section || page.layout || '' %>" data-lesson="<%= page.lesson_id || '' %>">
-<div class="site-backdrop" aria-hidden="true"></div>
 <a class="skip" href="#main">跳到主要内容</a>
 <aside class="sidebar" id="sidebar">
   <button class="icon-button sidebar-close" type="button" data-close-nav aria-label="关闭导航">×</button>
