@@ -23,6 +23,16 @@ async function petFixture(browser,options={}){
  });
  return {...f,calls,pet,setXP:v=>xp=v,setFailure:v=>failure=v,setDelay:v=>delay=v};
 }
+async function touchCheck(page){
+ const c=await page.context().newCDPSession(page);let r=await page.locator('.panda-grab').boundingBox();
+ await c.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:r.x+45,y:r.y+50}]});
+ await c.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:100,y:180}]});
+ await c.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(420);
+ assert(await page.locator('.panda-bubble').isHidden());r=await page.locator('.panda-grab').boundingBox();assert(r.x<160&&r.y<240);
+ const tap=async()=>{await c.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:r.x+45,y:r.y+50}]});await c.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});};
+ await tap();await page.waitForTimeout(420);assert(await page.locator('.panda-bubble').isVisible());const bubble=await page.locator('.panda-bubble').boundingBox();assert(bubble.x>=0&&bubble.y>=0&&bubble.x+bubble.width<=390&&bubble.y+bubble.height<=844);
+ await tap();await page.waitForTimeout(75);await tap();await page.waitForSelector('#search-dialog[open]');await page.waitForTimeout(450);assert(await page.locator('#search-dialog').isVisible());await page.keyboard.press('Escape');await c.detach();
+}
 (async()=>{const browser=await chromium.launch({channel:'msedge',headless:true});const checks=[];
  try{
   const f=await petFixture(browser),p=f.page;
@@ -43,7 +53,7 @@ async function petFixture(browser,options={}){
   await p.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});await p.evaluate(()=>document.documentElement.dataset.theme='dark');const anim=await p.locator('#panda-pet .panda-eyes').evaluate(e=>getComputedStyle(e).animationName);assert.equal(anim,'none');await p.screenshot({path:path.join(OUT,'account-dark.png'),animations:'disabled'});checks.push('dark mode and reduced motion');
   f.setFailure(true);await p.click('#panda-item-scarf');await p.waitForFunction(()=>document.querySelector('.panda-form-status')?.textContent.includes('暂时无法读取'));checks.push('RPC error retains existing pet and reports retryable failure');f.setFailure(false);
   f.setDelay(700);await p.evaluate(()=>dispatchEvent(new Event('foamlab:activity')));await p.waitForTimeout(230);await p.evaluate(()=>{window.foamAuth.user=null;dispatchEvent(new Event('foam-auth-change'));});await p.waitForTimeout(850);assert(await p.locator('#panda-pet').isHidden());assert(await p.locator('.panda-dock').isHidden());checks.push('logout during pending request cannot resurrect pet');assert.deepEqual(f.errors,[]);await f.close();
-  const mobile=await petFixture(browser,{mobile:true,xp:150}),mp=mobile.page;await ready(mp,'/account/','#panda-checkin');assert(await mp.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await mp.locator('[data-pet-search]').click();await mp.waitForSelector('#search-dialog[open]');await mp.keyboard.press('Escape');await mp.locator('.panda-grab').click();await mp.waitForSelector('.panda-bubble:not([hidden])');const bubble=await mp.locator('.panda-bubble').boundingBox();assert(bubble.x>=0&&bubble.x+bubble.width<=390);await mp.screenshot({path:path.join(OUT,'account-mobile.png'),animations:'disabled'});assert.deepEqual(mobile.errors,[]);await mobile.close();checks.push('mobile controls, bubble clamping and no horizontal overflow');
+  const mobile=await petFixture(browser,{mobile:true,xp:150}),mp=mobile.page;await ready(mp,'/account/','#panda-checkin');assert(await mp.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await mp.locator('[data-pet-search]').click();await mp.waitForSelector('#search-dialog[open]');await mp.keyboard.press('Escape');await mp.locator('.panda-grab').click();await mp.waitForSelector('.panda-bubble:not([hidden])');const bubble=await mp.locator('.panda-bubble').boundingBox();assert(bubble.x>=0&&bubble.x+bubble.width<=390);await mp.screenshot({path:path.join(OUT,'account-mobile.png'),animations:'disabled'});await touchCheck(mp);checks.push('touch drag, single tap and double tap keep search open');assert.deepEqual(mobile.errors,[]);await mobile.close();checks.push('mobile controls, bubble clamping and no horizontal overflow');
   const anon=await fixture(browser,'anon'),ap=anon.page;await ready(ap,'/','.panda-home-portrait svg');assert(await ap.locator('#panda-pet').isHidden());await ap.screenshot({path:path.join(OUT,'home-desktop.png'),animations:'disabled'});await ap.setViewportSize({width:390,height:844});assert(await ap.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await ap.screenshot({path:path.join(OUT,'home-mobile.png'),animations:'disabled'});checks.push('anonymous site has theme but no floating pet');assert.deepEqual(anon.errors,[]);await anon.close();
   fs.writeFileSync(path.join(OUT,'results.json'),JSON.stringify({checks,passed:checks.length,externalWrites:0},null,2));console.log(JSON.stringify({checks,passed:checks.length,externalWrites:0},null,2));
  }finally{await browser.close();}

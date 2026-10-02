@@ -38,7 +38,7 @@
  const kinds={checkin:'每日签到',course:'完成课程',topic:'发布讨论',reply:'回复讨论',comment:'文章评论',article:'文章发表'};
  const motion=matchMedia('(prefers-reduced-motion: reduce)');
  let userId=null,revision=0,state=null,busy=false,refreshTimer,lastFetch=0,lastTap=0,lastTapPoint=null;
- let tipIndex=read('foamlab-panda-tip',Math.floor(Math.random()*tips.length)),tab='outfit',clickTimer,bubbleTimer,actionTimer,drag=null,suppressClick=false;
+ let tipIndex=read('foamlab-panda-tip',Math.floor(Math.random()*tips.length)),tab='outfit',clickTimer,bubbleTimer,actionTimer,drag=null,suppressClick=false,openOnClick=false;
  const pet=document.createElement('aside');pet.id='panda-pet';pet.className='panda-pet';pet.hidden=true;pet.setAttribute('aria-label','熊猫学习伙伴');
  pet.innerHTML=`<div class="panda-bubble" hidden role="status"><button class="panda-bubble-close" aria-label="关闭熊猫提示" type="button">×</button><strong>熊猫说</strong><p></p><button type="button" class="panda-tip-search">查找相关内容 →</button></div><button type="button" class="panda-grab" aria-label="熊猫：单击听小技巧，双击搜索；方向键移动" title="单击：小技巧 · 双击：搜索 · 拖动：移动">${art()}</button><a class="panda-nameplate" href="/account/#my-panda"><span></span><b></b></a><div class="panda-tools"><button type="button" data-pet-search aria-label="熊猫搜索" title="搜索站内内容">⌕</button><button type="button" data-pet-checkin aria-label="熊猫每日签到" title="每日签到">✓</button><button type="button" data-pet-hide aria-label="收起熊猫" title="收起熊猫">−</button></div>`;
  document.body.append(pet);
@@ -46,7 +46,7 @@
  const panel=$('#my-panda');
  if(panel)panel.innerHTML='<div class="panda-account-loading">登录后领养熊猫，查看成长记录与收藏。</div>';
  const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- function clearInteraction(){clearTimeout(clickTimer);clearTimeout(bubbleTimer);clearTimeout(actionTimer);lastTap=0;lastTapPoint=null;drag=null;pet.classList.remove('is-dragging');$('.panda-bubble',pet).hidden=true;delete pet.dataset.action;}
+ function clearInteraction(){clearTimeout(clickTimer);clearTimeout(bubbleTimer);clearTimeout(actionTimer);lastTap=0;lastTapPoint=null;openOnClick=false;drag=null;pet.classList.remove('is-dragging');$('.panda-bubble',pet).hidden=true;delete pet.dataset.action;}
  function reset(){revision++;userId=null;state=null;busy=false;lastFetch=0;clearInteraction();pet.hidden=true;dock.hidden=true;if(panel)panel.innerHTML='<h2>我的熊猫</h2><p class="muted">使用 GitHub 登录后，熊猫就会来陪你学习。</p>';}
  function clampPosition(x,y){const w=pet.offsetWidth||126,h=pet.offsetHeight||185;return {x:Math.max(8,Math.min(innerWidth-w-8,x)),y:Math.max(8,Math.min(innerHeight-h-8,y))};}
  function move(x,y,persist=false){const p=clampPosition(x,y);pet.style.left=p.x+'px';pet.style.top=p.y+'px';if(persist&&userId)save('foamlab-panda-position:'+userId,p);positionBubble();}
@@ -69,9 +69,12 @@
  const grab=$('.panda-grab',pet);
  grab.addEventListener('pointerdown',e=>{if(e.button!==0)return;drag={id:e.pointerId,x:e.clientX,y:e.clientY,left:pet.offsetLeft,top:pet.offsetTop,moved:false};suppressClick=false;grab.setPointerCapture(e.pointerId);});
  grab.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.hypot(dx,dy)>6){drag.moved=true;suppressClick=true;clearTimeout(clickTimer);pet.classList.add('is-dragging');$('.panda-bubble',pet).hidden=true;}if(drag.moved)move(drag.left+dx,drag.top+dy);});
- grab.addEventListener('pointerup',e=>{if(!drag||drag.id!==e.pointerId)return;const moved=drag.moved;drag=null;pet.classList.remove('is-dragging');grab.releasePointerCapture(e.pointerId);if(moved){lastTap=0;move(pet.offsetLeft,pet.offsetTop,true);return;}const now=Date.now();if(now-lastTap<330&&lastTapPoint&&Math.hypot(e.clientX-lastTapPoint.x,e.clientY-lastTapPoint.y)<28){clearTimeout(clickTimer);lastTap=0;search();}else{lastTap=now;lastTapPoint={x:e.clientX,y:e.clientY};clearTimeout(clickTimer);clickTimer=setTimeout(tip,340);}});
- grab.addEventListener('pointercancel',()=>{drag=null;suppressClick=true;lastTap=0;pet.classList.remove('is-dragging');clearTimeout(clickTimer);});
- grab.addEventListener('click',e=>{if(e.detail===0&&!suppressClick)tip();suppressClick=false;});
+ grab.addEventListener('pointerup',e=>{if(!drag||drag.id!==e.pointerId)return;const moved=drag.moved;drag=null;pet.classList.remove('is-dragging');grab.releasePointerCapture(e.pointerId);if(moved){lastTap=0;openOnClick=false;move(pet.offsetLeft,pet.offsetTop,true);return;}const now=Date.now();if(now-lastTap<330&&lastTapPoint&&Math.hypot(e.clientX-lastTapPoint.x,e.clientY-lastTapPoint.y)<28){clearTimeout(clickTimer);lastTap=0;openOnClick=true;}else{lastTap=now;lastTapPoint={x:e.clientX,y:e.clientY};clearTimeout(clickTimer);clickTimer=setTimeout(tip,340);}});
+ grab.addEventListener('pointercancel',()=>{drag=null;suppressClick=true;openOnClick=false;lastTap=0;pet.classList.remove('is-dragging');clearTimeout(clickTimer);});
+ // Touch synthesizes a click after pointerup. Opening here prevents that click
+ // from landing on the newly opened dialog's backdrop and closing it again.
+ grab.addEventListener('click',e=>{if(openOnClick&&!suppressClick){openOnClick=false;search();}else if(e.detail===0)tip();suppressClick=false;});
+ grab.addEventListener('dblclick',e=>{if(!suppressClick){e.preventDefault();lastTap=0;search();}});
  grab.addEventListener('keydown',e=>{const delta={ArrowLeft:[-16,0],ArrowRight:[16,0],ArrowUp:[0,-16],ArrowDown:[0,16]}[e.key];if(delta){e.preventDefault();move(pet.offsetLeft+delta[0],pet.offsetTop+delta[1],true);}if(e.key==='Escape')$('.panda-bubble',pet).hidden=true;});
  grab.addEventListener('pointerenter',()=>{if(state?.pet.motion&&!motion.matches&&!drag)pet.classList.add('is-curious');});
  grab.addEventListener('pointerleave',()=>pet.classList.remove('is-curious'));
