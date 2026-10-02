@@ -1,0 +1,103 @@
+{
+  "version": "OpenFOAM v2512",
+  "cases": {
+    "01-uniform": {
+      "solver": "laplacianFoam",
+      "mesh_cells": 1600,
+      "mesh_ok": true,
+      "completed": true,
+      "initial_min": 300.0,
+      "initial_max": 300.0,
+      "final_min": 300.0,
+      "final_max": 300.0,
+      "initial_mean": 300.0,
+      "max_mean_temperature_drift": 0.0
+    },
+    "02-linear": {
+      "solver": "laplacianFoam",
+      "mesh_cells": 1600,
+      "mesh_ok": true,
+      "completed": true,
+      "initial_min": 300.125,
+      "initial_max": 319.875,
+      "final_min": 301.012951255,
+      "final_max": 318.987048744,
+      "initial_mean": 310.0,
+      "max_mean_temperature_drift": 0.0
+    },
+    "03-gaussian": {
+      "solver": "laplacianFoam",
+      "mesh_cells": 1600,
+      "mesh_ok": true,
+      "completed": true,
+      "initial_min": 300.0,
+      "initial_max": 349.214,
+      "final_min": 300.00372408,
+      "final_max": 318.773557765,
+      "initial_mean": 304.70856100590936,
+      "max_mean_temperature_drift": 1.0290648333466379e-08
+    },
+    "04-ellipse": {
+      "solver": "laplacianFoam",
+      "mesh_cells": 1600,
+      "mesh_ok": true,
+      "completed": true,
+      "initial_min": 300.0,
+      "initial_max": 350.0,
+      "final_min": 300.000038346,
+      "final_max": 328.426864857,
+      "initial_mean": 307.875,
+      "max_mean_temperature_drift": 1.9100014014838962e-08,
+      "hot_cells": 252,
+      "hot_area_m2": 0.000315,
+      "analytical_area_m2": 0.00031415926535897936
+    },
+    "05-fixed-profile": {
+      "solver": "icoFoam",
+      "mesh_cells": 1600,
+      "mesh_ok": true,
+      "completed": true,
+      "max_mean_velocity_error": 1.3877787807814457e-17,
+      "max_flow_imbalance_m3_s": 3.500003665525813e-17
+    },
+    "06-coded-steady": {
+      "solver": "icoFoam",
+      "mesh_cells": 1600,
+      "mesh_ok": true,
+      "completed": true,
+      "max_mean_velocity_error": 1.3877787807814457e-17,
+      "max_flow_imbalance_m3_s": 4.499989587230559e-17
+    },
+    "07-ramp": {
+      "solver": "icoFoam",
+      "mesh_cells": 1600,
+      "mesh_ok": true,
+      "completed": true,
+      "max_mean_velocity_error": 6.938893903907228e-18,
+      "max_flow_imbalance_m3_s": 1.8059991809058883e-16
+    },
+    "08-sine": {
+      "solver": "icoFoam",
+      "mesh_cells": 1600,
+      "mesh_ok": true,
+      "completed": true,
+      "max_mean_velocity_error": 4.9960036108132044e-14,
+      "max_flow_imbalance_m3_s": 6.599996021710783e-17
+    },
+    "09-pulsed-profile": {
+      "solver": "icoFoam",
+      "mesh_cells": 1600,
+      "mesh_ok": true,
+      "completed": true,
+      "max_mean_velocity_error": 4.9960036108132044e-14,
+      "max_flow_imbalance_m3_s": 7.69999535866258e-17
+    }
+  },
+  "advanced": {
+    "restart_1.25s_mean_Ux": 0.15,
+    "parallel_processes": 2,
+    "parallel_max_U_difference": 2.1800000693517063e-10,
+    "zero_amplitude_max_mean_error": 0.0
+  },
+  "comparison_fixed_implementations_max_U_difference": 7.29999394266656e-12
+}
