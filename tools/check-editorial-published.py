@@ -20,9 +20,19 @@ online={r['slug']:r for r in rest('foamlab_content?select='+','.join(fields)+'&o
 assert set(online)==set(expected),('Public content set differs',set(online)^set(expected))
 defaults={'summary':'','body':'','track':'','series':'','sort_order':0,'metadata':{},'cover_url':'','status':'published','comments_enabled':True}
 errors=[]
+baseline_path=ROOT/'.openfoam-work/editorial/database-before.json'
+baseline={r['slug']:r for r in json.loads(baseline_path.read_text(encoding='utf-8'))} if baseline_path.exists() else {}
 for slug,row in expected.items():
     for key in fields:
-        if row.get(key,defaults.get(key))!=online[slug].get(key):errors.append(slug+': '+key)
+        wanted=row.get(key,defaults.get(key))
+        actual=online[slug].get(key)
+        if key=='metadata' and 'seed_version' not in wanted and 'seed_version' in actual:
+            # The original import records a server-side provenance tag. An
+            # unchanged metadata field deliberately retains this existing tag.
+            previous=baseline.get(slug,{}).get('metadata',{}).get('seed_version')
+            assert actual['seed_version']==previous,(slug,'Unexpected provenance tag')
+            actual={k:v for k,v in actual.items() if k!='seed_version'}
+        if wanted!=actual:errors.append(slug+': '+key)
 assert not errors,errors
 assert rest('foamlab_content?select=slug&slug=in.(site-maintenance,site-design)')==[]
 for query in ['维护','设计']:
@@ -32,7 +42,7 @@ assert support['enabled'] and support['wechat_url']=='/assets/support/wechat.jpg
 
 paths={d['url'] for r in rows if r['kind']=='lesson' for d in r.get('metadata',{}).get('downloads',[]) if d['url'].startswith('/')}
 paths.update(['/assets/covers/foamlab-aircraft-background-v1.png','/assets/science/development-solver-decay.png','/assets/science/development-boundary-results.png','/assets/science/development-utility-volume-average.png','/assets/support/wechat.jpg','/assets/support/alipay.jpg'])
-paths.update('/assets/'+name for name in ['page-outline.js','page-outline.css','lab.js','site.js','support.js','navigation.css','reader.css'])
+paths.update('/assets/'+name for name in ['page-outline.js','page-outline.css','lab.js','site.js','support.js','navigation.css','reader.css','admin-doc.js'])
 
 def asset(path):
     req=urllib.request.Request(ORIGIN+path,headers={'User-Agent':'FoamLab-public-verification','Cache-Control':'no-cache'})
