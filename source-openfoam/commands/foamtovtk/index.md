@@ -1,23 +1,33 @@
 ---
-title: "foamToVTK · 将 OpenFOAM 网格和场转换为 VTK 数据"
+title: "foamToVTK · 把网格、欧拉场和粒子数据转换成 VTK"
 layout: reference
-description: "将 OpenFOAM 网格和场转换为 VTK 数据。"
+description: "把网格、欧拉场和粒子数据转换成 VTK。"
 cms_slug: "command-foamtovtk"
 ---
 
-<p>将 OpenFOAM 网格和场转换为 VTK 数据。</p><h2>导出最新时刻</h2>
-<pre><code class="language-bash">foamToVTK -latestTime
+<p>把网格、欧拉场和粒子数据转换成 VTK。</p><h2>开始前</h2>
+<p>已有OpenFOAM网格和结果；默认输出目录为VTK，可按字段、区域、patch或集合筛选。</p>
+<h2>示例 1：导出最新流场</h2>
+<pre><code class="language-bash">foamToVTK -latestTime -fields '(U p)'
 </code></pre>
-<p>结果写入 VTK 输出目录，便于在其他后处理工具中打开。</p>
-<h2>只导出速度和压力</h2>
-<pre><code class="language-bash">foamToVTK -latestTime -fields "(U p)"
+<p>只转换最新速度、压力及相关几何，便于快速在ParaView中检查最终结果。</p>
+<h2>示例 2：导出一段时间序列</h2>
+<pre><code class="language-bash">foamToVTK -time '0.1:1' -fields '(U p alpha.water)' -name VTK-animation
 </code></pre>
-<p>限制导出字段可以减少文件大小。点数据和单元数据含义不同，绘图时保留所选数据关联。</p>
-<h2>导出一段时间</h2>
-<pre><code class="language-bash">foamToVTK -time "0.1:0.5"
+<p>已有这些字段时，按时间输出到独立目录VTK-animation，用于制作对应区间动画。</p>
+<h2>示例 3：只导出壁面</h2>
+<pre><code class="language-bash">foamToVTK -latestTime -no-internal -patches '(walls "blade.*")' -fields '(p)'
 </code></pre>
-<p>只导出指定时间范围中已有的结果，适合制作短时间段动画。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allAreas</td><td>Use all regions in finite-area regionProperties</td></tr><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-ascii</td><td>Write in ASCII format instead of binary</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-cellSet &lt;name&gt;</td><td>Convert mesh subset corresponding to specified cellSet</td></tr><tr><td>-cellZone &lt;name&gt;</td><td>Convert mesh subset corresponding to specified cellZone</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-faceSet &lt;name&gt;</td><td>Convert specified faceSet only Specify single or multiple faceZones to write Eg, &#x27;cells&#x27; or &#x27;( slice &quot;mfp-.*&quot; )&#x27;. Specify single or multiple fields to write (all by default) Eg, &#x27;T&#x27; or &#x27;(p T U &quot;alpha.*&quot;)&#x27; Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-legacy</td><td>Write legacy format instead of xml</td></tr><tr><td>-name &lt;subdir&gt;</td><td>Directory name for VTK output (default: &#x27;VTK&#x27;)</td></tr><tr><td>-nearCellValue</td><td>Use cell value on patches instead of patch value itself</td></tr><tr><td>-no-boundary</td><td>Suppress output for boundary patches</td></tr><tr><td>-no-fields</td><td>Suppress conversion of fields</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamToVTK [OPTIONS]
+<p>保留指定壁面和叶片patch的压力，省去内部体网格，适合表面压力展示。</p>
+<h2>示例 4：导出某个cellZone</h2>
+<pre><code class="language-bash">foamToVTK -latestTime -cellZone rotor -fields '(U p)' -with-ids
+</code></pre>
+<p>仅转换rotor区域，并附加网格编号信息，便于关联选区、处理器编号或异常单元。</p>
+<h2>示例 5：输出可读的旧式VTK</h2>
+<pre><code class="language-bash">foamToVTK -latestTime -legacy -ascii -no-lagrangian -name VTK-ascii
+</code></pre>
+<p>使用legacy ASCII格式并跳过粒子数据，方便检查文本内容或对接只支持旧格式的工具。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-allAreas</code></td><td>Use all regions in finite-area regionProperties</td></tr><tr><td><code>-allRegions</code></td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td><code>-ascii</code></td><td>Write in ASCII format instead of binary</td></tr><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-cellSet &lt;name&gt;</code></td><td>Convert mesh subset corresponding to specified cellSet</td></tr><tr><td><code>-cellZone &lt;name&gt;</code></td><td>Convert mesh subset corresponding to specified cellZone</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-faceSet &lt;name&gt;</code></td><td>Convert specified faceSet only Specify single or multiple faceZones to write Eg, &#x27;cells&#x27; or &#x27;( slice &quot;mfp-.*&quot; )&#x27;. Specify single or multiple fields to write (all by default) Eg, &#x27;T&#x27; or &#x27;(p T U &quot;alpha.*&quot;)&#x27; Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-legacy</code></td><td>Write legacy format instead of xml</td></tr><tr><td><code>-name &lt;subdir&gt;</code></td><td>Directory name for VTK output (default: &#x27;VTK&#x27;)</td></tr><tr><td><code>-nearCellValue</code></td><td>Use cell value on patches instead of patch value itself</td></tr><tr><td><code>-no-boundary</code></td><td>Suppress output for boundary patches</td></tr><tr><td><code>-no-fields</code></td><td>Suppress conversion of fields</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamToVTK [OPTIONS]
 Options:
   -allAreas         Use all regions in finite-area regionProperties
   -allRegions       Use all regions in regionProperties

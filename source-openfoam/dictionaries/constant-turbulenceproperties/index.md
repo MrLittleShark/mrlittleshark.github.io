@@ -6,7 +6,7 @@ dictionary: true
 cms_slug: "dictionary-turbulenceproperties"
 ---
 
-<p>选择层流、RAS 或 LES，并设置湍流模型及其系数。</p><p>位置：<code>constant/turbulenceProperties</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-turbulence-model-hierarchy.png" alt="RANS、LES 与 DNS 的解析范围" loading="lazy"><figcaption><strong>RANS、LES 与 DNS 的解析范围</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 26 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>turbulenceProperties 选择层流或湍流模型</h2>
+<p>选择层流、RAS 或 LES，并设置湍流模型及其系数。</p><p>位置：<code>constant/turbulenceProperties</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-turbulence-model-hierarchy.png" alt="RANS、LES 与 DNS 的解析范围" loading="lazy"><figcaption><strong>RANS、LES 与 DNS 的解析范围</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 26</small></figcaption></figure><h2>turbulenceProperties 选择层流或湍流模型</h2>
 <p>在使用相应湍流模型接口的求解器中，<code>constant/turbulenceProperties</code> 选择层流、RANS 或 LES。模型改变后，需要的初始场、边界条件和离散方程也会变化。</p>
 <h3>使用 k–epsilon 模型</h3>
 <p>下面是 <code>simpleFoam/pitzDaily</code> 的配置主体：</p>

@@ -5,7 +5,30 @@ description: "用于网格单元的拓扑修复。"
 cms_slug: "command-splitcells"
 ---
 
-<p>用于网格单元的拓扑修复。</p><h2>用法</h2><pre><code class="language-bash">splitCells 90</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">splitCells 90 -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-geometry</td><td>Use geometric cut for hexes as well Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-set &lt;name&gt;</td><td>设置条目值，会修改文件。</td></tr><tr><td>-tol &lt;scalar&gt;</td><td>Edge snap tolerance (default 0.2)</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: splitCells [OPTIONS] &lt;edgeAngle&gt;
+<p>用于网格单元的拓扑修复。</p><h2>开始前</h2>
+<p>已有可进行平面切分的网格，按需要准备 cellSet。edgeAngle 以度给出，控制工具识别相关边的几何判据。</p>
+<h2>示例 1：按角度判据分裂单元</h2>
+<pre><code class="language-bash">splitCells 180
+</code></pre>
+<p>工具查找内部角超过给定阈值的单元，并尝试切分；这里使用 180°。查看日志中的候选和实际切分数量，再检查生成子单元的体积和形状。</p>
+<h2>示例 2：只切分一个单元集合</h2>
+<pre><code class="language-bash">splitCells 180 -set targetCells
+</code></pre>
+<p>将处理限制在已有 targetCells。适合对局部平面网格或问题区域进行试验，而保留其他区域的原单元。</p>
+<h2>示例 3：对六面体使用几何切割</h2>
+<pre><code class="language-bash">splitCells 180 -set targetCells -geometry
+</code></pre>
+<p>对六面体也启用几何切割方式，适用于希望按几何规则确定切面的位置。比较与默认处理的子单元形状。</p>
+<h2>示例 4：调整切点贴合容差</h2>
+<pre><code class="language-bash">splitCells 180 -set targetCells -geometry -tol 0.1
+</code></pre>
+<p>把边切点贴合容差从默认 0.2 改为 0.1。检查靠近已有顶点的切点如何处理，以及是否产生很短的新边。</p>
+<h2>示例 5：更新副本并全面检查</h2>
+<pre><code class="language-bash">splitCells 180 -set targetCells -overwrite
+checkMesh -constant -allGeometry -allTopology
+</code></pre>
+<p>将已确认的局部分裂方案写回原网格实例。检查单元体积、内部连接和边界面，随后核对场数据与网格的一致性。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-geometry</code></td><td>Use geometric cut for hexes as well Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td><code>-overwrite</code></td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td><code>-set &lt;name&gt;</code></td><td>设置条目值，会修改文件。</td></tr><tr><td><code>-tol &lt;scalar&gt;</code></td><td>Edge snap tolerance (default 0.2)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: splitCells [OPTIONS] &lt;edgeAngle&gt;
 Arguments:
   &lt;edgeAngle&gt;       in degrees [0-360]
 Options:

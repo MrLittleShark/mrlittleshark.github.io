@@ -17,6 +17,6 @@ for(const row of rows){
  }catch(e){errors.push(row.slug+': '+e.message);}
 }
 const commands=JSON.parse(fs.readFileSync(path.join(root,'source-openfoam/assets/commands.json'),'utf8'));
-for(const c of commands){if(!c.examples?.length)errors.push('command '+c.name+': no code example');if(/核验|源码说明：|已记录的选项：/.test(c.details||''))errors.push('command '+c.name+': prose dump in card');}
+for(const c of commands){if((c.examples?.length||0)<5)errors.push('command '+c.name+': fewer than five examples');if(/核验|源码说明：|已记录的选项：/.test(c.details||''))errors.push('command '+c.name+': prose dump in card');}
 const report={pages:rows.length,courses:rows.filter(r=>r.kind==='lesson').length,codeBlocks,tables,formulas,figures,commands:commands.length,commandExamples:commands.reduce((n,c)=>n+(c.examples?.length||0),0),errors};
 fs.mkdirSync(path.join(root,'.openfoam-work/editorial'),{recursive:true});fs.writeFileSync(path.join(root,'.openfoam-work/editorial/format-check.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));process.exitCode=errors.length?1:0;

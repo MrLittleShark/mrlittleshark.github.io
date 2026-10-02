@@ -1,11 +1,36 @@
 ---
-title: "engineCompRatio · 适用范围由所采用的几何容积模型确定"
+title: "engineCompRatio · 用发动机运动网格的最大、最小体积计算几何压缩比"
 layout: reference
-description: "适用范围由所采用的几何容积模型确定。"
+description: "用发动机运动网格的最大、最小体积计算几何压缩比。"
 cms_slug: "command-enginecompratio"
 ---
 
-<p>适用范围由所采用的几何容积模型确定。</p><h2>用法</h2><pre><code class="language-bash">engineCompRatio</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">engineCompRatio -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: engineCompRatio [OPTIONS]
+<p>用发动机运动网格的最大、最小体积计算几何压缩比。</p><h2>开始前</h2>
+<p>已有发动机网格、engineGeometry和对应engineMesh模型；工具会把网格移动到下止点与上止点位置计算体积。</p>
+<h2>示例 1：计算几何压缩比</h2>
+<pre><code class="language-bash">engineCompRatio
+</code></pre>
+<p>日志输出Vmax、Vmin和Vmax/Vmin，可直接核对案例几何压缩比。</p>
+<h2>示例 2：比较较大余隙</h2>
+<pre><code class="language-bash">foamDictionary constant/engineGeometry -entry clearance -set '[0 1 0 0 0 0 0] 0.002'
+engineCompRatio
+</code></pre>
+<p>在与该余隙一致的发动机几何副本中设置2毫米clearance，再计算上止点体积和压缩比。</p>
+<h2>示例 3：比较另一活塞行程</h2>
+<pre><code class="language-bash">engineCompRatio -case ./engine-longStroke
+</code></pre>
+<p>该副本的初始网格和stroke参数已成套更新；比较行程变化后的扫气体积与压缩比。</p>
+<h2>示例 4：网格重建后重新核查</h2>
+<pre><code class="language-bash">blockMesh -case ./engine-refined
+engineCompRatio -case ./engine-refined
+</code></pre>
+<p>engine-refined已配置相同物理几何的细网格；比较数值体积得到的压缩比随分辨率的变化。</p>
+<h2>示例 5：运动预演与压缩比配套检查</h2>
+<pre><code class="language-bash">moveEngineMesh -case ./engine-preview
+engineCompRatio -case ./engine-reference
+</code></pre>
+<p>两个独立案例使用相同初始几何；前者查看运动全过程，后者由原始参考网格计算止点体积，便于核对活塞运动模型。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: engineCompRatio [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

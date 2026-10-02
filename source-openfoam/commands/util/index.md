@@ -5,17 +5,33 @@ description: "切换到工具程序源码目录。"
 cms_slug: "command-util"
 ---
 
-<p>切换到工具程序源码目录。</p><h2>调用示例</h2>
-<pre><code class="language-bash">source "$WM_PROJECT_DIR/etc/config.sh/aliases"
-util
+<p>切换到工具程序源码目录。</p><h2>开始前</h2>
+<p>这是 Bash alias。先加载 v2512 的 etc/bashrc，再在交互式终端逐行执行。脚本中可直接写 cd "$WM_PROJECT_DIR/applications/utilities"；使用 alias 时须先启用 shopt -s expand_aliases 并分行解析。</p>
+<h2>示例 1：进入工具源码目录</h2>
+<pre><code class="language-bash">util
 pwd
+ls
 </code></pre>
-<p>这是 cd 的别名，对应目录为 <code>$WM_PROJECT_DIR/applications/utilities</code>。先创建尚不存在的个人目录，再使用相应别名。</p>
-<h2>在脚本中查看定义</h2>
-<pre><code class="language-bash">type util
+<p>快捷名称展开为 cd "$WM_PROJECT_DIR/applications/utilities"，随后显示完整路径和一级内容。</p>
+<h2>示例 2：浏览一个分类</h2>
+<pre><code class="language-bash">util
+ls mesh
 </code></pre>
-<p><code>type</code> 显示函数定义或别名展开，可用于确认当前终端加载的实现。</p>
-<details><summary>v2512 实现</summary>
-<pre><code class="language-bash">alias util='cd ${WM_PROJECT_DIR:?}/applications/utilities'
+<p>列出 mesh 下的文件，继续按应用或模型名称进入。</p>
+<h2>示例 3：查找源码与配置</h2>
+<pre><code class="language-bash">util
+find . -name Make -print
 </code></pre>
-</details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/config.sh/aliases">源码与说明</a></p>
+<p>从该目录递归查找，输出相对路径，便于定位实际算例或编译单元。</p>
+<h2>示例 4：比较两个分类</h2>
+<pre><code class="language-bash">util
+ls -d preProcessing postProcessing
+</code></pre>
+<p>列出两个类别的目录名，观察源码或教程的分类。</p>
+<h2>示例 5：返回原算例继续工作</h2>
+<pre><code class="language-bash">util
+find miscellaneous -maxdepth 2 -type d
+cd -
+</code></pre>
+<p>查看目录树后用 cd - 返回前一个工作目录，适合从算例跳到源码再返回。</p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/config.sh/aliases">源码与说明</a></p>

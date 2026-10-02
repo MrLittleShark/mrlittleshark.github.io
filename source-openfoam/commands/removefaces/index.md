@@ -5,7 +5,33 @@ description: "输入为预先建立的 faceSet。"
 cms_slug: "command-removefaces"
 ---
 
-<p>输入为预先建立的 faceSet。</p><h2>用法</h2><pre><code class="language-bash">removeFaces removeFacesSet</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">removeFaces removeFacesSet -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: removeFaces [OPTIONS] &lt;faceSet&gt;
+<p>输入为预先建立的 faceSet。</p><h2>开始前</h2>
+<p>已有 faceSet，内含拟移除的内部面；移除这些面会合并相邻单元。使用案例副本并检查合并后单元形状。</p>
+<h2>示例 1：合并指定内部面两侧的单元</h2>
+<pre><code class="language-bash">removeFaces internalFaces
+</code></pre>
+<p>读取 internalFaces，执行内部面移除与单元合并，结果写入新的网格实例。检查单元数是否按预期减少。</p>
+<h2>示例 2：从几何选区建立移除面集</h2>
+<pre><code class="language-bash">topoSet -dict system/topoSet-removeFacesDict
+removeFaces mergeFaces
+</code></pre>
+<p>前提是该 topoSet 字典生成只含目标内部面的 mergeFaces。先在可视化中检查选区，再合并这些面的相邻单元。</p>
+<h2>示例 3：把修改限制在独立案例</h2>
+<pre><code class="language-bash">removeFaces internalFaces -case ../mergeTest
+checkMesh -case ../mergeTest -latestTime -allGeometry
+</code></pre>
+<p>使用 mergeTest 的面集和网格，检查生成的多面体体积、凹性及面质量。</p>
+<h2>示例 4：将确认的修改写回原实例</h2>
+<pre><code class="language-bash">removeFaces internalFaces -overwrite
+checkMesh -constant -allTopology
+</code></pre>
+<p>适合已经在副本验证过的面集。更新原网格位置后，检查内部面与边界连接并核对已有场数据。</p>
+<h2>示例 5：并行合并单元</h2>
+<pre><code class="language-bash">mpirun -np 4 removeFaces internalFaces -parallel -overwrite
+mpirun -np 4 checkMesh -parallel
+</code></pre>
+<p>网格和面集需已一致分解到四个子域。并行运行后检查处理器界面，确认跨分区连接保持一致。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-overwrite</code></td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: removeFaces [OPTIONS] &lt;faceSet&gt;
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

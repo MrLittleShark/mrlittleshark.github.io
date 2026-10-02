@@ -5,7 +5,29 @@ description: "-patches 指定网格中已有的边界名称。"
 cms_slug: "command-surfacemeshextract"
 ---
 
-<p>-patches 指定网格中已有的边界名称。</p><h2>用法</h2><pre><code class="language-bash">surfaceMeshExtract walls.stl -patches &#x27;(walls)&#x27;</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">surfaceMeshExtract walls.stl -patches &#x27;(walls)&#x27; -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-writeOBJ</td><td>Write added pointPatch points to .obj files</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceMeshExtract [OPTIONS] &lt;output&gt;
+<p>-patches 指定网格中已有的边界名称。</p><h2>开始前</h2>
+<p>案例已有体网格和边界名称；含 faceZone 的示例还需先建立相应面区域。</p>
+<h2>示例 1：提取全部边界</h2>
+<pre><code class="language-bash">surfaceMeshExtract boundary.obj -constant
+</code></pre>
+<p>读取 constant 中的网格边界，输出表面文件。可在几何软件中查看计算域外形以及各边界的分区。</p>
+<h2>示例 2：只提取壁面</h2>
+<pre><code class="language-bash">surfaceMeshExtract walls.stl -patches '(walls)' -constant
+</code></pre>
+<p>仅提取名为 walls 的 patch。括号表示名称列表；将名称换成 constant/polyMesh/boundary 中的实际边界名。</p>
+<h2>示例 3：按名称匹配并排除</h2>
+<pre><code class="language-bash">surfaceMeshExtract body.obj -patches '("wall.*")' -exclude-patches '(wallAux)' -constant
+</code></pre>
+<p>先匹配 wall 开头的边界，再排除 wallAux。输出用于检查主要壁面，避免把辅助封口面一并导出。</p>
+<h2>示例 4：提取内部面区域</h2>
+<pre><code class="language-bash">surfaceMeshExtract interface.obj -faceZones '(interfaceZone)' -constant
+</code></pre>
+<p>把 interfaceZone 中的内部面也加入提取范围。适合查看耦合界面或风扇面的位置；需要该 faceZone 已存在。</p>
+<h2>示例 5：提取末时刻移动边界</h2>
+<pre><code class="language-bash">surfaceMeshExtract moved.obj -latestTime -patches '(movingWall)'
+</code></pre>
+<p>读取最新时间对应的网格位置，导出 movingWall。与初始位置的表面对比，可检查动网格位移方向和量级。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-writeOBJ</code></td><td>Write added pointPatch points to .obj files</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceMeshExtract [OPTIONS] &lt;output&gt;
 Arguments:
   &lt;output&gt;          The output surface file
 Options:

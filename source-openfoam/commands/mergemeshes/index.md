@@ -1,11 +1,36 @@
 ---
-title: "mergeMeshes · 接合处需共形连接时，合并后继续执行缝合"
+title: "mergeMeshes · 把两个独立网格合并到主案例中"
 layout: reference
-description: "接合处需共形连接时，合并后继续执行缝合。"
+description: "把两个独立网格合并到主案例中。"
 cms_slug: "command-mergemeshes"
 ---
 
-<p>接合处需共形连接时，合并后继续执行缝合。</p><h2>用法</h2><pre><code class="language-bash">mergeMeshes ./mainCase ./extraCase -overwrite</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">mergeMeshes ./mainCase ./extraCase -overwrite -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: mergeMeshes [OPTIONS] &lt;masterCase&gt; &lt;addCase&gt;
+<p>把两个独立网格合并到主案例中。</p><h2>开始前</h2>
+<p>masterCase 与 addCase 都有有效网格；两套坐标已对齐。合并后若要把接触边界变成内部面，还需拼接步骤。</p>
+<h2>示例 1：合并两个网格</h2>
+<pre><code class="language-bash">mergeMeshes baseCase extensionCase
+</code></pre>
+<p>baseCase 是接收结果的主案例，extensionCase 提供追加网格；输出位于主案例的新网格时间。</p>
+<h2>示例 2：指定结果时间</h2>
+<pre><code class="language-bash">mergeMeshes baseCase extensionCase -resultTime 2
+</code></pre>
+<p>把合并网格写到 baseCase 的时间 2，便于保留并选择不同预处理阶段。</p>
+<h2>示例 3：合并指定区域</h2>
+<pre><code class="language-bash">mergeMeshes baseCase extensionCase -masterRegion fluid -addRegion fluid
+</code></pre>
+<p>两个案例均含 fluid 区域时，只读取并合并这两个区域网格，结果仍归主案例的 fluid 区域。</p>
+<h2>示例 4：直接更新主网格并检查</h2>
+<pre><code class="language-bash">mergeMeshes baseCase extensionCase -overwrite
+checkMesh -case baseCase
+</code></pre>
+<p>-overwrite 更新主案例当前网格；随后检查合并后的单元数、连通区域和边界。</p>
+<h2>示例 5：合并后缝合吻合界面</h2>
+<pre><code class="language-bash">mergeMeshes baseCase extensionCase -overwrite
+stitchMesh -case baseCase -perfect interfaceA interfaceB -overwrite
+checkMesh -case baseCase
+</code></pre>
+<p>两个网格有完全吻合的 interfaceA/interfaceB 时，合并后将这对边界缝合成内部面，形成连通计算域。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-overwrite</code></td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: mergeMeshes [OPTIONS] &lt;masterCase&gt; &lt;addCase&gt;
 Options:
   -addRegion &lt;name&gt;
                     Specify alternative mesh region for the additional mesh

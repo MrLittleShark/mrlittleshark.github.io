@@ -1,11 +1,34 @@
 ---
-title: "setsToZones · 转换面集合时需处理面方向信息"
+title: "setsToZones · 把 pointSet、faceSet、cellSet 转成同名网格 zone"
 layout: reference
-description: "转换面集合时需处理面方向信息。"
+description: "把 pointSet、faceSet、cellSet 转成同名网格 zone。"
 cms_slug: "command-setstozones"
 ---
 
-<p>转换面集合时需处理面方向信息。</p><h2>用法</h2><pre><code class="language-bash">setsToZones</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">setsToZones -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noFlipMap</td><td>Ignore orientation of faceSet Do not execute function objects</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;value&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: setsToZones [OPTIONS]
+<p>把 pointSet、faceSet、cellSet 转成同名网格 zone。</p><h2>开始前</h2>
+<p>已有集合文件；需要定向的 faceSet 通常还需同名 cellSet 确定方向。</p>
+<h2>示例 1：把现有集合转成zone</h2>
+<pre><code class="language-bash">setsToZones
+</code></pre>
+<p>遍历网格集合并创建相应zone；cellSet转cellZone，pointSet转pointZone，faceSet转faceZone。</p>
+<h2>示例 2：仅需区域成员而不需方向</h2>
+<pre><code class="language-bash">setsToZones -noFlipMap
+</code></pre>
+<p>关闭 faceSet 的方向判定，适合只关注集合成员的zone转换；由面通量方向参与计算时应另外校正定向。</p>
+<h2>示例 3：转换初始恒定网格集合</h2>
+<pre><code class="language-bash">setsToZones -constant -noFlipMap
+</code></pre>
+<p>把 constant 纳入选择，读取初始网格的集合，适合网格预处理后建立源项或旋转体区域。</p>
+<h2>示例 4：转换最新状态的集合</h2>
+<pre><code class="language-bash">setsToZones -latestTime
+</code></pre>
+<p>动网格最后时刻已有重新选择的集合；转换后zone对应最新网格拓扑和编号。</p>
+<h2>示例 5：多区域源区生成流程</h2>
+<pre><code class="language-bash">topoSet -region fluid -dict system/topoSet-heaterDict
+setsToZones -region fluid -noFlipMap
+</code></pre>
+<p>先在 fluid 中生成 heater 等cellSet，再转为同名cellZone，供该区域体积源模型使用。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noFlipMap</code></td><td>Ignore orientation of faceSet Do not execute function objects</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-time &lt;value&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: setsToZones [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -constant         Include &#x27;constant/&#x27; dir in the times

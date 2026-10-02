@@ -5,42 +5,32 @@ description: "读取 decomposeParDict 中的 numberOfSubdomains。"
 cms_slug: "command-getnumberofprocessors"
 ---
 
-<p>读取 decomposeParDict 中的 numberOfSubdomains。</p><h2>调用示例</h2>
-<pre><code class="language-bash">source "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+<p>读取 decomposeParDict 中的 numberOfSubdomains。</p><h2>开始前</h2>
+<p>先在单独一行执行 source "$WM_PROJECT_DIR/bin/tools/RunFunctions"。示例在个人算例工作区操作，caseA、caseB 均为可修改的副本。</p>
+<h2>示例 1：读取默认分解数</h2>
+<pre><code class="language-bash">cd caseA
 getNumberOfProcessors
-getNumberOfProcessors system/decomposeParDict
 </code></pre>
-<p>省略参数时使用 system/decomposeParDict。输出可用作 mpirun 的进程数。</p>
-<h2>在脚本中查看定义</h2>
-<pre><code class="language-bash">type getNumberOfProcessors
+<p>从 system/decomposeParDict 读取 numberOfSubdomains 并输出整数。</p>
+<h2>示例 2：读取另一份方案</h2>
+<pre><code class="language-bash">cd caseA
+getNumberOfProcessors decomposeParDict.scotch
 </code></pre>
-<p><code>type</code> 显示函数定义或别名展开，可用于确认当前终端加载的实现。</p>
-<details><summary>v2512 实现</summary>
-<pre><code class="language-bash">getNumberOfProcessors()
-{
-    local dict="${1:-system/decomposeParDict}"
-
-    case "$dict" in
-    (system/*)  # Already qualified
-        ;;
-    (*)
-        # If it does not exist, assume it refers to location in system/
-        [ -f "$dict" ] || dict="system/$dict"
-        ;;
-    esac
-
-
-    # Re-use positional parameters for automatic whitespace elimination
-    set -- $(foamDictionary -entry numberOfSubdomains -value "$dict" 2&gt;/dev/null)
-
-    if [ "$#" -eq 1 ]
-    then
-        echo "$1"
-    else
-        echo "Error getting 'numberOfSubdomains' from '$dict'" 1&gt;&amp;2
-        echo 1      # Fallback is 1 proc (serial)
-        return 1
-    fi
-}
+<p>文件若不在当前目录，函数会继续按 system/decomposeParDict.scotch 查找。</p>
+<h2>示例 3：使用明确路径</h2>
+<pre><code class="language-bash">cd caseA
+getNumberOfProcessors system/decomposeParDict.four
 </code></pre>
-</details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/RunFunctions">源码与说明</a></p>
+<p>指定已经准备的替代字典；输出该字典中的子域数。</p>
+<h2>示例 4：传递给 MPI</h2>
+<pre><code class="language-bash">cd caseA
+n=$(getNumberOfProcessors) || exit 1
+mpirun -np "$n" checkMesh -parallel
+</code></pre>
+<p>先按相同字典完成 decomposePar；MPI 数量与子域数一致，终端显示分区网格检查。</p>
+<h2>示例 5：比较两套方案</h2>
+<pre><code class="language-bash">cd caseA
+for dict in system/decomposeParDict.*; do printf '%s: ' "$dict"; getNumberOfProcessors "$dict"; done
+</code></pre>
+<p>为每份匹配字典输出分区数；适用于并行规模试验前整理配置。</p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/RunFunctions">源码与说明</a></p>

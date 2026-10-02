@@ -5,7 +5,29 @@ description: "支持 intersection、union 和 difference，相关构建可依赖
 cms_slug: "command-surfacebooleanfeatures"
 ---
 
-<p>支持 intersection、union 和 difference，相关构建可依赖 CGAL。</p><h2>用法</h2><pre><code class="language-bash">surfaceBooleanFeatures intersection a.stl b.stl</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">surfaceBooleanFeatures intersection a.stl b.stl -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-invertedSpace</td><td>Do the surfaces have inverted space orientation, i.e. a point at infinity is considered inside. This is only sensible for union and intersection.</td></tr><tr><td>-no-cgal</td><td>Do not use CGAL algorithms</td></tr><tr><td>-perturb</td><td>Perturb surface points to escape degenerate intersections</td></tr><tr><td>-scale &lt;factor&gt;</td><td>Geometry scaling factor (both surfaces)</td></tr><tr><td>-surf1Baffle</td><td>Mark surface 1 as a baffle</td></tr><tr><td>-surf2Baffle</td><td>Mark surface 2 as a baffle Trim resulting intersection with additional surfaces; volumeType is &#x27;inside&#x27; (keep (parts of) edges that are inside), &#x27;outside&#x27; (keep (parts of) edges that are outside) or &#x27;mixed&#x27; (keep all)</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceBooleanFeatures [OPTIONS] &lt;action&gt; &lt;surface1&gt; &lt;surface2&gt;
+<p>支持 intersection、union 和 difference，相关构建可依赖 CGAL。</p><h2>开始前</h2>
+<p>准备相交的两个表面，并在含controlDict的工作算例中运行。输出是布尔界面的extendedFeatureEdgeMesh特征线。</p>
+<h2>示例 1：提取并集的交界特征</h2>
+<pre><code class="language-bash">surfaceBooleanFeatures union body.stl boss.stl
+</code></pre>
+<p>按并集关系识别两表面相交处的特征边，供后续特征控制使用。</p>
+<h2>示例 2：提取交集特征</h2>
+<pre><code class="language-bash">surfaceBooleanFeatures intersection body.stl box.stl
+</code></pre>
+<p>选择两个实体重叠部分的布尔界面，观察被box限定区域的交界线。</p>
+<h2>示例 3：提取差集特征</h2>
+<pre><code class="language-bash">surfaceBooleanFeatures difference body.stl cutter.stl
+</code></pre>
+<p>按第一个实体减去第二个实体的关系生成特征线，输入顺序决定差集含义。</p>
+<h2>示例 4：处理退化交点</h2>
+<pre><code class="language-bash">surfaceBooleanFeatures -perturb union body.stl boss.stl
+</code></pre>
+<p>两表面局部共面或交点退化导致求交困难时，小幅扰动点位以尝试获得稳定交线。</p>
+<h2>示例 5：限制交线保留范围</h2>
+<pre><code class="language-bash">surfaceBooleanFeatures -trim '((clip.stl inside))' union body.stl boss.stl
+</code></pre>
+<p>clip.stl为额外闭合选择表面，仅保留位于其内部的交线段，适合局部特征提取。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-invertedSpace</code></td><td>Do the surfaces have inverted space orientation, i.e. a point at infinity is considered inside. This is only sensible for union and intersection.</td></tr><tr><td><code>-no-cgal</code></td><td>Do not use CGAL algorithms</td></tr><tr><td><code>-perturb</code></td><td>Perturb surface points to escape degenerate intersections</td></tr><tr><td><code>-scale &lt;factor&gt;</code></td><td>Geometry scaling factor (both surfaces)</td></tr><tr><td><code>-surf1Baffle</code></td><td>Mark surface 1 as a baffle</td></tr><tr><td><code>-surf2Baffle</code></td><td>Mark surface 2 as a baffle Trim resulting intersection with additional surfaces; volumeType is &#x27;inside&#x27; (keep (parts of) edges that are inside), &#x27;outside&#x27; (keep (parts of) edges that are outside) or &#x27;mixed&#x27; (keep all)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceBooleanFeatures [OPTIONS] &lt;action&gt; &lt;surface1&gt; &lt;surface2&gt;
 Arguments:
   &lt;action&gt;          One of (intersection | union | difference)
   &lt;surface1&gt;        The input surface file 1

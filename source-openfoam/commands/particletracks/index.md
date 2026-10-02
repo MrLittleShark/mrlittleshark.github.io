@@ -1,11 +1,33 @@
 ---
-title: "particleTracks · 输入包括粒子标识信息和轨迹输出字典"
+title: "particleTracks · 把瞬态粒子位置历史连接成轨迹并导出"
 layout: reference
-description: "输入包括粒子标识信息和轨迹输出字典。"
+description: "把瞬态粒子位置历史连接成轨迹并导出。"
 cms_slug: "command-particletracks"
 ---
 
-<p>输入包括粒子标识信息和轨迹输出字典。</p><h2>用法</h2><pre><code class="language-bash">particleTracks</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">particleTracks -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-format &lt;name&gt;</td><td>The writer format (default: vtk or &#x27;setFormat&#x27; from dictionary) Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-stride &lt;int&gt;</td><td>Override the sample-frequency</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-verbose</td><td>Additional verbosity (can be used multiple times)</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: particleTracks [OPTIONS]
+<p>把瞬态粒子位置历史连接成轨迹并导出。</p><h2>开始前</h2>
+<p>已有多个时间的粒子位置及身份信息；默认字典实际为constant/particleTrackProperties，包含cloud、sampleFrequency、maxPositions等。</p>
+<h2>示例 1：导出完整时间轨迹</h2>
+<pre><code class="language-bash">particleTracks
+</code></pre>
+<p>按字典选择粒子云和采样频率，依据粒子身份关联不同时间的位置，输出轨迹文件。</p>
+<h2>示例 2：截取特定时间段</h2>
+<pre><code class="language-bash">particleTracks -time '0.1:0.5'
+</code></pre>
+<p>只连接0.1至0.5区间的数据，适合查看喷射初期或指定运动阶段。</p>
+<h2>示例 3：减少所跟踪粒子数量</h2>
+<pre><code class="language-bash">particleTracks -stride 10 -time '0:1'
+</code></pre>
+<p>-stride覆盖字典sampleFrequency，对粒子编号按指定采样间隔抽取轨迹，减少密集粒子云的显示量。</p>
+<h2>示例 4：给轨迹附加字段</h2>
+<pre><code class="language-bash">particleTracks -fields '(U d T)' -format vtk
+</code></pre>
+<p>云中已有U、d、T时，随轨迹写速度、粒径和温度，便于沿路径着色分析。</p>
+<h2>示例 5：采用另一云的轨迹方案</h2>
+<pre><code class="language-bash">particleTracks -dict constant/particleTrackProperties-spray -region gas -time '0.1:1'
+</code></pre>
+<p>替代字典指定喷雾云；从gas区域读取粒子，生成该云在指定时段内的轨迹。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-dict &lt;file&gt;</code></td><td>改用指定字典文件。</td></tr><tr><td><code>-format &lt;name&gt;</code></td><td>The writer format (default: vtk or &#x27;setFormat&#x27; from dictionary) Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-stride &lt;int&gt;</code></td><td>Override the sample-frequency</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-verbose</code></td><td>Additional verbosity (can be used multiple times)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: particleTracks [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -constant         Include &#x27;constant/&#x27; dir in the times list

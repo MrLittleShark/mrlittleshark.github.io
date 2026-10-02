@@ -6,7 +6,7 @@ dictionary: true
 cms_slug: "dictionary-fvschemes"
 ---
 
-<p>选择时间导数、梯度、散度、拉普拉斯项和面插值的离散格式。</p><p>位置：<code>system/fvSchemes</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-advection-profile-errors.png" alt="一维输运中的格式误差曲线" loading="lazy"><figcaption><strong>一维输运中的格式误差曲线</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module6.pdf，p. 157 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>fvSchemes 决定方程怎样离散</h2>
+<p>选择时间导数、梯度、散度、拉普拉斯项和面插值的离散格式。</p><p>位置：<code>system/fvSchemes</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-advection-profile-errors.png" alt="一维输运中的格式误差曲线" loading="lazy"><figcaption><strong>一维输运中的格式误差曲线</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module6.pdf，p. 157</small></figcaption></figure><h2>fvSchemes 决定方程怎样离散</h2>
 <p><code>system/fvSchemes</code> 为时间导数、梯度、对流和扩散分别选择数值格式。求解器负责建立哪些方程，字典负责指定这些算子的离散方法。</p>
 <p>以下是均匀正交方腔可用的一组设置，放在 <code>FoamFile</code> 文件头之后：</p>
 <pre><code class="language-foam">ddtSchemes

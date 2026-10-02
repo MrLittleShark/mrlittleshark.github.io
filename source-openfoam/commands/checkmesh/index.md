@@ -5,23 +5,29 @@ description: "检查网格拓扑、几何形状与质量，并定位问题区域
 cms_slug: "command-checkmesh"
 ---
 
-<p>检查网格拓扑、几何形状与质量，并定位问题区域。</p><h2>读取基本检查结果</h2>
-<pre><code class="language-bash">checkMesh
+<p>检查网格拓扑、几何形状与质量，并定位问题区域。</p><h2>开始前</h2>
+<p>算例已有网格。检查时刻和区域应与实际求解或待使用的网格一致。</p>
+<h2>示例 1：检查初始网格</h2>
+<pre><code class="language-bash">checkMesh -constant
 </code></pre>
-<p>先看网格范围、单元数、边界数，再看非正交、偏斜和体积等指标。<code>Failed ... mesh checks</code> 后的名称指向具体问题。</p>
-<h2>执行完整几何和拓扑检查</h2>
-<pre><code class="language-bash">checkMesh -allTopology -allGeometry &gt; log.checkMesh 2&gt;&amp;1
+<p>检查constant网格的体积、边界和基本拓扑，首先查看单元数与Mesh OK或失败项目。</p>
+<h2>示例 2：运行完整检查</h2>
+<pre><code class="language-bash">checkMesh -constant -allTopology -allGeometry
 </code></pre>
-<p><code>-allTopology</code> 增加连接关系检查，<code>-allGeometry</code> 增加几何检查。重定向将完整信息写入日志，方便比较两次网格修改。</p>
-<h2>导出异常集合</h2>
-<pre><code class="language-bash">checkMesh -allTopology -allGeometry -writeSets vtk
+<p>增加拓扑和包围盒等几何检查，适合导入、拼接或自编程生成的网格。</p>
+<h2>示例 3：使用项目质量标准</h2>
+<pre><code class="language-bash">checkMesh -meshQuality
 </code></pre>
-<p>将检查产生的面或单元集合写成 VTK，便于在 ParaView 中定位异常。先查出问题位置，再决定修改表面、细化等级或边界层参数。</p>
-<h2>检查并行网格</h2>
-<pre><code class="language-bash">mpirun -np 4 checkMesh -parallel
+<p>读取system/meshQualityDict，以项目设定的非正交性、扭曲等阈值检查。</p>
+<h2>示例 4：输出质量字段</h2>
+<pre><code class="language-bash">checkMesh -latestTime -writeAllFields -writeSets vtk
 </code></pre>
-<p>在已经分成 4 个子域的算例中运行。检查结果还包含分区边界及各处理器之间的连接。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allGeometry</td><td>执行更完整的网格几何检查。</td></tr><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-allTopology</td><td>执行更完整的网格拓扑检查。</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-meshQuality</td><td>Read user-defined mesh quality criteria from system/meshQualityDict</td></tr><tr><td>-noTopology</td><td>Skip checking the mesh topology</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-write-edges</td><td>Write bad edges (possibly relevant for finite-area) in vtk format</td></tr><tr><td>-writeAllFields</td><td>Write volFields with mesh quality parameters Write surfaceFields with mesh quality parameters Write checks to file in dictionary or JSON format Write volFields with selected mesh quality parameters Reconstruct and write all faceSets and cellSets in selected format</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-meshqualitydict/">meshQualityDict</a></p><h2>配套算例</h2><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/polyDualMesh/missingCorner">mesh/polyDualMesh/missingCorner</a></li></ul><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: checkMesh [OPTIONS]
+<p>检查最新网格，保存质量标量场和问题集合，可在ParaView定位坏单元。</p>
+<h2>示例 5：检查多区域并行网格</h2>
+<pre><code class="language-bash">mpirun -np 4 checkMesh -parallel -allRegions
+</code></pre>
+<p>前提4个分区及regionProperties完整；分别检查流体、固体区域和分区耦合关系。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-allGeometry</code></td><td>执行更完整的网格几何检查。</td></tr><tr><td><code>-allRegions</code></td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td><code>-allTopology</code></td><td>执行更完整的网格拓扑检查。</td></tr><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-meshQuality</code></td><td>Read user-defined mesh quality criteria from system/meshQualityDict</td></tr><tr><td><code>-noTopology</code></td><td>Skip checking the mesh topology</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-write-edges</code></td><td>Write bad edges (possibly relevant for finite-area) in vtk format</td></tr><tr><td><code>-writeAllFields</code></td><td>Write volFields with mesh quality parameters Write surfaceFields with mesh quality parameters Write checks to file in dictionary or JSON format Write volFields with selected mesh quality parameters Reconstruct and write all faceSets and cellSets in selected format</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-meshqualitydict/">meshQualityDict</a></p><h2>配套算例</h2><ul><li><a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/mesh/polyDualMesh/missingCorner">mesh/polyDualMesh/missingCorner</a></li></ul><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: checkMesh [OPTIONS]
 Options:
   -allGeometry      Include bounding box checks
   -allRegions       Use all regions in regionProperties

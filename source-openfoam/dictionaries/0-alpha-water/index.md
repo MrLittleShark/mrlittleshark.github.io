@@ -6,7 +6,7 @@ dictionary: true
 cms_slug: "dictionary-alpha-water"
 ---
 
-<p>水相体积分数场：0 表示无水，1 表示充满水，介于两者之间的值表示部分占据。</p><p>位置：<code>0/alpha.water</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-vof-volume-fraction.png" alt="相分数如何表示网格内的界面" loading="lazy"><figcaption><strong>相分数如何表示网格内的界面</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 78 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><p><code>alpha.water</code> 是水相体积分数场。它没有单位：0 表示单元中没有水，1 表示全是水，0 到 1 之间表示水与另一相共存。字段后缀 <code>water</code> 来自相模型中的相名。</p>
+<p>水相体积分数场：0 表示无水，1 表示充满水，介于两者之间的值表示部分占据。</p><p>位置：<code>0/alpha.water</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-vof-volume-fraction.png" alt="相分数如何表示网格内的界面" loading="lazy"><figcaption><strong>相分数如何表示网格内的界面</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 78</small></figcaption></figure><p><code>alpha.water</code> 是水相体积分数场。它没有单位：0 表示单元中没有水，1 表示全是水，0 到 1 之间表示水与另一相共存。字段后缀 <code>water</code> 来自相模型中的相名。</p>
 <h3>示例：设置初始水区</h3>
 <p>先在 <code>0/alpha.water</code> 中准备完整场和边界，再把以下主体写入具有标准字典文件头的 <code>system/setFieldsDict</code>：</p>
 <pre><code class="language-foam">defaultFieldValues

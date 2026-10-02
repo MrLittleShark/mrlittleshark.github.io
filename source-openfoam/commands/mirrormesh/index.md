@@ -1,11 +1,36 @@
 ---
-title: "mirrorMesh · 读取 mirrorMeshDict"
+title: "mirrorMesh · 按字典定义的平面镜像并扩展网格"
 layout: reference
-description: "读取 mirrorMeshDict。"
+description: "按字典定义的平面镜像并扩展网格。"
 cms_slug: "command-mirrormesh"
 ---
 
-<p>读取 mirrorMeshDict。</p><h2>用法</h2><pre><code class="language-bash">mirrorMesh</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">mirrorMesh -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: mirrorMesh [OPTIONS]
+<p>按字典定义的平面镜像并扩展网格。</p><h2>开始前</h2>
+<p>已有半域网格和 system/mirrorMeshDict，字典定义镜像平面及 planeTolerance。</p>
+<h2>示例 1：生成完整对称域</h2>
+<pre><code class="language-bash">mirrorMesh
+</code></pre>
+<p>读取默认镜像平面，复制镜像侧单元；平面上的匹配边界转为内部连接，结果写入新网格时间。</p>
+<h2>示例 2：采用另一镜像平面</h2>
+<pre><code class="language-bash">mirrorMesh -dict system/mirrorMesh-yDict
+</code></pre>
+<p>替代字典描述另一个平面，可用于沿不同对称面扩展同一基础网格的副本。</p>
+<h2>示例 3：镜像后直接继续预处理</h2>
+<pre><code class="language-bash">mirrorMesh -overwrite
+checkMesh
+</code></pre>
+<p>把完整域写回当前网格，检查镜像连接处的单元质量和边界分组。</p>
+<h2>示例 4：调整平面识别容差</h2>
+<pre><code class="language-bash">foamDictionary system/mirrorMeshDict -entry planeTolerance -set 1e-7
+mirrorMesh
+</code></pre>
+<p>planeTolerance 用于判定点是否位于镜像平面上；1e-7 应结合本案例长度单位选择，结果中检查平面处是否出现细小缝隙。</p>
+<h2>示例 5：镜像后修正周期配对</h2>
+<pre><code class="language-bash">mirrorMesh -overwrite
+createPatch -dict system/createPatch-cyclicDict -overwrite
+</code></pre>
+<p>输入网格带 cyclic 边界时，镜像可能改变面的对应顺序；替代 createPatchDict 重新建立周期配对，再用于后续计算。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-dict &lt;file&gt;</code></td><td>改用指定字典文件。</td></tr><tr><td><code>-overwrite</code></td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: mirrorMesh [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

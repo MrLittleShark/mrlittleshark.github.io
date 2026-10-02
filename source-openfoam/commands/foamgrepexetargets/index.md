@@ -5,8 +5,31 @@ description: "列出 Make/files 中的可执行文件目标，便于检查构建
 cms_slug: "command-foamgrepexetargets"
 ---
 
-<p>列出 Make/files 中的可执行文件目标，便于检查构建结果。</p><h2>用法</h2><pre><code class="language-bash"># 查看安装中的脚本；这条命令不会执行脚本
-sed -n &#x27;1,180p&#x27; &quot;$WM_PROJECT_DIR/bin/tools/foamGrepExeTargets&quot;</code></pre><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-bin</td><td>List contents of \$FOAM_APPBIN (no git required)</td></tr><tr><td>-no-git</td><td>Disable use of git for obtaining information</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
+<p>列出 Make/files 中的可执行文件目标，便于检查构建结果。</p><h2>开始前</h2>
+<p>加载 v2512 环境。内部脚本使用完整路径调用；在个人可写工作目录中生成输出。</p>
+<h2>示例 1：列出源码应用目标</h2>
+<pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamGrepExeTargets"
+</code></pre>
+<p>扫描 EXE 条目并输出应用目录名，默认尽量使用 Git 索引。</p>
+<h2>示例 2：列出已安装程序</h2>
+<pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamGrepExeTargets" -bin
+</code></pre>
+<p>直接列出 FOAM_APPBIN，包含实际目录内容。</p>
+<h2>示例 3：扫描解压源码树</h2>
+<pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamGrepExeTargets" -no-git
+</code></pre>
+<p>使用文件系统查找 Make/files，适合无 .git 的源码包。</p>
+<h2>示例 4：查找未构建目标</h2>
+<pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamGrepExeTargets" -no-git &gt; targets-source
+"$WM_PROJECT_DIR/bin/tools/foamGrepExeTargets" -bin &gt; targets-built
+diff -u targets-source targets-built
+</code></pre>
+<p>比较源码目标名与已生成程序，差异供定位遗漏或额外程序。</p>
+<h2>示例 5：筛选网格工具</h2>
+<pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamGrepExeTargets" -no-git | grep -i mesh
+</code></pre>
+<p>按名称筛选包含 mesh 的目标，辅助查找相关源码编译单元。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-bin</code></td><td>List contents of \$FOAM_APPBIN (no git required)</td></tr><tr><td><code>-no-git</code></td><td>Disable use of git for obtaining information</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
 Command: foamGrepExeTargets
 Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamGrepExeTargets
 

@@ -9,5 +9,4 @@ def figure_html(key):
       '<figcaption><strong>'+e(f['title'])+'</strong>'
       '<small class="figure-source">来源：Joel Guerrero / '
       '<a href="'+e(f['source_url'])+'">Wolf Dynamics</a> · '
-      +e(f['source_module_pdf'])+'，p. '+str(f['source_module_page'])+' · '
-      '<a href="'+e(f['license_url'])+'">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>')
+      +e(f['source_module_pdf'])+'，p. '+str(f['source_module_page'])+'</small></figcaption></figure>')

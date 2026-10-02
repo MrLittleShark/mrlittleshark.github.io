@@ -6,7 +6,7 @@ dictionary: true
 cms_slug: "dictionary-fvsolution"
 ---
 
-<p>设置线性方程求解器、收敛容差、压力速度耦合和欠松弛。</p><p>位置：<code>system/fvSolution</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-pimple-pressure-coupling.png" alt="PIMPLE 外校正与 PISO 内校正" loading="lazy"><figcaption><strong>PIMPLE 外校正与 PISO 内校正</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module6.pdf，p. 96 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>fvSolution 控制代数求解和压力校正</h2>
+<p>设置线性方程求解器、收敛容差、压力速度耦合和欠松弛。</p><p>位置：<code>system/fvSolution</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-pimple-pressure-coupling.png" alt="PIMPLE 外校正与 PISO 内校正" loading="lazy"><figcaption><strong>PIMPLE 外校正与 PISO 内校正</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module6.pdf，p. 96</small></figcaption></figure><h2>fvSolution 控制代数求解和压力校正</h2>
 <p><code>system/fvSolution</code> 主要包含三类内容：各场的线性求解器、压力—速度耦合算法，以及需要时使用的松弛因子。下面是一份适用于 <code>icoFoam</code> 方腔的主体配置，放在 <code>FoamFile</code> 文件头之后：</p>
 <pre><code class="language-foam">solvers
 {

@@ -1,11 +1,36 @@
 ---
-title: "splitMesh · 输入为预先建立的 cutFaces 等面集合"
+title: "splitMesh · 把 faceSet 指定的内部面拆成两侧边界"
 layout: reference
-description: "输入为预先建立的 cutFaces 等面集合。"
+description: "把 faceSet 指定的内部面拆成两侧边界。"
 cms_slug: "command-splitmesh"
 ---
 
-<p>输入为预先建立的 cutFaces 等面集合。</p><h2>用法</h2><pre><code class="language-bash">splitMesh cutFaces sideA sideB</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">splitMesh cutFaces sideA sideB -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: splitMesh [OPTIONS] &lt;faceSet&gt; &lt;master&gt; &lt;slave&gt;
+<p>把 faceSet 指定的内部面拆成两侧边界。</p><h2>开始前</h2>
+<p>已有内部faceSet，且 master/slave 指定的边界patch已按案例要求准备好；三个参数依次为集合、主侧、从侧。</p>
+<h2>示例 1：沿指定面集拆分</h2>
+<pre><code class="language-bash">splitMesh interfaceFaces sideA sideB
+</code></pre>
+<p>interfaceFaces 的内部面被转换为 sideA 与 sideB 两侧边界，结果写入新的网格时间。</p>
+<h2>示例 2：把拆分结果用于后续预处理</h2>
+<pre><code class="language-bash">splitMesh interfaceFaces sideA sideB -overwrite
+</code></pre>
+<p>写回当前网格；后续为新两侧配置边界条件时使用 sideA、sideB 名称。</p>
+<h2>示例 3：先生成切割集合</h2>
+<pre><code class="language-bash">topoSet -dict system/topoSet-cutDict
+splitMesh cutFaces cutMaster cutSlave -overwrite
+</code></pre>
+<p>topoSet-cutDict 已定义 cutFaces faceSet；选择与拆分连成可重复流程，输出沿该切面分开的网格。</p>
+<h2>示例 4：检查拆分后的连通区域</h2>
+<pre><code class="language-bash">splitMesh interfaceFaces sideA sideB -overwrite
+splitMeshRegions -detectOnly
+</code></pre>
+<p>第二条只检测网格连通区域，检查这次拆分是否确实把预期区域隔开。</p>
+<h2>示例 5：查看新边界的场类型</h2>
+<pre><code class="language-bash">splitMesh interfaceFaces sideA sideB -overwrite
+patchSummary -time 0 -expand
+</code></pre>
+<p>0时刻场已补充新patch条目后，用 patchSummary 展开每个边界，检查拆分两侧的边界条件。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-overwrite</code></td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: splitMesh [OPTIONS] &lt;faceSet&gt; &lt;master&gt; &lt;slave&gt;
 Arguments:
   &lt;faceSet&gt;         The faces used for splitting
   &lt;master&gt;          The master patch name

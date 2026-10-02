@@ -5,27 +5,29 @@ description: "查询边界条件、函数对象和求解器的帮助。"
 cms_slug: "command-foamhelp"
 ---
 
-<p>查询边界条件、函数对象和求解器的帮助。</p><h2>查询速度边界条件</h2>
+<p>查询边界条件、函数对象和求解器的帮助。</p><h2>开始前</h2>
+<p>已加载 v2512；在含网格及所查字段的算例中运行。boundary、solver 等类别放在选项之前；在线文档查询需要可访问文档索引。</p>
+<h2>示例 1：查询速度可用边界</h2>
 <pre><code class="language-bash">foamHelp boundary -field U
 </code></pre>
-<p>在已有网格和 <code>0/U</code> 的算例目录运行。<code>boundary</code> 选择边界条件类别，<code>-field U</code> 根据速度场的类型列出可用边界条件。类别名称放在选项之前。</p>
-<h2>缩小边界条件范围</h2>
+<p>读取速度场 U 的类型，列出可用于该矢量场的边界条件，供填写 0/U 时选择。</p>
+<h2>示例 2：查询压力可用边界</h2>
+<pre><code class="language-bash">foamHelp boundary -field p
+</code></pre>
+<p>已有 0/p 时查询标量边界；所得类型列表与 U 的矢量边界列表可对照阅读。</p>
+<h2>示例 3：筛选固定值速度边界</h2>
 <pre><code class="language-bash">foamHelp boundary -field U -fixedValue
-foamHelp boundary -constraint
 </code></pre>
-<p>第一行列出定值类速度边界，第二行列出约束类网格边界。<code>-fixedValue</code> 与 <code>-field</code> 配合使用。</p>
-<h2>查询函数对象和求解器</h2>
-<pre><code class="language-bash">foamHelp functionObject
-foamHelp solver
-foamHelp solver -read
+<p>在速度边界中筛选定值类实现，适合寻找给定入口速度及其派生条件。</p>
+<h2>示例 4：查询网格约束类型</h2>
+<pre><code class="language-bash">foamHelp boundary -constraint
 </code></pre>
-<p><code>functionObject</code> 查询函数对象文档；<code>solver</code> 查询求解器文档；<code>-read</code> 从 <code>system/controlDict</code> 读取 <code>application</code>。文档查询依赖 OpenFOAM 的文档配置和可访问的文档索引。</p>
-<h2>查看完整参数</h2>
-<pre><code class="language-bash">foamHelp -help-full
-foamHelp boundary -help
+<p>显示约束类边界信息，用于区分 empty、symmetry 等几何约束与普通场边界。</p>
+<h2>示例 5：按当前算例查询求解器</h2>
+<pre><code class="language-bash">foamHelp solver -read
 </code></pre>
-<p>第一行查看入口参数，第二行查看边界类别的参数。若提示找不到网格或场，先进入完成 <code>blockMesh</code> 的算例目录。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamHelp [OPTIONS] &lt;tool&gt;
+<p>从 system/controlDict 读取 application，再查询对应求解器文档；先确认该条目已设置为所用求解器。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamHelp [OPTIONS] &lt;tool&gt;
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

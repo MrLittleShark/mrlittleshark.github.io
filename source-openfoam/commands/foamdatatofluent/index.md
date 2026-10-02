@@ -1,11 +1,34 @@
 ---
-title: "foamDataToFluent · 转换范围为场数据，求解设置在目标软件中配置"
+title: "foamDataToFluent · 按映射字典把场数据导出为 Fluent 数据文件"
 layout: reference
-description: "转换范围为场数据，求解设置在目标软件中配置。"
+description: "按映射字典把场数据导出为 Fluent 数据文件。"
 cms_slug: "command-foamdatatofluent"
 ---
 
-<p>转换范围为场数据，求解设置在目标软件中配置。</p><h2>用法</h2><pre><code class="language-bash">foamDataToFluent</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">foamDataToFluent -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamDataToFluent [OPTIONS]
+<p>按映射字典把场数据导出为 Fluent 数据文件。</p><h2>开始前</h2>
+<p>已有匹配的OpenFOAM网格和字段，以及system/foamDataToFluentDict；Fluent端使用与之对应的网格。</p>
+<h2>示例 1：转换已有结果</h2>
+<pre><code class="language-bash">foamDataToFluent
+</code></pre>
+<p>读取字段映射规则并转换选中的时间，输出Fluent可读取的数据文件。</p>
+<h2>示例 2：只转换最后时刻</h2>
+<pre><code class="language-bash">foamDataToFluent -latestTime
+</code></pre>
+<p>仅写最新结果，适合把最终解传给对应Fluent网格继续分析。</p>
+<h2>示例 3：转换明确时刻</h2>
+<pre><code class="language-bash">foamDataToFluent -time 1
+</code></pre>
+<p>选择已有时间1，便于把同一物理时刻的解在不同后处理软件中对照。</p>
+<h2>示例 4：转换一段瞬态结果</h2>
+<pre><code class="language-bash">foamDataToFluent -time '0.1:0.5' -noZero
+</code></pre>
+<p>导出0.1到0.5的已有结果并排除初值，输出可用于瞬态场对比。</p>
+<h2>示例 5：并行计算后再转换</h2>
+<pre><code class="language-bash">reconstructPar -latestTime
+foamDataToFluent -latestTime
+</code></pre>
+<p>先把processor场重构成完整场，再按Fluent映射规则导出，保证字段对应完整网格。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamDataToFluent [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

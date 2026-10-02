@@ -1,11 +1,33 @@
 ---
-title: "mapFieldsPar · 通过 mpirun 启动，并添加 -parallel"
+title: "mapFieldsPar · 在并行或串行布局间执行网格到网格场映射"
 layout: reference
-description: "通过 mpirun 启动，并添加 -parallel。其参数按自身接口设置。"
+description: "在并行或串行布局间执行网格到网格场映射。"
 cms_slug: "command-mapfieldspar"
 ---
 
-<p>通过 mpirun 启动，并添加 -parallel。其参数按自身接口设置。</p><h2>用法</h2><pre><code class="language-bash">mapFieldsPar ../sourceCase -sourceTime latestTime -consistent</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">mapFieldsPar ../sourceCase -sourceTime latestTime -consistent -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-consistent</td><td>按匹配的边界拓扑进行场映射。</td></tr><tr><td>-no-lagrangian</td><td>Skip mapping lagrangian positions and fields</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-subtract</td><td>Subtract mapped source from target Specify the target region</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-mapfieldsdict/">mapFieldsDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: mapFieldsPar [OPTIONS] &lt;sourceCase&gt;
+<p>在并行或串行布局间执行网格到网格场映射。</p><h2>开始前</h2>
+<p>源、目标网格及字段可读；MPI执行时目标分区与进程数一致，非一致边界映射规则已准备。 并行示例采用 4 个子域，分区设置与进程数一致。</p>
+<h2>示例 1：按体积权重映射</h2>
+<pre><code class="language-bash">mapFieldsPar ../sourceCase -mapMethod cellVolumeWeight
+</code></pre>
+<p>从源案例计算重叠体积权重，映射到当前目标；适合不同分辨率但空间重叠的网格。</p>
+<h2>示例 2：只映射速度与压力</h2>
+<pre><code class="language-bash">mapFieldsPar ../sourceCase -fields '(U p)' -sourceTime latestTime
+</code></pre>
+<p>限制字段为U、p，读取源最新时刻；其他目标字段保留原设置。</p>
+<h2>示例 3：相同网格直接映射</h2>
+<pre><code class="language-bash">mapFieldsPar ../sourceCase -consistent -mapMethod direct
+</code></pre>
+<p>源目标几何和边界一致且满足直接寻址条件时，采用direct方法传递字段。</p>
+<h2>示例 4：选择边界面积加权</h2>
+<pre><code class="language-bash">mapFieldsPar ../sourceCase -mapMethod cellVolumeWeight -patchMapMethod faceAreaWeight
+</code></pre>
+<p>内部按体积、边界按面积加权，适合面划分不同但边界相互覆盖的映射。</p>
+<h2>示例 5：并行映射并保留欧拉场</h2>
+<pre><code class="language-bash">mpirun -np 4 mapFieldsPar ../sourceCase -parallel -fields '(U p T)' -no-lagrangian
+</code></pre>
+<p>目标已有4分区；并行映射所选欧拉场，-no-lagrangian跳过粒子位置和粒子属性。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-consistent</code></td><td>按匹配的边界拓扑进行场映射。</td></tr><tr><td><code>-no-lagrangian</code></td><td>Skip mapping lagrangian positions and fields</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-subtract</code></td><td>Subtract mapped source from target Specify the target region</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-mapfieldsdict/">mapFieldsDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: mapFieldsPar [OPTIONS] &lt;sourceCase&gt;
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -consistent       Source and target geometry and boundary conditions identical

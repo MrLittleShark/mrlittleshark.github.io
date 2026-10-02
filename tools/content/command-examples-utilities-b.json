@@ -1,0 +1,2637 @@
+{
+  "createBaffles": {
+    "summary": "将选定内部面改成挡板两侧的边界面。",
+    "prerequisites": "已有网格和 system/createBafflesDict；字典指定待转换面及两侧 patch。示例中的区域名、字典名应与案例一致。",
+    "examples": [
+      {
+        "title": "生成挡板",
+        "code": "createBaffles",
+        "explanation": "读取默认字典，将选中内部面改成边界面，并在新的网格时间目录写入结果。日志给出选面与新边界信息。"
+      },
+      {
+        "title": "使用另一套挡板位置",
+        "code": "createBaffles -dict system/createBaffles-obliqueDict",
+        "explanation": "预先准备描述斜挡板的字典；-dict 选择该文件，便于在相同基础网格上比较不同挡板位置。"
+      },
+      {
+        "title": "直接更新预处理网格",
+        "code": "createBaffles -overwrite\ncheckMesh",
+        "explanation": "-overwrite 把改动写回当前网格。随后检查单元闭合、边界拓扑与网格质量，再继续初始化场。"
+      },
+      {
+        "title": "只处理流体区域",
+        "code": "createBaffles -region fluid -dict system/createBaffles-fluidDict -overwrite",
+        "explanation": "多区域案例已有 fluid 网格；-region 限定修改对象，其他区域保持原有网格。结果是 fluid 内部新增的两侧挡板边界。"
+      },
+      {
+        "title": "挡板生成后拆分共用顶点",
+        "code": "createBaffles -overwrite\nmergeOrSplitBaffles -split -overwrite\ncheckMesh",
+        "explanation": "第一步创建面，第二步复制挡板两侧需要独立的顶点，适用于随后要让两侧独立运动的网格。最终检查拆分后的连通关系。"
+      }
+    ]
+  },
+  "createPatch": {
+    "summary": "把已有边界面或 faceSet 重组为指定 patch。",
+    "prerequisites": "已有网格和 system/createPatchDict；字典中的 patches/source 对应实际边界或 faceSet。",
+    "examples": [
+      {
+        "title": "按默认字典重组边界",
+        "code": "createPatch",
+        "explanation": "读取 createPatchDict，把选定面归入新 patch，输出新网格时间目录；检查日志中的新 patch 名称和面数。"
+      },
+      {
+        "title": "将入口拆分方案写回网格",
+        "code": "createPatch -dict system/createPatch-inletDict -overwrite",
+        "explanation": "替代字典描述入口面分组；-overwrite 更新当前 boundary 与相关网格文件，便于后续按新名称填写 0/ 下边界条件。"
+      },
+      {
+        "title": "检查周期面配对",
+        "code": "createPatch -writeObj",
+        "explanation": "字典已经定义 cyclic 配对时，额外写 OBJ 匹配几何，供可视化检查两侧位置与对应关系。"
+      },
+      {
+        "title": "为指定区域整理边界",
+        "code": "createPatch -region fluid -overwrite",
+        "explanation": "只重组 fluid 区域的边界，适合多区域案例中单独修正流体入口、出口和壁面名称。"
+      },
+      {
+        "title": "依次处理所有区域",
+        "code": "createPatch -allRegions -overwrite\ncheckMesh -allRegions",
+        "explanation": "regionProperties 已列出各区域且相应字典已准备好；-allRegions 对所有区域执行重组，再逐区域检查结果。"
+      }
+    ]
+  },
+  "deformedGeom": {
+    "summary": "用名为 U 的单元位移场生成变形网格。",
+    "prerequisites": "时间目录中已有 volVectorField U，其物理意义为位移；程序将它插值到顶点，再乘位置参数 factor。各例使用同一未变形网格的独立副本。",
+    "examples": [
+      {
+        "title": "显示实际位移",
+        "code": "deformedGeom 1",
+        "explanation": "系数 1 采用原位移幅值。程序遍历结果时间，在存在 U 的时刻写出变形网格，适合结构位移结果的几何显示。"
+      },
+      {
+        "title": "放大微小变形",
+        "code": "deformedGeom 20",
+        "explanation": "顶点位移乘 20，便于观察很小的挠曲。所得几何用于放大显示，空间尺寸中的变形量已改变。"
+      },
+      {
+        "title": "缩小显示幅度",
+        "code": "deformedGeom 0.2",
+        "explanation": "将位移缩到原来的五分之一；对大位移数据可先检查整体变形趋势，输出仍覆盖该副本的结果网格。"
+      },
+      {
+        "title": "比较正反方向",
+        "code": "deformedGeom -case ./reverseView -1",
+        "explanation": "reverseView 中保存原网格与位移结果；负系数把每个顶点沿相反位移方向移动，适合检查位移符号约定。"
+      },
+      {
+        "title": "检查放大后的网格质量",
+        "code": "deformedGeom 5\ncheckMesh -latestTime",
+        "explanation": "先生成五倍位移几何，再检查最后时刻的体积和质量指标；局部负体积能指出放大后发生穿越的位置。"
+      }
+    ]
+  },
+  "flattenMesh": {
+    "summary": "把二维笛卡尔网格的前后顶点校正到两个平面。",
+    "prerequisites": "网格已有正确的二维 empty 边界，前后面沿同一坐标方向；程序直接重写所读 points。",
+    "examples": [
+      {
+        "title": "校正轻微不共面的顶点",
+        "code": "flattenMesh",
+        "explanation": "程序识别二维法向，把两侧顶点分别放到包围盒的两个端平面，输出修正后的 points 路径。"
+      },
+      {
+        "title": "在案例副本上比较几何",
+        "code": "cp -r planarCase planarCase-flat\nflattenMesh -case planarCase-flat",
+        "explanation": "输入 planarCase 为现有薄层二维网格；结果写在独立副本，便于并排查看前后面平整程度。"
+      },
+      {
+        "title": "和网格检查连续使用",
+        "code": "flattenMesh\ncheckMesh -allGeometry",
+        "explanation": "完成平面校正后检查几何，重点观察二维方向、面平面性和单元体积。拓扑仍来自原网格。"
+      },
+      {
+        "title": "处理导入的二维网格",
+        "code": "fluentMeshToFoam channel.msh\nflattenMesh\ncheckMesh",
+        "explanation": "channel.msh 已按薄层二维方式生成并含可识别的 empty 边界；导入后校正坐标舍入误差，再检查网格。"
+      },
+      {
+        "title": "导出校正后的几何",
+        "code": "flattenMesh\nfoamToVTK -no-fields -name VTK-flat",
+        "explanation": "将校正后的网格导出到 VTK-flat，关闭场输出；可在 ParaView 中检查前后平面和薄层厚度。"
+      }
+    ]
+  },
+  "insideCells": {
+    "summary": "按单元中心是否位于封闭表面内部创建 cellSet。",
+    "prerequisites": "已生成体网格；输入曲面必须封闭、单连通，曲面与网格使用同一坐标和单位。",
+    "examples": [
+      {
+        "title": "选出球体内的单元",
+        "code": "insideCells constant/triSurface/sphere.stl sphereCells",
+        "explanation": "第一个参数是封闭曲面，第二个是输出 cellSet 名；中心位于球内的单元写入 sphereCells。"
+      },
+      {
+        "title": "检查选区位置",
+        "code": "insideCells constant/triSurface/solid.stl solidCells\nfoamToVTK -cellSet solidCells -no-fields",
+        "explanation": "先创建选区，再仅导出这些单元的几何，检查曲面与网格是否对齐。"
+      },
+      {
+        "title": "将选区变成体区域",
+        "code": "insideCells constant/triSurface/heater.stl heater\nsetsToZones -noFlipMap",
+        "explanation": "建立 heater cellSet，再生成同名 cellZone，供体积热源或多孔区模型引用；-noFlipMap 简化可能同时存在的 faceSet 转换。"
+      },
+      {
+        "title": "从曲面内提取子网格",
+        "code": "insideCells constant/triSurface/core.stl coreCells\nsubsetMesh coreCells -resultTime 1",
+        "explanation": "先选 coreCells，再把所选单元组成子网格并写到时间 1。新增切割面默认进入 oldInternalFaces。"
+      },
+      {
+        "title": "选择另一个案例中的物体",
+        "code": "insideCells -case ./fineMesh ./geometry/body.stl bodyCells",
+        "explanation": "fineMesh 是已有细网格案例；曲面路径按当前工作目录提供，-case 指定 cellSet 写入的目标案例，用于网格细化后的同一几何选区。"
+      }
+    ]
+  },
+  "mergeMeshes": {
+    "summary": "把两个独立网格合并到主案例中。",
+    "prerequisites": "masterCase 与 addCase 都有有效网格；两套坐标已对齐。合并后若要把接触边界变成内部面，还需拼接步骤。",
+    "examples": [
+      {
+        "title": "合并两个网格",
+        "code": "mergeMeshes baseCase extensionCase",
+        "explanation": "baseCase 是接收结果的主案例，extensionCase 提供追加网格；输出位于主案例的新网格时间。"
+      },
+      {
+        "title": "指定结果时间",
+        "code": "mergeMeshes baseCase extensionCase -resultTime 2",
+        "explanation": "把合并网格写到 baseCase 的时间 2，便于保留并选择不同预处理阶段。"
+      },
+      {
+        "title": "合并指定区域",
+        "code": "mergeMeshes baseCase extensionCase -masterRegion fluid -addRegion fluid",
+        "explanation": "两个案例均含 fluid 区域时，只读取并合并这两个区域网格，结果仍归主案例的 fluid 区域。"
+      },
+      {
+        "title": "直接更新主网格并检查",
+        "code": "mergeMeshes baseCase extensionCase -overwrite\ncheckMesh -case baseCase",
+        "explanation": "-overwrite 更新主案例当前网格；随后检查合并后的单元数、连通区域和边界。"
+      },
+      {
+        "title": "合并后缝合吻合界面",
+        "code": "mergeMeshes baseCase extensionCase -overwrite\nstitchMesh -case baseCase -perfect interfaceA interfaceB -overwrite\ncheckMesh -case baseCase",
+        "explanation": "两个网格有完全吻合的 interfaceA/interfaceB 时，合并后将这对边界缝合成内部面，形成连通计算域。"
+      }
+    ]
+  },
+  "mergeOrSplitBaffles": {
+    "summary": "检测共用顶点的挡板面，并合并或拆分它们。",
+    "prerequisites": "当前网格存在重合挡板面；拆分用于两侧独立拓扑，合并用于恢复内部面。",
+    "examples": [
+      {
+        "title": "只查找挡板",
+        "code": "mergeOrSplitBaffles -detectOnly",
+        "explanation": "扫描共享顶点的重合面，报告检测结果并保留网格原状，适合先确认要处理的对象。"
+      },
+      {
+        "title": "合并成内部面",
+        "code": "mergeOrSplitBaffles",
+        "explanation": "采用默认合并行为，把识别出的挡板面恢复成内部连接，结果写入新网格时间。"
+      },
+      {
+        "title": "拆分两侧顶点",
+        "code": "mergeOrSplitBaffles -split -overwrite",
+        "explanation": "-split 复制两侧需要分离的顶点；-overwrite 写回当前网格，使挡板两侧具有独立拓扑。"
+      },
+      {
+        "title": "用字典选择处理动作",
+        "code": "mergeOrSplitBaffles -dict system/baffleActionsDict -overwrite",
+        "explanation": "baffleActionsDict 已按该工具格式定义选定挡板及操作；用字典控制处理范围，结果写回网格。"
+      },
+      {
+        "title": "在单一区域拆分并核查",
+        "code": "mergeOrSplitBaffles -region fluid -split -overwrite\ncheckMesh -region fluid",
+        "explanation": "多区域案例仅修改 fluid，检查该区域拆分后的边界、单元闭合和连通关系。"
+      }
+    ]
+  },
+  "mirrorMesh": {
+    "summary": "按字典定义的平面镜像并扩展网格。",
+    "prerequisites": "已有半域网格和 system/mirrorMeshDict，字典定义镜像平面及 planeTolerance。",
+    "examples": [
+      {
+        "title": "生成完整对称域",
+        "code": "mirrorMesh",
+        "explanation": "读取默认镜像平面，复制镜像侧单元；平面上的匹配边界转为内部连接，结果写入新网格时间。"
+      },
+      {
+        "title": "采用另一镜像平面",
+        "code": "mirrorMesh -dict system/mirrorMesh-yDict",
+        "explanation": "替代字典描述另一个平面，可用于沿不同对称面扩展同一基础网格的副本。"
+      },
+      {
+        "title": "镜像后直接继续预处理",
+        "code": "mirrorMesh -overwrite\ncheckMesh",
+        "explanation": "把完整域写回当前网格，检查镜像连接处的单元质量和边界分组。"
+      },
+      {
+        "title": "调整平面识别容差",
+        "code": "foamDictionary system/mirrorMeshDict -entry planeTolerance -set 1e-7\nmirrorMesh",
+        "explanation": "planeTolerance 用于判定点是否位于镜像平面上；1e-7 应结合本案例长度单位选择，结果中检查平面处是否出现细小缝隙。"
+      },
+      {
+        "title": "镜像后修正周期配对",
+        "code": "mirrorMesh -overwrite\ncreatePatch -dict system/createPatch-cyclicDict -overwrite",
+        "explanation": "输入网格带 cyclic 边界时，镜像可能改变面的对应顺序；替代 createPatchDict 重新建立周期配对，再用于后续计算。"
+      }
+    ]
+  },
+  "moveDynamicMesh": {
+    "summary": "运行动态网格更新，检查运动和拓扑变化。",
+    "prerequisites": "已有 constant/dynamicMeshDict、所需位移或运动场，以及 controlDict 时间设置；运动边界与运动求解器一致。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "单独运行网格运动",
+        "code": "moveDynamicMesh",
+        "explanation": "按 controlDict 推进时间并调用 dynamicFvMesh 更新，写出设置的运动网格时间，便于先检查运动轨迹。"
+      },
+      {
+        "title": "限制运动试验长度",
+        "code": "foamDictionary system/controlDict -entry endTime -set 0.1\nmoveDynamicMesh",
+        "explanation": "将试验终止时间设为 0.1，仅生成起始运动阶段；检查最早出现的大变形或局部挤压。"
+      },
+      {
+        "title": "检查 AMI 接口",
+        "code": "moveDynamicMesh -checkAMI",
+        "explanation": "用于存在 AMI 接口的动态网格；额外检查插值权重并写接口 VTK 文件，观察相对运动中的覆盖情况。"
+      },
+      {
+        "title": "检查指定运动区域",
+        "code": "moveDynamicMesh -region rotor",
+        "explanation": "案例已经为 rotor 区域提供动态网格设置；只推进该区域，输出它的运动网格。"
+      },
+      {
+        "title": "并行运动预演",
+        "code": "decomposePar\nmpirun -np 4 moveDynamicMesh -parallel -checkAMI",
+        "explanation": "decomposeParDict 设置 4 个子域；运动在分区网格上执行，检查并行边界和 AMI 随运动的变化，结果写入 processor 目录。"
+      }
+    ]
+  },
+  "moveEngineMesh": {
+    "summary": "按发动机曲轴转角设置推进发动机网格运动。",
+    "prerequisites": "已有 engineGeometry、发动机网格运动配置和初始网格；controlDict 的时间设置与 engineTime 的转角约定匹配。",
+    "examples": [
+      {
+        "title": "检查完整活塞运动",
+        "code": "moveEngineMesh",
+        "explanation": "程序按发动机时间循环更新网格，日志以 CA-deg 显示曲轴转角，结果时间保存运动几何。"
+      },
+      {
+        "title": "只检查起始转角段",
+        "code": "foamDictionary system/controlDict -entry endTime -set 10\nmoveEngineMesh",
+        "explanation": "在以曲轴转角为用户时间、起始角小于10的案例中，将终止角设为10度，集中观察这一段活塞运动。"
+      },
+      {
+        "title": "减小转角步长",
+        "code": "foamDictionary system/controlDict -entry deltaT -set 0.25\nmoveEngineMesh",
+        "explanation": "本案例时间步以曲轴角计时；0.25度提供更密的运动状态，可比较单步变形与质量变化。"
+      },
+      {
+        "title": "比较另一发动机几何",
+        "code": "moveEngineMesh -case ./engine-longStroke",
+        "explanation": "engine-longStroke 已有独立的行程和运动参数；生成该几何的运动序列，和基准案例比较活塞位置。"
+      },
+      {
+        "title": "检查运动末态网格",
+        "code": "moveEngineMesh\ncheckMesh -latestTime",
+        "explanation": "先完成运动，再检查最后保存状态的体积和质量，适合检查接近上止点的狭小空间。"
+      }
+    ]
+  },
+  "moveMesh": {
+    "summary": "用 motionSolver 推进网格运动。",
+    "prerequisites": "已有 motionSolver 所需字典和运动场；controlDict 给出基础时间设置。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "按案例设置运动",
+        "code": "moveMesh",
+        "explanation": "读取运动求解器，逐步计算顶点位置并写结果，适合独立检查给定位移或速度边界。"
+      },
+      {
+        "title": "快速检查短时间运动",
+        "code": "moveMesh -endTime 0.02",
+        "explanation": "-endTime 临时覆盖终止时间，在已知起始时间小于0.02的案例中只预演初始阶段。"
+      },
+      {
+        "title": "采用更细时间步",
+        "code": "moveMesh -deltaT 0.001 -endTime 0.1",
+        "explanation": "每步0.001秒，运行至0.1秒；更密的几何状态便于观察运动边界与内部网格响应。"
+      },
+      {
+        "title": "比较较大的运动步长",
+        "code": "moveMesh -case ./motion-coarseStep -deltaT 0.01 -endTime 0.1",
+        "explanation": "在同一初态的独立副本上把时间步增大到0.01，比较最终顶点位置和中间网格质量。"
+      },
+      {
+        "title": "并行推进运动",
+        "code": "decomposePar\nmpirun -np 4 moveMesh -parallel -deltaT 0.001 -endTime 0.1",
+        "explanation": "已有4分区设置，运动求解在各分区执行并交换边界数据，输出 processor 目录下的运动网格。"
+      }
+    ]
+  },
+  "objToVTK": {
+    "summary": "把 OBJ 折线数据转换为 legacy VTK。",
+    "prerequisites": "OBJ 包含 v 顶点和 l 折线记录；两个位置参数依次是输入OBJ与输出VTK。",
+    "examples": [
+      {
+        "title": "转换一条已有折线",
+        "code": "objToVTK centreline.obj centreline.vtk",
+        "explanation": "读取 centreline.obj 的顶点与线连接，生成可由 ParaView 打开的 legacy VTK 折线。"
+      },
+      {
+        "title": "创建最小三点折线",
+        "code": "printf 'v 0 0 0\\nv 1 0 0\\nv 1 1 0\\nl 1 2 3\\n' > elbow-line.obj\nobjToVTK elbow-line.obj elbow-line.vtk",
+        "explanation": "v 定义3个点，l 按1开始的编号连接折线；输出显示一个直角转弯，便于理解格式。"
+      },
+      {
+        "title": "转换两条独立线段",
+        "code": "printf 'v 0 0 0\\nv 1 0 0\\nv 0 1 0\\nv 1 1 0\\nl 1 2\\nl 3 4\\n' > two-lines.obj\nobjToVTK two-lines.obj two-lines.vtk",
+        "explanation": "两条 l 记录生成两条独立线段，适合保存不同采样线或几何辅助线。"
+      },
+      {
+        "title": "整理多份几何输出",
+        "code": "mkdir -p vtk-lines\nfor f in lines/*.obj; do\n    objToVTK \"$f\" \"vtk-lines/$(basename \"${f%.obj}\").vtk\"\ndone",
+        "explanation": "lines 目录中已有若干OBJ折线；逐个转换并保留基本文件名，输出集中到 vtk-lines。"
+      },
+      {
+        "title": "查看周期匹配辅助线",
+        "code": "createPatch -writeObj\nfor f in final_*_match.obj; do\n    objToVTK \"$f\" \"${f%.obj}.vtk\"\ndone",
+        "explanation": "createPatchDict 已配置 cyclic 配对，-writeObj 会生成 final_<两侧patch名>_match.obj。这些折线连接配对面中心；转换成 VTK 后可检查配对方向与距离。"
+      }
+    ]
+  },
+  "orientFaceZone": {
+    "summary": "根据外部参考点统一 faceZone 的定向标记。",
+    "prerequisites": "已存在目标 faceZone；第二位置参数必须是网格外部参考点，用来确定面的外侧。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "统一闭合区域朝向",
+        "code": "orientFaceZone shellFaces '(10 0 0)'",
+        "explanation": "shellFaces 已包围目标区域，参考点(10,0,0)确在网格外；程序更新该zone的 flipMap 并报告翻转数量。"
+      },
+      {
+        "title": "对另一侧外部点定向",
+        "code": "orientFaceZone inletSection '(-10 0 0)'",
+        "explanation": "入口截面附近的外部参考点位于负x方向，使定向与所选外侧对应；用于统一截面积分的符号约定。"
+      },
+      {
+        "title": "处理多区域中的界面",
+        "code": "orientFaceZone -region fluid interfaceFaces '(10 10 10)'",
+        "explanation": "仅修改 fluid 的 interfaceFaces；参考点应位于该区域外，结果写入 fluid 的 faceZones。"
+      },
+      {
+        "title": "生成 zone 后定向",
+        "code": "topoSet -dict system/topoSet-interfaceDict\norientFaceZone interfaceFaces '(0 0 10)'",
+        "explanation": "topoSet 字典先创建 interfaceFaces faceZone，再用外部参考点统一朝向，适合作为界面通量统计的前处理。"
+      },
+      {
+        "title": "分区网格中同步定向",
+        "code": "mpirun -np 4 orientFaceZone -parallel shellFaces '(10 0 0)'",
+        "explanation": "已有4分区且耦合面两侧都进入zone；并行交换定向信息，使跨处理器的 flipMap 一致。"
+      }
+    ]
+  },
+  "polyDualMesh": {
+    "summary": "把体网格转成保留几何特征的对偶多面体网格。",
+    "prerequisites": "已有可转换的 polyMesh；featureAngle 以度表示。各比较案例使用相同原始网格副本。",
+    "examples": [
+      {
+        "title": "按30度特征角生成对偶网格",
+        "code": "polyDualMesh 30",
+        "explanation": "位置参数30控制边界特征识别；程序沿特征边与patch边界构造对偶单元，输出新网格时间。"
+      },
+      {
+        "title": "保留更细的几何转折",
+        "code": "polyDualMesh 15",
+        "explanation": "较小特征角把更多法向变化识别为特征，适合比较对偶网格对较缓转折的保留程度。"
+      },
+      {
+        "title": "处理凹边附近的单元",
+        "code": "polyDualMesh 30 -concaveMultiCells",
+        "explanation": "在凹边界边附近允许生成多个单元，改善该位置的对偶拓扑表达，随后检查凹角网格。"
+      },
+      {
+        "title": "让相邻单元之间保留多个面",
+        "code": "polyDualMesh 30 -splitAllFaces",
+        "explanation": "-splitAllFaces 允许相邻对偶单元之间存在多个面，适合研究对偶拓扑及面拆分方式。"
+      },
+      {
+        "title": "忽略原 faceZone 保留并更新",
+        "code": "polyDualMesh 30 -doNotPreserveFaceZones -overwrite\ncheckMesh",
+        "explanation": "关闭默认的 faceZone 特殊保留策略，写回当前网格；用于不需要原面区约束的转换流程，随后检查网格。"
+      }
+    ]
+  },
+  "refineMesh": {
+    "summary": "沿指定方向细化全域或选定单元。",
+    "prerequisites": "已有网格；局部或定向细化需要 system/refineMeshDict 及其引用的cellSet。",
+    "examples": [
+      {
+        "title": "全域细化",
+        "code": "refineMesh -all",
+        "explanation": "选择所有单元细化，生成新的网格时间；检查细化前后单元数量与最小尺寸。"
+      },
+      {
+        "title": "按默认字典局部细化",
+        "code": "refineMesh",
+        "explanation": "读取 refineMeshDict 的选区和方向，对指定单元做定向细化，适合局部提高分辨率。"
+      },
+      {
+        "title": "先选区再细化",
+        "code": "topoSet -dict system/topoSet-wakeDict\nrefineMesh -dict system/refineMesh-wakeDict -overwrite",
+        "explanation": "两个字典约定同一个尾流 cellSet；先选尾流单元，再按指定方向细化并更新当前网格。"
+      },
+      {
+        "title": "细化多区域中的流体",
+        "code": "refineMesh -region fluid -all -overwrite",
+        "explanation": "只细化 fluid 区域的全部单元，适合独立检查流体网格分辨率变化。"
+      },
+      {
+        "title": "连续两级全域细化",
+        "code": "refineMesh -all -overwrite\nrefineMesh -all -overwrite\ncheckMesh",
+        "explanation": "第二次读取第一次细化后的网格，获得两级细化结果；单元数和所需内存会随细化明显增加，最终检查质量。"
+      }
+    ]
+  },
+  "renumberMesh": {
+    "summary": "重排单元与面编号以减小矩阵带宽，并同步重排场。",
+    "prerequisites": "已有网格；选定时间的场与网格相匹配。默认重编号方法为 CuthillMcKee。",
+    "examples": [
+      {
+        "title": "测试编号效果",
+        "code": "renumberMesh -dry-run -frontWidth",
+        "explanation": "只计算重排方案与带宽、前沿宽度指标，保留原网格；可判断该网格是否值得重排。"
+      },
+      {
+        "title": "应用默认重编号",
+        "code": "renumberMesh -overwrite",
+        "explanation": "把重排后的网格和相应场写回当前案例，几何形状和物理场分布保持对应。"
+      },
+      {
+        "title": "保存编号映射",
+        "code": "renumberMesh -overwrite -write-maps",
+        "explanation": "额外保存旧编号与新编号的映射，用于对照外部单元数据、源项选区或调试信息。"
+      },
+      {
+        "title": "显式选择反向编号",
+        "code": "renumberMesh -renumber-method CuthillMcKee -renumber-coeffs 'reverse true;' -overwrite",
+        "explanation": "命令行选择方法并传入 reverse 系数，使用反向 Cuthill–McKee 排序，比较带宽和线性求解性能。"
+      },
+      {
+        "title": "对最后时刻的动网格重排",
+        "code": "renumberMesh -latestTime -overwrite -write-maps",
+        "explanation": "读取最后保存状态的网格和场，重排并输出映射；后续重启使用这一时间的匹配数据。"
+      }
+    ]
+  },
+  "rotateMesh": {
+    "summary": "按两个方向向量确定旋转，同时旋转网格与向量、张量场。",
+    "prerequisites": "已有网格和要旋转的结果时间；from、to 是非零方向向量，二者确定刚体旋转。",
+    "examples": [
+      {
+        "title": "把x方向转到y方向",
+        "code": "rotateMesh '(1 0 0)' '(0 1 0)'",
+        "explanation": "旋转网格，并同步处理所读向量、张量场的分量，适合改变整个案例的空间朝向。"
+      },
+      {
+        "title": "仅处理最后时刻",
+        "code": "rotateMesh '(0 0 1)' '(1 0 0)' -latestTime",
+        "explanation": "选择最新结果，把原z方向转到x方向；输出该状态下经过一致旋转的几何和场。"
+      },
+      {
+        "title": "旋转指定时间区间",
+        "code": "rotateMesh '(1 0 0)' '(0 0 1)' -time '0.1:0.5'",
+        "explanation": "仅处理0.1到0.5之间已有时间目录，便于统一一段动画数据的朝向。"
+      },
+      {
+        "title": "旋转指定区域",
+        "code": "rotateMesh '(1 0 0)' '(0 1 0)' -region fluid -time 0",
+        "explanation": "只处理 fluid 的0时刻网格与场；适合区域输入数据的坐标系转换。"
+      },
+      {
+        "title": "多区域一致旋转",
+        "code": "rotateMesh '(1 0 0)' '(0 1 0)' -allRegions -constant",
+        "explanation": "regionProperties 已登记各区域；所有区域按同一旋转变换处理，并将 constant 纳入选择，保持相对空间位置。"
+      }
+    ]
+  },
+  "setSet": {
+    "summary": "交互式或批量创建、修改网格集合。",
+    "prerequisites": "已有网格；批处理文件逐行使用 cellSet、faceSet 或 pointSet 的动作和选择源。",
+    "examples": [
+      {
+        "title": "交互创建盒内单元集",
+        "code": "setSet\n# 在 setSet 提示符中输入：\n# cellSet core new boxToCell (0 0 0) (1 1 1)\n# quit",
+        "explanation": "进入交互终端后，去掉示例注释符输入两条指令；new 创建 core，boxToCell 按单元中心选择指定盒内单元。"
+      },
+      {
+        "title": "用批处理文件重复选区",
+        "code": "printf 'cellSet core new boxToCell (0 0 0) (1 1 1)\\nquit\\n' > select.setSet\nsetSet -batch select.setSet",
+        "explanation": "把交互指令保存成文本，-batch 读取并执行，便于网格重建后重新生成相同几何选区。"
+      },
+      {
+        "title": "把选区扩大到另一盒体",
+        "code": "printf 'cellSet core new boxToCell (0 0 0) (1 1 1)\\ncellSet core add boxToCell (1 0 0) (2 1 1)\\nquit\\n' > twoBoxes.setSet\nsetSet -batch twoBoxes.setSet",
+        "explanation": "第一条创建集合，第二条 add 做并集；最终 core 包含两盒范围内的单元。"
+      },
+      {
+        "title": "只生成集合文件",
+        "code": "setSet -batch select.setSet -noVTK",
+        "explanation": "批处理已定义所需集合；-noVTK 关闭辅助VTK输出，保留供 topoSet、subsetMesh 等工具使用的集合。"
+      },
+      {
+        "title": "在运动网格的多个状态重选",
+        "code": "setSet -batch select.setSet -loop -time '0.1:0.5'",
+        "explanation": "-loop 对选中的每个已有时间执行批指令；几何运动时，盒内单元集合会随各时刻位置更新。"
+      }
+    ]
+  },
+  "setsToZones": {
+    "summary": "把 pointSet、faceSet、cellSet 转成同名网格 zone。",
+    "prerequisites": "已有集合文件；需要定向的 faceSet 通常还需同名 cellSet 确定方向。",
+    "examples": [
+      {
+        "title": "把现有集合转成zone",
+        "code": "setsToZones",
+        "explanation": "遍历网格集合并创建相应zone；cellSet转cellZone，pointSet转pointZone，faceSet转faceZone。"
+      },
+      {
+        "title": "仅需区域成员而不需方向",
+        "code": "setsToZones -noFlipMap",
+        "explanation": "关闭 faceSet 的方向判定，适合只关注集合成员的zone转换；由面通量方向参与计算时应另外校正定向。"
+      },
+      {
+        "title": "转换初始恒定网格集合",
+        "code": "setsToZones -constant -noFlipMap",
+        "explanation": "把 constant 纳入选择，读取初始网格的集合，适合网格预处理后建立源项或旋转体区域。"
+      },
+      {
+        "title": "转换最新状态的集合",
+        "code": "setsToZones -latestTime",
+        "explanation": "动网格最后时刻已有重新选择的集合；转换后zone对应最新网格拓扑和编号。"
+      },
+      {
+        "title": "多区域源区生成流程",
+        "code": "topoSet -region fluid -dict system/topoSet-heaterDict\nsetsToZones -region fluid -noFlipMap",
+        "explanation": "先在 fluid 中生成 heater 等cellSet，再转为同名cellZone，供该区域体积源模型使用。"
+      }
+    ]
+  },
+  "singleCellMesh": {
+    "summary": "将场映射到内部面被移除的 singleCell 区域网格。",
+    "prerequisites": "已有体网格和结果场；输出区域名为 singleCell，适合保留边界信息并压缩内部表示。",
+    "examples": [
+      {
+        "title": "生成简化区域",
+        "code": "singleCellMesh",
+        "explanation": "读取选择的结果时间，创建 singleCell 网格并映射场，输出到该区域的对应时间位置。"
+      },
+      {
+        "title": "只处理最终结果",
+        "code": "singleCellMesh -latestTime",
+        "explanation": "选择最后一个保存时刻，减少转换量，适合展示最终边界分布。"
+      },
+      {
+        "title": "转换一段结果历史",
+        "code": "singleCellMesh -time '0.1:0.5'",
+        "explanation": "处理区间内已有时刻，保留这一段的简化场时间序列。"
+      },
+      {
+        "title": "跳过初始状态",
+        "code": "singleCellMesh -noZero",
+        "explanation": "处理已有结果而排除0时刻，适合只整理求解后的边界数据。"
+      },
+      {
+        "title": "导出简化区域",
+        "code": "singleCellMesh -latestTime\nfoamToVTK -region singleCell -latestTime -name VTK-singleCell",
+        "explanation": "先创建最后状态的简化区域，再导出该区域到独立VTK目录，用于边界数据可视化。"
+      }
+    ]
+  },
+  "splitMesh": {
+    "summary": "把 faceSet 指定的内部面拆成两侧边界。",
+    "prerequisites": "已有内部faceSet，且 master/slave 指定的边界patch已按案例要求准备好；三个参数依次为集合、主侧、从侧。",
+    "examples": [
+      {
+        "title": "沿指定面集拆分",
+        "code": "splitMesh interfaceFaces sideA sideB",
+        "explanation": "interfaceFaces 的内部面被转换为 sideA 与 sideB 两侧边界，结果写入新的网格时间。"
+      },
+      {
+        "title": "把拆分结果用于后续预处理",
+        "code": "splitMesh interfaceFaces sideA sideB -overwrite",
+        "explanation": "写回当前网格；后续为新两侧配置边界条件时使用 sideA、sideB 名称。"
+      },
+      {
+        "title": "先生成切割集合",
+        "code": "topoSet -dict system/topoSet-cutDict\nsplitMesh cutFaces cutMaster cutSlave -overwrite",
+        "explanation": "topoSet-cutDict 已定义 cutFaces faceSet；选择与拆分连成可重复流程，输出沿该切面分开的网格。"
+      },
+      {
+        "title": "检查拆分后的连通区域",
+        "code": "splitMesh interfaceFaces sideA sideB -overwrite\nsplitMeshRegions -detectOnly",
+        "explanation": "第二条只检测网格连通区域，检查这次拆分是否确实把预期区域隔开。"
+      },
+      {
+        "title": "查看新边界的场类型",
+        "code": "splitMesh interfaceFaces sideA sideB -overwrite\npatchSummary -time 0 -expand",
+        "explanation": "0时刻场已补充新patch条目后，用 patchSummary 展开每个边界，检查拆分两侧的边界条件。"
+      }
+    ]
+  },
+  "splitMeshRegions": {
+    "summary": "按网格连通性或 cellZone 将网格拆分成多个区域。",
+    "prerequisites": "已有网格；按zone分区时先建立cellZones，按阻隔面分区时先建立faceSet。",
+    "examples": [
+      {
+        "title": "先统计连通区域",
+        "code": "splitMeshRegions -detectOnly",
+        "explanation": "只识别区域并报告数量和大小，保留现有网格，适合检查导入网格是否含意外孤立块。"
+      },
+      {
+        "title": "按连通性拆分",
+        "code": "splitMeshRegions -overwrite",
+        "explanation": "遍历单元连通关系，把互不连通部分写成区域网格，并直接写入当前网格实例。"
+      },
+      {
+        "title": "按材料cellZone拆分",
+        "code": "splitMeshRegions -cellZonesOnly -overwrite",
+        "explanation": "以已有cellZone定义区域，适合流体与固体尚共用网格但材料分组已明确的传热案例。"
+      },
+      {
+        "title": "仅保留指定点所在区域",
+        "code": "splitMeshRegions -insidePoint '(0.5 0.5 0.5)' -overwrite",
+        "explanation": "该点确定位于目标流体内部时，只写出包含它的区域，便于提取主流道。"
+      },
+      {
+        "title": "用内部面集阻断搜索",
+        "code": "splitMeshRegions -blockedFaces separatorFaces -useFaceZones -overwrite",
+        "explanation": "separatorFaces 阻止连通搜索跨过指定面；已有faceZone用于给区域间界面分组，输出更明确的耦合边界。"
+      }
+    ]
+  },
+  "stitchMesh": {
+    "summary": "把几何上可配对的两侧边界缝合为内部面。",
+    "prerequisites": "同一网格中已有待拼接的 master、slave patch；其重叠关系决定 perfect、integral 或 partial 方式。",
+    "examples": [
+      {
+        "title": "缝合完全吻合的面",
+        "code": "stitchMesh -perfect interfaceA interfaceB -overwrite",
+        "explanation": "两侧顶点和面分割完全一致时使用-perfect，写回网格并把接口改成内部面。"
+      },
+      {
+        "title": "缝合完整覆盖但分割不同的接口",
+        "code": "stitchMesh -integral interfaceA interfaceB -overwrite",
+        "explanation": "两侧整体覆盖一致但面划分不同，用-integral进行完整接口耦合。"
+      },
+      {
+        "title": "处理局部重叠",
+        "code": "stitchMesh -partial masterPatch slavePatch -overwrite",
+        "explanation": "只缝合两侧几何重叠部分，适合覆盖范围不完全一致的网格接口。"
+      },
+      {
+        "title": "根据字典处理多组接口",
+        "code": "stitchMesh -dict system/stitchMeshDict -overwrite",
+        "explanation": "字典已列出接口操作时省略位置参数，按文件中的操作顺序完成多组缝合。"
+      },
+      {
+        "title": "查看拼接中间阶段",
+        "code": "stitchMesh -integral interfaceA interfaceB -intermediate -toleranceDict system/stitchTolerances",
+        "explanation": "已有容差字典时，采用指定几何容差并保存中间阶段网格，便于定位小缝隙或错配面。"
+      }
+    ]
+  },
+  "subsetMesh": {
+    "summary": "按 cellSet 或 cellZone 提取子网格并映射场。",
+    "prerequisites": "已有目标cellSet/cellZone；切割后暴露的内部面需要合适的边界patch。",
+    "examples": [
+      {
+        "title": "按单元集合提取",
+        "code": "subsetMesh coreCells",
+        "explanation": "保留 coreCells 中的单元，新增切割面默认进入 oldInternalFaces，并写新网格时间。"
+      },
+      {
+        "title": "指定切割边界名称",
+        "code": "subsetMesh coreCells -patch cutBoundary -overwrite",
+        "explanation": "cutBoundary 是已准备的目标patch；暴露内部面归入此边界，结果写回当前网格。"
+      },
+      {
+        "title": "按cellZone提取",
+        "code": "subsetMesh -zone rotor -resultTime 2",
+        "explanation": "把 rotor 解释为cellZone名称，并将子网格写到时间2，便于和原网格分开查看。"
+      },
+      {
+        "title": "合并选择多个zone",
+        "code": "subsetMesh -zone '(fluid \"channel.*\")' -resultTime 3",
+        "explanation": "选择 fluid 及匹配 channel.* 的zone，保留它们包含的单元，用于提取相关连通部件。"
+      },
+      {
+        "title": "把切割面分配给最近边界",
+        "code": "subsetMesh coreCells -patches '(inlet outlet walls)' -exclude-patches outlet -overwrite",
+        "explanation": "已有这些patch时，在候选边界中按最近位置分配暴露面，并排除outlet，减少手工整理切割面的工作。"
+      }
+    ]
+  },
+  "topoSet": {
+    "summary": "按几何、网格属性和集合关系创建或修改 sets/zones。",
+    "prerequisites": "已有网格和 system/topoSetDict，actions 列表定义名称、类型、操作及选择源。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "执行标准选区字典",
+        "code": "topoSet",
+        "explanation": "按actions顺序建立集合或zone；日志列出各动作与选中数量，可据此核对几何选区。"
+      },
+      {
+        "title": "使用另一选区方案",
+        "code": "topoSet -dict system/topoSet-wakeDict",
+        "explanation": "读取尾流选区专用字典，便于在同一网格上分别准备细化区、采样区和体积源区。"
+      },
+      {
+        "title": "选最后时刻的运动网格",
+        "code": "topoSet -latestTime -dict system/topoSet-probeDict",
+        "explanation": "按最新顶点位置和拓扑重新执行几何选择，输出对应时刻的集合。"
+      },
+      {
+        "title": "在时间区间内反复选区",
+        "code": "topoSet -time '0.1:0.5' -dict system/topoSet-windowDict",
+        "explanation": "对区间内已有时刻重复盒体或表面选择，适合跟踪固定空间窗口内的网格单元。"
+      },
+      {
+        "title": "分区案例中建立区域集合",
+        "code": "mpirun -np 4 topoSet -parallel -region fluid -dict system/topoSet-fluidDict",
+        "explanation": "已有4分区fluid网格；每个进程执行选择并同步耦合边界信息，生成分区一致的集合。"
+      }
+    ]
+  },
+  "transformPoints": {
+    "summary": "平移、旋转或缩放网格坐标，可同步旋转向量与张量场。",
+    "prerequisites": "已有网格；变换直接更新所选时间的坐标，各独立几何方案从相同基础网格副本开始。",
+    "examples": [
+      {
+        "title": "毫米坐标转为米",
+        "code": "transformPoints -scale 0.001",
+        "explanation": "所有坐标乘0.001，适合CAD导入坐标以毫米存储、案例长度统一采用米的网格。"
+      },
+      {
+        "title": "平移模型",
+        "code": "transformPoints -translate '(0.5 0 0)'",
+        "explanation": "沿x方向平移0.5个当前长度单位；几何尺寸与单元连接保持不变。"
+      },
+      {
+        "title": "绕指定轴旋转",
+        "code": "transformPoints -rotate-angle '((0 0 1) 30)'",
+        "explanation": "绕z轴转30度，角度单位为度；用于调整模型相对来流的朝向。"
+      },
+      {
+        "title": "绕模型中心旋转并处理场",
+        "code": "transformPoints -auto-centre -rotate-y 15 -rotateFields -time 0",
+        "explanation": "使用包围盒中心为旋转中心，对0时刻网格及向量、张量场一起绕y轴转15度。"
+      },
+      {
+        "title": "统一多区域坐标",
+        "code": "transformPoints -allRegions -translate '(0 0 1)' -scale 0.001",
+        "explanation": "对regionProperties中的全部区域使用同一变换；先平移，再按工具变换顺序缩放，适合多部件坐标统一，需按原坐标单位给出平移量。"
+      }
+    ]
+  },
+  "zipUpMesh": {
+    "summary": "补齐含悬挂顶点的面连接，使多面体单元表面闭合。",
+    "prerequisites": "输入网格的几何形状有效，但部分面边连接存在悬挂顶点；程序会更新网格拓扑。",
+    "examples": [
+      {
+        "title": "修补悬挂顶点连接",
+        "code": "zipUpMesh",
+        "explanation": "读取网格并补齐单元面之间的边点连接，输出修补后的网格和处理统计。"
+      },
+      {
+        "title": "修补后检查拓扑",
+        "code": "zipUpMesh\ncheckMesh -allTopology",
+        "explanation": "重点检查面连接和单元闭合，观察修补后原先的拓扑问题是否消失。"
+      },
+      {
+        "title": "单独处理指定区域",
+        "code": "zipUpMesh -region fluid\ncheckMesh -region fluid -allTopology",
+        "explanation": "多区域案例只修补fluid，便于把问题定位到某个区域而保留其他区域的拓扑。"
+      },
+      {
+        "title": "在独立副本上比较修补结果",
+        "code": "cp -r importedMesh importedMesh-zipped\nzipUpMesh -case importedMesh-zipped\ncheckMesh -case importedMesh-zipped",
+        "explanation": "保留导入原网格，在副本中修补，再比较两份网格的连接与质量报告。"
+      },
+      {
+        "title": "导出修补后的几何",
+        "code": "zipUpMesh\nfoamToVTK -no-fields -name VTK-zipped",
+        "explanation": "修补后仅转换网格几何，在ParaView中检查原先悬挂顶点附近的面是否闭合。"
+      }
+    ]
+  },
+  "PDRsetFields": {
+    "summary": "把几何障碍物转换成 PDRFoam 所需的等效阻塞场。",
+    "prerequisites": "已有PDR网格、障碍物输入和 system/PDRsetFieldsDict；几何尺度与网格单位一致。",
+    "examples": [
+      {
+        "title": "先预览障碍物",
+        "code": "PDRsetFields -dry-run",
+        "explanation": "读取障碍物并写VTK预览，适合核对位置、尺寸和物体组，再生成阻塞场。"
+      },
+      {
+        "title": "生成等效阻塞字段",
+        "code": "PDRsetFields",
+        "explanation": "按默认字典处理几何障碍物，计算对应网格上的等效阻塞影响，供PDRFoam使用。"
+      },
+      {
+        "title": "使用另一障碍物方案",
+        "code": "PDRsetFields -dict system/PDRsetFields-denseDict",
+        "explanation": "替代字典描述更密集的障碍物布置；在案例副本中比较生成场的空间分布。"
+      },
+      {
+        "title": "在指定时间初始化",
+        "code": "PDRsetFields -time 0",
+        "explanation": "明确把设置作用于0时刻，适合统一初始场目录的自动化流程。"
+      },
+      {
+        "title": "读取旧式障碍物表",
+        "code": "PDRsetFields -legacy -dict system/PDRsetFields-legacyDict -dry-run",
+        "explanation": "输入确为legacy表时用-legacy强制该读取方式；先用VTK确认解析出的障碍物。"
+      }
+    ]
+  },
+  "applyBoundaryLayer": {
+    "summary": "按七分之一次幂规律修正近壁速度及相应湍流场。",
+    "prerequisites": "已有速度场、壁面和所需湍流模型输入；边界层厚度可用绝对长度 ybl 或相对系数 Cbl 指定。",
+    "examples": [
+      {
+        "title": "设置明确的边界层厚度",
+        "code": "applyBoundaryLayer -ybl 0.01",
+        "explanation": "以0.01米厚度修正近壁速度，适合给外流案例构造初始速度剖面。"
+      },
+      {
+        "title": "按网格平均壁距设置厚度",
+        "code": "applyBoundaryLayer -Cbl 2",
+        "explanation": "厚度取平均壁距的2倍，适合根据当前网格近壁尺度生成初始分布。"
+      },
+      {
+        "title": "同时写湍流场",
+        "code": "applyBoundaryLayer -ybl 0.01 -writeTurbulenceFields",
+        "explanation": "更新速度并写相应湍流量，使初始湍流场与所构造近壁剖面配套。"
+      },
+      {
+        "title": "比较更厚的入口发展层",
+        "code": "applyBoundaryLayer -case ./thickLayer -ybl 0.02 -writeTurbulenceFields",
+        "explanation": "thickLayer 是独立初始案例；厚度改为0.02米，可比较速度亏损范围与湍流场变化。"
+      },
+      {
+        "title": "只处理流体区域",
+        "code": "applyBoundaryLayer -region fluid -ybl 0.005 -writeTurbulenceFields",
+        "explanation": "多区域中只修改fluid的近壁场，适合流固传热案例的流体初始状态准备。"
+      }
+    ]
+  },
+  "boxTurb": {
+    "summary": "在规则盒网格上生成符合指定能谱的无散湍流速度。",
+    "prerequisites": "已有规则盒网格、U初始场和 constant/boxTurbDict，其中 Ea 为谱幅参数、k0 为特征波数。",
+    "examples": [
+      {
+        "title": "生成基准湍流盒",
+        "code": "boxTurb",
+        "explanation": "按Ea、k0生成U并写能谱图数据到graphs/当前时间/Ek，日志报告生成场的能量统计。"
+      },
+      {
+        "title": "增加谱能量幅值",
+        "code": "foamDictionary constant/boxTurbDict -entry Ea -set 0.02\nboxTurb",
+        "explanation": "在独立案例中把Ea设为0.02，生成更改谱幅后的速度；与原Ea结果比较速度幅值和Ek曲线。"
+      },
+      {
+        "title": "改变主要涡尺度",
+        "code": "foamDictionary constant/boxTurbDict -entry k0 -set 8\nboxTurb",
+        "explanation": "k0控制输入谱的特征波数，修改后观察能量峰值位置；波数尺度应与盒长及网格分辨率匹配。"
+      },
+      {
+        "title": "生成后检查离散散度",
+        "code": "boxTurb\npostProcess -func 'div(U)' -time 0",
+        "explanation": "初始时间为0时，计算生成速度的离散散度场，查看空间分布及局部离散误差。"
+      },
+      {
+        "title": "细网格湍流盒对照",
+        "code": "blockMesh -case ./turbFine\nboxTurb -case ./turbFine\nfoamToVTK -case ./turbFine -time 0 -fields '(U)'",
+        "explanation": "turbFine已配置更细的规则网格和相同物理谱参数；生成后导出U，比较可表达的小尺度结构。"
+      }
+    ]
+  },
+  "changeDictionary": {
+    "summary": "按替换字典批量修改场文件或网格字典条目。",
+    "prerequisites": "已有 system/changeDictionaryDict，替换内容与目标文件结构一致；操作将重写匹配文件。",
+    "examples": [
+      {
+        "title": "更新初始场边界",
+        "code": "changeDictionary -time 0",
+        "explanation": "读取默认替换规则，修改0目录中的目标场；适合一组场的入口、出口条件同步调整。"
+      },
+      {
+        "title": "选用温度方案",
+        "code": "changeDictionary -dict system/changeDictionary-hotWallDict -time 0",
+        "explanation": "使用热壁专用替换文件，把相关温度边界和配套条目一次更新到初始场。"
+      },
+      {
+        "title": "修改constant实例",
+        "code": "changeDictionary -instance constant",
+        "explanation": "-instance把目标实例设为constant；替换字典已指定该位置的文件时，可用于边界或物性相关字典修改。"
+      },
+      {
+        "title": "处理最新结果的重启边界",
+        "code": "changeDictionary -latestTime -dict system/changeDictionary-restartDict",
+        "explanation": "只修改最后保存时刻的字段，给重启计算准备新边界条件，同时保留更早时间。"
+      },
+      {
+        "title": "选择一个替换子字典",
+        "code": "changeDictionary -subDict restartReplacements -dict system/changeDictionary-allDict -time 2",
+        "explanation": "替代字典中已有restartReplacements子字典时，仅应用该组规则到时间2，便于集中维护多个修改方案。"
+      }
+    ]
+  },
+  "createBoxTurb": {
+    "summary": "按给定能谱和模态叠加生成各向同性湍流盒。",
+    "prerequisites": "constant/createBoxTurbDict 包含 L、N、nModes 和 Ek；L 是盒长，N 是网格数，Ek 为波数能谱函数。",
+    "examples": [
+      {
+        "title": "仅创建周期盒网格",
+        "code": "createBoxTurb -createBlockMesh",
+        "explanation": "按L、N生成带周期边界的盒网格后退出，先检查尺寸和分辨率。"
+      },
+      {
+        "title": "生成湍流速度",
+        "code": "createBoxTurb",
+        "explanation": "在已有对应盒网格上叠加nModes个模态，写出U、k与div(U)，日志报告波数范围和场统计。"
+      },
+      {
+        "title": "连贯创建并检查",
+        "code": "createBoxTurb -createBlockMesh\ncheckMesh\ncreateBoxTurb",
+        "explanation": "先生成网格、检查周期连接，再生成速度；把几何错误与谱参数问题分开定位。"
+      },
+      {
+        "title": "增加模态数量",
+        "code": "foamDictionary constant/createBoxTurbDict -entry nModes -set 500\ncreateBoxTurb",
+        "explanation": "已有有效L、N、Ek时把模态数设为500，比较能谱近似与生成成本；模态数至少应大于1。"
+      },
+      {
+        "title": "加密周期盒",
+        "code": "foamDictionary constant/createBoxTurbDict -entry N -set '(64 64 64)'\ncreateBoxTurb -createBlockMesh\ncreateBoxTurb",
+        "explanation": "在独立副本上改为64立方网格，重新生成网格和场；更小单元允许更高的离散最大波数。"
+      }
+    ]
+  },
+  "createExternalCoupledPatchGeometry": {
+    "summary": "导出外部耦合patch组的几何信息。",
+    "prerequisites": "网格已有用于外部耦合的patch组；位置参数是组名，输出供外部程序按面顺序交换数据。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "导出耦合壁面组",
+        "code": "createExternalCoupledPatchGeometry coupledWalls",
+        "explanation": "coupledWalls 是已存在的patch组；生成该组的几何数据，供外部传热或结构程序读取。"
+      },
+      {
+        "title": "指定通信目录",
+        "code": "createExternalCoupledPatchGeometry coupledWalls -commsDir exchange",
+        "explanation": "把通信几何输出到exchange，而非默认comms，便于与外部程序统一路径。"
+      },
+      {
+        "title": "导出流体区域接口",
+        "code": "createExternalCoupledPatchGeometry coupledWalls -region fluid",
+        "explanation": "从fluid区域读取同名patch组，输出该区域的接口几何。"
+      },
+      {
+        "title": "同时导出多个区域",
+        "code": "createExternalCoupledPatchGeometry coupledWalls -regions '(fluid solid)' -commsDir exchange",
+        "explanation": "两个区域均配置目标组时，批量输出接口几何，区域信息用于区分对应面。"
+      },
+      {
+        "title": "网格分区后导出接口",
+        "code": "mpirun -np 4 createExternalCoupledPatchGeometry coupledWalls -parallel -commsDir exchange",
+        "explanation": "已有4分区网格和一致组名；按并行案例的接口布局生成几何，供外部耦合按相同面组织交换数据。"
+      }
+    ]
+  },
+  "createViewFactors": {
+    "summary": "按 viewFactorsDict 选择的模型计算辐射视角因子。",
+    "prerequisites": "已有辐射边界、constant/viewFactorsDict，以及所选模型需要的面聚合或几何输入。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "计算默认区域视角因子",
+        "code": "createViewFactors",
+        "explanation": "从constant/viewFactorsDict创建视角因子模型并执行计算，输出后续辐射模型所需数据。"
+      },
+      {
+        "title": "为辐射区域单独计算",
+        "code": "createViewFactors -region enclosure",
+        "explanation": "enclosure区域已有完整辐射设置；只处理该封闭腔体的表面关系。"
+      },
+      {
+        "title": "先生成粗面映射",
+        "code": "faceAgglomerate\ncreateViewFactors",
+        "explanation": "使用依赖面聚合的模型时，先生成fine-to-coarse映射，再计算粗面之间的视角因子，降低计算量。"
+      },
+      {
+        "title": "在并行分区上计算",
+        "code": "decomposePar\nmpirun -np 4 createViewFactors -parallel",
+        "explanation": "decomposeParDict已设置4分区；在对应分区几何上计算视角因子，输出与并行布局配套的数据。"
+      },
+      {
+        "title": "几何修改后重新生成",
+        "code": "blockMesh -case ./enclosure-wide\nfaceAgglomerate -case ./enclosure-wide\ncreateViewFactors -case ./enclosure-wide",
+        "explanation": "enclosure-wide是改变腔体宽度后的独立案例；重建网格、聚合和因子，使结果反映新的可见关系。"
+      }
+    ]
+  },
+  "createZeroDirectory": {
+    "summary": "按求解器模板、湍流模型和 caseProperties 生成初始场。",
+    "prerequisites": "已有网格、system/controlDict、system/caseProperties及模型设置；每个实体边界在caseProperties中有对应条件。",
+    "examples": [
+      {
+        "title": "生成所需初始字段",
+        "code": "createZeroDirectory",
+        "explanation": "根据controlDict的application和模型类型选择模板，在0目录生成匹配的场及边界条目。"
+      },
+      {
+        "title": "使用个人模板库",
+        "code": "createZeroDirectory -templateDir ./fieldTemplates",
+        "explanation": "fieldTemplates具有与官方模板相同的solvers、models和边界模板结构；按自定义模板生成字段。"
+      },
+      {
+        "title": "复制模板后定制",
+        "code": "cp -r \"$WM_PROJECT_DIR/etc/caseDicts/createZeroDirectoryTemplates\" myTemplates\ncreateZeroDirectory -templateDir ./myTemplates",
+        "explanation": "先把官方模板复制为可编辑的个人版本，再用它生成场；后续可在该目录调整常用初值或边界模板。"
+      },
+      {
+        "title": "湍流模型切换后重新配场",
+        "code": "createZeroDirectory -case ./case-kOmegaSST\npatchSummary -case ./case-kOmegaSST -time 0 -expand",
+        "explanation": "独立案例已配置kOmegaSST及相应caseProperties；生成所需湍流场，并逐patch检查场类型。"
+      },
+      {
+        "title": "多区域案例生成初值",
+        "code": "createZeroDirectory -case ./heatExchanger",
+        "explanation": "heatExchanger的求解器模板支持多区域，regionProperties及各区域caseProperties已配置；程序按区域分别生成流体和固体初始场。"
+      }
+    ]
+  },
+  "dsmcInitialise": {
+    "summary": "按数密度、温度和平均速度初始化 DSMC 模拟粒子。",
+    "prerequisites": "已有网格、system/dsmcInitialiseDict、constant/dsmcProperties；物种名称与属性一致，粒子权重已设置。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "生成初始DSMC云",
+        "code": "dsmcInitialise",
+        "explanation": "读取numberDensities、temperature、velocity，生成dsmc云并写初始粒子数据，日志报告模拟粒子数量。"
+      },
+      {
+        "title": "初始化更高温气体",
+        "code": "foamDictionary system/dsmcInitialiseDict -entry temperature -set 600\ndsmcInitialise",
+        "explanation": "在初始案例副本中改为600K；随机热运动速度分布随温度改变，平均速度仍取velocity。"
+      },
+      {
+        "title": "加入定向平均流",
+        "code": "foamDictionary system/dsmcInitialiseDict -entry velocity -set '(500 0 0)'\ndsmcInitialise",
+        "explanation": "平均速度设为沿x方向500米每秒，在此基础上叠加热运动；输出粒子用于研究有来流的稀薄气体。"
+      },
+      {
+        "title": "比较不同数密度",
+        "code": "foamDictionary system/dsmcInitialiseDict -entry numberDensities/N2 -set 1e20\ndsmcInitialise",
+        "explanation": "字典已有N2物种时增改其数密度；固定体积与粒子权重下，模拟粒子数量随数密度变化。"
+      },
+      {
+        "title": "直接在分区网格中初始化",
+        "code": "decomposePar\nmpirun -np 4 dsmcInitialise -parallel",
+        "explanation": "已有4分区设置；各进程生成本地粒子，日志汇总全域数量，供随后并行dsmcFoam读取。"
+      }
+    ]
+  },
+  "engineSwirl": {
+    "summary": "根据发动机几何参数生成初始旋流速度场。",
+    "prerequisites": "已有U场和constant/engineGeometry，包含swirlAxis、swirlCenter、swirlRPMRatio、swirlProfile、bore及rpm。",
+    "examples": [
+      {
+        "title": "生成基准旋流",
+        "code": "engineSwirl",
+        "explanation": "按缸径、转速和旋流剖面更新U，日志输出Umax，便于核对初始速度量级。"
+      },
+      {
+        "title": "提高旋流比",
+        "code": "foamDictionary constant/engineGeometry -entry swirlRPMRatio -set 1.5\nengineSwirl",
+        "explanation": "旋流比设为1.5，保持发动机转速和几何不变；生成的切向速度幅值随旋流比改变。"
+      },
+      {
+        "title": "改变旋流中心",
+        "code": "foamDictionary constant/engineGeometry -entry swirlCenter -set '(0.01 0 0)'\nengineSwirl",
+        "explanation": "将旋流轴中心平移到指定坐标，适合检查偏心初始旋流的空间分布。"
+      },
+      {
+        "title": "改为绕y轴旋转",
+        "code": "foamDictionary constant/engineGeometry -entry swirlAxis -set '(0 1 0)'\nengineSwirl",
+        "explanation": "swirlAxis给出旋转轴方向；程序构造垂直于该轴的横截面，并在其中生成切向速度。"
+      },
+      {
+        "title": "导出初始旋流进行检查",
+        "code": "engineSwirl\nfoamToVTK -time 0 -fields '(U)' -name VTK-swirl",
+        "explanation": "初始时间为0时生成并导出U；用箭头或截面查看旋向、旋流中心和缸壁附近速度。"
+      }
+    ]
+  },
+  "faceAgglomerate": {
+    "summary": "把边界细面聚合为粗面并写映射。",
+    "prerequisites": "已有边界网格和constant/viewFactorsDict，其中包含聚合参数与writeFacesAgglomeration。",
+    "examples": [
+      {
+        "title": "生成细面到粗面映射",
+        "code": "faceAgglomerate",
+        "explanation": "读取默认viewFactorsDict，按pairPatchAgglomeration执行聚合，并写finalAgglom供视角因子计算使用。"
+      },
+      {
+        "title": "写出可视化分组场",
+        "code": "foamDictionary constant/viewFactorsDict -entry writeFacesAgglomeration -set true\nfaceAgglomerate",
+        "explanation": "启用聚合可视化场，便于在ParaView中检查哪些细面归入同一粗面。"
+      },
+      {
+        "title": "比较另一聚合设置",
+        "code": "faceAgglomerate -dict constant/viewFactors-coarseDict",
+        "explanation": "替代字典采用不同粗化参数；在副本中比较粗面数量与后续视角因子计算成本。"
+      },
+      {
+        "title": "仅聚合指定区域",
+        "code": "faceAgglomerate -region enclosure",
+        "explanation": "只为enclosure区域生成映射，适合多区域辐射计算的几何预处理。"
+      },
+      {
+        "title": "聚合后计算视角因子",
+        "code": "faceAgglomerate\nviewFactorsGen",
+        "explanation": "使用viewFactorsGen流程的案例先创建finalAgglom，再计算粗面之间的辐射交换关系。"
+      }
+    ]
+  },
+  "mapFields": {
+    "summary": "将一个案例的场映射到当前目标案例。",
+    "prerequisites": "源案例已有结果，目标案例已有网格和相容字段；非一致边界映射需要system/mapFieldsDict。",
+    "examples": [
+      {
+        "title": "同几何案例之间映射",
+        "code": "mapFields ../sourceCase -consistent",
+        "explanation": "在目标案例目录执行；源、目标几何及边界对应一致时使用-consistent，映射源场作为目标初值。"
+      },
+      {
+        "title": "明确源结果时间",
+        "code": "mapFields ../sourceCase -sourceTime 5 -consistent",
+        "explanation": "读取源时间5，避免由默认时间选择引入混淆；目标写入时刻由目标controlDict确定。"
+      },
+      {
+        "title": "使用最新源场",
+        "code": "mapFields ../sourceCase -sourceTime latestTime",
+        "explanation": "源案例已有最新结果且目标配置mapFieldsDict；将源最终场映射到目标网格。"
+      },
+      {
+        "title": "映射两个命名区域",
+        "code": "mapFields ../sourceCase -sourceRegion fluid -targetRegion gas -sourceTime 5",
+        "explanation": "源fluid映射到目标gas；两区域字段和边界映射已准备，用于区域名称不同的案例迁移。"
+      },
+      {
+        "title": "从分区结果映射到目标",
+        "code": "mapFields ../sourceCase -parallelSource -sourceTime latestTime",
+        "explanation": "源结果位于processor目录时启用-parallelSource；工具从分区源数据读取，写目标案例字段。"
+      }
+    ]
+  },
+  "mapFieldsPar": {
+    "summary": "在并行或串行布局间执行网格到网格场映射。",
+    "prerequisites": "源、目标网格及字段可读；MPI执行时目标分区与进程数一致，非一致边界映射规则已准备。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "按体积权重映射",
+        "code": "mapFieldsPar ../sourceCase -mapMethod cellVolumeWeight",
+        "explanation": "从源案例计算重叠体积权重，映射到当前目标；适合不同分辨率但空间重叠的网格。"
+      },
+      {
+        "title": "只映射速度与压力",
+        "code": "mapFieldsPar ../sourceCase -fields '(U p)' -sourceTime latestTime",
+        "explanation": "限制字段为U、p，读取源最新时刻；其他目标字段保留原设置。"
+      },
+      {
+        "title": "相同网格直接映射",
+        "code": "mapFieldsPar ../sourceCase -consistent -mapMethod direct",
+        "explanation": "源目标几何和边界一致且满足直接寻址条件时，采用direct方法传递字段。"
+      },
+      {
+        "title": "选择边界面积加权",
+        "code": "mapFieldsPar ../sourceCase -mapMethod cellVolumeWeight -patchMapMethod faceAreaWeight",
+        "explanation": "内部按体积、边界按面积加权，适合面划分不同但边界相互覆盖的映射。"
+      },
+      {
+        "title": "并行映射并保留欧拉场",
+        "code": "mpirun -np 4 mapFieldsPar ../sourceCase -parallel -fields '(U p T)' -no-lagrangian",
+        "explanation": "目标已有4分区；并行映射所选欧拉场，-no-lagrangian跳过粒子位置和粒子属性。"
+      }
+    ]
+  },
+  "mdInitialise": {
+    "summary": "按晶格、密度、温度和整体速度生成分子动力学初态。",
+    "prerequisites": "已有MD网格、system/mdInitialiseDict、分子类型和势函数；初始化区域与字典中的分子分组一致。",
+    "examples": [
+      {
+        "title": "生成基准分子云",
+        "code": "mdInitialise",
+        "explanation": "读取各分组的晶格与热运动参数，生成分子并写出初态，日志汇总分子数量。"
+      },
+      {
+        "title": "提高初始温度",
+        "code": "foamDictionary system/mdInitialiseDict -entry liquid/temperature -set 350\nmdInitialise",
+        "explanation": "字典已有liquid分组时，将热运动初始化温度设为350K，观察后续平衡过程。"
+      },
+      {
+        "title": "给分子云加入整体平移",
+        "code": "foamDictionary system/mdInitialiseDict -entry liquid/bulkVelocity -set '(100 0 0)'\nmdInitialise",
+        "explanation": "整体速度沿x方向为100米每秒，叠加在热运动上，可用于平移流或动量检查。"
+      },
+      {
+        "title": "旋转初始晶格",
+        "code": "foamDictionary system/mdInitialiseDict -entry liquid/orientationAngles -set '(0 0 45)'\nmdInitialise",
+        "explanation": "欧拉角按字典约定以度填写；改变晶格取向，适合研究结构相对边界的排列。"
+      },
+      {
+        "title": "初始化后进行热平衡",
+        "code": "mdInitialise\nmdEquilibrationFoam",
+        "explanation": "案例已配置mdEquilibrationFoam及温控参数；先建分子初态，再让系统按势函数松弛到目标状态。"
+      }
+    ]
+  },
+  "writeMorpherCPs": {
+    "summary": "写出体积 B 样条网格变形器的控制点。",
+    "prerequisites": "constant/dynamicMeshDict 已含 volumetricBSplinesMotionSolverCoeffs 及各控制盒定义。",
+    "examples": [
+      {
+        "title": "导出当前控制点布局",
+        "code": "writeMorpherCPs",
+        "explanation": "创建字典中每个B样条控制盒对象并写控制点，供查看设计变量在空间中的分布。"
+      },
+      {
+        "title": "检查细化网格上的控制盒",
+        "code": "writeMorpherCPs -case ./optimisation-fineMesh",
+        "explanation": "细网格案例已有相同物理控制盒设置；输出控制点，比较控制盒与细化边界的相对位置。"
+      },
+      {
+        "title": "比较另一套控制盒布置",
+        "code": "cp -r shapeCase shapeCase-wideBox\n# 在 shapeCase-wideBox/constant/dynamicMeshDict 中调整控制盒范围\nwriteMorpherCPs -case shapeCase-wideBox",
+        "explanation": "在独立副本中修改既有控制盒的几何定义，再导出；检查设计区域是否覆盖待优化表面。"
+      },
+      {
+        "title": "网格生成后导出控制点",
+        "code": "blockMesh\nwriteMorpherCPs",
+        "explanation": "blockMeshDict与变形器字典已配套；先生成当前设计几何网格，再输出控制点用于叠加检查。"
+      },
+      {
+        "title": "与边界几何一起查看",
+        "code": "writeMorpherCPs\nfoamToVTK -no-fields -no-internal -name VTK-designBoundary",
+        "explanation": "导出控制点后，另外导出边界网格，在同一视图检查控制点密度与边界曲率、局部细节的对应。"
+      }
+    ]
+  },
+  "setAlphaField": {
+    "summary": "按 setAlphaFieldDict 定义的几何方式初始化体积分数。",
+    "prerequisites": "已有网格、目标alpha场及system/setAlphaFieldDict；场名称、几何定义与模型配置一致。",
+    "examples": [
+      {
+        "title": "初始化默认体积分数",
+        "code": "setAlphaField",
+        "explanation": "按默认字典计算各单元体积分数并写场，用于准备两相流初始界面。"
+      },
+      {
+        "title": "只更新初始时刻",
+        "code": "setAlphaField -time 0",
+        "explanation": "指定0时刻，便于在网格修改后重新构造初始界面。"
+      },
+      {
+        "title": "采用另一界面位置",
+        "code": "setAlphaField -dict system/setAlphaField-highLevelDict -time 0",
+        "explanation": "替代字典已定义较高液位或不同界面几何；在独立副本比较初始液体体积。"
+      },
+      {
+        "title": "为最新状态重新设界面",
+        "code": "setAlphaField -latestTime -dict system/setAlphaField-restartDict",
+        "explanation": "选最后保存时刻，按重启方案重置体积分数，后续计算从这一状态继续。"
+      },
+      {
+        "title": "处理命名区域并导出",
+        "code": "setAlphaField -region fluid -time 0\nfoamToVTK -region fluid -time 0 -fields '(alpha.water)'",
+        "explanation": "fluid区域已有alpha.water时，初始化后导出该场，检查界面位置和过渡单元分布。"
+      }
+    ]
+  },
+  "setExprBoundaryFields": {
+    "summary": "用表达式设置边界场的数值或条目。",
+    "prerequisites": "已有场和system/setExprBoundaryFieldsDict；字典明确字段、边界、表达式及所需引用场。",
+    "examples": [
+      {
+        "title": "先计算表达式预览",
+        "code": "setExprBoundaryFields -dry-run -time 0",
+        "explanation": "求值并检查字段、patch和表达式，保留原场，适合先定位字段名或表达式问题。"
+      },
+      {
+        "title": "写入初始边界值",
+        "code": "setExprBoundaryFields -time 0",
+        "explanation": "按默认字典更新0时刻边界，适合空间变化的入口温度或速度分布。"
+      },
+      {
+        "title": "保留被替换子条目",
+        "code": "setExprBoundaryFields -backup -time 0",
+        "explanation": "写新设置时把原子条目保留为.backup，便于比较表达式施加前后的边界内容。"
+      },
+      {
+        "title": "预加载引用场",
+        "code": "setExprBoundaryFields -load-fields '(U T)' -dict system/setExprBoundaryFields-inletDict -time 0",
+        "explanation": "表达式引用U、T时先加载它们，按入口专用字典生成耦合分布。"
+      },
+      {
+        "title": "批量处理一段时间",
+        "code": "setExprBoundaryFields -time '0.1:0.5' -ascii",
+        "explanation": "对已有时间区间逐次求值，并强制ASCII写出，方便检查每个时刻边界值的变化。"
+      }
+    ]
+  },
+  "setExprFields": {
+    "summary": "用数学表达式创建或修改单元场。",
+    "prerequisites": "已有网格；修改模式要求目标场存在，创建模式需指定字段名、表达式和合适量纲。",
+    "examples": [
+      {
+        "title": "把已有标量场设为常数",
+        "code": "setExprFields -field T -expression '300' -time 0",
+        "explanation": "T已存在时，将选中场值设为300；应按T的物理单位解释，温度场通常以K填写。"
+      },
+      {
+        "title": "创建无量纲标记场",
+        "code": "setExprFields -create -field marker -dimensions '[0 0 0 0 0 0 0]' -expression '1' -time 0",
+        "explanation": "生成新的无量纲场marker，内部赋值1，可用作区域标记或后续表达式输入。"
+      },
+      {
+        "title": "由速度计算单位质量动能",
+        "code": "setExprFields -create -field kineticEnergy -dimensions '[0 2 -2 0 0 0 0]' -load-fields '(U)' -expression '0.5*magSqr(U)' -time 0",
+        "explanation": "读取U，创建单位质量动能场，量纲为平方米每二次方秒；便于观察速度非均匀性。"
+      },
+      {
+        "title": "保留边界只改内部温度",
+        "code": "setExprFields -field T -expression '350' -keepPatches -time 0",
+        "explanation": "内部T改为350，-keepPatches保留已有边界设置，适合调整初始温度而继续使用原边界条件。"
+      },
+      {
+        "title": "先检查字典中的多场表达式",
+        "code": "setExprFields -dict system/setExprFields-initialDict -dry-run -time 0\nsetExprFields -dict system/setExprFields-initialDict -time 0",
+        "explanation": "字典已配置多项场表达式时，先求值检查，再正式写入，适合同时构造速度、标量或几何指示场。"
+      }
+    ]
+  },
+  "setFields": {
+    "summary": "按几何选区或拓扑集合给已有场设置初值。",
+    "prerequisites": "目标场已存在，system/setFieldsDict 定义 defaultFieldValues 和 regions。",
+    "examples": [
+      {
+        "title": "执行初始场分区赋值",
+        "code": "setFields -time 0",
+        "explanation": "对0目录场先应用默认值，再按regions顺序设置局部值，常用于液位、热点或浓度团初始化。"
+      },
+      {
+        "title": "采用另一液位方案",
+        "code": "setFields -dict system/setFields-highWaterDict -time 0",
+        "explanation": "替代字典定义另一液位选区，便于保持网格相同而比较不同初始水量。"
+      },
+      {
+        "title": "在新网格上重新初始化",
+        "code": "blockMesh\nsetFields -time 0",
+        "explanation": "网格重建后重新执行几何选区，使非均匀初场与新单元数量匹配。"
+      },
+      {
+        "title": "只对某个区域赋值",
+        "code": "setFields -region fluid -dict system/setFields-fluidDict -time 0",
+        "explanation": "多区域案例中只修改fluid的场，保持固体初始温度等设置不变。"
+      },
+      {
+        "title": "设置有限面积场",
+        "code": "setFields -area-region film -dict system/setFields-filmDict -time 0",
+        "explanation": "已存在film有限面积网格及其场时，按专用字典设置表面初值，适用于薄膜或壳面计算。"
+      }
+    ]
+  },
+  "setTurbulenceFields": {
+    "summary": "按经验关系和壁距初始化选定的湍流字段。",
+    "prerequisites": "已有速度、湍流模型及system/setTurbulenceFieldsDict；initialiseK、initialiseOmega等开关决定写哪些字段。",
+    "examples": [
+      {
+        "title": "应用默认初始化方案",
+        "code": "setTurbulenceFields",
+        "explanation": "读取字典并初始化其中启用的U、k、epsilon、omega或R，输出相应字段统计。"
+      },
+      {
+        "title": "为k–omega方案初始化",
+        "code": "foamDictionary system/setTurbulenceFieldsDict -entry initialiseK -set true\nfoamDictionary system/setTurbulenceFieldsDict -entry initialiseOmega -set true\nsetTurbulenceFields",
+        "explanation": "其余必要经验参数和模型已配置；启用k和omega初场写入，适合给k–omega模型准备一致的起始量。"
+      },
+      {
+        "title": "为k–epsilon方案初始化",
+        "code": "setTurbulenceFields -dict system/setTurbulenceFields-kepsilonDict",
+        "explanation": "替代字典启用initialiseK与initialiseEpsilon，并提供相应经验参数；生成配套的k与epsilon。"
+      },
+      {
+        "title": "写出辅助分布f",
+        "code": "foamDictionary system/setTurbulenceFieldsDict -entry writeF -set true\nsetTurbulenceFields",
+        "explanation": "启用writeF后额外保存辅助场f，便于检查经验初始化随空间位置的变化。"
+      },
+      {
+        "title": "处理指定流体区域",
+        "code": "setTurbulenceFields -region fluid -dict system/setTurbulenceFields-fluidDict",
+        "explanation": "在多区域fluid内使用专用参数初始化；检查输出字段与该区域选择的湍流模型匹配。"
+      }
+    ]
+  },
+  "smoothSurfaceData": {
+    "summary": "对外部表面标量数据进行中值滤波。",
+    "prerequisites": "输入为受支持的表面结果文件；默认读取EnSight，默认处理标量T。半径单位为米。",
+    "examples": [
+      {
+        "title": "平滑表面温度",
+        "code": "smoothSurfaceData surface.case -radius 0.002",
+        "explanation": "输入EnSight表面结果含T；以2毫米邻域执行默认一次中值滤波，输出滤波后的表面数据。"
+      },
+      {
+        "title": "改为处理压力",
+        "code": "smoothSurfaceData surface.case -field p -radius 0.002",
+        "explanation": "选择标量p，对局部压力尖峰进行中值过滤，几何仍取输入表面。"
+      },
+      {
+        "title": "增加过滤遍数",
+        "code": "smoothSurfaceData surface.case -field T -radius 0.002 -sweeps 3",
+        "explanation": "连续执行3级中值滤波，抑制孤立异常值的同时也会改变较细的空间变化。"
+      },
+      {
+        "title": "比较较大邻域",
+        "code": "smoothSurfaceData coarseStudy.case -field T -radius 0.01 -sweeps 1",
+        "explanation": "独立输入副本使用1厘米滤波半径，比较平滑尺度对温度梯度的影响。"
+      },
+      {
+        "title": "明确格式并输出详细过程",
+        "code": "smoothSurfaceData surface.case -read-format ensight -field T -radius 0.002 -sweeps 2 -verbose",
+        "explanation": "显式选择EnSight读取器，执行两遍过滤并显示更多处理信息，便于核对字段和邻域构建。"
+      }
+    ]
+  },
+  "viewFactorsGen": {
+    "summary": "计算表面间辐射视角因子及分布映射。",
+    "prerequisites": "已有constant/viewFactorsDict、辐射边界和需要的faceAgglomerate结果。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "生成辐射交换数据",
+        "code": "viewFactorsGen",
+        "explanation": "按网格表面可见关系计算视角因子，写出后续viewFactor辐射模型需要的矩阵和映射数据。"
+      },
+      {
+        "title": "写出视角因子矩阵诊断",
+        "code": "foamDictionary constant/viewFactorsDict -entry writeViewFactorMatrix -set true\nviewFactorsGen",
+        "explanation": "开启矩阵输出选项，便于检查表面对之间的交换比例和结果分布。"
+      },
+      {
+        "title": "导出可见射线",
+        "code": "foamDictionary constant/viewFactorsDict -entry dumpRays -set true\nviewFactorsGen",
+        "explanation": "额外生成allVisibleFaces.obj等可见性诊断，适合检查遮挡与表面朝向。"
+      },
+      {
+        "title": "针对命名区域计算",
+        "code": "faceAgglomerate -region enclosure\nviewFactorsGen -region enclosure",
+        "explanation": "为enclosure生成聚合映射后计算其视角因子，适合多区域中的辐射腔体。"
+      },
+      {
+        "title": "并行生成",
+        "code": "mpirun -np 4 faceAgglomerate -parallel\nmpirun -np 4 viewFactorsGen -parallel",
+        "explanation": "网格已有4分区且viewFactorsDict一致；先聚合再计算，输出与各分区对应的交换数据。"
+      }
+    ]
+  },
+  "wallFunctionTable": {
+    "summary": "为查表壁面函数生成速度壁面律反查表。",
+    "prerequisites": "已有网格和constant/wallFunctionDict；官方注释示例采用SpaldingsLaw，可配置表名、步长、区间和对数坐标。",
+    "examples": [
+      {
+        "title": "从官方示例生成表",
+        "code": "cp \"$WM_PROJECT_DIR/etc/caseDicts/annotated/wallFunctionDict\" constant/wallFunctionDict\nwallFunctionTable",
+        "explanation": "使用SpaldingsLaw默认系数生成uPlusWallFunctionData，日志给出输出路径。"
+      },
+      {
+        "title": "提高表格分辨率",
+        "code": "foamDictionary constant/wallFunctionDict -entry dx -set 0.1\nwallFunctionTable",
+        "explanation": "dx由默认0.2改为0.1；在相同坐标区间内增加采样密度，减小后续查表间距。"
+      },
+      {
+        "title": "扩展表格上限",
+        "code": "foamDictionary constant/wallFunctionDict -entry xMax -set 8\nwallFunctionTable",
+        "explanation": "保留log10设置时，xMax表示对数坐标上界；提高上限扩展可查询的Re范围。"
+      },
+      {
+        "title": "使用另一输出表名",
+        "code": "foamDictionary constant/wallFunctionDict -entry invertedTableName -set uPlusFine\nwallFunctionTable",
+        "explanation": "将结果保存为uPlusFine，便于同时保留不同分辨率的壁面律表。"
+      },
+      {
+        "title": "比较壁面律常数",
+        "code": "foamDictionary constant/wallFunctionDict -entry SpaldingsLawCoeffs/kappa -set 0.40\nwallFunctionTable",
+        "explanation": "在独立参数方案中把kappa改为0.40，比较相同Re位置的u+；其余系数与坐标设置保持一致。"
+      }
+    ]
+  },
+  "decomposePar": {
+    "summary": "把网格和场划分到多个处理器子域。",
+    "prerequisites": "已有完整案例和system/decomposeParDict；numberOfSubdomains与后续MPI进程数一致。",
+    "examples": [
+      {
+        "title": "按字典分区",
+        "code": "decomposePar",
+        "explanation": "读取分区方法与子域数量，生成processor目录及对应网格、场，供并行求解器使用。"
+      },
+      {
+        "title": "先比较8分区方案",
+        "code": "decomposePar -dry-run -domains 8 -method scotch -cellDist",
+        "explanation": "-domains与-method在dry-run中临时覆盖设置；测试8个scotch子域并写可视化cellDist，保留原分区目录。"
+      },
+      {
+        "title": "只划分网格",
+        "code": "decomposePar -no-fields",
+        "explanation": "创建几何分区和寻址关系，暂不分解体场与粒子场，适合后续单独准备字段。"
+      },
+      {
+        "title": "复用网格分区更新场",
+        "code": "decomposePar -fields -time 0",
+        "explanation": "已有分区几何且原网格未改变时，只把0时刻场按已有寻址分配，适合调整初值后重复使用网格。"
+      },
+      {
+        "title": "多区域并行准备",
+        "code": "decomposePar -allRegions -cellDist",
+        "explanation": "regionProperties已有各区域，按相应分区设置生成区域网格及cellDist，检查流体与固体的工作量分布。"
+      }
+    ]
+  },
+  "reconstructPar": {
+    "summary": "把并行结果的字段重构到完整案例。",
+    "prerequisites": "已有processor结果和匹配的完整网格/寻址信息；网格需重构时先使用reconstructParMesh。",
+    "examples": [
+      {
+        "title": "重构全部可选结果",
+        "code": "reconstructPar",
+        "explanation": "将分区场按寻址信息拼回完整场，在原案例对应时间目录写结果。"
+      },
+      {
+        "title": "仅重构最新时刻",
+        "code": "reconstructPar -latestTime",
+        "explanation": "适合只查看最终计算状态，减少大量历史结果的读写。"
+      },
+      {
+        "title": "仅提取速度和压力",
+        "code": "reconstructPar -latestTime -fields '(U p)' -no-lagrangian",
+        "explanation": "只处理U、p，跳过粒子数据，适合快速查看流场。"
+      },
+      {
+        "title": "补齐新产生的时间",
+        "code": "reconstructPar -newTimes -time '1:5'",
+        "explanation": "只重构1至5区间内尚未在完整案例中存在的时间，适合计算继续推进后的增量整理。"
+      },
+      {
+        "title": "重构所有区域的初值与结果",
+        "code": "reconstructPar -allRegions -withZero",
+        "explanation": "包括0时刻，并对regionProperties中的全部区域处理，适合多区域案例完整交付。"
+      }
+    ]
+  },
+  "reconstructParMesh": {
+    "summary": "从处理器子域重构网格和寻址关系。",
+    "prerequisites": "已有匹配的分区网格；动网格或并行网格生成的各时间拓扑需要分别处理。",
+    "examples": [
+      {
+        "title": "重构恒定网格",
+        "code": "reconstructParMesh -constant",
+        "explanation": "从各processor的constant网格恢复全域网格，适合并行网格生成结束后的整理。"
+      },
+      {
+        "title": "恢复最新动网格",
+        "code": "reconstructParMesh -latestTime",
+        "explanation": "选择最后保存的分区网格状态，重构完整几何和连接关系。"
+      },
+      {
+        "title": "按处理器接口匹配",
+        "code": "reconstructParMesh -constant -procMatch",
+        "explanation": "只在processor边界上进行几何匹配，适合接口定义可靠的标准分区网格。"
+      },
+      {
+        "title": "采用全边界几何匹配",
+        "code": "reconstructParMesh -constant -fullMatch -mergeTol 1e-7",
+        "explanation": "在全部边界上做更全面的匹配；mergeTol是相对包围盒尺寸的合并容差。"
+      },
+      {
+        "title": "先恢复寻址再拼场",
+        "code": "reconstructParMesh -latestTime -addressing-only\nreconstructPar -latestTime",
+        "explanation": "完整网格已存在且与分区几何一致时，只建立procAddressing而保留网格，再利用寻址重构字段。"
+      }
+    ]
+  },
+  "redistributePar": {
+    "summary": "并行重分区、分解或重构网格与场。",
+    "prerequisites": "system/decomposeParDict定义目标子域数；MPI进程数至少覆盖原布局和目标布局所需的处理器数量。",
+    "examples": [
+      {
+        "title": "测试新的分区布局",
+        "code": "mpirun -np 8 redistributePar -parallel -dry-run -cellDist",
+        "explanation": "已有数据与目标设置就绪时，只评估重分区并输出cellDist诊断，用于比较负载分布。"
+      },
+      {
+        "title": "把串行案例分成8份",
+        "code": "mpirun -np 8 redistributePar -parallel -decompose",
+        "explanation": "decomposeParDict中numberOfSubdomains为8；从完整案例分解网格与场，利用并行进程执行分区过程。"
+      },
+      {
+        "title": "重新分配最新结果",
+        "code": "mpirun -np 8 redistributePar -parallel -latestTime -overwrite",
+        "explanation": "原布局不超过8个子域，目标设为8时，将最新网格与场重分配并更新分区数据，便于更换计算资源。"
+      },
+      {
+        "title": "并行重构完整案例",
+        "code": "mpirun -np 8 redistributePar -parallel -reconstruct -latestTime",
+        "explanation": "输入是8分区结果时，在并行中重构最新完整状态，作用对应把分区数据集中回单一案例。"
+      },
+      {
+        "title": "重分区全部区域",
+        "code": "mpirun -np 8 redistributePar -parallel -allRegions -latestTime -overwrite",
+        "explanation": "目标多区域分区设置已准备；同一流程处理流体和固体区域，输出可继续并行计算的区域场。"
+      }
+    ]
+  },
+  "postProcess": {
+    "summary": "在已有结果上执行功能对象。",
+    "prerequisites": "已有所需字段和网格；-func使用预配置功能对象，-dict使用包含functions的控制字典。",
+    "examples": [
+      {
+        "title": "计算速度大小",
+        "code": "postProcess -func 'mag(U)' -latestTime",
+        "explanation": "读取最新U，生成速度模场，适合查看流速分布或提取极值。"
+      },
+      {
+        "title": "计算速度梯度",
+        "code": "postProcess -func 'grad(U)' -time '0.1:0.5'",
+        "explanation": "对区间内已有U逐时刻计算梯度张量，输出与各时刻对应的grad(U)。"
+      },
+      {
+        "title": "同时计算涡量和Q",
+        "code": "postProcess -funcs '(vorticity Q)' -latestTime",
+        "explanation": "使用现有速度场生成涡量与Q判据，便于区分旋转强度与涡结构。"
+      },
+      {
+        "title": "执行自定义采样方案",
+        "code": "postProcess -dict system/postProcess-linesDict -time '1:2'",
+        "explanation": "替代字典的functions已配置采样线或积分对象；对1至2秒已有结果执行，输出通常位于postProcessing。"
+      },
+      {
+        "title": "后处理特定区域",
+        "code": "postProcess -region fluid -func 'mag(U)' -latestTime",
+        "explanation": "只读取fluid的U与网格，生成该区域速度大小，适合多区域案例。"
+      }
+    ]
+  },
+  "foamToVTK": {
+    "summary": "把网格、欧拉场和粒子数据转换成 VTK。",
+    "prerequisites": "已有OpenFOAM网格和结果；默认输出目录为VTK，可按字段、区域、patch或集合筛选。",
+    "examples": [
+      {
+        "title": "导出最新流场",
+        "code": "foamToVTK -latestTime -fields '(U p)'",
+        "explanation": "只转换最新速度、压力及相关几何，便于快速在ParaView中检查最终结果。"
+      },
+      {
+        "title": "导出一段时间序列",
+        "code": "foamToVTK -time '0.1:1' -fields '(U p alpha.water)' -name VTK-animation",
+        "explanation": "已有这些字段时，按时间输出到独立目录VTK-animation，用于制作对应区间动画。"
+      },
+      {
+        "title": "只导出壁面",
+        "code": "foamToVTK -latestTime -no-internal -patches '(walls \"blade.*\")' -fields '(p)'",
+        "explanation": "保留指定壁面和叶片patch的压力，省去内部体网格，适合表面压力展示。"
+      },
+      {
+        "title": "导出某个cellZone",
+        "code": "foamToVTK -latestTime -cellZone rotor -fields '(U p)' -with-ids",
+        "explanation": "仅转换rotor区域，并附加网格编号信息，便于关联选区、处理器编号或异常单元。"
+      },
+      {
+        "title": "输出可读的旧式VTK",
+        "code": "foamToVTK -latestTime -legacy -ascii -no-lagrangian -name VTK-ascii",
+        "explanation": "使用legacy ASCII格式并跳过粒子数据，方便检查文本内容或对接只支持旧格式的工具。"
+      }
+    ]
+  },
+  "foamToEnsight": {
+    "summary": "将网格和结果导出为 EnSight 格式。",
+    "prerequisites": "已有结果场；默认写EnSight目录，-name可为不同导出方案指定独立目录。",
+    "examples": [
+      {
+        "title": "导出最终状态",
+        "code": "foamToEnsight -latestTime -fields '(U p)'",
+        "explanation": "转换最终几何、速度与压力，生成EnSight案例文件和对应数据。"
+      },
+      {
+        "title": "导出时间区间",
+        "code": "foamToEnsight -time '0.1:1' -fields '(U T)' -name EnSight-thermal",
+        "explanation": "在含U、T的案例中仅导出指定区间，输出独立热流动数据集。"
+      },
+      {
+        "title": "导出边界压力",
+        "code": "foamToEnsight -latestTime -no-internal -patches '(walls)' -fields '(p)'",
+        "explanation": "关闭内部网格输出，仅写walls边界压力，适合外部表面后处理。"
+      },
+      {
+        "title": "将单元值插到节点",
+        "code": "foamToEnsight -latestTime -nodeValues -fields '(U p)'",
+        "explanation": "将字段插值到节点，适合需要节点数据的显示或外部接口；插值后的极值可能与单元原值有差异。"
+      },
+      {
+        "title": "输出ASCII数据并统一文件编号",
+        "code": "foamToEnsight -time '2:3' -ascii -index 0 -width 6 -no-lagrangian -name EnSight-ascii",
+        "explanation": "输出 2 至 3 秒的已有结果；-ascii 便于读取文本，-index 0 从 0 开始连续编号，-width 6 使用六位数据目录名，-no-lagrangian 跳过粒子数据。结果写入独立 EnSight-ascii 目录。"
+      }
+    ]
+  },
+  "foamToGMV": {
+    "summary": "按 conversionProperties 导出六面体网格和字段为 GMV。",
+    "prerequisites": "网格采用hex单元，constant/conversionProperties定义startTime、vector、format、cells；该旧式工具从字典而非时间CLI选择起始范围。",
+    "examples": [
+      {
+        "title": "创建最小转换配置",
+        "code": "cat > constant/conversionProperties <<'EOF'\nFoamFile { version 2.0; format ascii; class dictionary; object conversionProperties; }\nstartTime -1;\nvector U;\nformat ascii;\ncells hex;\nEOF\nfoamToGMV",
+        "explanation": "写入完整转换字典；导出晚于-1的数值时间，U作为GMV速度，结果命名为plotGMV.*。"
+      },
+      {
+        "title": "只处理较晚结果",
+        "code": "foamDictionary constant/conversionProperties -entry startTime -set 1\nfoamToGMV",
+        "explanation": "工具只转换严格晚于1的时间，适合跳过初始发展阶段。"
+      },
+      {
+        "title": "把平均速度作为GMV速度",
+        "code": "foamDictionary constant/conversionProperties -entry vector -set UMean\nfoamToGMV",
+        "explanation": "结果中已有UMean时，将它作为GMV的velocity数据，便于查看统计平均流场。"
+      },
+      {
+        "title": "导出生成的旋流场",
+        "code": "engineSwirl\nfoamToGMV",
+        "explanation": "发动机案例使用hex网格、vector为U且转换起始范围包含该场时，先生成初始旋流，再导出供GMV检查。"
+      },
+      {
+        "title": "检查ASCII文件结构",
+        "code": "foamToGMV\nhead -n 8 plotGMV.1",
+        "explanation": "转换后查看首个实际生成文件的头部；如编号不同，使用日志中的文件名。应能看到gmvinput和nodes等记录。"
+      }
+    ]
+  },
+  "foamDataToFluent": {
+    "summary": "按映射字典把场数据导出为 Fluent 数据文件。",
+    "prerequisites": "已有匹配的OpenFOAM网格和字段，以及system/foamDataToFluentDict；Fluent端使用与之对应的网格。",
+    "examples": [
+      {
+        "title": "转换已有结果",
+        "code": "foamDataToFluent",
+        "explanation": "读取字段映射规则并转换选中的时间，输出Fluent可读取的数据文件。"
+      },
+      {
+        "title": "只转换最后时刻",
+        "code": "foamDataToFluent -latestTime",
+        "explanation": "仅写最新结果，适合把最终解传给对应Fluent网格继续分析。"
+      },
+      {
+        "title": "转换明确时刻",
+        "code": "foamDataToFluent -time 1",
+        "explanation": "选择已有时间1，便于把同一物理时刻的解在不同后处理软件中对照。"
+      },
+      {
+        "title": "转换一段瞬态结果",
+        "code": "foamDataToFluent -time '0.1:0.5' -noZero",
+        "explanation": "导出0.1到0.5的已有结果并排除初值，输出可用于瞬态场对比。"
+      },
+      {
+        "title": "并行计算后再转换",
+        "code": "reconstructPar -latestTime\nfoamDataToFluent -latestTime",
+        "explanation": "先把processor场重构成完整场，再按Fluent映射规则导出，保证字段对应完整网格。"
+      }
+    ]
+  },
+  "foamToTetDualMesh": {
+    "summary": "把单元场和边界面场映射为已有 tetDualMesh 的点场。",
+    "prerequisites": "算例中已有原 polyMesh、目标区域 tetDualMesh/polyMesh 及其 pointDualAddressing。该映射表的长度须等于目标点数，正值对应原单元编号加 1，负值对应原边界面编号取负再减 1，0 对应未映射点。以下处理的是配套的网格与字段。",
+    "examples": [
+      {
+        "title": "映射初始时刻的场",
+        "code": "foamToTetDualMesh -time 0",
+        "explanation": "读取 0 目录内的体标量、体矢量及张量场，按 pointDualAddressing 写出 0/tetDualMesh 下的同名点场。例如单元压力 p 转成目标网格的 pointScalarField。"
+      },
+      {
+        "title": "映射指定结果时刻",
+        "code": "foamToTetDualMesh -time 0.5",
+        "explanation": "-time 选择最接近 0.5 的已有时间。各目标点从对应原单元或边界面取得数值；映射表中为 0 的点写入零值。适合把某一计算结果交给使用对偶点数据的后处理。"
+      },
+      {
+        "title": "处理另一算例的最终结果",
+        "code": "foamToTetDualMesh -case ./dualView -latestTime",
+        "explanation": "dualView 已包含两套匹配网格和寻址表。-case 指定目录，-latestTime 选最后一个结果时间；输出仍位于这个时间的 tetDualMesh 区域下，原单元场保留。"
+      },
+      {
+        "title": "转换一组已有时间",
+        "code": "for t in 0.1 0.2 0.3; do\n    foamToTetDualMesh -time \"$t\"\ndone",
+        "explanation": "三个时间均已存在，并共享有效的对偶寻址关系。工具每次只选择一个时间，因此用循环分别产生三个时间的点场；网格拓扑改变时，应为该时刻准备匹配的目标网格和映射表。"
+      },
+      {
+        "title": "检查目标网格和转换后的场类型",
+        "code": "checkMesh -region tetDualMesh -constant\nfoamToTetDualMesh -time 0.5\nfoamDictionary 0.5/tetDualMesh/p -entry FoamFile/class -value",
+        "explanation": "此例的两套网格保存在 constant，且 0.5/p 已存在。先检查目标区域网格，再映射压力；最后应读到 pointScalarField，可继续检查点数和映射表是否一致。转换程序读取目标网格，仅写转换后的场。"
+      }
+    ]
+  },
+  "smapToFoam": {
+    "summary": "把 STAR-CD SMAP 字段映射到已有 OpenFOAM 场。",
+    "prerequisites": "已有与SMAP数据对应的网格、当前时间目录中的目标场文件；支持SU→U、P→p、T→T等固定名称映射。",
+    "examples": [
+      {
+        "title": "导入已有SMAP结果",
+        "code": "smapToFoam results.smap",
+        "explanation": "位置参数是SMAP文件；程序根据当前目录已有字段读取对应数据并重写字段内部值。"
+      },
+      {
+        "title": "导入到指定案例",
+        "code": "smapToFoam -case ./convertedCase results.smap",
+        "explanation": "convertedCase已建立相同几何对应网格和目标场；-case决定结果写入的案例。"
+      },
+      {
+        "title": "把SMAP结果作为重启初值",
+        "code": "foamDictionary system/controlDict -entry startFrom -set startTime\nfoamDictionary system/controlDict -entry startTime -set 0\nsmapToFoam steady.smap",
+        "explanation": "把当前实例明确设为0，导入数据到已准备的0/U、0/p等文件，供后续求解器从此状态启动。"
+      },
+      {
+        "title": "仅导入已有目标标量",
+        "code": "smapToFoam -case ./temperatureImport thermal.smap",
+        "explanation": "temperatureImport当前时间只准备需要的T等目标字段时，工具按已有文件建立名称映射；检查SMAP内相应列与目标单位。"
+      },
+      {
+        "title": "导入后可视化核对",
+        "code": "smapToFoam results.smap\nfoamToVTK -time 0 -fields '(U p T)' -name VTK-smap",
+        "explanation": "本案例当前实例为0并已有U、p、T；导出导入后的字段，检查空间分布、速度方向和数量级。"
+      }
+    ]
+  },
+  "patchSummary": {
+    "summary": "列出各边界patch上的字段边界条件。",
+    "prerequisites": "已有网格和所选时间的场；适合检查边界名称与各字段的类型是否一致。",
+    "examples": [
+      {
+        "title": "查看初始边界条件",
+        "code": "patchSummary -time 0",
+        "explanation": "读取0时刻字段，汇总各patch采用的边界类型，适合求解前检查。"
+      },
+      {
+        "title": "逐patch展开显示",
+        "code": "patchSummary -time 0 -expand",
+        "explanation": "关闭相同条件的合并展示，逐个列出patch，便于定位某一小边界。"
+      },
+      {
+        "title": "检查最新重启状态",
+        "code": "patchSummary -latestTime",
+        "explanation": "查看最新结果场的边界类型，确认重启文件与预期边界设置一致。"
+      },
+      {
+        "title": "比较多个时刻",
+        "code": "patchSummary -time '0,1,2' -expand",
+        "explanation": "三个时间均存在时，逐时刻列出边界条件，检查中途修改或重启是否改变了字段设置。"
+      },
+      {
+        "title": "检查多区域流体边界",
+        "code": "patchSummary -region fluid -latestTime -expand",
+        "explanation": "仅查看fluid的最新场，便于把流固界面、入口和壁面条件分开核对。"
+      }
+    ]
+  },
+  "foamListTimes": {
+    "summary": "列出符合条件的案例时间目录。",
+    "prerequisites": "已有案例或processor结果；以下实例只列目录，不执行删除。",
+    "examples": [
+      {
+        "title": "列出计算结果时间",
+        "code": "foamListTimes",
+        "explanation": "输出标准时间选择范围内的数值目录，可用于了解已保存的结果时刻。"
+      },
+      {
+        "title": "包含初始0目录",
+        "code": "foamListTimes -withZero",
+        "explanation": "把0纳入结果列表，适合检查初场和输出时间是否齐全。"
+      },
+      {
+        "title": "查找最新结果",
+        "code": "foamListTimes -latestTime",
+        "explanation": "输出最后一个可用数值时刻，常用于后处理脚本选择最终状态。"
+      },
+      {
+        "title": "筛选指定范围",
+        "code": "foamListTimes -time '0.1:0.5,1:2' -noZero",
+        "explanation": "只列两个时间区间内的目录，方便决定重构、转换或动画的处理范围。"
+      },
+      {
+        "title": "查看并行输出时刻",
+        "code": "foamListTimes -processor -latestTime",
+        "explanation": "从processor0读取时间列表，确定并行计算已写出的最新时刻，再决定是否重构。"
+      }
+    ]
+  },
+  "foamFormatConvert": {
+    "summary": "按 controlDict 写出设置转换现有场和网格文件格式。",
+    "prerequisites": "已有结果；目标格式、精度与压缩由controlDict中的writeFormat、writePrecision、writeCompression决定，文件会重写。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "把最新结果转成ASCII",
+        "code": "foamDictionary system/controlDict -entry writeFormat -set ascii\nfoamFormatConvert -latestTime",
+        "explanation": "修改目标写格式后转换最新状态，便于直接查看字段数值。"
+      },
+      {
+        "title": "把一段结果转成二进制",
+        "code": "foamDictionary system/controlDict -entry writeFormat -set binary\nfoamFormatConvert -time '1:2' -noConstant",
+        "explanation": "将1至2秒结果改为二进制并跳过constant，适合减小场文件体积和读写时间。"
+      },
+      {
+        "title": "提高文本输出精度",
+        "code": "foamDictionary system/controlDict -entry writeFormat -set ascii\nfoamDictionary system/controlDict -entry writePrecision -set 12\nfoamFormatConvert -latestTime",
+        "explanation": "以12位精度重写当前可读数据；输出精度提高，已有低精度文件丢失的数值位数仍无法补回。"
+      },
+      {
+        "title": "只转换流体区域",
+        "code": "foamFormatConvert -region fluid -latestTime",
+        "explanation": "用当前controlDict写出设置处理fluid最新文件，保持其他区域原格式。"
+      },
+      {
+        "title": "转换并行结果格式",
+        "code": "mpirun -np 4 foamFormatConvert -parallel -latestTime",
+        "explanation": "已有4分区，分别重写各processor的最新场，适合直接改变并行重启数据格式。"
+      }
+    ]
+  },
+  "foamRestoreFields": {
+    "summary": "在原场与 Mean 平均场之间切换文件，并维护 .orig 备份。",
+    "prerequisites": "已有UMean、pMean等平均场，或此前生成的.orig备份；-method必须为mean或orig。",
+    "examples": [
+      {
+        "title": "预览用均值替换速度的动作",
+        "code": "foamRestoreFields -method mean -latestTime -dry-run U",
+        "explanation": "只报告文件重命名计划，检查UMean与U的对应关系。"
+      },
+      {
+        "title": "使用平均速度和压力",
+        "code": "foamRestoreFields -method mean -latestTime U p",
+        "explanation": "用UMean、pMean替代U、p，原有文件保存为.orig，便于把均值场交给后处理。"
+      },
+      {
+        "title": "恢复原始字段",
+        "code": "foamRestoreFields -method orig -latestTime U p",
+        "explanation": "存在U.orig、p.orig时将其恢复为原字段名称，返回切换前的瞬时结果。"
+      },
+      {
+        "title": "处理明确的时间范围",
+        "code": "foamRestoreFields -method mean -time '1:2' U",
+        "explanation": "仅对1至2秒已有平均速度的时刻切换U，保留其他时间。"
+      },
+      {
+        "title": "切换并行案例的均值场",
+        "code": "foamRestoreFields -method mean -processor -latestTime U p",
+        "explanation": "串行调用但扫描processor目录，在各子域最新时间进行相同字段切换，适合并行结果的统一整理。"
+      }
+    ]
+  },
+  "addr2line": {
+    "summary": "把二进制地址解析为函数名和源文件行号。",
+    "prerequisites": "此处对应Linux GNU addr2line；需要带调试符号的可执行文件或库，以及该模块内的地址/偏移。示例0x1234应替换为实际值。",
+    "examples": [
+      {
+        "title": "定位可执行文件地址",
+        "code": "addr2line -e \"$FOAM_USER_APPBIN/mySolver\" 0x1234",
+        "explanation": "-e指定产生堆栈的可执行文件，地址替换为模块内地址；输出源文件和行号。"
+      },
+      {
+        "title": "同时显示C++函数名",
+        "code": "addr2line -C -f -e \"$FOAM_USER_APPBIN/mySolver\" 0x1234",
+        "explanation": "-f增加函数名，-C还原C++修饰名称，便于把崩溃位置对应到类成员函数。"
+      },
+      {
+        "title": "一次解析多个地址",
+        "code": "addr2line -C -f -e \"$FOAM_USER_APPBIN/mySolver\" 0x1234 0x2345 0x3456",
+        "explanation": "依次解析同一模块中的多个堆栈地址，输出相应调用位置。"
+      },
+      {
+        "title": "定位共享库中的错误",
+        "code": "addr2line -C -f -e \"$FOAM_USER_LIBBIN/libmyBoundary.so\" 0x1234",
+        "explanation": "崩溃位于自定义边界库时选择该.so，并使用其模块内偏移，定位库源码而非主求解器。"
+      },
+      {
+        "title": "展开内联调用链",
+        "code": "addr2line -C -f -i -p -e \"$FOAM_USER_APPBIN/mySolver\" 0x1234",
+        "explanation": "-i展开内联函数，-p用更紧凑的单行形式输出；适合优化编译后一个地址对应多层内联代码的情况。"
+      }
+    ]
+  },
+  "particleTracks": {
+    "summary": "把瞬态粒子位置历史连接成轨迹并导出。",
+    "prerequisites": "已有多个时间的粒子位置及身份信息；默认字典实际为constant/particleTrackProperties，包含cloud、sampleFrequency、maxPositions等。",
+    "examples": [
+      {
+        "title": "导出完整时间轨迹",
+        "code": "particleTracks",
+        "explanation": "按字典选择粒子云和采样频率，依据粒子身份关联不同时间的位置，输出轨迹文件。"
+      },
+      {
+        "title": "截取特定时间段",
+        "code": "particleTracks -time '0.1:0.5'",
+        "explanation": "只连接0.1至0.5区间的数据，适合查看喷射初期或指定运动阶段。"
+      },
+      {
+        "title": "减少所跟踪粒子数量",
+        "code": "particleTracks -stride 10 -time '0:1'",
+        "explanation": "-stride覆盖字典sampleFrequency，对粒子编号按指定采样间隔抽取轨迹，减少密集粒子云的显示量。"
+      },
+      {
+        "title": "给轨迹附加字段",
+        "code": "particleTracks -fields '(U d T)' -format vtk",
+        "explanation": "云中已有U、d、T时，随轨迹写速度、粒径和温度，便于沿路径着色分析。"
+      },
+      {
+        "title": "采用另一云的轨迹方案",
+        "code": "particleTracks -dict constant/particleTrackProperties-spray -region gas -time '0.1:1'",
+        "explanation": "替代字典指定喷雾云；从gas区域读取粒子，生成该云在指定时段内的轨迹。"
+      }
+    ]
+  },
+  "steadyParticleTracks": {
+    "summary": "按稳态粒子云记录的 age 将路径点排序并导出轨迹。",
+    "prerequisites": "已有稳态云保存的轨迹采样、origId/origProc和age；constant/particleTrackDict定义cloud与fields。",
+    "examples": [
+      {
+        "title": "导出最终稳态轨迹",
+        "code": "steadyParticleTracks -latestTime",
+        "explanation": "对最新时间内同一粒子的路径样本按age排序，生成VTK/该时间/particleTracks.vtk。"
+      },
+      {
+        "title": "处理指定计算状态",
+        "code": "steadyParticleTracks -time 100",
+        "explanation": "在已保存时间100中重建轨迹，适合比较不同稳态迭代阶段的粒子运动。"
+      },
+      {
+        "title": "使用另一云配置",
+        "code": "steadyParticleTracks -dict constant/particleTrackDict-coal -latestTime",
+        "explanation": "替代字典指定coal云及输出字段；输出该云的路径和粒径、温度等属性。"
+      },
+      {
+        "title": "只导出需要的轨迹属性",
+        "code": "foamDictionary constant/particleTrackDict -entry fields -set '(U d)'\nsteadyParticleTracks -latestTime",
+        "explanation": "fields设为U、d后，几何轨迹保持相同，只附带速度和直径数据，减少输出体积。"
+      },
+      {
+        "title": "多区域中的粒子轨迹",
+        "code": "steadyParticleTracks -region gas -latestTime -verbose",
+        "explanation": "从gas区域读取云，并显示更详细的读取和写出信息，便于核对轨迹数量与输出位置。"
+      }
+    ]
+  },
+  "lumpedPointForces": {
+    "summary": "从压力场提取 lumped-point 运动区域的合力和力矩。",
+    "prerequisites": "案例采用lumpedPoint边界及运动描述，所选时间已有p；压力积分区域与参考点设置完整。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "提取最终载荷",
+        "code": "lumpedPointForces -latestTime",
+        "explanation": "读取最新压力，按集中点控制区计算合力、力矩并打印，适合核对结构输入载荷。"
+      },
+      {
+        "title": "输出载荷可视化",
+        "code": "lumpedPointForces -latestTime -vtk",
+        "explanation": "额外生成力和力矩的VTP几何及文件序列，便于查看各控制点的载荷方向。"
+      },
+      {
+        "title": "提取整个载荷阶段",
+        "code": "lumpedPointForces -time '0.1:1' -vtk",
+        "explanation": "对区间内已有时刻计算，形成载荷随时间变化的可视化序列。"
+      },
+      {
+        "title": "只处理指定流体区域",
+        "code": "lumpedPointForces -region fluid -latestTime -vtk",
+        "explanation": "多区域案例中从fluid的p与耦合边界提取载荷，结果对应该区域的控制点。"
+      },
+      {
+        "title": "并行场的载荷积分",
+        "code": "mpirun -np 4 lumpedPointForces -parallel -latestTime -vtk",
+        "explanation": "已有4分区且lumped-point设置一致；归集各分区压力贡献，得到全局控制区合力和力矩。"
+      }
+    ]
+  },
+  "lumpedPointMovement": {
+    "summary": "用响应表预览集中点运动，或测试外部耦合响应。",
+    "prerequisites": "已有lumpedPoint运动配置及responseFile响应表；带网格预览还需要对应耦合边界。",
+    "examples": [
+      {
+        "title": "只预览响应点运动",
+        "code": "lumpedPointMovement response.dat -dry-run",
+        "explanation": "读取响应表并输出集中点状态VTP序列，-dry-run可在没有体网格时检查运动输入。"
+      },
+      {
+        "title": "预览边界随控制点变形",
+        "code": "lumpedPointMovement response.dat",
+        "explanation": "已有耦合网格时同时写控制点状态和边界几何序列，查看结构响应如何传到表面。"
+      },
+      {
+        "title": "只查看前20个状态",
+        "code": "lumpedPointMovement response.dat -max 20",
+        "explanation": "限制最多20个输出，适合先检查较长响应表的起始阶段。"
+      },
+      {
+        "title": "抽样查看长时间序列",
+        "code": "lumpedPointMovement response.dat -span 5 -max 100",
+        "explanation": "每隔5个表项取一个，最多输出100帧，减少预览文件数量。"
+      },
+      {
+        "title": "缩小运动幅度",
+        "code": "lumpedPointMovement response.dat -scale 0.5 -visual-length 0.1",
+        "explanation": "相对初始状态把运动幅度缩到一半，同时设控制平面显示长度0.1，便于分辨运动方向与局部转角。"
+      }
+    ]
+  },
+  "lumpedPointZones": {
+    "summary": "显示集中点压力积分区域及插值权重关系。",
+    "prerequisites": "已有lumpedPoint运动和边界配置；完整模式需要原始网格。",
+    "examples": [
+      {
+        "title": "检查初始控制点",
+        "code": "lumpedPointZones -dry-run",
+        "explanation": "只读取初始集中点状态并写state.vtp，可先检查参考位置与转角设置。"
+      },
+      {
+        "title": "显示积分区域与插值关系",
+        "code": "lumpedPointZones",
+        "explanation": "生成state.vtp和lumpedPointZones.vtp，并报告每个控制点对应面积，检查边界分段。"
+      },
+      {
+        "title": "仅查看区域分组",
+        "code": "lumpedPointZones -no-interpolate",
+        "explanation": "保留压力积分区域显示，关闭插值器计算和显示，让区域归属更容易观察。"
+      },
+      {
+        "title": "调整控制平面显示大小",
+        "code": "lumpedPointZones -visual-length 0.05",
+        "explanation": "将用于显示方向的三角平面长度设为0.05个几何长度单位，避免小模型被标记遮挡。"
+      },
+      {
+        "title": "检查某一区域并显示过程",
+        "code": "lumpedPointZones -region fluid -verbose",
+        "explanation": "只处理fluid耦合边界，输出更详细的区域和控制点信息，便于核对多区域设置。"
+      }
+    ]
+  },
+  "createROMfields": {
+    "summary": "根据已训练的降阶模型数据重建指定时刻的场。",
+    "prerequisites": "已有网格、system/ROMfieldsDict、相应模态与系数数据；目标时间目录需要满足所选ROM模型的读取要求。",
+    "examples": [
+      {
+        "title": "按默认ROM字典重建",
+        "code": "createROMfields",
+        "explanation": "读取ROMfieldsDict选择模型，使用现有降阶数据创建并写字段，省去重新求解完整CFD方程。"
+      },
+      {
+        "title": "只重建最新已选时刻",
+        "code": "createROMfields -latestTime",
+        "explanation": "选择最新可用时间，根据模态与时间系数生成该状态的重建场。"
+      },
+      {
+        "title": "重建一段时间序列",
+        "code": "createROMfields -time '0.1:1'",
+        "explanation": "对该区间内可选择的已有时间目录重建，适合与高保真结果逐时刻比较。"
+      },
+      {
+        "title": "比较另一模态截断方案",
+        "code": "createROMfields -dict system/ROMfields-lowRankDict -time '0.1:1'",
+        "explanation": "替代字典已配置较少模态及对应数据；在独立案例比较重建细节与误差。"
+      },
+      {
+        "title": "重建指定区域后导出",
+        "code": "createROMfields -region fluid -latestTime\nfoamToVTK -region fluid -latestTime -fields '(U p)' -name VTK-ROM",
+        "explanation": "ROM模型配置为重建U、p时，先生成fluid区域场，再导出检查模态重建的空间结构。"
+      }
+    ]
+  },
+  "engineCompRatio": {
+    "summary": "用发动机运动网格的最大、最小体积计算几何压缩比。",
+    "prerequisites": "已有发动机网格、engineGeometry和对应engineMesh模型；工具会把网格移动到下止点与上止点位置计算体积。",
+    "examples": [
+      {
+        "title": "计算几何压缩比",
+        "code": "engineCompRatio",
+        "explanation": "日志输出Vmax、Vmin和Vmax/Vmin，可直接核对案例几何压缩比。"
+      },
+      {
+        "title": "比较较大余隙",
+        "code": "foamDictionary constant/engineGeometry -entry clearance -set '[0 1 0 0 0 0 0] 0.002'\nengineCompRatio",
+        "explanation": "在与该余隙一致的发动机几何副本中设置2毫米clearance，再计算上止点体积和压缩比。"
+      },
+      {
+        "title": "比较另一活塞行程",
+        "code": "engineCompRatio -case ./engine-longStroke",
+        "explanation": "该副本的初始网格和stroke参数已成套更新；比较行程变化后的扫气体积与压缩比。"
+      },
+      {
+        "title": "网格重建后重新核查",
+        "code": "blockMesh -case ./engine-refined\nengineCompRatio -case ./engine-refined",
+        "explanation": "engine-refined已配置相同物理几何的细网格；比较数值体积得到的压缩比随分辨率的变化。"
+      },
+      {
+        "title": "运动预演与压缩比配套检查",
+        "code": "moveEngineMesh -case ./engine-preview\nengineCompRatio -case ./engine-reference",
+        "explanation": "两个独立案例使用相同初始几何；前者查看运动全过程，后者由原始参考网格计算止点体积，便于核对活塞运动模型。"
+      }
+    ]
+  },
+  "pdfPlot": {
+    "summary": "对选定概率分布随机采样并输出直方图数据。",
+    "prerequisites": "已有最小OpenFOAM案例及constant/pdfDict；nSamples为抽样数，nIntervals为分箱数，writeData控制是否保存原始样本。",
+    "examples": [
+      {
+        "title": "生成均匀分布样本",
+        "code": "cat > constant/pdfDict <<'EOF'\nFoamFile { version 2.0; format ascii; class dictionary; object pdfDict; }\ntype uniform;\nuniformDistribution { minValue 1e-5; maxValue 5e-5; }\nnSamples 10000;\nnIntervals 40;\nwriteData false;\nEOF\npdfPlot",
+        "explanation": "在10至50微米数值范围内抽样10000次，写pdf目录下的分箱计数图数据。该输出是计数，归一化后才是概率密度。"
+      },
+      {
+        "title": "增加样本数量",
+        "code": "foamDictionary constant/pdfDict -entry nSamples -set 100000\npdfPlot",
+        "explanation": "分箱不变时增加到10万次抽样，比较随机起伏随样本数的降低趋势。"
+      },
+      {
+        "title": "提高分箱分辨率",
+        "code": "foamDictionary constant/pdfDict -entry nIntervals -set 100\npdfPlot",
+        "explanation": "将区间细分为100箱，能显示更细的分布形状，同时每箱样本数减少。"
+      },
+      {
+        "title": "保存每个随机样本",
+        "code": "foamDictionary constant/pdfDict -entry writeData -set true\npdfPlot",
+        "explanation": "额外写pdf/uniform.data，便于自行计算均值、方差或制作归一化概率密度图。"
+      },
+      {
+        "title": "扩大分布范围",
+        "code": "foamDictionary constant/pdfDict -entry uniformDistribution/maxValue -set 1e-4\npdfPlot",
+        "explanation": "上界改为100微米，重新采样并比较均值和宽度，适合检查粒径分布参数。"
+      }
+    ]
+  },
+  "postChannel": {
+    "summary": "把通道湍流统计场沿均匀方向平均为壁法向剖面。",
+    "prerequisites": "已有constant/postChannelDict、运动黏度及UMean、UPrime2Mean、pPrime2Mean；通道分层和对称设置与网格一致。",
+    "examples": [
+      {
+        "title": "处理最新统计结果",
+        "code": "postChannel -latestTime",
+        "explanation": "读取统计场并沿通道均匀方向归并，输出平均速度、雷诺应力等壁法向曲线。"
+      },
+      {
+        "title": "处理指定统计时刻",
+        "code": "postChannel -time 100",
+        "explanation": "时间100已包含完整平均场时，导出该统计积累阶段的通道剖面。"
+      },
+      {
+        "title": "比较多个平均窗口结果",
+        "code": "postChannel -time '100,200,300'",
+        "explanation": "依次处理三个保存时刻，比较平均剖面随统计样本增加是否趋于稳定。"
+      },
+      {
+        "title": "跳过初始未统计场",
+        "code": "postChannel -noZero -time '100:300'",
+        "explanation": "只对所选后期结果进行通道平均，避免把初始场当作统计结果。"
+      },
+      {
+        "title": "先重构统计场再处理",
+        "code": "reconstructPar -latestTime -fields '(UMean UPrime2Mean pPrime2Mean)'\npostChannel -latestTime",
+        "explanation": "postChannel为串行工具；先从分区结果重构它实际需要的三个统计场，再生成全通道曲线。"
+      }
+    ]
+  },
+  "profilingSummary": {
+    "summary": "汇总各处理器的性能剖析记录。",
+    "prerequisites": "计算时已启用并写出profiling数据；工具读取对应时间中的记录，汇总调用数、耗时及可用内存信息。",
+    "examples": [
+      {
+        "title": "汇总最新性能记录",
+        "code": "profilingSummary -latestTime",
+        "explanation": "选最后保存的profiling记录，对各处理器统计做汇总，写入postProcessing/profiling。"
+      },
+      {
+        "title": "汇总指定时刻",
+        "code": "profilingSummary -time 100",
+        "explanation": "时间100已有性能记录时，生成该阶段的摘要，便于定位计算成本。"
+      },
+      {
+        "title": "比较多个阶段",
+        "code": "profilingSummary -time '100,200,300'",
+        "explanation": "分别汇总三个时刻，比较网格更新、压力求解等模块的耗时变化。"
+      },
+      {
+        "title": "忽略初始阶段",
+        "code": "profilingSummary -time '200:500' -noZero",
+        "explanation": "只整理后期时间段，适合分析进入稳定工作状态后的并行负载。"
+      },
+      {
+        "title": "比较另一并行规模",
+        "code": "profilingSummary -case ./run-16cores -latestTime",
+        "explanation": "run-16cores已保存16核案例的profiling数据；与其他规模的摘要比较最大、平均、最小耗时，检查负载差异。"
+      }
+    ]
+  },
+  "temporalInterpolate": {
+    "summary": "在已有时间之间插值字段，增加可视化时间帧。",
+    "prerequisites": "已有至少两个时间的相同字段，网格拓扑与字段寻址保持相容；插值结果用于时间数据重采样。",
+    "examples": [
+      {
+        "title": "在相邻时刻增加中间帧",
+        "code": "temporalInterpolate -time '0:1' -divisions 1",
+        "explanation": "对所选已有时刻的每个相邻间隔插入1个中间时间，默认使用线性插值。"
+      },
+      {
+        "title": "每个间隔增加三帧",
+        "code": "temporalInterpolate -time '0:1' -divisions 3",
+        "explanation": "原间隔被分成4段，写3个内部时刻，适合让动画变化更连续。"
+      },
+      {
+        "title": "只插值速度与压力",
+        "code": "temporalInterpolate -time '0:1' -fields '(U p)' -divisions 3",
+        "explanation": "只创建U、p的中间数据，减少输出量，其余字段保留原时间分辨率。"
+      },
+      {
+        "title": "采用样条时间插值",
+        "code": "temporalInterpolate -time '0:2' -fields '(T)' -interpolationType spline -divisions 2",
+        "explanation": "存在足够相邻温度快照时用样条方式，每间隔增加2帧；比较温度变化是否出现插值过冲。"
+      },
+      {
+        "title": "插值多区域中的流体数据",
+        "code": "temporalInterpolate -region fluid -time '0.1:0.5' -fields '(U)' -divisions 4",
+        "explanation": "只给fluid速度添加时间帧，再用相同区域导出动画，保持其他区域数据不变。"
+      }
+    ]
+  },
+  "noise": {
+    "summary": "对压力时间信号或表面压力数据做频谱与声压级分析。",
+    "prerequisites": "system/noiseDict已选择模型、输入文件、列或表面格式，以及采样和窗口设置；输入压力单位与rhoRef约定匹配。",
+    "examples": [
+      {
+        "title": "执行默认噪声分析",
+        "code": "noise",
+        "explanation": "读取noiseDict和压力数据，计算模型支持的频谱、功率谱或声压级，写到配置的输出位置。"
+      },
+      {
+        "title": "选择另一测点方案",
+        "code": "noise -dict system/noise-probe2Dict",
+        "explanation": "替代字典指定第二测点数据和相同处理设置，便于比较不同位置的频谱峰值。"
+      },
+      {
+        "title": "增加FFT采样长度",
+        "code": "foamDictionary system/noiseDict -entry N -set 2048\nnoise",
+        "explanation": "N设为2048，输入数据须足以覆盖窗口；在采样频率固定时，较长窗口提高频率分辨率。"
+      },
+      {
+        "title": "只分析指定频段",
+        "code": "foamDictionary system/noiseDict -entry minFreq -set 100\nfoamDictionary system/noiseDict -entry maxFreq -set 2000\nnoise",
+        "explanation": "将关注频率设为100至2000Hz，检查该范围内的谱峰；上界应处于输入采样可解析范围。"
+      },
+      {
+        "title": "比较A计权声压级",
+        "code": "foamDictionary system/noiseDict -entry SPLweighting -set dBA\nnoise",
+        "explanation": "在其他设置不变时采用A计权，得到按听觉频率响应加权的声压级，适合与未计权dB结果比较。"
+      }
+    ]
+  },
+  "computeSensitivities": {
+    "summary": "利用已有原始场与伴随场计算优化目标对设计变量的灵敏度。",
+    "prerequisites": "已有完整optimisationDict、优化管理器、目标函数、设计变量，以及相同状态的原始和伴随解。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "计算当前设计灵敏度",
+        "code": "computeSensitivities",
+        "explanation": "读取优化设置，更新目标函数并计算相应设计变量的灵敏度，写出配置的结果场或设计导数。"
+      },
+      {
+        "title": "使用最新收敛状态",
+        "code": "foamDictionary system/controlDict -entry startFrom -set latestTime\ncomputeSensitivities",
+        "explanation": "将读取状态设为最新结果；该时刻需有与目标匹配的原始和伴随场。"
+      },
+      {
+        "title": "核对指定设计迭代",
+        "code": "foamDictionary system/controlDict -entry startFrom -set startTime\nfoamDictionary system/controlDict -entry startTime -set 20\ncomputeSensitivities",
+        "explanation": "时间20保存了完整设计状态时，重算该状态的目标和灵敏度，便于对照设计更新记录。"
+      },
+      {
+        "title": "并行计算设计导数",
+        "code": "mpirun -np 4 computeSensitivities -parallel",
+        "explanation": "已有4分区原始和伴随解，按同一优化定义汇集各分区贡献，输出对应设计导数。"
+      },
+      {
+        "title": "比较另一目标函数",
+        "code": "computeSensitivities -case ./dragObjective\ncomputeSensitivities -case ./pressureLossObjective",
+        "explanation": "两案例各自已有对应目标的伴随解和配置；分别输出阻力目标与压降目标的灵敏度，比较设计区域的贡献差异。"
+      }
+    ]
+  },
+  "cumulativeDisplacement": {
+    "summary": "计算各时刻网格点相对 constant 参考网格的位移及法向分量。",
+    "prerequisites": "constant保存初始points，各结果时刻点编号和点数与其相容；适合无重编号、无拓扑改变的形变序列。 并行示例采用 4 个子域，分区设置与进程数一致。",
+    "examples": [
+      {
+        "title": "计算最终几何变化",
+        "code": "cumulativeDisplacement -latestTime",
+        "explanation": "生成点向量场displacement及边界点法向位移normalDisplacement，以constant网格为参考。"
+      },
+      {
+        "title": "处理整个形变阶段",
+        "code": "cumulativeDisplacement -time '0.1:1'",
+        "explanation": "对区间内每个已有网格状态计算参考位移，便于观察变形如何随时间积累。"
+      },
+      {
+        "title": "只处理某个区域",
+        "code": "cumulativeDisplacement -region solid -latestTime",
+        "explanation": "对solid区域网格计算位移，适合多区域中的结构形变检查。"
+      },
+      {
+        "title": "计算分区网格的位移",
+        "code": "mpirun -np 4 cumulativeDisplacement -parallel -latestTime",
+        "explanation": "已有4分区且各时间点寻址一致；在分区上计算并同步边界点法向信息。"
+      },
+      {
+        "title": "导出变形场",
+        "code": "cumulativeDisplacement -latestTime\nfoamToVTK -latestTime -fields '(displacement normalDisplacement)' -name VTK-displacement",
+        "explanation": "将生成的点场与网格一起导出，用法向位移检查表面局部鼓起或收缩，用向量场查看整体方向。"
+      }
+    ]
+  },
+  "adiabaticFlameT": {
+    "summary": "按给定燃料和初温扫描当量比，计算绝热火焰温度。",
+    "prerequisites": "读取位置参数给出的独立控制文件；P以Pa、T0以K填写，n/m为烃分子中的C/H原子数，fuel必须匹配安装版thermoData物种键。",
+    "examples": [
+      {
+        "title": "创建甲烷基准输入",
+        "code": "cat > flame-300K.in <<'EOF'\nP 100000;\nT0 300;\nfuel CH4___ANHARMONIC;\nn 1;\nm 4;\nEOF\nadiabaticFlameT flame-300K.in",
+        "explanation": "采用v2512热物性库实际存在的甲烷键，初温300K、压力1bar；程序按源码扫描当量比0.01至3，输出phi、混合分数和Tad。"
+      },
+      {
+        "title": "比较反应物预热",
+        "code": "cp flame-300K.in flame-600K.in\nfoamDictionary flame-600K.in -entry T0 -set 600\nadiabaticFlameT flame-600K.in",
+        "explanation": "只把初温提高到600K，比较同一当量比下的Tad；其余燃料与热物性输入保持相同。"
+      },
+      {
+        "title": "切换为乙烷",
+        "code": "cp flame-300K.in flame-ethane.in\nfoamDictionary flame-ethane.in -entry fuel -set C2H6\nfoamDictionary flame-ethane.in -entry n -set 2\nfoamDictionary flame-ethane.in -entry m -set 6\nadiabaticFlameT flame-ethane.in",
+        "explanation": "同时修改物种名称和C/H原子数，工具由n、m重新计算理论需氧量，输出乙烷的当量比扫描。"
+      },
+      {
+        "title": "给出另一压力条件",
+        "code": "cp flame-300K.in flame-5bar.in\nfoamDictionary flame-5bar.in -entry P -set 500000\nadiabaticFlameT flame-5bar.in",
+        "explanation": "压力改为5bar；该工具采用给定产物组合的焓平衡，与包含解离的平衡温度模型区别在产物处理方式。"
+      },
+      {
+        "title": "批量比较预热温度",
+        "code": "for tempK in 300 450 600; do\n    cp flame-300K.in \"flame-${tempK}K.in\"\n    foamDictionary \"flame-${tempK}K.in\" -entry T0 -set \"$tempK\"\n    adiabaticFlameT \"flame-${tempK}K.in\" > \"flame-${tempK}K.out\"\ndone",
+        "explanation": "建立三份独立输入并各自扫描当量比，输出可用于绘制Tad–phi曲线族，比较预热对整个燃烧范围的影响。"
+      }
+    ]
+  },
+  "chemkinToFoam": {
+    "summary": "把 CHEMKIN 机理、热力学和输运数据转换成 OpenFOAM 字典。",
+    "prerequisites": "准备同一机理对应的CHEMKIN反应文件、热力学文件和输运文件；五个位置参数最后两项是输出化学与热物性字典。",
+    "examples": [
+      {
+        "title": "转换一套完整机理",
+        "code": "chemkinToFoam chem.inp therm.dat tran.dat reactions thermodynamics",
+        "explanation": "前三个文件提供反应、JANAF热物性和输运信息，结果写为reactions与thermodynamics。"
+      },
+      {
+        "title": "直接放入案例constant目录",
+        "code": "mkdir -p constant\nchemkinToFoam mechanism/chem.inp mechanism/therm.dat mechanism/tran.dat constant/reactions constant/thermo.compressibleGas",
+        "explanation": "集中从mechanism读取输入，生成案例中可引用的两个字典；thermophysicalProperties应指向相应文件。"
+      },
+      {
+        "title": "读取新版热力学格式",
+        "code": "chemkinToFoam -newFormat chem.inp therm-new.dat tran.dat reactions-new thermodynamics-new",
+        "explanation": "热力学文件采用该解析器支持的newFormat时启用选项，输出使用不同文件名便于比较。"
+      },
+      {
+        "title": "转换后检查物种清单",
+        "code": "chemkinToFoam chem.inp therm.dat tran.dat constant/reactions constant/thermo.compressibleGas\nfoamDictionary constant/reactions -entry species -value",
+        "explanation": "列出转换后注册的物种，核对后续组分初始场的名称、大小写和机理中的物种是否一致。"
+      },
+      {
+        "title": "比较简化机理与详细机理",
+        "code": "mkdir -p converted/detailed converted/reduced\nchemkinToFoam detailed/chem.inp detailed/therm.dat detailed/tran.dat converted/detailed/reactions converted/detailed/thermo\nchemkinToFoam reduced/chem.inp reduced/therm.dat reduced/tran.dat converted/reduced/reactions converted/reduced/thermo",
+        "explanation": "两套机理各用自身配套热物性、输运文件，输出分开保存，再比较物种数、反应数和目标工况的计算成本。"
+      }
+    ]
+  },
+  "equilibriumCO": {
+    "summary": "输出四个气相解离反应在固定温压下的平衡常数 Kc。",
+    "prerequisites": "v2512源码固定P=1e5Pa、T=3000K，读取constant/thermoData；默认工具输出反应平衡常数，所需物种包括CO2、CO、O2、O、H2O、H2、H、OH、N2。",
+    "examples": [
+      {
+        "title": "准备最小热化学案例",
+        "code": "mkdir -p coCase/constant coCase/system\ncat > coCase/system/controlDict <<'EOF'\nFoamFile { version 2.0; format ascii; class dictionary; object controlDict; }\napplication equilibriumCO;\nstartFrom startTime;\nstartTime 0;\nstopAt endTime;\nendTime 1;\ndeltaT 1;\nwriteControl timeStep;\nwriteInterval 1;\nEOF\ncat > coCase/constant/thermoData <<'EOF'\nFoamFile { version 2.0; format ascii; class dictionary; object thermoData; }\n#includeEtc \"thermoData/thermoData\"\nEOF\nequilibriumCO -case coCase",
+        "explanation": "通过includeEtc引用安装版热物性库，运行后输出4个Kc，依次对应CO2、O2和两条H2O解离反应。"
+      },
+      {
+        "title": "给输出标明反应",
+        "code": "equilibriumCO -case coCase | awk 'BEGIN {split(\"CO2_to_CO O2_to_O H2O_to_H2 H2O_to_H_OH\",r,\" \")} /Kc\\(EQreactions\\)/ {i++; print r[i],$NF}'",
+        "explanation": "把每个Kc与源码中的反应顺序对应，方便制作温度依赖表或检查反向反应关系。"
+      },
+      {
+        "title": "编译2000K的个人版本",
+        "code": "cp -r \"$WM_PROJECT_DIR/applications/utilities/thermophysical/equilibriumCO\" equilibriumCOStudy-src\nsed -i 's/const scalar T = 3000.0;/const scalar T = 2000.0;/' equilibriumCOStudy-src/equilibriumCO.C\nsed -i 's@$(FOAM_APPBIN)/equilibriumCO@$(FOAM_USER_APPBIN)/equilibriumCOStudy@' equilibriumCOStudy-src/Make/files\n(cd equilibriumCOStudy-src && wmake)\nequilibriumCOStudy -case coCase",
+        "explanation": "只修改个人源码副本的温度，编译为新程序名；与基准3000K的4个Kc比较，原安装程序保持原参数。"
+      },
+      {
+        "title": "在个人版本修改压力",
+        "code": "sed -i 's/const scalar P = 1e5;/const scalar P = 1e6;/' equilibriumCOStudy-src/equilibriumCO.C\n(cd equilibriumCOStudy-src && wmake)\nequilibriumCOStudy -case coCase",
+        "explanation": "将个人版本输入压力设为1MPa并重新编译；观察所用理想气体热力学中Kc的压力依赖，和实际平衡组成的压力响应分别讨论。"
+      },
+      {
+        "title": "增加一个反向反应",
+        "code": "sed -i '/for (const thermo& react : EQreactions)/i\\    EQreactions.emplace_back((H2 + 0.5*O2 == H2O));' equilibriumCOStudy-src/equilibriumCO.C\n(cd equilibriumCOStudy-src && wmake)\nequilibriumCOStudy -case coCase",
+        "explanation": "在循环前增加水生成反应，输出变为5个Kc；新增反应与原第三条互为逆反应，可检查相同温压下平衡常数的倒数关系。"
+      }
+    ]
+  },
+  "equilibriumFlameT": {
+    "summary": "扫描燃料当量比和初温，同时计算包含部分产物解离的平衡火焰温度。",
+    "prerequisites": "独立控制文件提供P、fuel、n、m；v2512源码扫描phi=0.6至1.35、初温300至3000K，并考虑CO2与H2O解离。",
+    "examples": [
+      {
+        "title": "计算甲烷的温度扫描",
+        "code": "cat > equilibrium-methane.in <<'EOF'\nP 100000;\nfuel CH4___ANHARMONIC;\nn 1;\nm 4;\nEOF\nequilibriumFlameT equilibrium-methane.in",
+        "explanation": "使用实际存在的甲烷热物性键，输出每个phi和T0下的Tad、Teq、温差及剩余氧摩尔分数。"
+      },
+      {
+        "title": "比较较高压力",
+        "code": "cp equilibrium-methane.in equilibrium-10bar.in\nfoamDictionary equilibrium-10bar.in -entry P -set 1000000\nequilibriumFlameT equilibrium-10bar.in",
+        "explanation": "将压力改为10bar，比较同一phi、T0下产物解离与Teq的变化。"
+      },
+      {
+        "title": "换成丙烷",
+        "code": "cp equilibrium-methane.in equilibrium-propane.in\nfoamDictionary equilibrium-propane.in -entry fuel -set C3H8\nfoamDictionary equilibrium-propane.in -entry n -set 3\nfoamDictionary equilibrium-propane.in -entry m -set 8\nequilibriumFlameT equilibrium-propane.in",
+        "explanation": "燃料键与原子数同时修改，程序重算理论需氧量并输出丙烷扫描结果。"
+      },
+      {
+        "title": "提取300K初温的数据行",
+        "code": "equilibriumFlameT equilibrium-methane.in | awk 'NF==7 && $3==300 {print $1,$4,$5,$6}'",
+        "explanation": "按输出表结构提取phi、Tad、Teq和温差，得到初温300K时的当量比曲线数据。"
+      },
+      {
+        "title": "批量压力扫描",
+        "code": "for pressurePa in 100000 500000 1000000; do\n    cp equilibrium-methane.in \"equilibrium-${pressurePa}.in\"\n    foamDictionary \"equilibrium-${pressurePa}.in\" -entry P -set \"$pressurePa\"\n    equilibriumFlameT \"equilibrium-${pressurePa}.in\" > \"equilibrium-${pressurePa}.out\"\ndone",
+        "explanation": "保持同一燃料和源码扫描范围，在1、5、10bar分别输出完整表，便于比较压力与解离影响。"
+      }
+    ]
+  },
+  "mixtureAdiabaticFlameT": {
+    "summary": "根据给定反应物与产物组成，通过热物性焓关系估算绝热温度。",
+    "prerequisites": "控制文件含P、T0、reactants、products；组分以物种名和权重成对列出，两组权重各自和为1，列表后还需混合物名称。",
+    "examples": [
+      {
+        "title": "建立甲烷空气组成输入",
+        "code": "cat > mixture.in <<'EOF'\nP 100000;\nT0 300;\nreactants (CH4___ANHARMONIC 0.095057 O2 0.190114 N2 0.714829) methaneAir;\nproducts (CO2 0.095057 H2O 0.190114 N2 0.714829) burntGas;\nEOF\nmixtureAdiabaticFlameT mixture.in",
+        "explanation": "列出近化学计量甲烷空气的给定组成，物种键匹配安装热物性库；工具按源码的混合焓组合求出单个温度，输出单位K。"
+      },
+      {
+        "title": "比较反应物预热",
+        "code": "cp mixture.in mixture-hot.in\nfoamDictionary mixture-hot.in -entry T0 -set 600\nmixtureAdiabaticFlameT mixture-hot.in",
+        "explanation": "保留两组组成，把初温改为600K，查看初始焓提高后的计算温度。"
+      },
+      {
+        "title": "在另一压力下计算",
+        "code": "cp mixture.in mixture-5bar.in\nfoamDictionary mixture-5bar.in -entry P -set 500000\nmixtureAdiabaticFlameT mixture-5bar.in",
+        "explanation": "压力改为5bar，输入的产物组成仍固定；适合分析该焓计算对压力参数的响应。"
+      },
+      {
+        "title": "设置过量空气的组成",
+        "code": "cp mixture.in mixture-lean.in\nfoamDictionary mixture-lean.in -entry reactants -set '(CH4___ANHARMONIC 0.0499002 O2 0.1996008 N2 0.7504990) leanReactants'\nfoamDictionary mixture-lean.in -entry products -set '(CO2 0.0499002 H2O 0.0998004 O2 0.0998004 N2 0.7504990) leanProducts'\nmixtureAdiabaticFlameT mixture-lean.in",
+        "explanation": "示例按较稀甲烷空气配比同时调整两组组成，产物保留剩余O2；比较给定组成变化对计算温度的影响。"
+      },
+      {
+        "title": "建立温压参数表",
+        "code": "for pressurePa in 100000 500000; do\n    for tempK in 300 600; do\n        cp mixture.in \"mix-${pressurePa}-${tempK}.in\"\n        foamDictionary \"mix-${pressurePa}-${tempK}.in\" -entry P -set \"$pressurePa\"\n        foamDictionary \"mix-${pressurePa}-${tempK}.in\" -entry T0 -set \"$tempK\"\n        mixtureAdiabaticFlameT \"mix-${pressurePa}-${tempK}.in\"\n    done\ndone",
+        "explanation": "对同一给定组成计算四个温压组合，输出可整理为温度响应表；组成由输入指定，扩展时应同步维护反应物与产物配比。"
+      }
+    ]
+  }
+}

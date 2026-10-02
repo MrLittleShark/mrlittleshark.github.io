@@ -1,11 +1,34 @@
 ---
-title: "moveMesh · 输入包括网格运动方程及边界条件"
+title: "moveMesh · 用 motionSolver 推进网格运动"
 layout: reference
-description: "输入包括网格运动方程及边界条件。"
+description: "用 motionSolver 推进网格运动。"
 cms_slug: "command-movemesh"
 ---
 
-<p>输入包括网格运动方程及边界条件。</p><h2>用法</h2><pre><code class="language-bash">moveMesh -deltaT 0.01 -endTime 1</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">moveMesh -deltaT 0.01 -endTime 1 -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-deltaT &lt;time&gt;</td><td>Override deltaT (eg, for accelerated motion)</td></tr><tr><td>-endTime &lt;time&gt;</td><td>Override endTime (eg, for shorter tests) Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: moveMesh [OPTIONS]
+<p>用 motionSolver 推进网格运动。</p><h2>开始前</h2>
+<p>已有 motionSolver 所需字典和运动场；controlDict 给出基础时间设置。 并行示例采用 4 个子域，分区设置与进程数一致。</p>
+<h2>示例 1：按案例设置运动</h2>
+<pre><code class="language-bash">moveMesh
+</code></pre>
+<p>读取运动求解器，逐步计算顶点位置并写结果，适合独立检查给定位移或速度边界。</p>
+<h2>示例 2：快速检查短时间运动</h2>
+<pre><code class="language-bash">moveMesh -endTime 0.02
+</code></pre>
+<p>-endTime 临时覆盖终止时间，在已知起始时间小于0.02的案例中只预演初始阶段。</p>
+<h2>示例 3：采用更细时间步</h2>
+<pre><code class="language-bash">moveMesh -deltaT 0.001 -endTime 0.1
+</code></pre>
+<p>每步0.001秒，运行至0.1秒；更密的几何状态便于观察运动边界与内部网格响应。</p>
+<h2>示例 4：比较较大的运动步长</h2>
+<pre><code class="language-bash">moveMesh -case ./motion-coarseStep -deltaT 0.01 -endTime 0.1
+</code></pre>
+<p>在同一初态的独立副本上把时间步增大到0.01，比较最终顶点位置和中间网格质量。</p>
+<h2>示例 5：并行推进运动</h2>
+<pre><code class="language-bash">decomposePar
+mpirun -np 4 moveMesh -parallel -deltaT 0.001 -endTime 0.1
+</code></pre>
+<p>已有4分区设置，运动求解在各分区执行并交换边界数据，输出 processor 目录下的运动网格。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-deltaT &lt;time&gt;</code></td><td>Override deltaT (eg, for accelerated motion)</td></tr><tr><td><code>-endTime &lt;time&gt;</code></td><td>Override endTime (eg, for shorter tests) Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: moveMesh [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

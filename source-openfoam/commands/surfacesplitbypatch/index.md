@@ -5,7 +5,29 @@ description: "-patches 指定待拆分区域。"
 cms_slug: "command-surfacesplitbypatch"
 ---
 
-<p>-patches 指定待拆分区域。</p><h2>用法</h2><pre><code class="language-bash">surfaceSplitByPatch body.stl</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">surfaceSplitByPatch body.stl -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceSplitByPatch [OPTIONS] &lt;input&gt;
+<p>-patches 指定待拆分区域。</p><h2>开始前</h2>
+<p>准备带多个表面区域的 STL、OBJ 等文件；先检查区域名称，再设置选取列表。</p>
+<h2>示例 1：按全部区域拆分</h2>
+<pre><code class="language-bash">surfaceSplitByPatch assembly.stl
+</code></pre>
+<p>为各表面区域写出独立文件，终端显示实际输出文件名。适合将装配体的入口、出口和壁面分开处理。</p>
+<h2>示例 2：仅导出指定区域</h2>
+<pre><code class="language-bash">surfaceSplitByPatch assembly.stl -patches '(inlet outlet)'
+</code></pre>
+<p>只为 inlet 和 outlet 写出文件，保留原区域内的三角面。可单独检查端面位置和封口情况。</p>
+<h2>示例 3：使用名称模式选取</h2>
+<pre><code class="language-bash">surfaceSplitByPatch assembly.obj -patches '("blade.*")'
+</code></pre>
+<p>匹配 blade 开头的区域，分别导出各叶片。正则表达式应放在列表中并加引号。</p>
+<h2>示例 4：排除辅助区域</h2>
+<pre><code class="language-bash">surfaceSplitByPatch assembly.stl -exclude-patches '(construction capTemporary)'
+</code></pre>
+<p>拆分其余区域，同时跳过施工辅助面和临时封口。适合整理准备交给其他软件的几何文件。</p>
+<h2>示例 5：组合选取和排除</h2>
+<pre><code class="language-bash">surfaceSplitByPatch assembly.stl -patches '("wall.*")' -exclude-patches '(wallTemporary)'
+</code></pre>
+<p>导出 wall 开头的目标表面并排除临时壁面。对生成文件逐个运行 surfaceCheck，可单独定位某一区域的开放边。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceSplitByPatch [OPTIONS] &lt;input&gt;
 Arguments:
   &lt;input&gt;           The input surface file
 Options:

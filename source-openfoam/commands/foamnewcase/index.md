@@ -5,7 +5,31 @@ description: "模板来自用户或站点配置。-list 列出可用模板；创
 cms_slug: "command-foamnewcase"
 ---
 
-<p>模板来自用户或站点配置。-list 列出可用模板；创建命令为 foamNewCase -app simpleFoam -case newCase。</p><h2>用法</h2><pre><code class="language-bash">foamNewCase -list</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">foamNewCase -list -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-app NAME</td><td>specify the application to use</td></tr><tr><td>-case DIR</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-list</td><td>列出可用的预配置函数。</td></tr><tr><td>-with-api=NUM</td><td>specify alternative api to use (default: \$FOAM_API)</td></tr><tr><td>-version VER</td><td>[obsolete]</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamNewCase [OPTION]
+<p>模板来自用户或站点配置。-list 列出可用模板；创建命令为 foamNewCase -app simpleFoam -case newCase。</p><h2>开始前</h2>
+<p>需要 rsync 和用户/站点应用模板。先执行 mkdir -p "$HOME/.OpenFOAM/appTemplates/2512"，再将完整初始算例复制为该目录下的 cavityStarter，保证其含 constant 和 system。</p>
+<h2>示例 1：查看可用模板</h2>
+<pre><code class="language-bash">foamNewCase -list
+</code></pre>
+<p>列出用户和站点 appTemplates 中具有算例结构的模板名。</p>
+<h2>示例 2：创建指定算例</h2>
+<pre><code class="language-bash">foamNewCase -app cavityStarter -case case-new
+</code></pre>
+<p>目标不存在时自动建立，rsync 同步模板并建立 postPro 目录。</p>
+<h2>示例 3：在空目录生成</h2>
+<pre><code class="language-bash">mkdir -p case-local
+cd case-local
+foamNewCase -app cavityStarter
+</code></pre>
+<p>省略 -case 时使用当前目录。</p>
+<h2>示例 4：显式指定 API</h2>
+<pre><code class="language-bash">foamNewCase -with-api=2512 -app cavityStarter -case case-api2512
+</code></pre>
+<p>优先匹配 2512 目录内的同名模板，再查通用模板。</p>
+<h2>示例 5：建立三组试验</h2>
+<pre><code class="language-bash">for tag in coarse medium fine; do foamNewCase -app cavityStarter -case "grid-$tag"; done
+</code></pre>
+<p>从同一模板建立不同网格试验，后续分别调整 blockMeshDict。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-app NAME</code></td><td>specify the application to use</td></tr><tr><td><code>-case DIR</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-list</code></td><td>列出可用的预配置函数。</td></tr><tr><td><code>-with-api=NUM</code></td><td>specify alternative api to use (default: \$FOAM_API)</td></tr><tr><td><code>-version VER</code></td><td>[obsolete]</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamNewCase [OPTION]
 options:
   -app NAME         specify the application to use
   -case DIR         specify alternative case directory, default is the cwd

@@ -13,7 +13,7 @@
 
 左侧依次是积累和对流，右侧是扩散和源项。把面积分写成各个面上的求和后，问题就变为：怎样求出面上的速度、标量值和梯度？
 
-<figure class="wolf-figure"><img src="/assets/wolf/wolf-fvm-convective-face-flux.png" alt="从体积分到离散面通量" loading="lazy"><figcaption><strong>从体积分到离散面通量</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module6.pdf，p. 11 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>
+<figure class="wolf-figure"><img src="/assets/wolf/wolf-fvm-convective-face-flux.png" alt="从体积分到离散面通量" loading="lazy"><figcaption><strong>从体积分到离散面通量</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module6.pdf，p. 11</small></figcaption></figure>
 
 相邻单元共用的面只需计算一份通量，在两个单元中分别取正、负号。这样相加时内部面的贡献抵消，整个区域的变化由外边界通量和源项决定。
 
@@ -26,7 +26,7 @@ OpenFOAM 通常在单元中心保存场值，计算对流和扩散时还需要�
 - **受限格式**根据局部变化调整高阶重构，在精度与过冲控制之间作取舍。
 - **非正交修正**处理面法向与相邻单元中心连线不一致时的扩散通量。
 
-<figure class="wolf-figure"><img src="/assets/wolf/wolf-advection-profile-errors.png" alt="一维输运中的格式误差曲线" loading="lazy"><figcaption><strong>一维输运中的格式误差曲线</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module6.pdf，p. 157 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure>
+<figure class="wolf-figure"><img src="/assets/wolf/wolf-advection-profile-errors.png" alt="一维输运中的格式误差曲线" loading="lazy"><figcaption><strong>一维输运中的格式误差曲线</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module6.pdf，p. 157</small></figcaption></figure>
 
 图中的差异可通过[对流离散课程](/read/?slug=advection-schemes-boundedness)配套算例比较。先使用相同网格和时间步，只改变格式，再查看剖面、极值和总积分。
 

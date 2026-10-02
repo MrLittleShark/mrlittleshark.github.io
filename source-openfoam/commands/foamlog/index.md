@@ -5,15 +5,34 @@ description: "从求解日志提取残差、迭代次数和其他监测量。"
 cms_slug: "command-foamlog"
 ---
 
-<p>从求解日志提取残差、迭代次数和其他监测量。</p><h2>提取残差</h2>
-<pre><code class="language-bash">foamLog log.simpleFoam
+<p>从求解日志提取残差、迭代次数和其他监测量。</p><h2>开始前</h2>
+<p>加载 v2512 环境，使用个人算例副本 caseA。并行示例先配置 decomposeParDict 并完成 decomposePar，程序和字典须匹配。 先保存求解器输出为 caseA/log.icoFoam。在副本内提取，结果默认写入 logs 目录。</p>
+<h2>示例 1：提取残差曲线</h2>
+<pre><code class="language-bash">cd caseA
+foamLog log.icoFoam
 </code></pre>
-<p>在 <code>logs</code> 目录生成数据文件。通常可见 <code>p_0</code>、<code>Ux_0</code> 等名称，具体取决于日志实际包含的字段。</p>
-<h2>监控提取结果</h2>
-<pre><code class="language-bash">foamMonitor -l logs/p_0
+<p>生成 logs/&lt;变量&gt;_&lt;子迭代号&gt;，一般包含时间与残差两列。</p>
+<h2>示例 2：先列出可提取量</h2>
+<pre><code class="language-bash">cd caseA
+foamLog -list log.icoFoam
 </code></pre>
-<p><code>-l</code> 使用对数纵轴。残差下降表示方程迭代误差减小，还可同时比较压降、流量等目标量。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-list | -l</td><td>列出可用的预配置函数。</td></tr><tr><td>-n</td><td>create single column files with extracted data only</td></tr><tr><td>-quiet | -q</td><td>quiet operation</td></tr><tr><td>-local | -localDB</td><td>only use the local database file</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamLog [OPTIONS] &lt;log&gt;
+<p>显示可识别变量，不生成提取文件。</p>
+<h2>示例 3：只保留数据列</h2>
+<pre><code class="language-bash">cd caseA
+foamLog -n log.icoFoam
+</code></pre>
+<p>-n 去掉时间列，仅输出每个量的数据值。</p>
+<h2>示例 4：从外部指定算例</h2>
+<pre><code class="language-bash">foamLog -case caseA log.icoFoam
+</code></pre>
+<p>切换到指定算例后提取其日志，输出仍在该算例 logs 中。</p>
+<h2>示例 5：使用自定义提取数据库</h2>
+<pre><code class="language-bash">cd caseA
+cp "$WM_PROJECT_DIR/bin/tools/foamLog.db" foamLog.db
+foamLog -local log.icoFoam
+</code></pre>
+<p>将数据库复制到当前目录，可按“名称/行匹配/取值前缀”规则增加提取项；-local 只用本地数据库。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-list | -l</code></td><td>列出可用的预配置函数。</td></tr><tr><td><code>-n</code></td><td>create single column files with extracted data only</td></tr><tr><td><code>-quiet | -q</code></td><td>quiet operation</td></tr><tr><td><code>-local | -localDB</code></td><td>only use the local database file</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamLog [OPTIONS] &lt;log&gt;
   -case &lt;dir&gt;           specify alternate case directory, default is the cwd
   -list | -l            lists but does not extract
   -n                    create single column files with extracted data only

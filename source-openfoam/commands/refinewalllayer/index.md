@@ -5,7 +5,30 @@ description: "输入比例指定边的细分位置。"
 cms_slug: "command-refinewalllayer"
 ---
 
-<p>输入比例指定边的细分位置。</p><h2>用法</h2><pre><code class="language-bash">refineWallLayer &#x27;(walls)&#x27; 0.3 -overwrite</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">refineWallLayer &#x27;(walls)&#x27; 0.3 -overwrite -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-useSet &lt;name&gt;</td><td>Restrict cells to refine based on specified cellSet name</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: refineWallLayer [OPTIONS] &lt;patches&gt; &lt;edgeFraction&gt;
+<p>输入比例指定边的细分位置。</p><h2>开始前</h2>
+<p>已有包含指定壁面 patch 的网格；edgeFraction 决定沿壁面相连边切分的位置，取 0–1 之间的比例。</p>
+<h2>示例 1：细化一个壁面附近的单元</h2>
+<pre><code class="language-bash">refineWallLayer '(walls)' 0.5
+</code></pre>
+<p>对 walls 相邻的单元按一半比例切分，形成更细的近壁层。输出后检查壁面法向的单元尺寸。</p>
+<h2>示例 2：获得更薄的第一层</h2>
+<pre><code class="language-bash">refineWallLayer '(walls)' 0.2
+</code></pre>
+<p>将壁面附近切分比例设为 0.2，得到较薄的靠壁部分。与 0.5 的独立副本比较第一层高度和网格质量。</p>
+<h2>示例 3：同时选择多组壁面</h2>
+<pre><code class="language-bash">refineWallLayer '(upperWall lowerWall)' 0.3
+</code></pre>
+<p>同时处理上下壁面。两侧边界名称应与 boundary 文件一致，检查狭窄区域是否产生互相影响的切分。</p>
+<h2>示例 4：把处理限制到单元集合</h2>
+<pre><code class="language-bash">refineWallLayer '(walls)' 0.25 -useSet nearWallCells
+</code></pre>
+<p>仅在指定壁面附近且属于 nearWallCells 的单元中进行操作。适合局部壁面加密，保留其余区域原有分辨率。</p>
+<h2>示例 5：在副本更新并检查</h2>
+<pre><code class="language-bash">refineWallLayer '(walls)' 0.2 -overwrite
+checkMesh -constant -allGeometry
+</code></pre>
+<p>更新原网格后检查近壁单元的长宽比、体积与非正交性。第一层高度仍需结合雷诺数、壁面模型及目标 y⁺ 估算。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-overwrite</code></td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-useSet &lt;name&gt;</code></td><td>Restrict cells to refine based on specified cellSet name</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: refineWallLayer [OPTIONS] &lt;patches&gt; &lt;edgeFraction&gt;
 Arguments:
   &lt;patches&gt;         The list of patch names or regex - Eg, &#x27;(top &quot;Wall.&quot;)&#x27;
   &lt;edgeFraction&gt;    The size of the refined cells as a fraction of the

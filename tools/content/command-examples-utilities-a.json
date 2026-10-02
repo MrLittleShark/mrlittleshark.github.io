@@ -1,0 +1,2612 @@
+{
+  "foamHelp": {
+    "prerequisites": "已加载 v2512；在含网格及所查字段的算例中运行。boundary、solver 等类别放在选项之前；在线文档查询需要可访问文档索引。",
+    "examples": [
+      {
+        "title": "查询速度可用边界",
+        "code": "foamHelp boundary -field U",
+        "explanation": "读取速度场 U 的类型，列出可用于该矢量场的边界条件，供填写 0/U 时选择。"
+      },
+      {
+        "title": "查询压力可用边界",
+        "code": "foamHelp boundary -field p",
+        "explanation": "已有 0/p 时查询标量边界；所得类型列表与 U 的矢量边界列表可对照阅读。"
+      },
+      {
+        "title": "筛选固定值速度边界",
+        "code": "foamHelp boundary -field U -fixedValue",
+        "explanation": "在速度边界中筛选定值类实现，适合寻找给定入口速度及其派生条件。"
+      },
+      {
+        "title": "查询网格约束类型",
+        "code": "foamHelp boundary -constraint",
+        "explanation": "显示约束类边界信息，用于区分 empty、symmetry 等几何约束与普通场边界。"
+      },
+      {
+        "title": "按当前算例查询求解器",
+        "code": "foamHelp solver -read",
+        "explanation": "从 system/controlDict 读取 application，再查询对应求解器文档；先确认该条目已设置为所用求解器。"
+      }
+    ]
+  },
+  "foamDictionary": {
+    "prerequisites": "输入为 OpenFOAM 字典；修改示例在算例副本中执行。点号可定位嵌套条目。",
+    "examples": [
+      {
+        "title": "读取停止时刻",
+        "code": "foamDictionary system/controlDict -entry endTime -value",
+        "explanation": "只输出 endTime 的值，便于确认当前计算何时停止。"
+      },
+      {
+        "title": "列出求解器设置",
+        "code": "foamDictionary system/fvSolution -entry solvers -keywords",
+        "explanation": "列出 solvers 子字典内的键，如 p、pFinal、U；由此确认哪些字段有线性求解设置。"
+      },
+      {
+        "title": "修改时间步",
+        "code": "foamDictionary system/controlDict -entry deltaT -set 0.001",
+        "explanation": "把 deltaT 改为0.001并保存原文件。瞬态计算中该值通常表示秒；实际步长还受自适应设置影响。"
+      },
+      {
+        "title": "修改嵌套入口值",
+        "code": "foamDictionary 0/U -entry boundaryField.inlet.value -set 'uniform (0.2 0 0)'",
+        "explanation": "已有 inlet/value 时将其改为沿x方向0.2m/s；入口类型须使用 value 条目。"
+      },
+      {
+        "title": "展开包含文件并比较修改",
+        "code": "foamDictionary system/controlDict -expand > controlDict.expanded\nfoamDictionary system/controlDict -diff system/controlDict.original",
+        "explanation": "先生成展开宏和包含后的文本，再与事先保存的原字典比较。展开文件另存，不覆盖工作字典。"
+      }
+    ]
+  },
+  "foamHasLibrary": {
+    "prerequisites": "共享库位于当前 OpenFOAM 或用户库搜索路径。工具用退出状态表示装载是否成功，适合编译后的依赖检查。",
+    "examples": [
+      {
+        "title": "检查有限体积库",
+        "code": "foamHasLibrary libfiniteVolume.so",
+        "explanation": "尝试装载有限体积库；成功退出表示当前环境能够找到并加载它。"
+      },
+      {
+        "title": "同时检查两个依赖",
+        "code": "foamHasLibrary libfiniteVolume.so libmeshTools.so",
+        "explanation": "默认要求两个库都能加载，适合检查依赖有限体积与网格工具的自定义程序。"
+      },
+      {
+        "title": "显示加载细节",
+        "code": "foamHasLibrary -detail -verbose libsampling.so",
+        "explanation": "查看采样库的详细装载信息，帮助定位库文件或其依赖缺失。"
+      },
+      {
+        "title": "检查任一候选实现",
+        "code": "foamHasLibrary -or libcustomModelA.so libcustomModelB.so",
+        "explanation": "已编译两个候选插件时，任一个可加载即可成功；两个名称都仍会检查。"
+      },
+      {
+        "title": "在运行前验证自定义边界库",
+        "code": "if foamHasLibrary libfoamLabPulsedInlet.so; then icoFoam; fi",
+        "explanation": "在已配置该边界的算例中，仅在库加载成功后启动求解器。该检查关注装载，边界参数由求解器继续读取。"
+      }
+    ]
+  },
+  "foamListRegions": {
+    "prerequisites": "体区域名称与分类来自 constant/regionProperties；有限面积区域来自 constant/finite-area/regionProperties。",
+    "examples": [
+      {
+        "title": "列出全部体区域",
+        "code": "foamListRegions",
+        "explanation": "读取区域清单并输出各区域名，便于核对多区域目录。"
+      },
+      {
+        "title": "只列流体区域",
+        "code": "foamListRegions fluid",
+        "explanation": "选择名为 fluid 的分类，输出其中的区域，例如 air、water；分类名称以字典实际内容为准。"
+      },
+      {
+        "title": "只列固体区域",
+        "code": "foamListRegions solid",
+        "explanation": "输出 solid 分类下的 heater 等区域，可据此逐个检查固体材料设置。"
+      },
+      {
+        "title": "读取有限面积区域",
+        "code": "foamListRegions -finite-area",
+        "explanation": "切换到有限面积区域清单，用于薄膜、壳体等面积网格的区域管理。"
+      },
+      {
+        "title": "兼容单区域与多区域目录",
+        "code": "foamListRegions -case ../candidateCase -optional -verbose",
+        "explanation": "显式选择算例并显示读取细节；缺少 regionProperties 时允许继续，适合批量检查不同算例。"
+      }
+    ]
+  },
+  "foamUpgradeCyclics": {
+    "prerequisites": "用于迁移采用旧式未拆分 cyclic 的网格与场。先对独立副本预览，再选择需转换的时间和区域。",
+    "examples": [
+      {
+        "title": "预览需要转换的内容",
+        "code": "foamUpgradeCyclics -dry-run",
+        "explanation": "扫描当前算例并报告转换操作，保持文件原样，可先确认受影响边界。"
+      },
+      {
+        "title": "转换初始网格与场",
+        "code": "foamUpgradeCyclics -constant -time 0",
+        "explanation": "在副本中处理 constant 网格与0时刻场，使周期边界拆分关系同步更新。"
+      },
+      {
+        "title": "只更新最新结果",
+        "code": "foamUpgradeCyclics -latestTime",
+        "explanation": "已有较多时间目录时选择最大数值时间目录，更新其周期边界字段。"
+      },
+      {
+        "title": "指定区域迁移",
+        "code": "foamUpgradeCyclics -region air -time 0",
+        "explanation": "处理多区域算例中的 air 网格和初场；其他区域按各自周期配置分别检查。"
+      },
+      {
+        "title": "处理含指令的字典",
+        "code": "foamUpgradeCyclics -enableFunctionEntries -time '0:0.5'",
+        "explanation": "允许展开可信算例中的 include 等指令，并选择0至0.5范围的时间；转换后对照展开后的边界名称。"
+      }
+    ]
+  },
+  "checkFaMesh": {
+    "prerequisites": "已由 makeFaMesh 建立有限面积网格。area-region 指面积网格区域，region 指其所属体网格区域。",
+    "examples": [
+      {
+        "title": "检查默认面积网格",
+        "code": "checkFaMesh",
+        "explanation": "读取默认有限面积网格，报告面、边及几何检查结果。"
+      },
+      {
+        "title": "输出可视化网格",
+        "code": "checkFaMesh -write-vtk",
+        "explanation": "在检查时写出VTP网格，可在ParaView定位异常边或面。"
+      },
+      {
+        "title": "检查指定薄膜区域",
+        "code": "checkFaMesh -area-region film",
+        "explanation": "已有名为film的面积网格时，仅检查它，便于排查多个面积区域中的问题。"
+      },
+      {
+        "title": "检查所有面积区域",
+        "code": "checkFaMesh -allAreas -write-vtk",
+        "explanation": "按有限面积regionProperties逐个检查，并输出各区域可视化文件。"
+      },
+      {
+        "title": "检查已分区网格",
+        "code": "mpirun -np 4 checkFaMesh -parallel -area-region film",
+        "explanation": "前提是4个分区中已有匹配的面积网格；检查并行分区及耦合边连接。"
+      }
+    ]
+  },
+  "makeFaMesh": {
+    "prerequisites": "已有体网格及与其patch匹配的faMeshDefinition；命名面积区域还需对应区域配置。",
+    "examples": [
+      {
+        "title": "先构造但不保存",
+        "code": "makeFaMesh -dry-run",
+        "explanation": "读取定义并尝试构造面积网格，先检查边界选择和连接关系，暂不写网格。"
+      },
+      {
+        "title": "生成默认面积网格",
+        "code": "makeFaMesh",
+        "explanation": "从定义选定的体网格边界面创建有限面积网格，供液膜或壳体模型使用。"
+      },
+      {
+        "title": "使用另一份定义",
+        "code": "makeFaMesh -dict system/faMeshDefinition.test",
+        "explanation": "已准备该完整定义时选择它，适合对照不同patch组合；字典路径由-dict明确指定。"
+      },
+      {
+        "title": "生成命名区域并输出图形",
+        "code": "makeFaMesh -area-region film -write-vtk -write-edges-obj",
+        "explanation": "生成film面积网格，同时导出面与边的可视化数据，检查薄膜边界是否闭合。"
+      },
+      {
+        "title": "在分区网格上生成",
+        "code": "mpirun -np 4 makeFaMesh -parallel -area-region film -no-fields",
+        "explanation": "4个体网格分区已经存在；生成面积网格及分区寻址，-no-fields暂不分解面积场。"
+      }
+    ]
+  },
+  "PDRblockMesh": {
+    "prerequisites": "准备system/PDRblockMeshDict，其中包含x/y/z坐标分段、单元数与边界定义；生成操作在工作副本中进行。",
+    "examples": [
+      {
+        "title": "生成直角分段网格",
+        "code": "PDRblockMesh",
+        "explanation": "按三个方向的坐标段生成网格，默认写入constant/polyMesh，日志给出单元数。"
+      },
+      {
+        "title": "预览等价blockMesh配置",
+        "code": "PDRblockMesh -print-dict",
+        "explanation": "打印等价的blockMeshDict后退出，便于理解分段坐标怎样对应块和边界。"
+      },
+      {
+        "title": "保存等价字典",
+        "code": "PDRblockMesh -write-dict",
+        "explanation": "写出system/blockMeshDict.PDRblockMesh后退出，可用它与手工blockMesh配置对照。"
+      },
+      {
+        "title": "比较细网格定义",
+        "code": "PDRblockMesh -dict system/PDRblockMeshDict.fine -time 1",
+        "explanation": "已有完整fine字典时将其网格写到指定时间1，保留constant中的基准网格以便比较。"
+      },
+      {
+        "title": "只生成主体区域",
+        "code": "PDRblockMesh -no-outer\ncheckMesh -constant",
+        "explanation": "字典另含外部扩展区域时跳过外部区域，随后检查主体网格尺寸、边界与质量。"
+      }
+    ]
+  },
+  "blockMesh": {
+    "prerequisites": "准备system/blockMeshDict；新网格会写入选定算例，已有网格的比较请使用独立副本。",
+    "examples": [
+      {
+        "title": "生成方腔网格",
+        "code": "blockMesh\ncheckMesh -constant",
+        "explanation": "读取默认字典生成constant/polyMesh，再检查单元数、体积和边界；20×20×1块应得到400单元。"
+      },
+      {
+        "title": "预览块拓扑",
+        "code": "blockMesh -write-vtk",
+        "explanation": "导出块拓扑VTU后退出，适合在实际细分前检查顶点连接与块的位置。"
+      },
+      {
+        "title": "预览块边和中心",
+        "code": "blockMesh -write-obj",
+        "explanation": "导出块边及中心OBJ后退出，可排查弧线、边连接或顶点编号问题。"
+      },
+      {
+        "title": "选择另一套划分",
+        "code": "blockMesh -dict system/blockMeshDict.fine -time 1",
+        "explanation": "用完整fine字典生成时间1的网格，便于与constant基准比较单元数量和分辨率。"
+      },
+      {
+        "title": "创建命名区域及集合",
+        "code": "blockMesh -region fluid -dict system/fluid/blockMeshDict -sets",
+        "explanation": "为fluid区域生成网格；字典中命名的cellZones同时写成cellSets，便于后续集合操作。"
+      }
+    ]
+  },
+  "extrudeMesh": {
+    "prerequisites": "已有待拉伸patch或字典指定的源表面，并准备system/extrudeMeshDict；其中确定源、方向、层数和厚度。",
+    "examples": [
+      {
+        "title": "按默认字典拉伸",
+        "code": "extrudeMesh",
+        "explanation": "读取extrudeMeshDict，从所选源patch或表面生成拉伸网格，检查日志中的源面数与层数。"
+      },
+      {
+        "title": "指定拉伸方案",
+        "code": "extrudeMesh -dict system/extrudeMeshDict.thin",
+        "explanation": "使用完整thin字典生成薄层网格，输出位置由拉伸方式与源/目标算例设置决定。"
+      },
+      {
+        "title": "增加法向层数",
+        "code": "foamDictionary system/extrudeMeshDict -entry nLayers -set 10\nextrudeMesh",
+        "explanation": "在已有法向拉伸配置中改为10层，比较层厚与厚度方向分辨率；总厚度仍由模型系数决定。"
+      },
+      {
+        "title": "调整层厚增长",
+        "code": "foamDictionary system/extrudeMeshDict -entry expansionRatio -set 1.2\nextrudeMesh",
+        "explanation": "在独立副本中让相邻层按1.2增长，适合从近壁细层向外过渡；检查最终层厚是否过大。"
+      },
+      {
+        "title": "检查多区域源网格",
+        "code": "extrudeMesh -region solid -dict system/extrudeMeshDict.solid",
+        "explanation": "已准备solid区域及相应源patch的字典时，选择该源区域进行拉伸，核对输出区域连接与边界。"
+      }
+    ]
+  },
+  "extrudeToRegionMesh": {
+    "prerequisites": "已有faceZone或faceSet以及system/extrudeToRegionMeshDict；字典给出新region名、源面、厚度、层数和映射方式。",
+    "examples": [
+      {
+        "title": "生成壁膜区域",
+        "code": "extrudeToRegionMesh",
+        "explanation": "按默认定义从源面拉伸出新区域，例如wallFilmRegion，输出新的区域网格及界面设置。"
+      },
+      {
+        "title": "选择固体板方案",
+        "code": "extrudeToRegionMesh -dict system/extrudeToRegionMeshDict.panel",
+        "explanation": "在完整panel定义中指定region panelRegion，生成固体板区域，适合共轭传热或热解模型。"
+      },
+      {
+        "title": "加密厚度方向",
+        "code": "foamDictionary system/extrudeToRegionMeshDict -entry nLayers -set 8\nextrudeToRegionMesh",
+        "explanation": "同一源面、同一厚度下生成8层；线性均匀拉伸且expansionRatio=1时每层厚度为总厚度的1/8。"
+      },
+      {
+        "title": "从指定体区域拉伸",
+        "code": "extrudeToRegionMesh -region air -dict system/extrudeToRegionMeshDict.panel",
+        "explanation": "源面位于air区域时选择该体网格，避免在默认区域查找同名faceZone。"
+      },
+      {
+        "title": "建立并检查新区域",
+        "code": "extrudeToRegionMesh\ncheckMesh -region panelRegion",
+        "explanation": "字典中的region必须为panelRegion；检查生成区域的单元体积、厚度及耦合面，确认它可供后续区域求解。"
+      }
+    ]
+  },
+  "extrude2DMesh": {
+    "prerequisites": "已有二维输入及system/extrude2DMeshDict。位置参数只接受polyMesh2D或MeshedSurface，大小写按源码填写。",
+    "examples": [
+      {
+        "title": "拉伸二维体网格",
+        "code": "extrude2DMesh polyMesh2D",
+        "explanation": "从polyMesh2D路径构造输入网格，按字典生成三维厚度方向单元，日志显示生成时间。"
+      },
+      {
+        "title": "使用表面网格输入",
+        "code": "extrude2DMesh MeshedSurface",
+        "explanation": "已有该模式所需的MeshedSurface数据时，选择表面输入通路；字典仍控制拉伸模型和层数。"
+      },
+      {
+        "title": "指定另一个算例",
+        "code": "extrude2DMesh -case ../thinChannel polyMesh2D",
+        "explanation": "在thinChannel中读取二维网格与拉伸字典，结果也写入该算例。"
+      },
+      {
+        "title": "改变直线拉伸厚度",
+        "code": "foamDictionary system/extrude2DMeshDict -entry linearDirectionCoeffs.thickness -set 0.02\nextrude2DMesh polyMesh2D",
+        "explanation": "前提extrudeModel为linearDirection；将厚度设为0.02m，并检查生成网格的包围盒。"
+      },
+      {
+        "title": "增加三维分辨率",
+        "code": "foamDictionary system/extrude2DMeshDict -entry nLayers -set 5\nextrude2DMesh polyMesh2D\ncheckMesh -latestTime",
+        "explanation": "把厚度方向改成5层后检查新网格；用于三维计算时，前后边界应采用相应物理类型。"
+      }
+    ]
+  },
+  "cellSizeAndAlignmentGrid": {
+    "prerequisites": "该开发工具需在本机可用；读取system/foamyHexMeshDict的geometry、surfaceConformation和尺寸控制，使用独立foamy算例副本。",
+    "examples": [
+      {
+        "title": "导出尺寸与方向控制数据",
+        "code": "cellSizeAndAlignmentGrid",
+        "explanation": "根据当前foamy定义生成constant中的points、sizes、alignments，分别记录采样点、目标尺寸和方向。"
+      },
+      {
+        "title": "检查另一个几何方案",
+        "code": "cellSizeAndAlignmentGrid -case ../foamyVariant",
+        "explanation": "variant已包含完整几何和字典；导出该方案的控制数据，与原方案分别保存。"
+      },
+      {
+        "title": "降低全局目标尺寸",
+        "code": "foamDictionary system/foamyHexMeshDict -entry motionControl.defaultCellSize -set 0.003\ncellSizeAndAlignmentGrid",
+        "explanation": "在完整配置中将默认尺寸设为3mm，再生成sizes，观察远离局部加密区的尺度变化。"
+      },
+      {
+        "title": "调整局部控制优先级",
+        "code": "foamDictionary system/foamyHexMeshDict -entry motionControl.shapeControlFunctions.body.priority -set 2\ncellSizeAndAlignmentGrid",
+        "explanation": "前提已有body局部控制块；提高其优先级后重新导出，检查重叠控制区域采用的尺寸。"
+      },
+      {
+        "title": "先检查控制再生成体网格",
+        "code": "cellSizeAndAlignmentGrid\nfoamyHexMesh",
+        "explanation": "先查看导出的控制场覆盖了几何细节，再用同一字典生成体网格；前者输出控制数据，后者生成实际单元。"
+      }
+    ]
+  },
+  "foamyHexMesh": {
+    "prerequisites": "准备完整foamyHexMeshDict与constant/triSurface几何；locationInMesh位于目标流体域，第三方依赖及程序已安装。",
+    "examples": [
+      {
+        "title": "检查输入几何",
+        "code": "foamyHexMesh -checkGeometry",
+        "explanation": "读取字典中的全部表面并检查几何质量，先处理孔洞、交叉或区域选择问题。"
+      },
+      {
+        "title": "生成Voronoi网格",
+        "code": "foamyHexMesh",
+        "explanation": "按尺寸、方向和表面贴合控制生成网格，日志显示初始点、贴合与平滑过程。"
+      },
+      {
+        "title": "只做初始点贴合",
+        "code": "foamyHexMesh -conformationOnly",
+        "explanation": "已有合适初始点配置时，仅对初始点执行表面贴合，便于分离检查后续点运动的影响。"
+      },
+      {
+        "title": "比较局部加密方案",
+        "code": "foamyHexMesh -case ../foamyFine",
+        "explanation": "fine副本已改变shapeControlFunctions的目标尺寸；单独生成后比较小间隙单元数和表面分辨率。"
+      },
+      {
+        "title": "并行生成网格",
+        "code": "mpirun -np 4 foamyHexMesh -parallel",
+        "explanation": "按算例的并行准备流程设置4个分区及decomposeParDict，再并行运行，检查各进程分配与最终网格。"
+      }
+    ]
+  },
+  "foamyHexMeshBackgroundMesh": {
+    "prerequisites": "该开发工具需在本机可用；使用完整foamyHexMeshDict及表面几何，输出用于检查背景网格与距离表面。",
+    "examples": [
+      {
+        "title": "生成几何表示",
+        "code": "foamyHexMeshBackgroundMesh",
+        "explanation": "根据foamy尺寸定义构造背景网格并计算表面距离表示，查看日志中的细化与表面输出位置。"
+      },
+      {
+        "title": "保留网格和距离场",
+        "code": "foamyHexMeshBackgroundMesh -writeMesh",
+        "explanation": "同时写出背景网格及cellDistance、pointDistance，便于显示零距离附近的几何表示。"
+      },
+      {
+        "title": "调整合并容差",
+        "code": "foamyHexMeshBackgroundMesh -writeMesh -mergeTol 1e-7",
+        "explanation": "将合并距离设为包围盒尺寸的1e-7，用于比较较近几何点是否被过早合并。"
+      },
+      {
+        "title": "比较更细背景尺度",
+        "code": "foamDictionary system/foamyHexMeshDict -entry motionControl.defaultCellSize -set 0.002\nfoamyHexMeshBackgroundMesh -writeMesh",
+        "explanation": "已有完整配置时将基准尺寸改为2mm，检查狭小特征的距离场是否得到更好表达。"
+      },
+      {
+        "title": "处理另一组表面",
+        "code": "foamyHexMeshBackgroundMesh -case ../geometryStudy -writeMesh",
+        "explanation": "geometryStudy中使用另一组geometry或局部尺度，输出其背景网格，供不同几何方案对照。"
+      }
+    ]
+  },
+  "foamyHexMeshSurfaceSimplify": {
+    "prerequisites": "该开发工具需在本机可用；输入表面来自system/foamyHexMeshDict的geometry，两个位置参数为三方向采样数和输出表面名。",
+    "examples": [
+      {
+        "title": "进行粗采样",
+        "code": "foamyHexMeshSurfaceSimplify '(40 40 40)' body40.stl",
+        "explanation": "以40×40×40采样设置重建表面，输出到constant/triSurface/body40.stl，适合初步检查轮廓。"
+      },
+      {
+        "title": "提高表面分辨率",
+        "code": "foamyHexMeshSurfaceSimplify '(80 80 80)' body80.stl",
+        "explanation": "保持相同几何，将各方向采样数加倍；细节更充分，计算和表面数据量也增加。"
+      },
+      {
+        "title": "按长轴增加采样",
+        "code": "foamyHexMeshSurfaceSimplify '(120 40 40)' longBody.stl",
+        "explanation": "适合x方向较长的几何，分方向设置采样数，避免各方向分辨率差距过大。"
+      },
+      {
+        "title": "对比两个算例几何",
+        "code": "foamyHexMeshSurfaceSimplify -case ../variant '(80 80 80)' variant80.stl",
+        "explanation": "读取variant的几何与控制配置，把重采样结果保存在该算例中。"
+      },
+      {
+        "title": "检查重建表面",
+        "code": "foamyHexMeshSurfaceSimplify '(80 80 80)' rebuilt.stl\nsurfaceCheck constant/triSurface/rebuilt.stl",
+        "explanation": "重建后检查闭合性、面数和包围盒，再决定是否用于后续网格生成。"
+      }
+    ]
+  },
+  "foamyQuadMesh": {
+    "prerequisites": "已有system/foamyQuadMeshDict及所引用的闭合几何、特征边；二维平面由locationInMesh的z坐标确定。",
+    "examples": [
+      {
+        "title": "生成平面网格",
+        "code": "foamyQuadMesh",
+        "explanation": "按默认字典生成二维Voronoi网格，查看边界贴合与短边过滤结果。"
+      },
+      {
+        "title": "指定初始布点",
+        "code": "foamyQuadMesh -pointsFile initialPoints",
+        "explanation": "initialPoints为工具支持的点文件；使用相同初始点可比较不同平滑或尺寸设置的影响。"
+      },
+      {
+        "title": "比较更小局部尺寸",
+        "code": "foamDictionary system/foamyQuadMeshDict -entry motionControl.minCellSize -set 0.02\nfoamyQuadMesh",
+        "explanation": "在副本中修改已有尺度参数后生成网格，重点比较狭缝和折角附近的单元分布。"
+      },
+      {
+        "title": "处理独立几何副本",
+        "code": "foamyQuadMesh -case ../letterMesh",
+        "explanation": "letterMesh已有字典、STL及扩展特征边；结果保存在该副本，便于比较文字或复杂平面轮廓。"
+      },
+      {
+        "title": "生成后拉伸成单层网格",
+        "code": "foamyQuadMesh\nextrude2DMesh polyMesh2D",
+        "explanation": "前提已准备对应extrude2DMeshDict且前一步输出可用二维网格；第二步按厚度、层数生成求解用体网格。"
+      }
+    ]
+  },
+  "snappyHexMesh": {
+    "prerequisites": "先有blockMesh背景网格、snappyHexMeshDict和表面几何。每个网格方案在独立副本生成。",
+    "examples": [
+      {
+        "title": "检查几何输入",
+        "code": "snappyHexMesh -checkGeometry",
+        "explanation": "检查字典引用的几何与区域，先定位表面缺陷和尺寸问题。"
+      },
+      {
+        "title": "检查算例设置",
+        "code": "snappyHexMesh -dry-run",
+        "explanation": "执行简化设置检查流程，便于发现缺失几何、字典条目和不合理选择。"
+      },
+      {
+        "title": "生成贴体网格",
+        "code": "snappyHexMesh",
+        "explanation": "执行字典启用的细化、贴合、层生成阶段，默认保留各阶段对应的网格输出。"
+      },
+      {
+        "title": "使用另一套控制",
+        "code": "snappyHexMesh -dict system/snappyHexMeshDict.fine",
+        "explanation": "已准备fine字典时选择它，比较表面细化等级、间隙分辨率和边界层厚度。"
+      },
+      {
+        "title": "并行生成并检查",
+        "code": "decomposePar\nmpirun -np 4 snappyHexMesh -parallel\nmpirun -np 4 checkMesh -parallel -latestTime",
+        "explanation": "decomposeParDict的numberOfSubdomains设为4；在各分区生成最新网格，再检查并行网格质量。"
+      }
+    ]
+  },
+  "checkMesh": {
+    "prerequisites": "算例已有网格。检查时刻和区域应与实际求解或待使用的网格一致。",
+    "examples": [
+      {
+        "title": "检查初始网格",
+        "code": "checkMesh -constant",
+        "explanation": "检查constant网格的体积、边界和基本拓扑，首先查看单元数与Mesh OK或失败项目。"
+      },
+      {
+        "title": "运行完整检查",
+        "code": "checkMesh -constant -allTopology -allGeometry",
+        "explanation": "增加拓扑和包围盒等几何检查，适合导入、拼接或自编程生成的网格。"
+      },
+      {
+        "title": "使用项目质量标准",
+        "code": "checkMesh -meshQuality",
+        "explanation": "读取system/meshQualityDict，以项目设定的非正交性、扭曲等阈值检查。"
+      },
+      {
+        "title": "输出质量字段",
+        "code": "checkMesh -latestTime -writeAllFields -writeSets vtk",
+        "explanation": "检查最新网格，保存质量标量场和问题集合，可在ParaView定位坏单元。"
+      },
+      {
+        "title": "检查多区域并行网格",
+        "code": "mpirun -np 4 checkMesh -parallel -allRegions",
+        "explanation": "前提4个分区及regionProperties完整；分别检查流体、固体区域和分区耦合关系。"
+      }
+    ]
+  },
+  "surfaceAdd": {
+    "prerequisites": "两个输入为可读取的表面文件，坐标系和长度单位一致；输出文件使用新名称。",
+    "examples": [
+      {
+        "title": "合并两个部件",
+        "code": "surfaceAdd housing.stl rotor.stl assembly.stl",
+        "explanation": "把壳体和转子组合为一个表面文件，并对重合点做几何合并；保留各部件区域信息。"
+      },
+      {
+        "title": "按同名区域合并",
+        "code": "surfaceAdd -mergeRegions left.stl right.stl joined.stl",
+        "explanation": "两块表面区域含相同名称时，将对应区域组合，适合被分成多个文件的同一边界。"
+      },
+      {
+        "title": "合并毫米几何",
+        "code": "surfaceAdd -scale 0.001 housing_mm.stl rotor_mm.stl assembly_m.stl",
+        "explanation": "两个输入都以毫米表示时，先按0.001缩放再合并，输出坐标以米表示。"
+      },
+      {
+        "title": "逐步组合三个部件",
+        "code": "surfaceAdd body.stl inlet.stl bodyInlet.stl\nsurfaceAdd bodyInlet.stl outlet.stl complete.stl",
+        "explanation": "通过中间文件组合三个表面，每一步均保留输入，便于判断区域在何时发生变化。"
+      },
+      {
+        "title": "检查合并后的交叉",
+        "code": "surfaceAdd a.stl b.stl combined.stl\nsurfaceCheck -checkSelfIntersection combined.stl",
+        "explanation": "合并前两表面已在同一坐标系。第二步检查交叉三角形；surfaceAdd本身做组合与点合并，不执行实体布尔裁切。"
+      }
+    ]
+  },
+  "surfaceBooleanFeatures": {
+    "prerequisites": "准备相交的两个表面，并在含controlDict的工作算例中运行。输出是布尔界面的extendedFeatureEdgeMesh特征线。",
+    "examples": [
+      {
+        "title": "提取并集的交界特征",
+        "code": "surfaceBooleanFeatures union body.stl boss.stl",
+        "explanation": "按并集关系识别两表面相交处的特征边，供后续特征控制使用。"
+      },
+      {
+        "title": "提取交集特征",
+        "code": "surfaceBooleanFeatures intersection body.stl box.stl",
+        "explanation": "选择两个实体重叠部分的布尔界面，观察被box限定区域的交界线。"
+      },
+      {
+        "title": "提取差集特征",
+        "code": "surfaceBooleanFeatures difference body.stl cutter.stl",
+        "explanation": "按第一个实体减去第二个实体的关系生成特征线，输入顺序决定差集含义。"
+      },
+      {
+        "title": "处理退化交点",
+        "code": "surfaceBooleanFeatures -perturb union body.stl boss.stl",
+        "explanation": "两表面局部共面或交点退化导致求交困难时，小幅扰动点位以尝试获得稳定交线。"
+      },
+      {
+        "title": "限制交线保留范围",
+        "code": "surfaceBooleanFeatures -trim '((clip.stl inside))' union body.stl boss.stl",
+        "explanation": "clip.stl为额外闭合选择表面，仅保留位于其内部的交线段，适合局部特征提取。"
+      }
+    ]
+  },
+  "surfaceCheck": {
+    "prerequisites": "输入为STL、OBJ等支持的表面；检查会输出统计，部分选项还生成问题集合或分割结果。",
+    "examples": [
+      {
+        "title": "检查基本质量",
+        "code": "surfaceCheck body.stl",
+        "explanation": "查看点数、三角面数、包围盒、开边及区域数，先确认几何尺度和闭合状态。"
+      },
+      {
+        "title": "检查自相交",
+        "code": "surfaceCheck -checkSelfIntersection body.stl",
+        "explanation": "额外检测相互穿过的三角形，适合CAD修补或表面平滑之后检查。"
+      },
+      {
+        "title": "输出缺陷集合",
+        "code": "surfaceCheck -checkSelfIntersection -writeSets vtk body.stl",
+        "explanation": "把问题三角形或边转换为VTK数据，便于在ParaView定位具体缺陷。"
+      },
+      {
+        "title": "限制诊断文件数量",
+        "code": "surfaceCheck -outputThreshold 0 body.stl",
+        "explanation": "输出统计但抑制诊断文件写出，适合只需快速读取质量信息的大型表面。"
+      },
+      {
+        "title": "识别并拆分非流形连接",
+        "code": "surfaceCheck -splitNonManifold -writeSets vtk body.stl",
+        "explanation": "针对多重连接边检查并分开相应表面连接，查看分割结果后再确定所需几何拓扑。"
+      }
+    ]
+  },
+  "surfaceClean": {
+    "prerequisites": "长度阈值使用缩放后的几何单位，quality为三角形质量阈值。先用surfaceCheck了解最小特征尺度，输出另存。",
+    "examples": [
+      {
+        "title": "清理极短边",
+        "code": "surfaceClean raw.stl 1e-6 1e-6 clean.stl",
+        "explanation": "将短于1μm的边和质量极差的三角形纳入清理，输出clean.stl以供对照。"
+      },
+      {
+        "title": "提高质量阈值",
+        "code": "surfaceClean raw.stl 1e-6 0.01 cleanQuality.stl",
+        "explanation": "保持长度阈值，提高最小质量要求到0.01，适合进一步处理狭长薄片三角形。"
+      },
+      {
+        "title": "按毫米输入清理",
+        "code": "surfaceClean -scale 0.001 raw_mm.stl 1e-5 0.01 clean_m.stl",
+        "explanation": "先把毫米坐标换成米，再使用10μm的长度阈值清理。"
+      },
+      {
+        "title": "跳过预清理比较主算法",
+        "code": "surfaceClean -no-clean raw.stl 1e-6 0.01 cleanNoPrepass.stl",
+        "explanation": "-no-clean跳过输入阶段的一轮检查清理，后续按长度与质量要求处理，适合诊断不同阶段的影响。"
+      },
+      {
+        "title": "清理后核对闭合性",
+        "code": "surfaceClean raw.stl 1e-6 0.01 clean.stl\nsurfaceCheck -checkSelfIntersection clean.stl",
+        "explanation": "检查输出的开边、自相交与包围盒，确认清理后的表面仍符合预期几何。"
+      }
+    ]
+  },
+  "surfaceCoarsen": {
+    "prerequisites": "输入为三角表面。源码按factor×原顶点数确定目标顶点数；使用0到1之间的正因子，输出另存。",
+    "examples": [
+      {
+        "title": "温和减少顶点",
+        "code": "surfaceCoarsen fine.stl 0.8 coarse80.stl",
+        "explanation": "目标约保留80%的原顶点，先观察主要轮廓和小圆角是否保持。"
+      },
+      {
+        "title": "减半顶点数",
+        "code": "surfaceCoarsen fine.stl 0.5 coarse50.stl",
+        "explanation": "目标顶点数约减为一半，适合降低可视化或初步几何检查成本。"
+      },
+      {
+        "title": "较强粗化对照",
+        "code": "surfaceCoarsen fine.stl 0.25 coarse25.stl",
+        "explanation": "约保留四分之一顶点，与0.8和0.5方案比较细节损失，避免直接用最粗表面替代精细几何。"
+      },
+      {
+        "title": "缩放后粗化",
+        "code": "surfaceCoarsen -scale 0.001 fine_mm.stl 0.5 coarse_m.stl",
+        "explanation": "先将毫米坐标转换为米，再按相同顶点保留比例粗化。"
+      },
+      {
+        "title": "检查粗化结果",
+        "code": "surfaceCoarsen fine.stl 0.5 coarse.stl\nsurfaceCheck coarse.stl",
+        "explanation": "比较输入输出面数、开边及包围盒；factor控制顶点目标，三角面数随重建结果变化。"
+      }
+    ]
+  },
+  "surfaceConvert": {
+    "prerequisites": "输入与输出格式由扩展名识别，也可显式指定；该工具使用三角表面表示。",
+    "examples": [
+      {
+        "title": "将STL转为OBJ",
+        "code": "surfaceConvert body.stl body.obj",
+        "explanation": "生成可显示分组信息的OBJ，便于查看三角表面。"
+      },
+      {
+        "title": "按毫米转为米",
+        "code": "surfaceConvert -scale 0.001 body_mm.stl body_m.stl",
+        "explanation": "统一缩放全部坐标，输出网格几何大小缩小1000倍。"
+      },
+      {
+        "title": "明确无扩展名输入格式",
+        "code": "surfaceConvert -read-format stl geometry body.obj",
+        "explanation": "geometry实际包含STL数据时显式指定读取格式，避免依赖文件名猜测。"
+      },
+      {
+        "title": "分区排序并清理",
+        "code": "surfaceConvert -clean -group body.stl grouped.obj",
+        "explanation": "对输入进行基本清理，并按区域重新排列三角形，方便检查各区域连续分组。"
+      },
+      {
+        "title": "控制文本输出精度",
+        "code": "surfaceConvert -precision 12 body.obj precise.stl",
+        "explanation": "用12位写出精度保存转换结果，适合小尺寸细节或后续格式往返对照。"
+      }
+    ]
+  },
+  "surfaceFeatureConvert": {
+    "prerequisites": "输入为边网格，而非三角表面；常见用途是将提取的eMesh特征边转换为可查看的OBJ线。",
+    "examples": [
+      {
+        "title": "显示提取的特征边",
+        "code": "surfaceFeatureConvert constant/triSurface/body.eMesh bodyEdges.obj",
+        "explanation": "把已有特征边网格导出为OBJ线段，可与原STL叠加检查。"
+      },
+      {
+        "title": "将OBJ边转为eMesh",
+        "code": "surfaceFeatureConvert featureLines.obj featureLines.eMesh",
+        "explanation": "输入OBJ应包含有效线段连接；输出可供支持eMesh的网格工具读取。"
+      },
+      {
+        "title": "缩放特征边单位",
+        "code": "surfaceFeatureConvert -scale 0.001 edges_mm.eMesh edges_m.eMesh",
+        "explanation": "毫米特征边转换为米，使其与已经缩放的表面一致。"
+      },
+      {
+        "title": "读取无扩展名边文件",
+        "code": "surfaceFeatureConvert -read-format eMesh featureData edges.obj",
+        "explanation": "featureData实际为OpenFOAM边网格时显式指定格式。"
+      },
+      {
+        "title": "指定输出格式并检查形状",
+        "code": "surfaceFeatureConvert -write-format obj body.eMesh edgePreview\nsurfaceFeatureConvert -read-format obj edgePreview checked.eMesh",
+        "explanation": "先输出无扩展名OBJ线，再读回eMesh；比较边数及坐标，检查格式转换是否保留连接。"
+      }
+    ]
+  },
+  "surfaceFeatureExtract": {
+    "prerequisites": "已有constant/triSurface表面及system/surfaceFeatureExtractDict；字典中逐个指定表面、提取方法与夹角。",
+    "examples": [
+      {
+        "title": "按默认配置提取",
+        "code": "surfaceFeatureExtract",
+        "explanation": "读取默认字典，生成对应eMesh等特征数据，供snappyHexMesh的features条目引用。"
+      },
+      {
+        "title": "使用独立特征配置",
+        "code": "surfaceFeatureExtract -dict system/surfaceFeatureExtractDict.fine",
+        "explanation": "fine字典中已设置另一夹角或表面列表时，单独选择该方案提取。"
+      },
+      {
+        "title": "检查另一几何算例",
+        "code": "surfaceFeatureExtract -case ../gearCase",
+        "explanation": "gearCase包含自身几何和提取字典；结果写入其constant/triSurface。"
+      },
+      {
+        "title": "把特征边转为可视线",
+        "code": "surfaceFeatureExtract\nsurfaceFeatureConvert constant/triSurface/body.eMesh bodyEdges.obj",
+        "explanation": "字典中输入为body.stl时，提取后将eMesh转换为OBJ，与齿尖或棱边位置对照。"
+      },
+      {
+        "title": "用于贴体网格流程",
+        "code": "surfaceFeatureExtract\nsnappyHexMesh",
+        "explanation": "snappyHexMeshDict已引用本次生成的eMesh及细化等级；先生成特征，再进行体网格细化与贴合。"
+      }
+    ]
+  },
+  "surfaceFind": {
+    "prerequisites": "给定表面文件和查询点；未指定的坐标分量为0。输出最近面、顶点等定位信息。",
+    "examples": [
+      {
+        "title": "查询原点附近表面",
+        "code": "surfaceFind body.stl",
+        "explanation": "以(0,0,0)查询最近面与顶点，用于确认几何与坐标原点的位置关系。"
+      },
+      {
+        "title": "定位入口中心附近",
+        "code": "surfaceFind -x 0.1 body.stl",
+        "explanation": "查询点为(0.1,0,0)，适合轴向沿x的管道入口或截面附近定位。"
+      },
+      {
+        "title": "查询侧壁附近",
+        "code": "surfaceFind -x 0.1 -y 0.025 body.stl",
+        "explanation": "明确两个坐标分量，查询侧壁附近最近三角面，便于定位局部几何。"
+      },
+      {
+        "title": "查询三维缺陷点",
+        "code": "surfaceFind -x 0.1 -y 0.025 -z 0.01 body.stl",
+        "explanation": "使用检查报告给出的三维坐标，找出对应面和顶点编号。"
+      },
+      {
+        "title": "比较修补前后位置",
+        "code": "surfaceFind -x 0.1 -y 0.025 -z 0.01 raw.stl\nsurfaceFind -x 0.1 -y 0.025 -z 0.01 repaired.stl",
+        "explanation": "对同一个查询点比较两份表面，观察最近点距离及所在面是否随修补发生明显改变。"
+      }
+    ]
+  },
+  "surfaceHookUp": {
+    "prerequisites": "system/surfaceHookUpDict逐项列出待连接表面及type triSurfaceMesh，文件位于constant/triSurface；容差与几何长度单位一致。",
+    "examples": [
+      {
+        "title": "连接微小间隙",
+        "code": "surfaceHookUp 1e-5",
+        "explanation": "用10μm连接容差移动并重三角化邻近边界，生成hookedSurface_前缀的新表面。"
+      },
+      {
+        "title": "比较更严格容差",
+        "code": "surfaceHookUp 1e-6",
+        "explanation": "在相同原始几何副本中采用1μm容差，只处理更近的边界，比较仍未连接的缝隙。"
+      },
+      {
+        "title": "限制处理轮数",
+        "code": "surfaceHookUp -maxIters 20 1e-5",
+        "explanation": "把最大迭代次数设为20，观察一小段连接过程的进展与剩余间隙。"
+      },
+      {
+        "title": "选择另一组连接面",
+        "code": "surfaceHookUp -dict system/surfaceHookUpDict.inlet 1e-5",
+        "explanation": "完整inlet字典只列需要连接的入口相关表面，缩小本次处理范围。"
+      },
+      {
+        "title": "检查连接后的表面",
+        "code": "surfaceHookUp 1e-5\nsurfaceCheck constant/triSurface/hookedSurface_surface1.stl",
+        "explanation": "字典包含surface1.stl时检查其新文件，核对开边、交叉及区域，确认连接是否达到预期。"
+      }
+    ]
+  },
+  "surfaceInertia": {
+    "prerequisites": "实体惯量使用闭合且法向一致的表面；薄壳模式使用面密度。几何坐标按米准备。",
+    "examples": [
+      {
+        "title": "计算单位密度实体惯量",
+        "code": "surfaceInertia body.stl",
+        "explanation": "根据闭合几何计算体积、质心、惯量张量和主惯量，默认单位密度便于检查几何贡献。"
+      },
+      {
+        "title": "指定钢材密度",
+        "code": "surfaceInertia -density 7850 body.stl",
+        "explanation": "将实体密度设为7850kg/m³，质量与惯量随密度按比例改变。"
+      },
+      {
+        "title": "计算铝材对照",
+        "code": "surfaceInertia -density 2700 body.stl",
+        "explanation": "保持几何不变改用2700kg/m³，质心位置不变，质量和惯量降低。"
+      },
+      {
+        "title": "计算薄壳惯量",
+        "code": "surfaceInertia -shellProperties -density 2 shell.stl",
+        "explanation": "用2kg/m²的面密度计算壳体性质，适合已知厚度乘材料密度得到的面质量。"
+      },
+      {
+        "title": "改用安装点作为参考",
+        "code": "surfaceInertia -density 7850 -referencePoint '(0 0 0)' body.stl",
+        "explanation": "输出相对于原点的惯量，用于与刚体运动中指定参考点的惯量配置对应。"
+      }
+    ]
+  },
+  "surfaceInflate": {
+    "prerequisites": "在工作算例中准备表面及controlDict；distance按几何长度单位填写，factor为额外延伸安全系数，常用1～2。",
+    "examples": [
+      {
+        "title": "生成小幅外偏移",
+        "code": "surfaceInflate body.stl 0.001 1.2",
+        "explanation": "沿点法向膨胀约1mm，并使用1.2安全系数；查看日志列出的表面与迭代输出。"
+      },
+      {
+        "title": "增大包络距离",
+        "code": "surfaceInflate body.stl 0.005 1.2",
+        "explanation": "对同一原始几何生成5mm级外包络，适合比较间隙或外围包络。"
+      },
+      {
+        "title": "减少法向平滑次数",
+        "code": "surfaceInflate -nSmooth 5 body.stl 0.001 1.2",
+        "explanation": "将平滑迭代数设为5，比较棱角附近法向传播与局部偏移形状。"
+      },
+      {
+        "title": "设置特征角",
+        "code": "surfaceInflate -featureAngle 45 -nSmooth 2 body.stl 0.002 1.5",
+        "explanation": "用45°特征角和两次平滑处理有棱角表面，观察锐边附近的膨胀效果。"
+      },
+      {
+        "title": "加入自相交检查",
+        "code": "surfaceInflate -checkSelfIntersection body.stl 0.002 1.2",
+        "explanation": "狭窄间隙或凹角处启用自相交检查，检查偏移是否导致表面互相穿过。"
+      }
+    ]
+  },
+  "surfaceLambdaMuSmooth": {
+    "prerequisites": "输入为三角表面，lambda与mu按工具接口取0到1；输出另存，比较轮廓和体积变化。",
+    "examples": [
+      {
+        "title": "轻度拉普拉斯平滑",
+        "code": "surfaceLambdaMuSmooth raw.stl 0.2 0 5 smooth5.stl",
+        "explanation": "mu=0采用拉普拉斯平滑，lambda=0.2控制每次松弛量，先做5次观察。"
+      },
+      {
+        "title": "增加平滑轮数",
+        "code": "surfaceLambdaMuSmooth raw.stl 0.2 0 20 smooth20.stl",
+        "explanation": "从同一原表面开始做20次，与5次结果比较噪声减少和轮廓收缩。"
+      },
+      {
+        "title": "采用双参数平滑",
+        "code": "surfaceLambdaMuSmooth raw.stl 0.3 0.31 10 smoothLM.stl",
+        "explanation": "使用lambda/mu两步平滑，以不同参数对抗单步平滑造成的收缩；检查实际体积变化。"
+      },
+      {
+        "title": "保护特征点和边",
+        "code": "surfaceLambdaMuSmooth -featureFile body.eMesh raw.stl 0.3 0.31 10 preserved.stl",
+        "explanation": "已有与表面对应的特征边文件时，固定其中指定的特征，保留关键棱角。"
+      },
+      {
+        "title": "比较平滑后的质量",
+        "code": "surfaceLambdaMuSmooth raw.stl 0.3 0.31 10 smooth.stl\nsurfaceCheck -checkSelfIntersection smooth.stl",
+        "explanation": "查看自相交、开边和包围盒，判断平滑是否改善局部三角形而保留所需几何。"
+      }
+    ]
+  },
+  "surfaceMeshConvert": {
+    "prerequisites": "准备工具支持的表面网格；坐标变换示例还需在 constant/coordinateSystems 定义 local 坐标系。-from 与 -to 分别用于两个方向的变换，每次选一个。",
+    "examples": [
+      {
+        "title": "转换表面格式",
+        "code": "surfaceMeshConvert body.obj body.stl",
+        "explanation": "读取 OBJ 的顶点和面，写成 STL；输出格式由扩展名决定。转换后用 surfaceCheck body.stl 查看三角面数量和连通性。"
+      },
+      {
+        "title": "读取时换算毫米",
+        "code": "surfaceMeshConvert body-mm.stl body-m.obj -read-scale 0.001",
+        "explanation": "输入坐标乘 0.001，再写出 OBJ。原长 100 mm 的边输出为 0.1，适合与以米建立的背景网格对齐。"
+      },
+      {
+        "title": "清理并三角化",
+        "code": "surfaceMeshConvert body.obj body-clean.stl -clean -tri",
+        "explanation": "先清理表面中可处理的退化或重复实体，再将多边形转为三角形。检查输出面数及几何轮廓，确认细小结构仍然保留。"
+      },
+      {
+        "title": "从局部坐标转到全局坐标",
+        "code": "surfaceMeshConvert blade.obj blade-global.obj -from local",
+        "explanation": "前提是 constant/coordinateSystems 中存在 local。按其原点和方向将局部几何变换到全局坐标，供装配使用；若要继续转到另一个局部系，可对输出另运行一次 -to。"
+      },
+      {
+        "title": "指定格式并输出毫米",
+        "code": "surfaceMeshConvert body.data body.export -read-format obj -write-format stl -write-scale 1000",
+        "explanation": "为没有标准扩展名的文件明确指定格式。输出坐标乘 1000，可将米制模型交给使用毫米坐标的工具。"
+      }
+    ]
+  },
+  "surfaceMeshExport": {
+    "prerequisites": "案例内已有 surfMesh；可先使用 surfaceMeshImport 导入。它导出存储的表面网格，体网格边界另用 surfaceMeshExtract。",
+    "examples": [
+      {
+        "title": "导出默认表面",
+        "code": "surfaceMeshExport body.obj",
+        "explanation": "读取当前案例中默认名称的 surfMesh 并导出为 OBJ。终端会显示读取的表面路径，可据此确认导出的对象。"
+      },
+      {
+        "title": "导出命名表面",
+        "code": "surfaceMeshExport blade.stl -name blade",
+        "explanation": "选择名为 blade 的 surfMesh，输出 STL。适合一个案例同时保存叶片、轮毂等多个独立表面。"
+      },
+      {
+        "title": "导出毫米坐标",
+        "code": "surfaceMeshExport body-mm.obj -write-scale 1000",
+        "explanation": "写文件前将坐标乘 1000；原来 0.2 m 的尺寸输出为 200。导出的文件单位需要在接收软件中设为毫米。"
+      },
+      {
+        "title": "导出到指定坐标系",
+        "code": "surfaceMeshExport body-local.obj -to local",
+        "explanation": "前提是 constant/coordinateSystems 中存在 local。将案例坐标下的表面表示到该坐标系，便于相对零件原点检查几何。"
+      },
+      {
+        "title": "导出其他案例的指定格式",
+        "code": "surfaceMeshExport -case ../surfaceCase body.data -name blade -write-format obj",
+        "explanation": "从 ../surfaceCase 读取 blade 表面，并将结果写为 OBJ 内容。输出路径 body.data 相对当前工作目录，使用绝对路径可明确存放位置。"
+      }
+    ]
+  },
+  "surfaceMeshExtract": {
+    "prerequisites": "案例已有体网格和边界名称；含 faceZone 的示例还需先建立相应面区域。",
+    "examples": [
+      {
+        "title": "提取全部边界",
+        "code": "surfaceMeshExtract boundary.obj -constant",
+        "explanation": "读取 constant 中的网格边界，输出表面文件。可在几何软件中查看计算域外形以及各边界的分区。"
+      },
+      {
+        "title": "只提取壁面",
+        "code": "surfaceMeshExtract walls.stl -patches '(walls)' -constant",
+        "explanation": "仅提取名为 walls 的 patch。括号表示名称列表；将名称换成 constant/polyMesh/boundary 中的实际边界名。"
+      },
+      {
+        "title": "按名称匹配并排除",
+        "code": "surfaceMeshExtract body.obj -patches '(\"wall.*\")' -exclude-patches '(wallAux)' -constant",
+        "explanation": "先匹配 wall 开头的边界，再排除 wallAux。输出用于检查主要壁面，避免把辅助封口面一并导出。"
+      },
+      {
+        "title": "提取内部面区域",
+        "code": "surfaceMeshExtract interface.obj -faceZones '(interfaceZone)' -constant",
+        "explanation": "把 interfaceZone 中的内部面也加入提取范围。适合查看耦合界面或风扇面的位置；需要该 faceZone 已存在。"
+      },
+      {
+        "title": "提取末时刻移动边界",
+        "code": "surfaceMeshExtract moved.obj -latestTime -patches '(movingWall)'",
+        "explanation": "读取最新时间对应的网格位置，导出 movingWall。与初始位置的表面对比，可检查动网格位移方向和量级。"
+      }
+    ]
+  },
+  "surfaceMeshImport": {
+    "prerequisites": "准备表面文件和包含 system/controlDict 的案例目录；命名导入可在同一案例保存多个 surfMesh。",
+    "examples": [
+      {
+        "title": "导入默认表面",
+        "code": "surfaceMeshImport body.stl",
+        "explanation": "将 STL 转为案例内的 surfMesh 存储。随后 surfaceMeshExport body.obj 可将这一表面重新导出检查。"
+      },
+      {
+        "title": "给表面指定名称",
+        "code": "surfaceMeshImport blade.obj -name blade",
+        "explanation": "以 blade 为名称保存表面，之后通过 surfaceMeshExport -name blade 选择它。适合分开管理多个零件。"
+      },
+      {
+        "title": "导入毫米模型",
+        "code": "surfaceMeshImport body-mm.stl -read-scale 0.001 -name body",
+        "explanation": "读取时将坐标换算为米，再保存为 body 表面。查看终端边界框，应与目标计算域尺寸一致。"
+      },
+      {
+        "title": "清理后导入",
+        "code": "surfaceMeshImport body.obj -clean -name bodyClean",
+        "explanation": "对输入表面执行清理再存储。对照原始与导出文件的点、面数量，确认清理处理了哪些实体。"
+      },
+      {
+        "title": "从局部坐标导入另一案例",
+        "code": "surfaceMeshImport blade.obj -case ../surfaceCase -name blade -from local",
+        "explanation": "从指定案例的坐标系字典读取 local，将局部几何变换到案例坐标。导出检查叶片原点及轴向是否符合装配位置。"
+      }
+    ]
+  },
+  "surfaceMeshInfo": {
+    "prerequisites": "准备受支持的表面文件。该工具读取表面并报告信息，适合转换和修复前后比较。",
+    "examples": [
+      {
+        "title": "查看点面统计",
+        "code": "surfaceMeshInfo body.stl",
+        "explanation": "显示点数、面数等表面统计信息。可先判断输入是否为空，以及三角化后的规模是否符合预期。"
+      },
+      {
+        "title": "查看每个面的面积",
+        "code": "surfaceMeshInfo body.stl -areas",
+        "explanation": "额外输出各面的面积。很小的面积常对应细碎三角形，可结合可视化定位需要清理的区域。"
+      },
+      {
+        "title": "以米制坐标检查毫米模型",
+        "code": "surfaceMeshInfo body-mm.stl -scale 0.001 -areas",
+        "explanation": "按缩放后的几何计算面积：长度乘 0.001，面积相应乘 10⁻⁶。适合直接核对 CAD 导出模型的物理尺度。"
+      },
+      {
+        "title": "导出结构化统计",
+        "code": "surfaceMeshInfo body.obj -xml > body-info.xml",
+        "explanation": "将统计输出为 XML 格式，便于脚本读取点数、面数等指标。文件用于批量几何检查记录。"
+      },
+      {
+        "title": "比较修复前后的面积",
+        "code": "surfaceMeshInfo body-original.stl -areas -xml > original.xml\nsurfaceMeshInfo body-clean.stl -areas -xml > clean.xml",
+        "explanation": "分别记录原始与清理后表面的面面积。比较面数和面积分布，可发现修复时是否丢失了较大的实体面。"
+      }
+    ]
+  },
+  "surfaceOrient": {
+    "prerequisites": "准备三角表面和一个坐标明确的观察点；闭合表面可选择已知内部点或外部点确定朝向。",
+    "examples": [
+      {
+        "title": "按外部点统一法向",
+        "code": "surfaceOrient body.stl '(10 10 10)' body-oriented.stl",
+        "explanation": "假设给定点位于模型外部，按该外部参考确定表面方向。输出另存，使用 ParaView 的法向显示检查外表面朝向。"
+      },
+      {
+        "title": "按内部点确定方向",
+        "code": "surfaceOrient sphere.stl '(0 0 0)' sphere-oriented.stl -inside",
+        "explanation": "适用于以原点为中心的闭合球面。-inside 明确该点在实体内部，程序据此判断表面内外。"
+      },
+      {
+        "title": "复杂闭合表面使用穿透测试",
+        "code": "surfaceOrient cavity.stl '(5 5 5)' cavity-oriented.stl -usePierceTest",
+        "explanation": "通过射线与三角面的交点关系判断方向，适合常规判定效果不理想的几何。输入闭合性应先用 surfaceCheck 检查。"
+      },
+      {
+        "title": "同时进行尺度转换",
+        "code": "surfaceOrient body-mm.stl '(1 1 1)' body-m.stl -scale 0.001",
+        "explanation": "表面坐标缩放到米后进行方向处理，参考点也按缩放后的坐标选择。输出边界框应缩小为原来的千分之一。"
+      },
+      {
+        "title": "为表面惯性计算准备朝向",
+        "code": "surfaceOrient closed.stl '(10 10 10)' oriented.stl\nsurfaceInertia oriented.stl",
+        "explanation": "先统一闭合外表面的方向，再计算体积、质心和惯性参数。查看结果体积与尺寸是否一致，可帮助发现几何朝向问题。"
+      }
+    ]
+  },
+  "surfacePatch": {
+    "prerequisites": "案例有 system/surfacePatchDict，geometry 中声明实际表面。以下字典修改针对 surfaces/body.stl；工具把变更表面另存为 body_patched.stl。",
+    "examples": [
+      {
+        "title": "按特征角拆分表面区域",
+        "code": "foamDictionary system/surfacePatchDict -entry 'surfaces/body.stl' -set '{ type autoPatch; featureAngle 45; }'\nsurfacePatch",
+        "explanation": "为 body.stl 的整体表面指定 autoPatch，按 45° 特征角形成区域。-entry 使用斜杠分隔字典层级，保留文件名 body.stl 中的点号。检查输出表面的区域数量与位置。"
+      },
+      {
+        "title": "保留更多棱边分区",
+        "code": "foamDictionary system/surfacePatchDict -entry 'surfaces/body.stl/featureAngle' -set 20\nsurfacePatch",
+        "explanation": "把分区角度改为 20°，较小的折角也可形成区域边界。比较输出区域数，判断是否过度分割了曲面离散带来的小折角。"
+      },
+      {
+        "title": "合并较平滑的区域",
+        "code": "foamDictionary system/surfacePatchDict -entry 'surfaces/body.stl/featureAngle' -set 80\nsurfacePatch",
+        "explanation": "较大阈值保留更明显的几何棱边，通常形成更少的区域。检查入口、出口等需要独立边界的部分是否仍能识别。"
+      },
+      {
+        "title": "只处理一个已有区域",
+        "code": "surfacePatch -dict system/surfacePatch-top.dict",
+        "explanation": "前提是在该字典 surfaces/body.stl/regions 内给 maxZ 设置 { type autoPatch; featureAngle 45; }。只重新划分目标区域，便于保留其他已命名表面。"
+      },
+      {
+        "title": "按搜索几何切分区域",
+        "code": "surfacePatch -dict system/surfacePatch-cut.dict",
+        "explanation": "该字典在 geometry 声明 box，在目标 surfaces 条目设置 type cut; cutters (box);。输出表面按与 box 的几何关系形成分区，便于划定局部边界区域。"
+      }
+    ]
+  },
+  "surfacePointMerge": {
+    "prerequisites": "准备三角表面；距离使用当前表面坐标单位。先查看最小真实几何间隙，再选择明显小于该间隙的合并距离。",
+    "examples": [
+      {
+        "title": "合并近重合点",
+        "code": "surfacePointMerge body.stl 1e-8 body-merged.stl",
+        "explanation": "将距离小于 10⁻⁸ 的点合并，处理导出造成的近重合坐标。比较输出点数，并检查开放边是否减少。"
+      },
+      {
+        "title": "处理更大的接缝误差",
+        "code": "surfacePointMerge body.stl 1e-5 body-merged-10um.stl",
+        "explanation": "米制模型使用 10 μm 容差。适合已确认接缝误差在该量级的输入；合并后核对窄缝和薄壁是否仍存在。"
+      },
+      {
+        "title": "合并前换算单位",
+        "code": "surfacePointMerge body-mm.stl 1e-5 body-m.stl -scale 0.001",
+        "explanation": "先把毫米坐标缩放为米，再以 10⁻⁵ m 的距离合并。输出可以直接与米制背景网格组合。"
+      },
+      {
+        "title": "比较两档容差",
+        "code": "surfacePointMerge body.stl 1e-7 merged-a.stl\nsurfacePointMerge body.stl 1e-6 merged-b.stl\nsurfaceCheck merged-a.stl\nsurfaceCheck merged-b.stl",
+        "explanation": "从同一输入分别生成结果，比较非流形边、开放边和点数，选取能修复接缝且保留结构的较小容差。"
+      },
+      {
+        "title": "为特征提取准备表面",
+        "code": "surfacePointMerge body.stl 1e-8 body-joined.stl\nsurfaceCheck body-joined.stl",
+        "explanation": "检查合并结果的连通性后，将 body-joined.stl 放到 constant/triSurface，并在 surfaceFeatureExtractDict 指向该文件。这样特征提取使用的是修复后的接缝。"
+      }
+    ]
+  },
+  "surfaceRedistributePar": {
+    "prerequisites": "准备已分解的体网格、system/decomposeParDict 和 constant/triSurface/body.stl；MPI 进程数应等于子域数。操作写入分区表面，宜在案例副本内进行。",
+    "examples": [
+      {
+        "title": "按两个网格子域分配表面",
+        "code": "mpirun -np 2 surfaceRedistributePar body.stl follow -parallel",
+        "explanation": "follow 按各进程网格边界框分配相交三角面。完成后各进程拥有其局部网格需要查询的表面部分。"
+      },
+      {
+        "title": "在四个子域使用同一流程",
+        "code": "mpirun -np 4 surfaceRedistributePar body.stl follow -parallel",
+        "explanation": "适用于已分为四个子域的案例。比较各进程报告的表面规模，可判断几何在当前网格分区中的负载分布。"
+      },
+      {
+        "title": "保留网格之外的三角面",
+        "code": "mpirun -np 2 surfaceRedistributePar body.stl follow -keepNonMapped -parallel",
+        "explanation": "保留没有映射到当前网格边界框的表面三角形。适合后续网格范围还会扩展、需要保留完整几何的工作流程。"
+      },
+      {
+        "title": "按表面独立分配",
+        "code": "mpirun -np 2 surfaceRedistributePar body.stl independent -parallel",
+        "explanation": "独立确定表面的分布，而不是逐步跟随体网格边界框。对照 follow 的各进程三角面数，评估所选分配方式的负载。"
+      },
+      {
+        "title": "重新分配已有分区表面",
+        "code": "mpirun -np 2 surfaceRedistributePar body.stl follow -parallel -case ../redistributedCase",
+        "explanation": "目标案例需已经完成体网格重新分区。工具可读取已有分区表面，并使其分布跟随新网格，供后续并行几何查询使用。"
+      }
+    ]
+  },
+  "surfaceRefineRedGreen": {
+    "prerequisites": "准备三角表面。红绿细化增加三角面数量，主要改变离散密度；新顶点位于原三角形上。",
+    "examples": [
+      {
+        "title": "细化一次",
+        "code": "surfaceRefineRedGreen body.stl body-refined.stl",
+        "explanation": "使用默认一次细化，将表面的三角形继续细分。输出面数增加，原有表面外形保持为同一个分片线性几何。"
+      },
+      {
+        "title": "连续细化两次",
+        "code": "surfaceRefineRedGreen body.stl body-refined2.stl -steps 2",
+        "explanation": "在第一轮结果上继续细分，获得更密的表面离散。运行前评估面数和内存，避免对已经很密的 CAD 曲面重复加密。"
+      },
+      {
+        "title": "转换格式并细化",
+        "code": "surfaceRefineRedGreen body.obj body-refined.stl -steps 1",
+        "explanation": "从受支持的三角表面格式读取并输出 STL。适合已有 OBJ 三角面需要进一步细分的场景。"
+      },
+      {
+        "title": "检查细化后的拓扑",
+        "code": "surfaceRefineRedGreen coarse.stl fine.stl -steps 1\nsurfaceCheck coarse.stl\nsurfaceCheck fine.stl",
+        "explanation": "对比面数、开放边和连通性。细分应保留原来的边界结构；开放几何经过细化后仍需按开放表面使用。"
+      },
+      {
+        "title": "细化后再进行平滑",
+        "code": "surfaceRefineRedGreen faceted.stl dense.stl -steps 1\nsurfaceLambdaMuSmooth dense.stl 0.5 0.53 5 smooth.stl",
+        "explanation": "先增加离散点，再做五轮 λ–μ 平滑。结果会改变几何形状，应对照原始轮廓和关键尺寸选择平滑强度。"
+      }
+    ]
+  },
+  "surfaceSplitByPatch": {
+    "prerequisites": "准备带多个表面区域的 STL、OBJ 等文件；先检查区域名称，再设置选取列表。",
+    "examples": [
+      {
+        "title": "按全部区域拆分",
+        "code": "surfaceSplitByPatch assembly.stl",
+        "explanation": "为各表面区域写出独立文件，终端显示实际输出文件名。适合将装配体的入口、出口和壁面分开处理。"
+      },
+      {
+        "title": "仅导出指定区域",
+        "code": "surfaceSplitByPatch assembly.stl -patches '(inlet outlet)'",
+        "explanation": "只为 inlet 和 outlet 写出文件，保留原区域内的三角面。可单独检查端面位置和封口情况。"
+      },
+      {
+        "title": "使用名称模式选取",
+        "code": "surfaceSplitByPatch assembly.obj -patches '(\"blade.*\")'",
+        "explanation": "匹配 blade 开头的区域，分别导出各叶片。正则表达式应放在列表中并加引号。"
+      },
+      {
+        "title": "排除辅助区域",
+        "code": "surfaceSplitByPatch assembly.stl -exclude-patches '(construction capTemporary)'",
+        "explanation": "拆分其余区域，同时跳过施工辅助面和临时封口。适合整理准备交给其他软件的几何文件。"
+      },
+      {
+        "title": "组合选取和排除",
+        "code": "surfaceSplitByPatch assembly.stl -patches '(\"wall.*\")' -exclude-patches '(wallTemporary)'",
+        "explanation": "导出 wall 开头的目标表面并排除临时壁面。对生成文件逐个运行 surfaceCheck，可单独定位某一区域的开放边。"
+      }
+    ]
+  },
+  "surfaceSplitByTopology": {
+    "prerequisites": "工具根据三角面拓扑识别并分离 baffle 等区域；输入中的开放边和多连接边决定分区，适合薄片附着在主体表面的几何。",
+    "examples": [
+      {
+        "title": "分离附着薄片区域",
+        "code": "surfaceSplitByTopology body-with-baffle.stl body-separated.stl",
+        "explanation": "读取包含附着薄片的三角表面，沿其拓扑关系划分区域并写入输出。查看区域名称和颜色，确认薄片与主体的分离范围。"
+      },
+      {
+        "title": "先诊断连接关系",
+        "code": "surfaceCheck junction.stl\nsurfaceSplitByTopology junction.stl junction-zones.stl",
+        "explanation": "先查看开放边、多连接边数量，再进行拓扑分区。处理后可把新区域与异常边位置对应，判断几何连接是否符合模型。"
+      },
+      {
+        "title": "将分区导出为独立文件",
+        "code": "surfaceSplitByTopology assembly.stl assembly-zones.stl\nsurfaceSplitByPatch assembly-zones.stl",
+        "explanation": "第一步在输出中建立区域，第二步把区域分别写成文件。便于后续单独保留或修复薄片部分。"
+      },
+      {
+        "title": "处理 OBJ 三角表面",
+        "code": "surfaceSplitByTopology plate.obj plate-zones.obj",
+        "explanation": "使用 OBJ 输入和输出保留可视化工作流程。检查分区边界是否沿附着边，而不是仅凭文件中的原分组推断结果。"
+      },
+      {
+        "title": "比较处理前后的拓扑",
+        "code": "surfaceSplitByTopology model.stl model-zones.stl\nsurfaceCheck model.stl\nsurfaceCheck model-zones.stl",
+        "explanation": "核对面数与连接统计，并在可视化中按区域着色。分区结果用于选择区域；是否需要真正断开共享点，可继续评估 surfaceSplitNonManifolds。"
+      }
+    ]
+  },
+  "surfaceSplitNonManifolds": {
+    "prerequisites": "输入存在多个面共享同一条边的非流形连接。工具通过复制点分开这类连接，输出应结合预期零件拓扑检查。",
+    "examples": [
+      {
+        "title": "断开非流形连接",
+        "code": "surfaceSplitNonManifolds junction.stl junction-split.stl",
+        "explanation": "复制需要分离的连接点，使非流形连接按表面结构拆开。原始文件保留，输出用于后续网格处理。"
+      },
+      {
+        "title": "定位处理的连接",
+        "code": "surfaceSplitNonManifolds junction.stl junction-debug.stl -debug",
+        "explanation": "启用工具自身的调试输出，查看处理非流形边的细节。适合普通运行后仍不清楚哪些连接被分开的情况。"
+      },
+      {
+        "title": "对照拓扑统计",
+        "code": "surfaceCheck junction.stl\nsurfaceSplitNonManifolds junction.stl split.stl\nsurfaceCheck split.stl",
+        "explanation": "比较处理前后的非流形边和开放边数量。分开连接后可能形成独立开放边，需确认这与实体或薄片模型的要求一致。"
+      },
+      {
+        "title": "按区域检查拆分结果",
+        "code": "surfaceSplitNonManifolds assembly.stl split.stl\nsurfaceSplitByPatch split.stl",
+        "explanation": "先断开异常共享连接，再逐区域导出检查。区域划分来自输入，第二步便于分别查看各部件的边界。"
+      },
+      {
+        "title": "为后续方向整理准备表面",
+        "code": "surfaceSplitNonManifolds closed-parts.stl split-parts.stl\nsurfaceOrient split-parts.stl '(10 10 10)' oriented-parts.stl",
+        "explanation": "适用于分离后由多个闭合零件组成的输入；选取明确位于所有零件外部的点统一方向。随后检查各零件的闭合性和法向。"
+      }
+    ]
+  },
+  "surfaceSubset": {
+    "prerequisites": "准备三角表面及选择字典。点、边、面编号均从 0 开始；每个示例都从完整基础字典开始或在其上修改。",
+    "examples": [
+      {
+        "title": "按面编号提取",
+        "code": "cat > subsetDict <<'EOF'\nlocalPoints ();\nedges ();\nfaces (0 1 2);\nzone ();\naddFaceNeighbours no;\nEOF\nsurfaceSubset subsetDict body.stl selected.stl",
+        "explanation": "仅选择编号 0、1、2 的三角面。输出是表面子集，可先用小范围检查输入的编号与可视化选择是否对应。"
+      },
+      {
+        "title": "提取盒内面",
+        "code": "foamDictionary subsetDict -entry faces -set '()'\nfoamDictionary subsetDict -entry zone -set '((0 0 0) (0.1 0.1 0.1))'\nsurfaceSubset subsetDict body.stl box.stl",
+        "explanation": "清空显式面列表，按两个角点定义选择盒。以面中心是否处于该盒内选择三角面，适合提取局部结构。"
+      },
+      {
+        "title": "扩大到相邻面",
+        "code": "foamDictionary subsetDict -entry addFaceNeighbours -set true\nsurfaceSubset subsetDict body.stl expanded.stl",
+        "explanation": "在已有选择基础上加入面邻域，扩大局部提取范围。与未扩展结果比较边界，可为局部修复保留周围过渡区域。"
+      },
+      {
+        "title": "导出选择的补集",
+        "code": "foamDictionary subsetDict -entry invertSelection -set true\nsurfaceSubset subsetDict body.stl remaining.stl",
+        "explanation": "输出当前选择以外的面。适合把模型分为待修复局部与其余主体；使用前确认之前的选择参数符合目标。"
+      },
+      {
+        "title": "按局部点选择相连面",
+        "code": "foamDictionary subsetDict -entry invertSelection -set false\nfoamDictionary subsetDict -entry addFaceNeighbours -set false\nfoamDictionary subsetDict -entry zone -set '()'\nfoamDictionary subsetDict -entry localPoints -set '(0 1)'\nsurfaceSubset subsetDict body.stl near-points.stl",
+        "explanation": "保留 faces 为空，并按局部点 0、1 选取相关面。适合检查某一接缝端点周围的三角形连接。"
+      }
+    ]
+  },
+  "surfaceToPatch": {
+    "prerequisites": "已有体网格及带区域名称的三角表面，二者坐标和单位一致。该工具按表面分区重新分配网格边界，建议在独立案例副本运行。",
+    "examples": [
+      {
+        "title": "按几何区域重划边界",
+        "code": "surfaceToPatch constant/triSurface/body.stl",
+        "explanation": "把表面的区域信息映射到现有网格边界面上。处理后查看 polyMesh/boundary，并为新增边界补齐各场文件的边界条件。"
+      },
+      {
+        "title": "指定匹配容差",
+        "code": "surfaceToPatch constant/triSurface/body.stl -tol 0.0001",
+        "explanation": "容差是相对网格尺度的比例，较小值要求网格面与表面更接近。检查未能匹配的区域，避免把几何错位当作容差问题。"
+      },
+      {
+        "title": "对离散误差稍大的表面匹配",
+        "code": "surfaceToPatch constant/triSurface/body.stl -tol 0.002",
+        "explanation": "适用于已确认几何一致、但表面离散产生小偏差的情况。提高容差后检查相邻区域边界，确认没有跨越窄间隙误匹配。"
+      },
+      {
+        "title": "只处理选定的面集",
+        "code": "surfaceToPatch constant/triSurface/body.stl -faceSet targetFaces",
+        "explanation": "使用已存在的 targetFaces 限定处理面。适合只重划某个零件或一组边界，保留其余网格面的分区。"
+      },
+      {
+        "title": "在副本重划并检查",
+        "code": "surfaceToPatch -case ../patchTest ../patchTest/constant/triSurface/body.stl -tol 0.001\ncheckMesh -case ../patchTest -latestTime",
+        "explanation": "将试验限制在 patchTest 副本。工具有边界变更时把新网格写到后续时间，因此检查最新网格；核对边界名称、网格连接并配置相应场文件后再继续求解。"
+      }
+    ]
+  },
+  "surfaceTransformPoints": {
+    "prerequisites": "准备受支持的表面文件；输入与输出使用不同文件名，便于直接比较变换前后的边界框。",
+    "examples": [
+      {
+        "title": "将毫米转换为米",
+        "code": "surfaceTransformPoints body-mm.stl body-m.stl -read-scale 0.001",
+        "explanation": "读取坐标时统一乘 0.001。长度 100 的零件变为 0.1，与 OpenFOAM 算例常用的米制输入对应。"
+      },
+      {
+        "title": "平移几何",
+        "code": "surfaceTransformPoints body.stl shifted.stl -translate '(0.1 0 0)'",
+        "explanation": "将全部顶点沿 x 正方向移动 0.1 个坐标单位。形状和尺寸保持不变，边界框的 x 范围整体平移。"
+      },
+      {
+        "title": "绕指定轴旋转",
+        "code": "surfaceTransformPoints blade.stl blade-rotated.stl -rotate-angle '((0 0 1) 45)'",
+        "explanation": "绕过原点的 z 轴旋转 45°。查看叶片与入口方向的关系，确认旋转正向符合右手规则。"
+      },
+      {
+        "title": "绕几何中心旋转",
+        "code": "surfaceTransformPoints body.stl body-rotated.stl -auto-centre -rotate-z 90",
+        "explanation": "自动使用几何中心作为旋转中心，绕 z 轴转 90°。适合改变零件方向，同时保持其中心位置。"
+      },
+      {
+        "title": "缩放并对齐方向",
+        "code": "surfaceTransformPoints body-mm.stl aligned.stl -read-scale 0.001 -rotate '((1 0 0) (0 0 1))'",
+        "explanation": "先转换长度单位，再将原 x 方向转到 z 方向。组合变换后检查包围盒和关键定位点，供后续网格划分使用。"
+      }
+    ]
+  },
+  "ansysToFoam": {
+    "prerequisites": "准备由 I-DEAS 导出的 ANSYS 网格输入文件，以及目标 OpenFOAM 案例；该转换器按这一网格格式读取数据。",
+    "examples": [
+      {
+        "title": "导入米制网格",
+        "code": "ansysToFoam mesh.ans",
+        "explanation": "读取节点、单元和边界信息，在案例中生成 polyMesh。默认坐标缩放因子为 1，适用于输入已经采用米的情况。"
+      },
+      {
+        "title": "导入毫米网格",
+        "code": "ansysToFoam mesh-mm.ans -scale 0.001",
+        "explanation": "将节点坐标乘 0.001。导入后在 checkMesh 的 bounding box 中核对长度，原 100 mm 应对应 0.1 m。"
+      },
+      {
+        "title": "导入指定案例",
+        "code": "ansysToFoam /data/mesh.ans -case ../ansysCase\ncheckMesh -case ../ansysCase -constant",
+        "explanation": "从明确的输入路径读取，并把网格写入 ansysCase。检查器报告单元类型、质量和边界数量，可定位转换后的连接问题。"
+      },
+      {
+        "title": "调整导入后的边界组织",
+        "code": "ansysToFoam mesh.ans\ncreatePatch -overwrite",
+        "explanation": "前提是 system/createPatchDict 已按转换得到的 patch 名称配置。第二步合并或重命名边界，形成求解器需要的 inlet、outlet、walls 等分区。"
+      },
+      {
+        "title": "检查并优化网格编号",
+        "code": "ansysToFoam mesh.ans -scale 0.001\ncheckMesh -constant -allTopology -allGeometry\nrenumberMesh -overwrite",
+        "explanation": "先对转换结果做较全面的几何和拓扑检查，再重新编号以改善矩阵带宽。重新编号改变网格索引，已有按编号创建的集合应重新核对。"
+      }
+    ]
+  },
+  "ccmToFoam": {
+    "prerequisites": "安装带 CCM 支持的 OpenFOAM 工具，准备 STAR-CCM+ 导出的 .ccm 文件；操作在单独案例目录进行。",
+    "examples": [
+      {
+        "title": "导入 CCM 网格",
+        "code": "ccmToFoam mesh.ccm",
+        "explanation": "读取几何并生成 OpenFOAM 网格。检查转换日志中的区域、界面和边界名称，再配置物理场。"
+      },
+      {
+        "title": "先查看区域与接口信息",
+        "code": "ccmToFoam mesh.ccm -list",
+        "explanation": "只列出 cellTable、boundaryRegion 和接口等几何信息后退出。先核对流固区域、边界名称与接口类型，再选择实际导入时的处理选项。"
+      },
+      {
+        "title": "保留固体单元",
+        "code": "ccmToFoam mesh.ccm -solids",
+        "explanation": "将输入中的固体单元也保留到导入网格中。随后按 cellZone 划分流体和固体区域，配置多区域求解所需的材料参数。"
+      },
+      {
+        "title": "合并就地接口",
+        "code": "ccmToFoam mesh.ccm -merge",
+        "explanation": "对可按原位置合并的接口执行合并。完成后检查内部面和 patch 数量，确认原本应连通的区域已经连接。"
+      },
+      {
+        "title": "明确单位和输出格式",
+        "code": "ccmToFoam mesh-mm.ccm -scale 0.001 -ascii -numbered",
+        "explanation": "输入毫米坐标换算为米，网格以 ASCII 保存，并使用编号式 patch/zone 名称。适合原始名称需要统一处理的导入流程，后续按日志建立名称对应关系。"
+      }
+    ]
+  },
+  "foamToCcm": {
+    "prerequisites": "安装带 CCM 支持的导出工具；案例已有网格，结果导出示例还需存在相应时间的场文件。",
+    "examples": [
+      {
+        "title": "导出网格与结果",
+        "code": "foamToCcm -latestTime",
+        "explanation": "选择最新时间导出 CCM 数据。几何文件使用 .ccmg，结果文件使用 .ccmp 加时间后缀，供支持 CCM 的软件读取。"
+      },
+      {
+        "title": "仅导出网格",
+        "code": "foamToCcm -mesh -constant -name channelMesh",
+        "explanation": "以 channelMesh 为输出基名，只写几何。适合把网格交给另一求解软件继续配置，而不传递当前场结果。"
+      },
+      {
+        "title": "仅导出指定结果",
+        "code": "foamToCcm -results -time 0.5 -name channelResult",
+        "explanation": "选取 0.5 时间目录，只写结果数据。接收端还需要与该结果对应的网格，特别是动网格情况下的几何位置。"
+      },
+      {
+        "title": "导出一段瞬态结果",
+        "code": "foamToCcm -time '0.1:0.5' -name transient",
+        "explanation": "转换选定范围内已有的时间目录。每个时间对应结果文件，网格发生变化时还会输出相应几何，便于后续动画处理。"
+      },
+      {
+        "title": "应用区域名称映射",
+        "code": "foamToCcm -latestTime -remap constant/remapping -name mappedCase",
+        "explanation": "按准备好的 remapping 文件进行区域映射后导出。适合需要保持与外部软件区域命名约定一致的交换流程。"
+      }
+    ]
+  },
+  "cfx4ToFoam": {
+    "prerequisites": "准备 CFX4 的 .geo 几何文件和目标案例，输入格式应与 CFX4 转换器相符。",
+    "examples": [
+      {
+        "title": "导入 CFX4 几何",
+        "code": "cfx4ToFoam mesh.geo",
+        "explanation": "转换节点、单元和边界到 polyMesh。查看终端输出，核对读取的块数和边界分区。"
+      },
+      {
+        "title": "换算毫米坐标",
+        "code": "cfx4ToFoam mesh.geo -scale 0.001",
+        "explanation": "将输入节点坐标乘 0.001。转换后检查边界框尺寸，确保计算域长度与后续速度、黏度等 SI 制参数一致。"
+      },
+      {
+        "title": "在目标案例中检查拓扑",
+        "code": "cfx4ToFoam /data/mesh.geo -case ../cfxCase\ncheckMesh -case ../cfxCase -constant -allTopology",
+        "explanation": "将网格写入指定案例后检查拓扑连接。关注内部面、边界面和不连通区域，判断多块网格是否正确连接。"
+      },
+      {
+        "title": "整理转换后的边界",
+        "code": "cfx4ToFoam mesh.geo\ncreatePatch -overwrite",
+        "explanation": "先依据转换得到的 patch 名称编写 createPatchDict，再合并同一物理边界的分区。检查 boundary 文件并同步配置各场的 boundaryField。"
+      },
+      {
+        "title": "导出外表面核对形状",
+        "code": "cfx4ToFoam mesh.geo -scale 0.001\nfoamToSurface cfx-boundary.stl -constant",
+        "explanation": "把导入网格外边界写成 STL，便于与原始几何叠加检查。主要核对单位、朝向、孔洞以及入口出口的位置。"
+      }
+    ]
+  },
+  "datToFoam": {
+    "prerequisites": "这是配合特定双锥结构化网格数据使用的 points 转换器。准备格式正确的 DAT 和顶点编号匹配的 blockMeshDict；工具会替换 constant/polyMesh/points，宜在副本操作。",
+    "examples": [
+      {
+        "title": "用 DAT 坐标替换块网格顶点",
+        "code": "blockMesh\ndatToFoam biconic.dat",
+        "explanation": "先建立 faces、owner、neighbour 等拓扑，再写入 DAT 转换得到的 points。程序跳过输入 i、j 方向的首层点，并生成两侧楔形顶点，网格编号必须与此排列对应。"
+      },
+      {
+        "title": "检查替换后的网格",
+        "code": "blockMesh\ndatToFoam biconic.dat\ncheckMesh -constant -allGeometry",
+        "explanation": "检查体积、面方向和单元形状。若出现负体积或严重扭曲，优先核对 DAT 的点排列与 blockMesh 的编号关系。"
+      },
+      {
+        "title": "在独立案例测试坐标",
+        "code": "blockMesh -case ../biconicTest\ndatToFoam /data/biconic.dat -case ../biconicTest",
+        "explanation": "把坐标替换限制在 biconicTest。输出点数为 2×(iPoints−1)×(jPoints−1)，可与目标拓扑需要的点数进行对照。"
+      },
+      {
+        "title": "换算输入坐标的单位",
+        "code": "blockMesh\ndatToFoam biconic-mm.dat\ntransformPoints -scale '(0.001 0.001 0.001)'",
+        "explanation": "DAT 转换器本身没有缩放选项，转换完成后统一缩放整个网格。该顺序使新生成的楔形顶点也按相同长度比例变换。"
+      },
+      {
+        "title": "提取生成的楔形外表面",
+        "code": "blockMesh\ndatToFoam biconic.dat\nfoamToSurface biconic-boundary.obj -constant",
+        "explanation": "导出最终外表面，检查双锥轮廓、轴线和楔形两侧。程序按源码中固定的 0.1° 角构造两侧坐标，几何检查应与该设置一致。"
+      }
+    ]
+  },
+  "ensightToFoam": {
+    "prerequisites": "准备 EnSight Gold 几何 .geo 文件；转换几何后，求解器的初始场和数值设置需在案例中另行配置。",
+    "examples": [
+      {
+        "title": "导入几何",
+        "code": "ensightToFoam mesh.geo",
+        "explanation": "读取 EnSight 几何并建立体网格。检查转换报告中的单元类型和区域数量。"
+      },
+      {
+        "title": "导入毫米模型",
+        "code": "ensightToFoam mesh.geo -scale 0.001",
+        "explanation": "缩放节点坐标到米。导入后使用 checkMesh 核对边界框，与原始模型的实际尺寸对应。"
+      },
+      {
+        "title": "合并几乎重合的顶点",
+        "code": "ensightToFoam mesh.geo -mergeTol 1e-6",
+        "explanation": "使用相对模型包围盒尺度的合并容差，处理分块几何中的近重合点。检查接缝是否连接，同时核对细小间隙是否保留。"
+      },
+      {
+        "title": "保留输入单元的手性",
+        "code": "ensightToFoam mesh.geo -keepHandedness",
+        "explanation": "保留输入单元方向而关闭自动方向调整，适用于已经确认输入连接顺序符合预期的网格。随后检查负体积和面方向。"
+      },
+      {
+        "title": "在副本组合缩放与合并",
+        "code": "ensightToFoam /data/mesh.geo -case ../ensightCase -scale 0.001 -mergeTol 1e-7\ncheckMesh -case ../ensightCase -constant -allTopology",
+        "explanation": "在独立案例内同时处理单位和小接缝。通过连接检查确认各部分构成预期流体域，再继续设置边界条件。"
+      }
+    ]
+  },
+  "fireToFoam": {
+    "prerequisites": "准备 AVL FIRE 的多面体网格文件，目标案例包含基本 system 配置。",
+    "examples": [
+      {
+        "title": "导入 FIRE 网格",
+        "code": "fireToFoam mesh.fpma",
+        "explanation": "读取 FIRE 多面体网格并写入 OpenFOAM。默认采用二进制网格输出，转换后可通过 checkMesh 查看结构。"
+      },
+      {
+        "title": "导出为可读的网格文件",
+        "code": "fireToFoam mesh.fpma -ascii",
+        "explanation": "把网格写为 ASCII 格式，便于直接查看 points、faces 和 boundary。大型网格的文件体积会相应增加。"
+      },
+      {
+        "title": "开启额外边检查",
+        "code": "fireToFoam mesh.fpma -check",
+        "explanation": "转换时增加边相关检查，帮助定位输入面连接问题。结合后续 checkMesh 的拓扑报告判断错误位置。"
+      },
+      {
+        "title": "将毫米网格换算为米",
+        "code": "fireToFoam mesh.fpma -scale 0.001",
+        "explanation": "对顶点坐标进行单位转换。检查输出包围盒，再设置以米为长度单位的物性和边界条件。"
+      },
+      {
+        "title": "在指定案例进行完整检查",
+        "code": "fireToFoam /data/mesh.fpma -case ../fireCase -ascii -check\ncheckMesh -case ../fireCase -constant -allGeometry -allTopology",
+        "explanation": "将转换和检查集中到 fireCase。查看负体积、面连接和边界分区，确认网格可用于后续求解。"
+      }
+    ]
+  },
+  "fluent3DMeshToFoam": {
+    "prerequisites": "准备三维 Fluent 网格文件；由 Cubit 生成的同类文件可使用专用选项。组名必须与输入网格实际名称一致。",
+    "examples": [
+      {
+        "title": "导入三维 Fluent 网格",
+        "code": "fluent3DMeshToFoam mesh.msh",
+        "explanation": "建立体网格以及输入定义的边界分组。查看转换日志中 cell group 和 face group 的对应关系。"
+      },
+      {
+        "title": "导入 Cubit 导出文件",
+        "code": "fluent3DMeshToFoam cubit.msh -cubit",
+        "explanation": "启用针对 Cubit 文件的处理路径。转换后核对单元数量及边界组，适合使用 Cubit 建网格的工作流程。"
+      },
+      {
+        "title": "转换毫米坐标",
+        "code": "fluent3DMeshToFoam mesh.msh -scale 0.001",
+        "explanation": "将输入坐标换算为米。与 Fluent 界面显示单位不同，转换器使用的是文件里的实际数值，需在 checkMesh 中核对。"
+      },
+      {
+        "title": "跳过指定单元组",
+        "code": "fluent3DMeshToFoam mesh.msh -ignoreCellGroups '(solidSupport)'",
+        "explanation": "前提是输入含名为 solidSupport 的可排除单元组。导入时跳过该组，随后核对保留单元数及由此产生的边界。"
+      },
+      {
+        "title": "跳过指定面组并检查",
+        "code": "fluent3DMeshToFoam mesh.msh -ignoreFaceGroups '(auxFaces)' -case ../fluentTest\ncheckMesh -case ../fluentTest -constant -allTopology",
+        "explanation": "适用于已确认 auxFaces 属于可忽略辅助数据的输入。检查真实外边界是否仍完整，保留求解所需的面分区。"
+      }
+    ]
+  },
+  "fluentMeshToFoam": {
+    "prerequisites": "准备 Fluent 网格文件和 OpenFOAM 案例。二维网格需提供有限厚度，场文件中相应前后边界应与二维模型一致。",
+    "examples": [
+      {
+        "title": "导入三维网格",
+        "code": "fluentMeshToFoam mesh.msh",
+        "explanation": "把 Fluent 的面和单元连接转换为 polyMesh。检查生成的边界分区名称，并将其用于初始场文件。"
+      },
+      {
+        "title": "导入毫米网格",
+        "code": "fluentMeshToFoam mesh.msh -scale 0.001",
+        "explanation": "节点坐标乘 0.001；输入长度 1000 将变为 1 m。通过 checkMesh 的 bounding box 检查换算结果。"
+      },
+      {
+        "title": "为二维网格指定厚度",
+        "code": "fluentMeshToFoam mesh2d.msh -2D 0.01",
+        "explanation": "将二维网格处理为厚度 0.01 的网格。厚度先按输入坐标给出；如果同时设置 -scale，它也会一起缩放。"
+      },
+      {
+        "title": "保留单元区域",
+        "code": "fluentMeshToFoam mesh.msh -writeZones",
+        "explanation": "把相应单元分组写成 cellZone，供多孔区、旋转区或多区域拆分使用。转换后检查 cellZones 中的名称和单元数量。"
+      },
+      {
+        "title": "同时生成集合用于后续选区",
+        "code": "fluentMeshToFoam mesh.msh -writeZones -writeSets\ncheckMesh -constant",
+        "explanation": "额外将区域和边界信息写为集合，便于 topoSet、局部网格修改等工具使用。集合内容应与转换日志中的分组一致。"
+      }
+    ]
+  },
+  "foamMeshToFluent": {
+    "prerequisites": "案例已有体网格；该工具导出 Fluent 网格，输出文件位置以终端报告为准。场结果的交换需要另选结果导出工具。",
+    "examples": [
+      {
+        "title": "导出已有网格",
+        "code": "foamMeshToFluent",
+        "explanation": "读取当前案例的网格，生成 Fluent .msh 文件。接收端读取后应核对长度单位和边界区域。"
+      },
+      {
+        "title": "从 blockMesh 建网格后导出",
+        "code": "blockMesh\ncheckMesh -constant\nfoamMeshToFluent",
+        "explanation": "先生成结构化块网格，再检查并导出。适合使用 OpenFOAM 的 blockMesh 建网格、在 Fluent 中进行后续计算。"
+      },
+      {
+        "title": "导出指定案例",
+        "code": "foamMeshToFluent -case ../channel",
+        "explanation": "在当前目录直接指定 channel 案例，输出网格对应该案例。查看日志中的文件路径，避免把其他案例的导出文件混用。"
+      },
+      {
+        "title": "整理边界后导出",
+        "code": "createPatch -overwrite\nfoamMeshToFluent",
+        "explanation": "前提是 createPatchDict 已定义目标分组。先合并或命名入口、出口和壁面，导出的 Fluent 边界区域更便于分配物理条件。"
+      },
+      {
+        "title": "重新编号后导出",
+        "code": "renumberMesh -overwrite\ncheckMesh -constant\nfoamMeshToFluent",
+        "explanation": "在案例副本中重新编号，再导出通过检查的网格。几何形状保持不变，输出连接编号随之更新，适合比较外部软件读取与计算效率。"
+      }
+    ]
+  },
+  "foamToFireMesh": {
+    "prerequisites": "案例已有体网格；按时间导出示例需要相应网格时间目录。输出用于 AVL FIRE 格式交换。",
+    "examples": [
+      {
+        "title": "导出初始网格",
+        "code": "foamToFireMesh -constant",
+        "explanation": "选择 constant 网格并转换为 FIRE 格式。转换日志给出实际写出的文件位置。"
+      },
+      {
+        "title": "使用 ASCII 格式",
+        "code": "foamToFireMesh -constant -ascii",
+        "explanation": "以文本格式导出，便于排查交换文件问题。与二进制输出相比，文件通常更大。"
+      },
+      {
+        "title": "转换为毫米坐标",
+        "code": "foamToFireMesh -constant -scale 1000",
+        "explanation": "输出坐标乘 1000，将米制网格改为毫米数值。接收软件应按毫米解释输出坐标。"
+      },
+      {
+        "title": "导出最新变形网格",
+        "code": "foamToFireMesh -latestTime",
+        "explanation": "读取最新时间对应的几何。适用于动网格计算后将变形位置交给 FIRE 相关工具。"
+      },
+      {
+        "title": "导出一组瞬态网格",
+        "code": "foamToFireMesh -time '0.1:0.5' -ascii",
+        "explanation": "遍历所选范围内已有的时间目录，导出相关网格。核对每个输出对应的时间，避免把静态网格重复文件误认为不同形状。"
+      }
+    ]
+  },
+  "foamToStarMesh": {
+    "prerequisites": "案例已有网格；默认导出比例为 1000，即常见米制 OpenFOAM 网格转为毫米制 STAR-CD 坐标。",
+    "examples": [
+      {
+        "title": "按默认比例导出",
+        "code": "foamToStarMesh -constant",
+        "explanation": "输出 STAR-CD 的顶点、单元和边界文件。默认坐标乘 1000，原 1 m 长度写为 1000。"
+      },
+      {
+        "title": "保持原坐标数值",
+        "code": "foamToStarMesh -constant -scale 1",
+        "explanation": "显式指定比例 1，适合接收端也使用米制坐标的情况。导入外部软件后核对边界框。"
+      },
+      {
+        "title": "仅导出几何连接",
+        "code": "foamToStarMesh -constant -noBnd",
+        "explanation": "输出顶点和单元，跳过 .bnd 边界文件。适合接收端计划重新建立边界分区的流程。"
+      },
+      {
+        "title": "导出最新网格位置",
+        "code": "foamToStarMesh -latestTime -scale 1",
+        "explanation": "选择最新时间的网格，保持米制坐标。动网格输出可用于检查最后时刻的几何形状。"
+      },
+      {
+        "title": "导出选定时间的网格",
+        "code": "foamToStarMesh -time '0.2,0.5,1' -scale 1000",
+        "explanation": "选择已有的 0.2、0.5 和 1 时间目录。比较输出几何可以分析位移过程；所有输出采用相同的毫米坐标尺度。"
+      }
+    ]
+  },
+  "foamToSurface": {
+    "prerequisites": "案例已有体网格；工具导出体网格边界表面，输出格式由文件扩展名决定。",
+    "examples": [
+      {
+        "title": "导出初始边界",
+        "code": "foamToSurface boundary.stl -constant",
+        "explanation": "提取 constant 网格的边界并写成 STL。可在 CAD 或可视化软件中检查计算域外形。"
+      },
+      {
+        "title": "保留多边形表面表示",
+        "code": "foamToSurface boundary.obj -constant",
+        "explanation": "输出 OBJ 表面，便于读取网格边界上的多边形。需要三角形表示时，可配合 -tri 选项。"
+      },
+      {
+        "title": "显式三角化边界",
+        "code": "foamToSurface boundary-tri.obj -constant -tri",
+        "explanation": "将边界多边形分解为三角形后导出。适合需要三角表面的下游几何工具。"
+      },
+      {
+        "title": "导出毫米坐标",
+        "code": "foamToSurface boundary-mm.stl -constant -scale 1000",
+        "explanation": "将米制网格的坐标乘 1000。接收端应使用毫米单位，并检查几何边界框。"
+      },
+      {
+        "title": "导出最新变形边界",
+        "code": "foamToSurface moved.stl -latestTime",
+        "explanation": "提取最新时间对应的网格边界。与初始输出叠加，可检查动网格位移和变形范围。"
+      }
+    ]
+  },
+  "gambitToFoam": {
+    "prerequisites": "准备 GAMBIT Neutral 网格文件；该输入与 Fluent .msh 文件采用不同的格式。",
+    "examples": [
+      {
+        "title": "导入 Neutral 网格",
+        "code": "gambitToFoam mesh.neu",
+        "explanation": "读取中性格式中的节点、单元和边界分组，建立 OpenFOAM 网格。核对转换日志中的组名及单元数。"
+      },
+      {
+        "title": "导入毫米模型",
+        "code": "gambitToFoam mesh.neu -scale 0.001",
+        "explanation": "节点坐标换算为米，便于直接使用 SI 制物性参数。检查 bounding box 是否与实际尺寸一致。"
+      },
+      {
+        "title": "转换到目标案例并检查",
+        "code": "gambitToFoam /data/mesh.neu -case ../gambitCase\ncheckMesh -case ../gambitCase -constant -allTopology",
+        "explanation": "把网格写入指定案例并检查连接关系。关注多块网格之间是否出现意外的断开区域。"
+      },
+      {
+        "title": "将分散边界归并",
+        "code": "gambitToFoam mesh.neu\ncreatePatch -overwrite",
+        "explanation": "前提是 createPatchDict 已按导入 patch 名称配置。将同一物理壁面对应的多个分组归并，减少后续边界条件重复配置。"
+      },
+      {
+        "title": "导出表面核对入口出口",
+        "code": "gambitToFoam mesh.neu -scale 0.001\nsurfaceMeshExtract ports.obj -patches '(inlet outlet)' -constant",
+        "explanation": "输入需包含 inlet 和 outlet 分组。单独导出两个端面，检查法向、面积和间距是否符合实际流动通道。"
+      }
+    ]
+  },
+  "gmshToFoam": {
+    "prerequisites": "准备 Gmsh 的 ASCII MSH 2 格式网格；建议在 Gmsh 中定义 Physical Volume 和 Physical Surface 来表达体区及边界。",
+    "examples": [
+      {
+        "title": "导入现有 Gmsh 网格",
+        "code": "gmshToFoam mesh.msh",
+        "explanation": "读取节点、单元和物理分组，生成 polyMesh。转换后查看 boundary 和 cellZones，核对 Physical 分组是否完整。"
+      },
+      {
+        "title": "从几何文件生成再导入",
+        "code": "gmsh channel.geo -3 -format msh2 -o channel.msh\ngmshToFoam channel.msh",
+        "explanation": "需要系统已安装 gmsh。第一步生成三维 MSH 2 网格，第二步转换为 OpenFOAM，适合可重复的几何—网格工作流程。"
+      },
+      {
+        "title": "导入命名区域",
+        "code": "gmshToFoam solid.msh -region solid",
+        "explanation": "将网格写到名为 solid 的区域路径。适合多区域案例中单独准备固体网格，随后需要相应的 constant/solid 和 system/solid 配置。"
+      },
+      {
+        "title": "保留输入的单元方向",
+        "code": "gmshToFoam mesh.msh -keepOrientation",
+        "explanation": "保留输入棱柱和六面体的方向信息。适用于已确认节点顺序的网格，之后用 checkMesh 查看负体积和面方向。"
+      },
+      {
+        "title": "换算毫米模型并检查",
+        "code": "gmshToFoam mesh-mm.msh\ntransformPoints -scale '(0.001 0.001 0.001)'\ncheckMesh -constant -allGeometry",
+        "explanation": "转换器通过输入坐标建立网格；第二步统一缩放为米。检查单元质量和尺寸，再配置求解器物性。"
+      }
+    ]
+  },
+  "ideasUnvToFoam": {
+    "prerequisites": "准备 I-DEAS Universal .unv 文件；按实际导出单位核对坐标，确保所需边界分组随文件一并导出。",
+    "examples": [
+      {
+        "title": "导入 UNV 网格",
+        "code": "ideasUnvToFoam mesh.unv",
+        "explanation": "读取通用格式中的网格与分组，写出 OpenFOAM polyMesh。检查单元数量和边界名称与原模型是否对应。"
+      },
+      {
+        "title": "导出边界调试几何",
+        "code": "ideasUnvToFoam mesh.unv -dump",
+        "explanation": "转换时额外写出 boundaryFaces.obj，便于可视化核对读取到的边界面。适合排查分组与几何位置不对应的问题。"
+      },
+      {
+        "title": "转换毫米坐标",
+        "code": "ideasUnvToFoam mesh-mm.unv\ntransformPoints -scale '(0.001 0.001 0.001)'",
+        "explanation": "导入完成后统一将节点坐标换算为米。后续 checkMesh 的边界框应对应模型的实际米制尺寸。"
+      },
+      {
+        "title": "在独立案例检查全部连接",
+        "code": "ideasUnvToFoam /data/mesh.unv -case ../unvCase\ncheckMesh -case ../unvCase -constant -allTopology",
+        "explanation": "转换结果写入 unvCase，随后检查面连接和不连通区域。便于把格式转换问题与已有求解设置分开排查。"
+      },
+      {
+        "title": "整理分组后查看外形",
+        "code": "ideasUnvToFoam mesh.unv\ncreatePatch -overwrite\nfoamToSurface unv-boundary.obj -constant",
+        "explanation": "先依据导入名称编写 createPatchDict，再整理边界并导出外表面。对照原始几何检查入口、出口和壁面归属。"
+      }
+    ]
+  },
+  "kivaToFoam": {
+    "prerequisites": "准备 KIVA3 或 KIVA3v 网格文件；目标案例是独立副本，转换后需核对缸体、活塞及缸盖边界。",
+    "examples": [
+      {
+        "title": "导入默认文件",
+        "code": "kivaToFoam",
+        "explanation": "从当前目录读取 otape17，默认采用 KIVA3v 处理方式。日志显示各类边界和单元数量。"
+      },
+      {
+        "title": "指定输入文件",
+        "code": "kivaToFoam -file engine.otape17",
+        "explanation": "读取明确命名的网格，便于同时保存不同曲轴位置或不同几何版本的输入。"
+      },
+      {
+        "title": "导入 KIVA3 格式",
+        "code": "kivaToFoam -file engine3.otape17 -version kiva3",
+        "explanation": "选择 KIVA3 解析路径。版本参数应与输入文件格式一致，转换后核对活塞和缸套相关边界。"
+      },
+      {
+        "title": "显式选择 KIVA3v",
+        "code": "kivaToFoam -file engine3v.otape17 -version kiva3v -case ../engineCase",
+        "explanation": "把 KIVA3v 网格转换到 engineCase。适合在多个发动机案例之间明确输入版本与目标目录。"
+      },
+      {
+        "title": "调整缸盖边界识别高度",
+        "code": "kivaToFoam -file engine.otape17 -zHeadMin 0.1\ncheckMesh -constant",
+        "explanation": "按 z 高度阈值把相应缸套面转入缸盖分组；0.1 应按输入几何坐标确定。检查转换后的缸盖范围和网格质量。"
+      }
+    ]
+  },
+  "mshToFoam": {
+    "prerequisites": "准备 Adventure 格式的 .msh 文件。默认读取四面体网格，六面体使用 -hex；Gmsh 文件应使用 gmshToFoam。",
+    "examples": [
+      {
+        "title": "导入四面体网格",
+        "code": "mshToFoam mesh.msh",
+        "explanation": "按 Adventure 四面体连接格式读取网格，建立 polyMesh。检查单元数与原始网格是否一致。"
+      },
+      {
+        "title": "导入六面体网格",
+        "code": "mshToFoam hexMesh.msh -hex",
+        "explanation": "切换到六面体单元格式。该选项改变单元连接的读取方式，应与输入每个单元的节点数对应。"
+      },
+      {
+        "title": "在目标案例检查连接",
+        "code": "mshToFoam /data/mesh.msh -case ../adventureCase\ncheckMesh -case ../adventureCase -constant -allTopology",
+        "explanation": "将转换限制到独立案例，并检查外边界及内部面的连接。适合先验证输入格式再配置求解。"
+      },
+      {
+        "title": "将毫米网格换算为米",
+        "code": "mshToFoam mesh-mm.msh\ntransformPoints -scale '(0.001 0.001 0.001)'",
+        "explanation": "转换后统一缩放坐标。确认边界框尺寸与后续使用的米制速度、黏度参数一致。"
+      },
+      {
+        "title": "按几何棱边划分边界",
+        "code": "mshToFoam mesh.msh\nautoPatch 45 -overwrite\ncheckMesh -constant",
+        "explanation": "根据 45° 特征角对边界进一步分区，适用于输入未提供所需物理边界名称的模型。分区后按几何位置命名并设置边界条件。"
+      }
+    ]
+  },
+  "netgenNeutralToFoam": {
+    "prerequisites": "准备 NETGEN Neutral 格式文件；边界标签随输入读取，转换后需根据几何位置核对各 patch。",
+    "examples": [
+      {
+        "title": "导入四面体网格",
+        "code": "netgenNeutralToFoam mesh.neu",
+        "explanation": "读取顶点、四面体以及表面三角形，生成 OpenFOAM 网格。日志给出各边界分区的面数。"
+      },
+      {
+        "title": "检查边界面连接",
+        "code": "netgenNeutralToFoam mesh.neu\ncheckMesh -constant -allTopology",
+        "explanation": "检查边界三角形是否与体单元正确相连。若转换器提示某些边界面没有相邻单元，应回到输入网格核对表面数据。"
+      },
+      {
+        "title": "换算毫米坐标",
+        "code": "netgenNeutralToFoam mesh-mm.neu\ntransformPoints -scale '(0.001 0.001 0.001)'",
+        "explanation": "将转换后的全网格统一缩放为米，再通过 bounding box 核对模型尺寸。"
+      },
+      {
+        "title": "整理编号式边界名称",
+        "code": "netgenNeutralToFoam mesh.neu\ncreatePatch -overwrite",
+        "explanation": "前提是根据转换输出的 patch 编号配置 createPatchDict。把实际入口、出口和壁面改为有物理意义的名称，方便配置场文件。"
+      },
+      {
+        "title": "在指定案例导出外表面",
+        "code": "netgenNeutralToFoam /data/mesh.neu -case ../netgenCase\nfoamToSurface netgen-boundary.obj -case ../netgenCase -constant",
+        "explanation": "将网格转换到 netgenCase，并导出边界用于与 NETGEN 原模型对比。检查孔洞、几何尺度及各边界的位置。"
+      }
+    ]
+  },
+  "plot3dToFoam": {
+    "prerequisites": "准备 ASCII 格式 Plot3D 几何文件，确认文件是单块还是多块、是否包含 iblank 数据。",
+    "examples": [
+      {
+        "title": "导入多块几何",
+        "code": "plot3dToFoam mesh.xyz",
+        "explanation": "按默认多块格式读取，生成 OpenFOAM 网格。检查各块相邻界面的连接情况。"
+      },
+      {
+        "title": "读取单块格式",
+        "code": "plot3dToFoam single.xyz -singleBlock",
+        "explanation": "输入文件使用单块格式时添加此选项，避免把块尺寸行误读为块数量。"
+      },
+      {
+        "title": "读取不含空白标志的数据",
+        "code": "plot3dToFoam mesh.xyz -noBlank",
+        "explanation": "用于文件中没有 iblank 数据的情况。该选项控制输入记录的读取方式，应根据导出格式选择。"
+      },
+      {
+        "title": "将二维数据处理为有限厚度",
+        "code": "plot3dToFoam planar.xyz -2D 0.01 -noBlank",
+        "explanation": "为二维网格指定 0.01 的厚度，输入应为无 iblank 的对应格式。检查前后边界和单元层数，再配置二维场边界。"
+      },
+      {
+        "title": "组合格式与单位设置",
+        "code": "plot3dToFoam single-mm.xyz -singleBlock -noBlank -scale 0.001\ncheckMesh -constant",
+        "explanation": "读取单块、无 iblank 的毫米制输入，转换为米并检查网格。二维厚度如另行指定，也会随 -scale 一起缩放。"
+      }
+    ]
+  },
+  "star4ToFoam": {
+    "prerequisites": "准备 STAR-CD v4 的同名前缀 .vrt、.cel 和 .bnd 文件；默认缩放因子 0.001，通常把毫米转换为米。",
+    "examples": [
+      {
+        "title": "按文件前缀导入",
+        "code": "star4ToFoam mesh",
+        "explanation": "读取 mesh.vrt、mesh.cel 和对应边界文件。默认将顶点坐标乘 0.001，检查输出尺寸是否符合输入单位。"
+      },
+      {
+        "title": "导入已经为米制的网格",
+        "code": "star4ToFoam mesh -scale 1",
+        "explanation": "保持原始坐标数值，适用于顶点文件已采用米制的输入。显式比例能避免二次缩放。"
+      },
+      {
+        "title": "写出文本格式网格",
+        "code": "star4ToFoam mesh -ascii",
+        "explanation": "导入后以 ASCII 保存 polyMesh，便于直接阅读连接和边界数据。大型网格需要预留更多磁盘空间。"
+      },
+      {
+        "title": "保留固体单元",
+        "code": "star4ToFoam mesh -solids",
+        "explanation": "将输入中的固体单元也转换并保留。多区域传热应用需继续按区域拆分，并为各区域配置独立物性与求解设置。"
+      },
+      {
+        "title": "在独立案例组合导入",
+        "code": "star4ToFoam /data/engine -case ../starCase -scale 0.001 -ascii -solids\ncheckMesh -case ../starCase -constant -allTopology",
+        "explanation": "从绝对前缀路径读取网格，保留全部目标区域并检查连接。核对区域之间的界面和外边界，作为后续多区域配置的依据。"
+      }
+    ]
+  },
+  "tetgenToFoam": {
+    "prerequisites": "准备 TetGen 同名前缀的 .node、.ele 和 .face 文件；边界标记用于建立表面分区。",
+    "examples": [
+      {
+        "title": "按前缀导入",
+        "code": "tetgenToFoam mesh.1",
+        "explanation": "读取 mesh.1.node、mesh.1.ele 和 mesh.1.face，建立四面体网格。检查边界标记对应的 patch 数量。"
+      },
+      {
+        "title": "仅使用节点与单元文件",
+        "code": "tetgenToFoam mesh.1 -noFaceFile",
+        "explanation": "适用于没有 .face 文件的输入。网格仍可由节点和单元建立，所需边界分区需要后续按几何重新配置。"
+      },
+      {
+        "title": "检查四面体质量",
+        "code": "tetgenToFoam mesh.1\ncheckMesh -constant -allGeometry -allTopology",
+        "explanation": "检查转换后的单元体积、非正交性和边界连接，确认输入中的四面体能够用于预期离散格式。"
+      },
+      {
+        "title": "将毫米坐标换算为米",
+        "code": "tetgenToFoam mesh-mm.1\ntransformPoints -scale '(0.001 0.001 0.001)'",
+        "explanation": "TetGen 文件中的坐标数值被直接读取，转换后统一缩放。通过边界框检查实际长度。"
+      },
+      {
+        "title": "为缺失标记的网格划分边界",
+        "code": "tetgenToFoam mesh.1 -noFaceFile\nautoPatch 45 -overwrite",
+        "explanation": "根据外表面的折角建立边界分区。之后在可视化中确认各区位置，再使用 createPatchDict 整理为入口、出口和壁面。"
+      }
+    ]
+  },
+  "vtkUnstructuredToFoam": {
+    "prerequisites": "准备旧式 ASCII VTK UNSTRUCTURED_GRID 文件；转换器读取体网格，物理边界分组需后续建立。",
+    "examples": [
+      {
+        "title": "导入 VTK 体网格",
+        "code": "vtkUnstructuredToFoam mesh.vtk",
+        "explanation": "读取点坐标和支持的单元连接，生成 OpenFOAM 网格。查看转换日志中的单元类型及数量。"
+      },
+      {
+        "title": "检查混合单元网格",
+        "code": "vtkUnstructuredToFoam mixed.vtk\ncheckMesh -constant -allTopology -allGeometry",
+        "explanation": "输入包含多种受支持的体单元时，检查转换后的连接和单元质量。关注未识别单元以及异常体积报告。"
+      },
+      {
+        "title": "换算毫米坐标",
+        "code": "vtkUnstructuredToFoam mesh-mm.vtk\ntransformPoints -scale '(0.001 0.001 0.001)'",
+        "explanation": "转换后缩放全网格到米制，便于与其他 OpenFOAM 案例的物性和边界条件一致。"
+      },
+      {
+        "title": "按外形建立边界分区",
+        "code": "vtkUnstructuredToFoam mesh.vtk\nautoPatch 45 -overwrite",
+        "explanation": "转换器没有物理边界信息，第二步按特征角划分外表面。根据实际位置进一步命名和配置场边界。"
+      },
+      {
+        "title": "在独立案例提取表面核对",
+        "code": "vtkUnstructuredToFoam /data/mesh.vtk -case ../vtkCase\nfoamToSurface vtk-boundary.obj -case ../vtkCase -constant",
+        "explanation": "将转换结果放入 vtkCase，并导出外表面。与原 VTK 数据叠加查看，检查几何位置、尺度和边界是否完整。"
+      }
+    ]
+  },
+  "writeMeshObj": {
+    "prerequisites": "案例已有网格；按编号查看时编号从 0 开始，使用集合选取时需先创建对应 cellSet 或 faceSet。",
+    "examples": [
+      {
+        "title": "导出单个单元",
+        "code": "writeMeshObj -cell 0 -constant",
+        "explanation": "把编号 0 的单元写为 OBJ 几何。终端报告输出文件，可用 ParaView 查看该单元的面、边连接。"
+      },
+      {
+        "title": "检查指定网格面",
+        "code": "writeMeshObj -face 100 -constant",
+        "explanation": "导出面 100，适合结合 checkMesh 报告定位问题面。前提是网格中确实存在该面编号。"
+      },
+      {
+        "title": "检查一个点的邻域",
+        "code": "writeMeshObj -point 25 -constant",
+        "explanation": "导出与点 25 相关的几何信息，用于查看局部连接。适合定位重复点、异常边或局部网格畸变。"
+      },
+      {
+        "title": "查看问题单元集合",
+        "code": "writeMeshObj -cellSet badCells -constant",
+        "explanation": "将已存在的 badCells 单元集合导出。可从检查结果或 topoSet 建立集合，集中查看质量不佳区域。"
+      },
+      {
+        "title": "导出边界的面与边",
+        "code": "writeMeshObj -patchFaces -patchEdges -latestTime",
+        "explanation": "将最新网格的 patch 面和边写为 OBJ。适合查看动网格最终边界形状以及各 patch 的连接情况。"
+      }
+    ]
+  },
+  "PDRMesh": {
+    "prerequisites": "已有 PDR 网格、system/PDRMeshDict、blockedCells 单元集及需要的面集；blockedFaces 的目标 patch 必须已存在。示例在案例副本执行。",
+    "examples": [
+      {
+        "title": "移除阻塞单元并生成边界",
+        "code": "PDRMesh",
+        "explanation": "按 PDRMeshDict 的 blockedCells 删除阻塞区域，将暴露面放到指定 patch，结果写入后续时间。检查日志中的保留单元数和新边界面数。"
+      },
+      {
+        "title": "指定阻塞单元集合",
+        "code": "foamDictionary system/PDRMeshDict -entry blockedCells -set obstacleCells\nPDRMesh",
+        "explanation": "前提是 obstacleCells 已准备好。更换被排除的单元区域，可以比较不同障碍物布置对有效流体域的影响。"
+      },
+      {
+        "title": "为阻塞面设置目标边界",
+        "code": "foamDictionary system/PDRMeshDict -entry blockedFaces -set '((screenFaces screenWall))'\nPDRMesh",
+        "explanation": "把 screenFaces 中的阻塞面分配到已有 screenWall patch。检查两侧挡板面及由删除单元暴露的面是否得到正确分组。"
+      },
+      {
+        "title": "设置其他暴露面的归属",
+        "code": "foamDictionary system/PDRMeshDict -entry defaultPatch -set obstacleWall\nPDRMesh -overwrite",
+        "explanation": "未被 blockedFaces 等条目明确分配的暴露面进入 obstacleWall。-overwrite 把结果写回原网格位置，运行前使用可恢复的独立副本。"
+      },
+      {
+        "title": "在分解网格上处理",
+        "code": "mpirun -np 4 PDRMesh -parallel -overwrite\nmpirun -np 4 checkMesh -parallel",
+        "explanation": "前提是网格、集合及 PDR 设置已一致分解为四个子域。并行处理后检查跨处理器连接以及新生成边界。"
+      }
+    ]
+  },
+  "collapseEdges": {
+    "prerequisites": "准备网格和 system/collapseDict，至少含 collapseEdgesCoeffs.minimumEdgeLength 与 maximumMergeAngle；长度采用网格单位。在独立副本试验。",
+    "examples": [
+      {
+        "title": "按现有阈值合并短边",
+        "code": "collapseEdges",
+        "explanation": "读取 collapseDict 合并满足条件的短边，并写出修改后的网格。检查点数、面数及质量变化，判断简化是否保留目标结构。"
+      },
+      {
+        "title": "设置绝对短边阈值",
+        "code": "foamDictionary system/collapseDict -entry collapseEdgesCoeffs.minimumEdgeLength -set 0.0001\ncollapseEdges",
+        "explanation": "米制网格以 0.1 mm 为短边阈值。该长度应小于需要保留的真实几何细节，结果需核对薄壁和窄间隙。"
+      },
+      {
+        "title": "使用另一份简化参数",
+        "code": "collapseEdges -dict system/collapseConservativeDict",
+        "explanation": "从独立字典读取更保守的长度与角度设置，便于在相同原始网格副本上比较不同简化强度。"
+      },
+      {
+        "title": "同时处理可折叠的面",
+        "code": "collapseEdges -collapseFaces",
+        "explanation": "前提是 collapseDict 中也已配置 collapseFacesCoeffs。允许按面形状把部分面折叠为边或点，适合处理细长小面，之后检查单元质量。"
+      },
+      {
+        "title": "限定间接处理面集",
+        "code": "collapseEdges -collapseFaceSet targetFaces -overwrite\ncheckMesh -constant -allGeometry",
+        "explanation": "使用已有 targetFaces 指定需要处理的面集合，并把结果写回原实例。-collapseFaceSet 与 -collapseFaces 是两种互斥的面处理方式；短边过滤仍会先进行，完成后检查集合邻域及网格质量。"
+      }
+    ]
+  },
+  "combinePatchFaces": {
+    "prerequisites": "网格某些单元在同一 patch 上有多个近共面的边界面；工具将符合角度与凸凹条件的面合并。示例应在独立案例副本比较。",
+    "examples": [
+      {
+        "title": "合并近共面的边界面",
+        "code": "combinePatchFaces 5",
+        "explanation": "以 5° 特征角判断可合并面，写出修改后的网格。适合整理几乎共面的碎面，检查边界面数变化。"
+      },
+      {
+        "title": "提高允许折角",
+        "code": "combinePatchFaces 20",
+        "explanation": "允许更大的夹角参与合并，简化程度通常提高。比较外形与网格质量，确认曲面细节仍满足所需分辨率。"
+      },
+      {
+        "title": "限制允许的凹角",
+        "code": "combinePatchFaces 10 -concaveAngle 15",
+        "explanation": "同时使用 10° 特征角和 15° 凹角参数，控制形成多边形面的几何形状。检查输出面是否出现不适合的凹形结构。"
+      },
+      {
+        "title": "启用网格质量约束",
+        "code": "combinePatchFaces 10 -meshQuality",
+        "explanation": "读取 system/meshQualityDict 中的质量约束来检查合并操作。该字典应已配置完整，适合在面简化时保留明确质量条件。"
+      },
+      {
+        "title": "在分解网格中合并",
+        "code": "mpirun -np 4 combinePatchFaces 10 -parallel -overwrite\nmpirun -np 4 checkMesh -parallel",
+        "explanation": "四个子域均使用同一角度设置，直接更新分区网格。完成后检查处理器边界和新面质量。"
+      }
+    ]
+  },
+  "modifyMesh": {
+    "prerequisites": "准备 system/modifyMeshDict，含 pointsToMove、edgesToSplit、facesToTriangulate、edgesToCollapse、cellsToSplit 五个列表。下列坐标以 0–1 的单六面体为说明，每例从独立原始副本开始，先清空其他操作列表。",
+    "examples": [
+      {
+        "title": "移动一个边界点",
+        "code": "foamDictionary system/modifyMeshDict -entry pointsToMove -set '(((0 0 0) (-0.01 0 0)))'\nmodifyMesh",
+        "explanation": "每个元素包含两个点：第一个定位原边界点，第二个给出新坐标。这里把原点沿负 x 移动 0.01，输出后检查相邻单元体积和面质量。"
+      },
+      {
+        "title": "在边界边上插入切点",
+        "code": "foamDictionary system/modifyMeshDict -entry edgesToSplit -set '(((0.5 0 0) (0.25 0 0)))'\nmodifyMesh",
+        "explanation": "第一个点用于查找 x 轴上的边，第二个点是插入位置。在该边的四分之一处增加切点，检查相关边界面的顶点连接。"
+      },
+      {
+        "title": "把边界面分解为三角面",
+        "code": "foamDictionary system/modifyMeshDict -entry facesToTriangulate -set '(((0.5 0.5 0) (0.5 0.5 0)))'\nmodifyMesh",
+        "explanation": "用底面中心定位边界面，并以同一位置作为分解中心。查看生成三角面的数量、方向和总面积。"
+      },
+      {
+        "title": "将单元分为锥形子单元",
+        "code": "foamDictionary system/modifyMeshDict -entry cellsToSplit -set '(((0.5 0.5 0.5) (0.5 0.5 0.5)))'\nmodifyMesh",
+        "explanation": "第一个点定位目标单元，第二个指定内部公共顶点。单元按各面与内部顶点构成锥形子单元，检查子单元体积之和与原体积。"
+      },
+      {
+        "title": "使用独立字典并检查结果",
+        "code": "modifyMesh -dict system/modifyMesh-testDict\ncheckMesh -latestTime -allGeometry -allTopology",
+        "explanation": "在该字典中明确选择一种修改操作，默认写到新的时间实例。对最新网格检查几何和拓扑，再决定是否把方案用于正式案例。"
+      }
+    ]
+  },
+  "refineHexMesh": {
+    "prerequisites": "网格由可进行 2×2×2 细化的六面体构成，并已有目标 cellSet；按几何选集时可先使用 topoSet。",
+    "examples": [
+      {
+        "title": "细化选定单元",
+        "code": "refineHexMesh refineCells",
+        "explanation": "将 refineCells 中的六面体细分，工具会根据相邻细化等级关系调整实际选区。查看日志中的选中与最终细化单元数。"
+      },
+      {
+        "title": "缩小选集以满足等级约束",
+        "code": "refineHexMesh refineCells -minSet",
+        "explanation": "通过从原选集中删减单元来满足细化约束；默认处理倾向于扩大选集。适合希望细化尽量局限在指定区域的情况。"
+      },
+      {
+        "title": "直接更新案例副本",
+        "code": "refineHexMesh refineCells -overwrite\ncheckMesh -constant",
+        "explanation": "将细化结果写回原网格位置。检查单元数、网格连接和物理场映射，再继续计算。"
+      },
+      {
+        "title": "细化命名区域",
+        "code": "refineHexMesh hotCells -region solid",
+        "explanation": "读取 solid 区域及其 hotCells 集合，只处理该区域的网格。适合局部加密固体传热区，需检查区域接口的一致性。"
+      },
+      {
+        "title": "并行细化",
+        "code": "mpirun -np 4 refineHexMesh refineCells -parallel -overwrite\nmpirun -np 4 checkMesh -parallel",
+        "explanation": "前提是网格与 refineCells 已分解到四个子域。并行细化后检查子域连接和各进程单元数量。"
+      }
+    ]
+  },
+  "refineWallLayer": {
+    "prerequisites": "已有包含指定壁面 patch 的网格；edgeFraction 决定沿壁面相连边切分的位置，取 0–1 之间的比例。",
+    "examples": [
+      {
+        "title": "细化一个壁面附近的单元",
+        "code": "refineWallLayer '(walls)' 0.5",
+        "explanation": "对 walls 相邻的单元按一半比例切分，形成更细的近壁层。输出后检查壁面法向的单元尺寸。"
+      },
+      {
+        "title": "获得更薄的第一层",
+        "code": "refineWallLayer '(walls)' 0.2",
+        "explanation": "将壁面附近切分比例设为 0.2，得到较薄的靠壁部分。与 0.5 的独立副本比较第一层高度和网格质量。"
+      },
+      {
+        "title": "同时选择多组壁面",
+        "code": "refineWallLayer '(upperWall lowerWall)' 0.3",
+        "explanation": "同时处理上下壁面。两侧边界名称应与 boundary 文件一致，检查狭窄区域是否产生互相影响的切分。"
+      },
+      {
+        "title": "把处理限制到单元集合",
+        "code": "refineWallLayer '(walls)' 0.25 -useSet nearWallCells",
+        "explanation": "仅在指定壁面附近且属于 nearWallCells 的单元中进行操作。适合局部壁面加密，保留其余区域原有分辨率。"
+      },
+      {
+        "title": "在副本更新并检查",
+        "code": "refineWallLayer '(walls)' 0.2 -overwrite\ncheckMesh -constant -allGeometry",
+        "explanation": "更新原网格后检查近壁单元的长宽比、体积与非正交性。第一层高度仍需结合雷诺数、壁面模型及目标 y⁺ 估算。"
+      }
+    ]
+  },
+  "refinementLevel": {
+    "prerequisites": "用于经过 2×2×2 笛卡尔细化且尚未贴体变形的网格。程序按单元体积分类，写出级别场及相关集合。",
+    "examples": [
+      {
+        "title": "识别体积对应的细化级别",
+        "code": "refinementLevel",
+        "explanation": "按体积分组生成 vol0、vol1 等 cellSet，以及用于显示的 refinementLevel 场。较小单元对应更高细化级别。"
+      },
+      {
+        "title": "处理已有级别文件的案例",
+        "code": "refinementLevel -readLevel",
+        "explanation": "允许读取已经存在的 refinementLevel 标签文件继续处理；程序仍按当前体积分箱计算级别。适合检查已有细化状态与当前网格的对应关系。"
+      },
+      {
+        "title": "在独立未贴体网格中检查",
+        "code": "refinementLevel -case ../castellatedCase",
+        "explanation": "指定只完成笛卡尔细化的案例。查看终端的体积组和每组单元数，判断目标区域细化是否达到预期。"
+      },
+      {
+        "title": "使用建议集合继续细化",
+        "code": "refinementLevel\nrefineHexMesh refCells",
+        "explanation": "当工具明确报告写出非空 refCells 时执行第二步。该集合标出需要继续细化以改善相邻等级过渡的单元，之后重新检查等级关系。"
+      },
+      {
+        "title": "并行检查细化等级",
+        "code": "mpirun -np 4 refinementLevel -parallel",
+        "explanation": "在已分解的未贴体网格上运行，写出各子域的级别信息。比较各进程报告，检查局部细化分布及跨子域的过渡区域。"
+      }
+    ]
+  },
+  "removeFaces": {
+    "prerequisites": "已有 faceSet，内含拟移除的内部面；移除这些面会合并相邻单元。使用案例副本并检查合并后单元形状。",
+    "examples": [
+      {
+        "title": "合并指定内部面两侧的单元",
+        "code": "removeFaces internalFaces",
+        "explanation": "读取 internalFaces，执行内部面移除与单元合并，结果写入新的网格实例。检查单元数是否按预期减少。"
+      },
+      {
+        "title": "从几何选区建立移除面集",
+        "code": "topoSet -dict system/topoSet-removeFacesDict\nremoveFaces mergeFaces",
+        "explanation": "前提是该 topoSet 字典生成只含目标内部面的 mergeFaces。先在可视化中检查选区，再合并这些面的相邻单元。"
+      },
+      {
+        "title": "把修改限制在独立案例",
+        "code": "removeFaces internalFaces -case ../mergeTest\ncheckMesh -case ../mergeTest -latestTime -allGeometry",
+        "explanation": "使用 mergeTest 的面集和网格，检查生成的多面体体积、凹性及面质量。"
+      },
+      {
+        "title": "将确认的修改写回原实例",
+        "code": "removeFaces internalFaces -overwrite\ncheckMesh -constant -allTopology",
+        "explanation": "适合已经在副本验证过的面集。更新原网格位置后，检查内部面与边界连接并核对已有场数据。"
+      },
+      {
+        "title": "并行合并单元",
+        "code": "mpirun -np 4 removeFaces internalFaces -parallel -overwrite\nmpirun -np 4 checkMesh -parallel",
+        "explanation": "网格和面集需已一致分解到四个子域。并行运行后检查处理器界面，确认跨分区连接保持一致。"
+      }
+    ]
+  },
+  "selectCells": {
+    "prerequisites": "准备网格、闭合三角表面和 system/selectCellsDict，含 surface、outsidePoints、useSurface、selectCut、selectInside、selectOutside、nearDistance。outsidePoints 取明确位于表面外侧的点。",
+    "examples": [
+      {
+        "title": "按现有设置划分单元",
+        "code": "selectCells",
+        "explanation": "输出 inside、outside、cutCells 等分类集合，并把最终选区写为 selected。可在 ParaView 中显示集合检查表面与体网格的相对位置。"
+      },
+      {
+        "title": "选择表面内及相交单元",
+        "code": "foamDictionary system/selectCellsDict -entry selectInside -set true\nfoamDictionary system/selectCellsDict -entry selectCut -set true\nfoamDictionary system/selectCellsDict -entry selectOutside -set false\nselectCells",
+        "explanation": "使用已启用 useSurface 的字典，组合内部单元与被表面切过的单元。适合准备内部流体域的初步选区。"
+      },
+      {
+        "title": "选择表面外侧",
+        "code": "foamDictionary system/selectCellsDict -entry selectInside -set false\nfoamDictionary system/selectCellsDict -entry selectOutside -set true\nfoamDictionary system/selectCellsDict -entry selectCut -set true\nselectCells",
+        "explanation": "改为保留外部与相交单元，适用于物体绕流的背景网格。检查 outsidePoints 与目标外部连通域是否一致。"
+      },
+      {
+        "title": "仅查看切割单元",
+        "code": "foamDictionary system/selectCellsDict -entry selectInside -set false\nfoamDictionary system/selectCellsDict -entry selectOutside -set false\nfoamDictionary system/selectCellsDict -entry selectCut -set true\nselectCells",
+        "explanation": "强调表面穿过的单元带，便于评估局部网格尺寸。工具还会执行连通性相关整理，实际 selected 应与 cutCells 一起查看。"
+      },
+      {
+        "title": "在副本比较表面距离参数",
+        "code": "foamDictionary ../selectionTest/system/selectCellsDict -entry nearDistance -set 0.001\nselectCells -case ../selectionTest",
+        "explanation": "将近表面距离设为 0.001 个网格长度单位，再比较 selected 与原方案。该参数影响近表面处理，需结合局部单元尺寸解释选区变化。"
+      }
+    ]
+  },
+  "snappyRefineMesh": {
+    "prerequisites": "准备适用于 snappyRefineMesh 的完整 system/snappyRefineMeshDict、背景网格及三角表面。该字典使用 surface、minEdgeLen、maxEdgeLen 等条目，与 snappyHexMeshDict 分别配置。",
+    "examples": [
+      {
+        "title": "按现有表面细化设置运行",
+        "code": "snappyRefineMesh",
+        "explanation": "读取表面和细化规则，在表面附近逐步细分网格。日志给出每轮选中的单元及网格规模，可查看最终表面附近的分辨率。"
+      },
+      {
+        "title": "减小目标最小边长",
+        "code": "foamDictionary system/snappyRefineMeshDict -entry minEdgeLen -set 0.001\nsnappyRefineMesh",
+        "explanation": "在全新背景网格副本中把细化停止相关的最小边长设为 0.001。长度使用网格坐标单位；与原方案比较近表面网格密度和单元总数。"
+      },
+      {
+        "title": "设置单元规模阈值",
+        "code": "foamDictionary system/snappyRefineMeshDict -entry cellLimit -set 200000\nsnappyRefineMesh",
+        "explanation": "将细化流程的单元数量阈值设为 20 万。程序在细化前根据当前单元数与候选数量估计新增规模，并据此决定是否继续；日志会说明因数量阈值停止的情况。"
+      },
+      {
+        "title": "选择内部和相交区域",
+        "code": "foamDictionary system/snappyRefineMeshDict -entry nCutLayers -set 0\nfoamDictionary system/snappyRefineMeshDict -entry selectInside -set true\nfoamDictionary system/snappyRefineMeshDict -entry selectCut -set true\nfoamDictionary system/snappyRefineMeshDict -entry selectOutside -set false\nsnappyRefineMesh",
+        "explanation": "以闭合表面内部为目标，保留内部及相交单元。outsidePoints 应位于表面外部，随后查看 selected 集合和最终边界。"
+      },
+      {
+        "title": "保存中间细化网格",
+        "code": "foamDictionary system/snappyRefineMeshDict -entry writeMesh -set true\nsnappyRefineMesh\ncheckMesh -latestTime",
+        "explanation": "把中间细化阶段的网格也写到时间目录，便于逐步观察细化区域变化。最终用 checkMesh 检查最新网格。"
+      }
+    ]
+  },
+  "splitCells": {
+    "prerequisites": "已有可进行平面切分的网格，按需要准备 cellSet。edgeAngle 以度给出，控制工具识别相关边的几何判据。",
+    "examples": [
+      {
+        "title": "按角度判据分裂单元",
+        "code": "splitCells 180",
+        "explanation": "工具查找内部角超过给定阈值的单元，并尝试切分；这里使用 180°。查看日志中的候选和实际切分数量，再检查生成子单元的体积和形状。"
+      },
+      {
+        "title": "只切分一个单元集合",
+        "code": "splitCells 180 -set targetCells",
+        "explanation": "将处理限制在已有 targetCells。适合对局部平面网格或问题区域进行试验，而保留其他区域的原单元。"
+      },
+      {
+        "title": "对六面体使用几何切割",
+        "code": "splitCells 180 -set targetCells -geometry",
+        "explanation": "对六面体也启用几何切割方式，适用于希望按几何规则确定切面的位置。比较与默认处理的子单元形状。"
+      },
+      {
+        "title": "调整切点贴合容差",
+        "code": "splitCells 180 -set targetCells -geometry -tol 0.1",
+        "explanation": "把边切点贴合容差从默认 0.2 改为 0.1。检查靠近已有顶点的切点如何处理，以及是否产生很短的新边。"
+      },
+      {
+        "title": "更新副本并全面检查",
+        "code": "splitCells 180 -set targetCells -overwrite\ncheckMesh -constant -allGeometry -allTopology",
+        "explanation": "将已确认的局部分裂方案写回原网格实例。检查单元体积、内部连接和边界面，随后核对场数据与网格的一致性。"
+      }
+    ]
+  },
+  "attachMesh": {
+    "prerequisites": "已有拓扑分离的接口，以及 polyMesh/meshModifiers 中为其定义的网格修改器和对应 zone。工具按这些设置连接接口，在独立副本运行。",
+    "examples": [
+      {
+        "title": "连接已定义的滑移接口",
+        "code": "attachMesh",
+        "explanation": "读取网格修改器并执行接口连接，默认把结果写到下一时间实例。检查日志中的接口处理信息和生成网格路径。"
+      },
+      {
+        "title": "检查连接后的网格",
+        "code": "attachMesh\ncheckMesh -latestTime -allTopology",
+        "explanation": "使用新时间实例检查内部面、边界面和区域连通性。连接正确时，原先分离接口两侧应具有预期的拓扑关系。"
+      },
+      {
+        "title": "在目标案例测试接口",
+        "code": "attachMesh -case ../interfaceTest\ncheckMesh -case ../interfaceTest -latestTime",
+        "explanation": "从独立 interfaceTest 案例读取网格及 meshModifiers。适合保留原始分离网格，同时对接口设置进行调整比较。"
+      },
+      {
+        "title": "将已确认方案写回原位置",
+        "code": "attachMesh -overwrite\ncheckMesh -constant -allTopology",
+        "explanation": "在网格原实例为 constant 的副本中直接保存连接结果。之后继续计算时，网格读取路径与常规初始网格一致。"
+      },
+      {
+        "title": "连接后优化单元编号",
+        "code": "attachMesh -overwrite\nrenumberMesh -overwrite\ncheckMesh -constant",
+        "explanation": "先形成连续的网格连接，再优化单元编号。检查连接和几何保持一致，供后续线性方程求解使用。"
+      }
+    ]
+  },
+  "autoPatch": {
+    "prerequisites": "已有体网格外边界；工具按外表面折角划分 patch。每个角度对比示例应从同一原始网格的独立副本开始。",
+    "examples": [
+      {
+        "title": "按常见特征角分区",
+        "code": "autoPatch 45",
+        "explanation": "使用 45° 特征角划分外部面，默认写入新的网格实例。按 patch 着色查看入口、出口和壁面是否形成可识别区域。"
+      },
+      {
+        "title": "识别较小折角",
+        "code": "autoPatch 20",
+        "explanation": "较小阈值会保留更多细微折角，通常产生更多区域。适合检查浅台阶和小倒角，同时关注曲面三角离散带来的过度分区。"
+      },
+      {
+        "title": "只保留较明显棱边",
+        "code": "autoPatch 80",
+        "explanation": "较大阈值强调明显的形状转折。与 45° 方案比较 patch 数量，确认重要物理边界仍可区分。"
+      },
+      {
+        "title": "更新案例副本并检查",
+        "code": "autoPatch 45 -overwrite\ncheckMesh -constant",
+        "explanation": "直接在副本原网格位置写入分区结果。随后更新场文件中的边界名称和条件，保持与新 boundary 文件一致。"
+      },
+      {
+        "title": "为新分区赋予物理名称",
+        "code": "autoPatch 45 -overwrite\ncreatePatch -overwrite",
+        "explanation": "先按几何分区，再根据实际结果编写 createPatchDict，把相关 patch 合并或命名为 inlet、outlet、walls。两步之间需检查自动生成的名称和空间位置。"
+      }
+    ]
+  },
+  "foamCalc": {
+    "prerequisites": "需要当前安装包含 v2512 的 foamCalc 表达式计算器。表达式加引号，数值单位由输入者保持一致；该工具求表达式值。",
+    "examples": [
+      {
+        "title": "计算带括号的算术表达式",
+        "code": "foamCalc '(2 + 3)*4'",
+        "explanation": "输出数值 20。括号指定先做加法，外层引号使表达式作为完整参数交给程序。"
+      },
+      {
+        "title": "计算雷诺数",
+        "code": "foamCalc '0.2*0.01/1e-6'",
+        "explanation": "按 Re=UL/ν 输入 U=0.2 m/s、L=0.01 m、ν=10⁻⁶ m²/s，结果为 2000。数值计算使用一致单位即可得到无量纲结果。"
+      },
+      {
+        "title": "由速度分量计算大小",
+        "code": "foamCalc 'sqrt(3*3 + 4*4)'",
+        "explanation": "输出 5，表示二维向量 (3,4) 的模。可把数值替换为自己的速度分量，用于估算速度尺度。"
+      },
+      {
+        "title": "按目标 Courant 数估算时间步",
+        "code": "foamCalc -precision 12 '0.5*0.001/0.2'",
+        "explanation": "按 Δt≈Co·Δx/U 输入 Co=0.5、Δx=0.001 m、U=0.2 m/s，得到 0.0025 s。-precision 控制输出精度，实际网格仍需查看求解器报告的最大 Courant 数。"
+      },
+      {
+        "title": "计算正弦入口在指定时刻的速度",
+        "code": "foamCalc -precision 12 '0.1*(1 + 0.5*sin(6.283185307179586*0.25))'",
+        "explanation": "对应平均速度 0.1、振幅系数 0.5、频率 1 Hz，在 t=0.25 s 时得到 0.15。sin 的参数使用弧度，可据此核对时变边界的数值。"
+      }
+    ]
+  },
+  "foamExprParserInfo": {
+    "prerequisites": "需要当前安装包含 foamExprParserInfo。该工具输出表达式解析器的符号与语法规则，适合检查可用表达式写法。",
+    "examples": [
+      {
+        "title": "查看一般场表达式的符号",
+        "code": "foamExprParserInfo -field -tokens",
+        "explanation": "列出 field 解析器识别的符号和类型名称。查找函数对应的终结符，有助于定位表达式解析时的未知符号。"
+      },
+      {
+        "title": "查看一般场表达式的组合规则",
+        "code": "foamExprParserInfo -field -rules",
+        "explanation": "输出 field 解析器语法规则。结合 svalue、sfield、vfield 等类型，查看标量值、标量场和向量场能够怎样组合。"
+      },
+      {
+        "title": "检查边界表达式规则",
+        "code": "foamExprParserInfo -patch -rules",
+        "explanation": "选择 patch 解析器，查看边界表达式的语法。编写边界相关表达式时，应以这一组规则核对，而不是直接照搬其他解析器的写法。"
+      },
+      {
+        "title": "同时查看体场解析器符号与规则",
+        "code": "foamExprParserInfo -volume -tokens -rules",
+        "explanation": "打印 volume 解析器的两类信息。可对照类型前缀区分体场、表面场和点场表达式，定位输入类型不匹配的问题。"
+      },
+      {
+        "title": "比较所有解析器",
+        "code": "foamExprParserInfo -all -tokens -rules > expression-parsers.txt",
+        "explanation": "把全部解析器的符号和规则集中保存，用于比较同一函数或运算在不同上下文中的支持情况。大写名称通常是终结符，小写名称通常是非终结符。"
+      }
+    ]
+  }
+}

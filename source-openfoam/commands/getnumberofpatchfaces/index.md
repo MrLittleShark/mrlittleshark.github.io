@@ -5,46 +5,31 @@ description: "读取指定网格边界的面数。"
 cms_slug: "command-getnumberofpatchfaces"
 ---
 
-<p>读取指定网格边界的面数。</p><h2>调用示例</h2>
-<pre><code class="language-bash">source "$WM_PROJECT_DIR/bin/tools/RunFunctions"
-getNumberOfPatchFaces movingWall
+<p>读取指定网格边界的面数。</p><h2>开始前</h2>
+<p>先在单独一行执行 source "$WM_PROJECT_DIR/bin/tools/RunFunctions"。示例在个人算例工作区操作，caseA、caseB 均为可修改的副本。 先生成网格并确认实际 patch 名。第二个参数是 region 名，不是文件路径。</p>
+<h2>示例 1：查看入口面数</h2>
+<pre><code class="language-bash">cd caseA
+getNumberOfPatchFaces inlet
 </code></pre>
-<p>读取 constant/polyMesh/boundary。第二个位置参数可指定多区域网格的区域名称。</p>
-<h2>在脚本中查看定义</h2>
-<pre><code class="language-bash">type getNumberOfPatchFaces
+<p>从 constant/polyMesh/boundary 提取 inlet 的 nFaces。</p>
+<h2>示例 2：比较入口出口</h2>
+<pre><code class="language-bash">cd caseA
+for patch in inlet outlet; do printf '%s: ' "$patch"; getNumberOfPatchFaces "$patch"; done
 </code></pre>
-<p><code>type</code> 显示函数定义或别名展开，可用于确认当前终端加载的实现。</p>
-<details><summary>v2512 实现</summary>
-<pre><code class="language-bash">getNumberOfPatchFaces()
-{
-    local patch="${1:-}"
-    local file="${2:-}"
-
-    file="constant/$file${file:+/}polyMesh/boundary"
-
-    [ -n "$patch" ] || {
-        echo "No patch name given" 1&gt;&amp;2
-        return 1
-    }
-
-    [ -f "$file" ] || {
-        echo "No such file: $file" 1&gt;&amp;2
-        return 2
-    }
-
-    local nFaces
-    nFaces=$(sed -ne \
-        '/^ *'"$patch"' *$/,/}/{s/^ *nFaces  *\([0-9][0-9]*\) *;.*$/\1/p}' \
-        "$file")
-
-    if [ -n "$nFaces" ]
-    then
-        echo "$nFaces"
-    else
-        echo "No patch entry found for '$patch' in $file" 1&gt;&amp;2
-        echo 0      # Report as 0
-        return 2
-    fi
-}
+<p>打印两块边界的面数，可用于检查划分规模。</p>
+<h2>示例 3：查询流体区域</h2>
+<pre><code class="language-bash">cd caseA
+getNumberOfPatchFaces inlet fluid
 </code></pre>
-</details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/RunFunctions">源码与说明</a></p>
+<p>第二个参数 fluid 将读取位置改为 constant/fluid/polyMesh/boundary。</p>
+<h2>示例 4：在脚本中使用面数</h2>
+<pre><code class="language-bash">cd caseA
+n=$(getNumberOfPatchFaces inlet) || exit 1
+if [ "$n" -gt 0 ]; then echo "inlet has $n faces"; fi
+</code></pre>
+<p>成功读取后比较整数，入口非空时输出说明。</p>
+<h2>示例 5：比较两套网格</h2>
+<pre><code class="language-bash">for c in caseA caseB; do (cd "$c" &amp;&amp; getNumberOfPatchFaces inlet); done
+</code></pre>
+<p>在具有同名 inlet 的两组网格中输出边界面数，观察加密后面数变化。</p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/RunFunctions">源码与说明</a></p>

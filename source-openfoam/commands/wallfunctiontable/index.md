@@ -1,11 +1,38 @@
 ---
-title: "wallFunctionTable · 由字典指定壁面模型及数据范围"
+title: "wallFunctionTable · 为查表壁面函数生成速度壁面律反查表"
 layout: reference
-description: "由字典指定壁面模型及数据范围。"
+description: "为查表壁面函数生成速度壁面律反查表。"
 cms_slug: "command-wallfunctiontable"
 ---
 
-<p>由字典指定壁面模型及数据范围。</p><h2>用法</h2><pre><code class="language-bash">wallFunctionTable</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">wallFunctionTable -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wallFunctionTable [OPTIONS]
+<p>为查表壁面函数生成速度壁面律反查表。</p><h2>开始前</h2>
+<p>已有网格和constant/wallFunctionDict；官方注释示例采用SpaldingsLaw，可配置表名、步长、区间和对数坐标。</p>
+<h2>示例 1：从官方示例生成表</h2>
+<pre><code class="language-bash">cp "$WM_PROJECT_DIR/etc/caseDicts/annotated/wallFunctionDict" constant/wallFunctionDict
+wallFunctionTable
+</code></pre>
+<p>使用SpaldingsLaw默认系数生成uPlusWallFunctionData，日志给出输出路径。</p>
+<h2>示例 2：提高表格分辨率</h2>
+<pre><code class="language-bash">foamDictionary constant/wallFunctionDict -entry dx -set 0.1
+wallFunctionTable
+</code></pre>
+<p>dx由默认0.2改为0.1；在相同坐标区间内增加采样密度，减小后续查表间距。</p>
+<h2>示例 3：扩展表格上限</h2>
+<pre><code class="language-bash">foamDictionary constant/wallFunctionDict -entry xMax -set 8
+wallFunctionTable
+</code></pre>
+<p>保留log10设置时，xMax表示对数坐标上界；提高上限扩展可查询的Re范围。</p>
+<h2>示例 4：使用另一输出表名</h2>
+<pre><code class="language-bash">foamDictionary constant/wallFunctionDict -entry invertedTableName -set uPlusFine
+wallFunctionTable
+</code></pre>
+<p>将结果保存为uPlusFine，便于同时保留不同分辨率的壁面律表。</p>
+<h2>示例 5：比较壁面律常数</h2>
+<pre><code class="language-bash">foamDictionary constant/wallFunctionDict -entry SpaldingsLawCoeffs/kappa -set 0.40
+wallFunctionTable
+</code></pre>
+<p>在独立参数方案中把kappa改为0.40，比较相同Re位置的u+；其余系数与坐标设置保持一致。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: wallFunctionTable [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

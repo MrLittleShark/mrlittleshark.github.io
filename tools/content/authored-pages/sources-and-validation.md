@@ -9,7 +9,7 @@
 
 ## 图片与源码
 
-Wolf 基础培训配图在图下标注原作者、页码和 CC BY-SA 4.0 许可；裁剪仅用于突出相关内容。OpenFOAM 和 BasicOFProgramming 的源码包保留原版权头与 GPL 许可证。
+Wolf 基础培训配图来源于 Joel Guerrero / Wolf Dynamics，采用 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 许可。本站选取并裁剪了讲义中的相关图像，图下保留来源与页码。OpenFOAM 和 BasicOFProgramming 的源码包保留原版权头与 GPL 许可证。
 
 方腔、标量输运等计算图在相应课程中给出计算设置。封面为 CFD 主题插画。
 

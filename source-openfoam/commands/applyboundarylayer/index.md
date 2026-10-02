@@ -1,11 +1,33 @@
 ---
-title: "applyBoundaryLayer · 用于符合该速度分布近似的初始场设置"
+title: "applyBoundaryLayer · 按七分之一次幂规律修正近壁速度及相应湍流场"
 layout: reference
-description: "用于符合该速度分布近似的初始场设置。"
+description: "按七分之一次幂规律修正近壁速度及相应湍流场。"
 cms_slug: "command-applyboundarylayer"
 ---
 
-<p>用于符合该速度分布近似的初始场设置。</p><h2>用法</h2><pre><code class="language-bash">applyBoundaryLayer -ybl 0.01</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">applyBoundaryLayer -ybl 0.01 -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-Cbl &lt;scalar&gt;</td><td>Boundary-layer thickness as Cbl * mean distance to wall</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-ybl &lt;scalar&gt;</td><td>Specify the boundary-layer thickness</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: applyBoundaryLayer [OPTIONS]
+<p>按七分之一次幂规律修正近壁速度及相应湍流场。</p><h2>开始前</h2>
+<p>已有速度场、壁面和所需湍流模型输入；边界层厚度可用绝对长度 ybl 或相对系数 Cbl 指定。</p>
+<h2>示例 1：设置明确的边界层厚度</h2>
+<pre><code class="language-bash">applyBoundaryLayer -ybl 0.01
+</code></pre>
+<p>以0.01米厚度修正近壁速度，适合给外流案例构造初始速度剖面。</p>
+<h2>示例 2：按网格平均壁距设置厚度</h2>
+<pre><code class="language-bash">applyBoundaryLayer -Cbl 2
+</code></pre>
+<p>厚度取平均壁距的2倍，适合根据当前网格近壁尺度生成初始分布。</p>
+<h2>示例 3：同时写湍流场</h2>
+<pre><code class="language-bash">applyBoundaryLayer -ybl 0.01 -writeTurbulenceFields
+</code></pre>
+<p>更新速度并写相应湍流量，使初始湍流场与所构造近壁剖面配套。</p>
+<h2>示例 4：比较更厚的入口发展层</h2>
+<pre><code class="language-bash">applyBoundaryLayer -case ./thickLayer -ybl 0.02 -writeTurbulenceFields
+</code></pre>
+<p>thickLayer 是独立初始案例；厚度改为0.02米，可比较速度亏损范围与湍流场变化。</p>
+<h2>示例 5：只处理流体区域</h2>
+<pre><code class="language-bash">applyBoundaryLayer -region fluid -ybl 0.005 -writeTurbulenceFields
+</code></pre>
+<p>多区域中只修改fluid的近壁场，适合流固传热案例的流体初始状态准备。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-Cbl &lt;scalar&gt;</code></td><td>Boundary-layer thickness as Cbl * mean distance to wall</td></tr><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-ybl &lt;scalar&gt;</code></td><td>Specify the boundary-layer thickness</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: applyBoundaryLayer [OPTIONS]
 Options:
   -Cbl &lt;scalar&gt;     Boundary-layer thickness as Cbl * mean distance to wall
   -case &lt;dir&gt;       Case directory (instead of current directory)

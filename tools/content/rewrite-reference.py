@@ -4,7 +4,7 @@ The original v2512 example files and captured help are left byte-for-byte intact
 Authored Markdown guides replace the mixed excerpts on common dictionary pages.
 """
 from pathlib import Path
-import html, json, re, subprocess
+import html, json, re, subprocess, sys
 from bs4 import BeautifulSoup
 from wolf_media import figure_html
 
@@ -86,7 +86,9 @@ def command_body(item, old, guide):
         if key in NOISY: continue
         opts.append([flag, OPTION_NOTES.get(key, desc)])
     if opts:
-        body += '<h2>常用参数</h2>'+table(['参数','作用'], opts[:14])
+        parameter_table=table(['参数','作用'], opts[:14])
+        parameter_table=re.sub(r'<tr><td>([\s\S]*?)</td>', r'<tr><td><code>\1</code></td>', parameter_table)
+        body += '<h2>常用参数</h2>'+parameter_table
     if item.get('configs'):
         body += '<h2>相关配置</h2><p>'+' · '.join(a(x['url'],x['name']) for x in item['configs'])+'</p>'
     old_soup = BeautifulSoup(old, 'html.parser')
@@ -192,6 +194,24 @@ def main():
     definitions=load(HERE/'reference-definitions.json',{})
     command_edits=load(HERE/'command-guides.json',{})
     command_edits.update(load(HERE/'shell-command-guides.json',{}))
+    # Explicit, reviewed progressions take precedence over the earlier short
+    # guides and remain part of the normal rebuild pipeline.
+    example_guides={}
+    for file in sorted(HERE.glob('command-examples-*.json')):
+        for name, guide in load(file,{}).items():
+            assert name not in example_guides, ('Duplicate command guide', name)
+            examples=guide['examples']
+            assert len(examples)>=5, (name, 'At least five examples required')
+            assert len({x['code'] for x in examples})==len(examples), (name, 'Duplicate code')
+            body='## 开始前\n\n'+guide['prerequisites']+'\n\n'
+            for i, example in enumerate(examples,1):
+                body+='## 示例 '+str(i)+'：'+example['title']+'\n\n```bash\n'+example['code'].strip()+'\n```\n\n'
+                if example.get('output'):
+                    body+='输出示例：\n\n```text\n'+example['output'].strip()+'\n```\n\n'
+                body+=example['explanation'].strip()+'\n\n'
+            example_guides[name]=dict(command_edits.get(name,{}),body=body,examples=examples,example=examples[0]['code'])
+            if guide.get('summary'):example_guides[name]['summary']=guide['summary']
+    command_edits.update(example_guides)
     guides={}
     for filename in ['dictionary-guides.json','field-guides.json','mesh-guides.json']:
         guides.update(load(HERE/filename,{}))
@@ -235,7 +255,7 @@ def main():
             anchor='<h2>常用参数</h2>'
             body=body.replace(anchor,extra+anchor,1) if anchor in body else body+extra
         row.update(title=item['title'],summary=item['description'],body=body)
-    for item in dicts:
+    for item in ([] if '--commands-only' in sys.argv else dicts):
         slug='dictionary-'+re.sub(r'[^a-z0-9]+','-',item['name'].lower()).strip('-')
         row=by_slug[slug]
         item['description']=definitions.get(item['name'],item['description'].split('。')[0]+'。')

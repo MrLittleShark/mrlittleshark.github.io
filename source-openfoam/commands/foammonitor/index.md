@@ -5,16 +5,29 @@ description: "用绘图工具查看并更新时序数据。"
 cms_slug: "command-foammonitor"
 ---
 
-<p>用绘图工具查看并更新时序数据。</p><h2>绘制压力残差</h2>
-<pre><code class="language-bash">foamLog log.simpleFoam
-foamMonitor -l logs/p_0
+<p>用绘图工具查看并更新时序数据。</p><h2>开始前</h2>
+<p>需要带 X11 支持的 gnuplot。输入是一个时间—数据表，不是原始求解日志；下例路径按实际函数对象输出调整。每次调用接收一个文件。</p>
+<h2>示例 1：监视残差</h2>
+<pre><code class="language-bash">foamMonitor -logscale caseA/postProcessing/residuals/0/residuals.dat
 </code></pre>
-<p>先将求解日志转成列数据，再绘图。该脚本依赖相应绘图程序；文件名称以 <code>foamLog</code> 输出为准。</p>
-<h2>绘制多个分量</h2>
-<pre><code class="language-bash">foamMonitor -l logs/Ux_0
+<p>对数纵轴便于观察多个数量级的残差衰减。</p>
+<h2>示例 2：监视力系数</h2>
+<pre><code class="language-bash">foamMonitor -grid caseA/postProcessing/forceCoeffs/0/coefficient.dat
 </code></pre>
-<p>该命令一次读取一个文件。另开终端运行 foamMonitor -l logs/Uy_0，可分别观察两个速度分量。多列数据则可放在同一文件中绘图。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-g | -grid</td><td>Draw grid lines</td></tr><tr><td>-i | -idle &lt;time&gt;</td><td>Stop if &lt;file&gt; unchanging for &lt;time&gt; sec (default = 60)</td></tr><tr><td>-l | -logscale</td><td>Plot y-axis data on log scale</td></tr><tr><td>-r | -refresh &lt;time&gt;</td><td>Refresh display every &lt;time&gt; sec (default = 10)</td></tr><tr><td>-x | -xrange &lt;range&gt;</td><td>Set &lt;range&gt; of x-axis data, format &quot;[0:1]&quot;</td></tr><tr><td>-y | -yrange &lt;range&gt;</td><td>Set &lt;range&gt; of y-axis data, format &quot;[0:1]&quot;</td></tr><tr><td>-h | -help</td><td>Display short help and exit</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamMonitor [OPTIONS] &lt;file&gt;
+<p>绘制数据列并增加网格线，方便读取系数振荡。</p>
+<h2>示例 3：提高刷新频率</h2>
+<pre><code class="language-bash">foamMonitor -refresh 2 caseA/postProcessing/residuals/0/residuals.dat
+</code></pre>
+<p>每两秒重新读文件，适用于较快写出的计算。</p>
+<h2>示例 4：聚焦一个时间窗</h2>
+<pre><code class="language-bash">foamMonitor -xrange "[0.2:0.5]" caseA/postProcessing/residuals/0/residuals.dat
+</code></pre>
+<p>用给定范围限制横轴，便于观察局部阶段。</p>
+<h2>示例 5：等待较慢的输出</h2>
+<pre><code class="language-bash">foamMonitor -idle 600 -refresh 10 -logscale caseA/postProcessing/residuals/0/residuals.dat
+</code></pre>
+<p>文件连续 600 秒无变化才停止，避免长时间步被默认超时中断。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-g | -grid</code></td><td>Draw grid lines</td></tr><tr><td><code>-i | -idle &lt;time&gt;</code></td><td>Stop if &lt;file&gt; unchanging for &lt;time&gt; sec (default = 60)</td></tr><tr><td><code>-l | -logscale</code></td><td>Plot y-axis data on log scale</td></tr><tr><td><code>-r | -refresh &lt;time&gt;</code></td><td>Refresh display every &lt;time&gt; sec (default = 10)</td></tr><tr><td><code>-x | -xrange &lt;range&gt;</code></td><td>Set &lt;range&gt; of x-axis data, format &quot;[0:1]&quot;</td></tr><tr><td><code>-y | -yrange &lt;range&gt;</code></td><td>Set &lt;range&gt; of y-axis data, format &quot;[0:1]&quot;</td></tr><tr><td><code>-h | -help</code></td><td>Display short help and exit</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamMonitor [OPTIONS] &lt;file&gt;
 Options:
   -g | -grid            Draw grid lines
   -i | -idle &lt;time&gt;     Stop if &lt;file&gt; unchanging for &lt;time&gt; sec (default = 60)

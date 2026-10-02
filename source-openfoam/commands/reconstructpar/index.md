@@ -1,23 +1,33 @@
 ---
-title: "reconstructPar · 将并行子域中的场重建到完整网格上"
+title: "reconstructPar · 把并行结果的字段重构到完整案例"
 layout: reference
-description: "将并行子域中的场重建到完整网格上。"
+description: "把并行结果的字段重构到完整案例。"
 cms_slug: "command-reconstructpar"
 ---
 
-<p>将并行子域中的场重建到完整网格上。</p><h2>重建最新结果</h2>
+<p>把并行结果的字段重构到完整案例。</p><h2>开始前</h2>
+<p>已有processor结果和匹配的完整网格/寻址信息；网格需重构时先使用reconstructParMesh。</p>
+<h2>示例 1：重构全部可选结果</h2>
+<pre><code class="language-bash">reconstructPar
+</code></pre>
+<p>将分区场按寻址信息拼回完整场，在原案例对应时间目录写结果。</p>
+<h2>示例 2：仅重构最新时刻</h2>
 <pre><code class="language-bash">reconstructPar -latestTime
 </code></pre>
-<p>读取最近时刻的分区场，将完整场写到主算例时间目录。</p>
-<h2>只重建部分场</h2>
-<pre><code class="language-bash">reconstructPar -latestTime -fields "(U p)"
+<p>适合只查看最终计算状态，减少大量历史结果的读写。</p>
+<h2>示例 3：仅提取速度和压力</h2>
+<pre><code class="language-bash">reconstructPar -latestTime -fields '(U p)' -no-lagrangian
 </code></pre>
-<p>仅合并速度和压力，可减少读写量。字段名使用实际求解器输出的名称。</p>
-<h2>选择时间范围</h2>
-<pre><code class="language-bash">reconstructPar -time "0.1:0.5"
+<p>只处理U、p，跳过粒子数据，适合快速查看流场。</p>
+<h2>示例 4：补齐新产生的时间</h2>
+<pre><code class="language-bash">reconstructPar -newTimes -time '1:5'
 </code></pre>
-<p>合并 0.1 至 0.5 范围内已存在的时刻。动态网格或拓扑变化算例还需处理各时刻的网格。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allAreas</td><td>Use all regions in finite-area regionProperties</td></tr><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-newTimes</td><td>Only reconstruct new times (i.e. that do not exist already)</td></tr><tr><td>-no-fields</td><td>Skip reconstructing fields</td></tr><tr><td>-no-lagrangian</td><td>Skip reconstructing lagrangian positions and fields</td></tr><tr><td>-no-sets</td><td>Skip reconstructing cellSets, faceSets, pointSets Do not execute function objects</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-verbose</td><td>Additional verbosity (can be used multiple times)</td></tr><tr><td>-withZero</td><td>Include &#x27;0/&#x27; dir in the times list</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: reconstructPar [OPTIONS]
+<p>只重构1至5区间内尚未在完整案例中存在的时间，适合计算继续推进后的增量整理。</p>
+<h2>示例 5：重构所有区域的初值与结果</h2>
+<pre><code class="language-bash">reconstructPar -allRegions -withZero
+</code></pre>
+<p>包括0时刻，并对regionProperties中的全部区域处理，适合多区域案例完整交付。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-allAreas</code></td><td>Use all regions in finite-area regionProperties</td></tr><tr><td><code>-allRegions</code></td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-newTimes</code></td><td>Only reconstruct new times (i.e. that do not exist already)</td></tr><tr><td><code>-no-fields</code></td><td>Skip reconstructing fields</td></tr><tr><td><code>-no-lagrangian</code></td><td>Skip reconstructing lagrangian positions and fields</td></tr><tr><td><code>-no-sets</code></td><td>Skip reconstructing cellSets, faceSets, pointSets Do not execute function objects</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-verbose</code></td><td>Additional verbosity (can be used multiple times)</td></tr><tr><td><code>-withZero</code></td><td>Include &#x27;0/&#x27; dir in the times list</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: reconstructPar [OPTIONS]
 Options:
   -allAreas         Use all regions in finite-area regionProperties
   -allRegions       Use all regions in regionProperties

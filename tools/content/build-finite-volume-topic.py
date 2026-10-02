@@ -4,6 +4,9 @@ from wolf_media import FIGURES,figure_html
 HERE=Path(__file__).parent
 body=(HERE/'authored-pages/topic-finite-volume.md').read_text(encoding='utf-8')
 body=re.sub(r'\{\{figure:([^}]+)\}\}',lambda m:figure_html(m.group(1)),body)
+def refresh_figure(match):
+    return next((figure_html(key) for key,item in FIGURES.items() if item['file'] in match.group()), match.group())
+body=re.sub(r'<figure\b[^>]*class="wolf-figure"[^>]*>[\s\S]*?</figure>',refresh_figure,body)
 (HERE/'authored-pages/topic-finite-volume.md').write_text(body,encoding='utf-8')
 row={'slug':'topic-finite-volume','kind':'module','title':'有限体积法','summary':'控制体、面通量、离散格式、矩阵装配与压力速度耦合。','body':body,'track':'专题学习','series':'OpenFOAM v2512 专题','sort_order':0,'status':'published','author_name':'FoamLab','cover_url':FIGURES['wolf-fvm-convective-face-flux']['file'],'comments_enabled':True,'metadata':{'topic_key':'finite-volume','version':'v2512','canonical_path':'/topics/finite-volume/'}}
 (HERE/'finite-volume-content.json').write_text(json.dumps([row],ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

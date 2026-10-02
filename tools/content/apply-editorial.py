@@ -128,6 +128,7 @@ def main():
                     anchor = workflow['anchor']
                     assert body.count(anchor) == 1, (slug, 'Workflow anchor', anchor)
                     body = body.replace(anchor, marker+'\n\n'+workflow['insertion'].strip()+'\n\n'+endmarker+'\n\n'+anchor, 1)
+            body = short_figures(body)
             body = body.replace('OpenCFD OpenFOAM v2512', 'OpenFOAM v2512')
             row['body'] = re.sub(r'\n{4,}', '\n\n\n', body).strip()+'\n'
             if slug in titles:

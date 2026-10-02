@@ -5,7 +5,29 @@ description: "-scale 指定长度缩放系数。"
 cms_slug: "command-foamtofiremesh"
 ---
 
-<p>-scale 指定长度缩放系数。</p><h2>用法</h2><pre><code class="language-bash">foamToFireMesh</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">foamToFireMesh -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-ascii</td><td>Write in ASCII format instead of binary</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-scale &lt;factor&gt;</td><td>Geometry scaling factor - default is 1 (none)</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamToFireMesh [OPTIONS]
+<p>-scale 指定长度缩放系数。</p><h2>开始前</h2>
+<p>案例已有体网格；按时间导出示例需要相应网格时间目录。输出用于 AVL FIRE 格式交换。</p>
+<h2>示例 1：导出初始网格</h2>
+<pre><code class="language-bash">foamToFireMesh -constant
+</code></pre>
+<p>选择 constant 网格并转换为 FIRE 格式。转换日志给出实际写出的文件位置。</p>
+<h2>示例 2：使用 ASCII 格式</h2>
+<pre><code class="language-bash">foamToFireMesh -constant -ascii
+</code></pre>
+<p>以文本格式导出，便于排查交换文件问题。与二进制输出相比，文件通常更大。</p>
+<h2>示例 3：转换为毫米坐标</h2>
+<pre><code class="language-bash">foamToFireMesh -constant -scale 1000
+</code></pre>
+<p>输出坐标乘 1000，将米制网格改为毫米数值。接收软件应按毫米解释输出坐标。</p>
+<h2>示例 4：导出最新变形网格</h2>
+<pre><code class="language-bash">foamToFireMesh -latestTime
+</code></pre>
+<p>读取最新时间对应的几何。适用于动网格计算后将变形位置交给 FIRE 相关工具。</p>
+<h2>示例 5：导出一组瞬态网格</h2>
+<pre><code class="language-bash">foamToFireMesh -time '0.1:0.5' -ascii
+</code></pre>
+<p>遍历所选范围内已有的时间目录，导出相关网格。核对每个输出对应的时间，避免把静态网格重复文件误认为不同形状。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-ascii</code></td><td>Write in ASCII format instead of binary</td></tr><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-scale &lt;factor&gt;</code></td><td>Geometry scaling factor - default is 1 (none)</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamToFireMesh [OPTIONS]
 Options:
   -ascii            Write in ASCII format instead of binary
   -case &lt;dir&gt;       Case directory (instead of current directory)

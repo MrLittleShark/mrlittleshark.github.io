@@ -1,11 +1,37 @@
 ---
-title: "createViewFactors · 读取 constant/viewFactorsDict 等辐射配置"
+title: "createViewFactors · 按 viewFactorsDict 选择的模型计算辐射视角因子"
 layout: reference
-description: "读取 constant/viewFactorsDict 等辐射配置。"
+description: "按 viewFactorsDict 选择的模型计算辐射视角因子。"
 cms_slug: "command-createviewfactors"
 ---
 
-<p>读取 constant/viewFactorsDict 等辐射配置。</p><h2>用法</h2><pre><code class="language-bash">createViewFactors</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">createViewFactors -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: createViewFactors [OPTIONS]
+<p>按 viewFactorsDict 选择的模型计算辐射视角因子。</p><h2>开始前</h2>
+<p>已有辐射边界、constant/viewFactorsDict，以及所选模型需要的面聚合或几何输入。 并行示例采用 4 个子域，分区设置与进程数一致。</p>
+<h2>示例 1：计算默认区域视角因子</h2>
+<pre><code class="language-bash">createViewFactors
+</code></pre>
+<p>从constant/viewFactorsDict创建视角因子模型并执行计算，输出后续辐射模型所需数据。</p>
+<h2>示例 2：为辐射区域单独计算</h2>
+<pre><code class="language-bash">createViewFactors -region enclosure
+</code></pre>
+<p>enclosure区域已有完整辐射设置；只处理该封闭腔体的表面关系。</p>
+<h2>示例 3：先生成粗面映射</h2>
+<pre><code class="language-bash">faceAgglomerate
+createViewFactors
+</code></pre>
+<p>使用依赖面聚合的模型时，先生成fine-to-coarse映射，再计算粗面之间的视角因子，降低计算量。</p>
+<h2>示例 4：在并行分区上计算</h2>
+<pre><code class="language-bash">decomposePar
+mpirun -np 4 createViewFactors -parallel
+</code></pre>
+<p>decomposeParDict已设置4分区；在对应分区几何上计算视角因子，输出与并行布局配套的数据。</p>
+<h2>示例 5：几何修改后重新生成</h2>
+<pre><code class="language-bash">blockMesh -case ./enclosure-wide
+faceAgglomerate -case ./enclosure-wide
+createViewFactors -case ./enclosure-wide
+</code></pre>
+<p>enclosure-wide是改变腔体宽度后的独立案例；重建网格、聚合和因子，使结果反映新的可见关系。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: createViewFactors [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

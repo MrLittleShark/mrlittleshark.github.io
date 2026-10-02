@@ -1,11 +1,38 @@
 ---
-title: "flattenMesh · 适用于相应的二维笛卡尔网格"
+title: "flattenMesh · 把二维笛卡尔网格的前后顶点校正到两个平面"
 layout: reference
-description: "适用于相应的二维笛卡尔网格。"
+description: "把二维笛卡尔网格的前后顶点校正到两个平面。"
 cms_slug: "command-flattenmesh"
 ---
 
-<p>适用于相应的二维笛卡尔网格。</p><h2>用法</h2><pre><code class="language-bash">flattenMesh</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">flattenMesh -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: flattenMesh [OPTIONS]
+<p>把二维笛卡尔网格的前后顶点校正到两个平面。</p><h2>开始前</h2>
+<p>网格已有正确的二维 empty 边界，前后面沿同一坐标方向；程序直接重写所读 points。</p>
+<h2>示例 1：校正轻微不共面的顶点</h2>
+<pre><code class="language-bash">flattenMesh
+</code></pre>
+<p>程序识别二维法向，把两侧顶点分别放到包围盒的两个端平面，输出修正后的 points 路径。</p>
+<h2>示例 2：在案例副本上比较几何</h2>
+<pre><code class="language-bash">cp -r planarCase planarCase-flat
+flattenMesh -case planarCase-flat
+</code></pre>
+<p>输入 planarCase 为现有薄层二维网格；结果写在独立副本，便于并排查看前后面平整程度。</p>
+<h2>示例 3：和网格检查连续使用</h2>
+<pre><code class="language-bash">flattenMesh
+checkMesh -allGeometry
+</code></pre>
+<p>完成平面校正后检查几何，重点观察二维方向、面平面性和单元体积。拓扑仍来自原网格。</p>
+<h2>示例 4：处理导入的二维网格</h2>
+<pre><code class="language-bash">fluentMeshToFoam channel.msh
+flattenMesh
+checkMesh
+</code></pre>
+<p>channel.msh 已按薄层二维方式生成并含可识别的 empty 边界；导入后校正坐标舍入误差，再检查网格。</p>
+<h2>示例 5：导出校正后的几何</h2>
+<pre><code class="language-bash">flattenMesh
+foamToVTK -no-fields -name VTK-flat
+</code></pre>
+<p>将校正后的网格导出到 VTK-flat，关闭场输出；可在 ParaView 中检查前后平面和薄层厚度。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: flattenMesh [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

@@ -1,11 +1,36 @@
 ---
-title: "createBaffles · 读取 createBafflesDict"
+title: "createBaffles · 将选定内部面改成挡板两侧的边界面"
 layout: reference
-description: "读取 createBafflesDict。边界面生成与点拆分属于不同操作。"
+description: "将选定内部面改成挡板两侧的边界面。"
 cms_slug: "command-createbaffles"
 ---
 
-<p>读取 createBafflesDict。边界面生成与点拆分属于不同操作。</p><h2>用法</h2><pre><code class="language-bash">createBaffles -overwrite</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">createBaffles -overwrite -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-createbafflesdict/">createBafflesDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: createBaffles [OPTIONS]
+<p>将选定内部面改成挡板两侧的边界面。</p><h2>开始前</h2>
+<p>已有网格和 system/createBafflesDict；字典指定待转换面及两侧 patch。示例中的区域名、字典名应与案例一致。</p>
+<h2>示例 1：生成挡板</h2>
+<pre><code class="language-bash">createBaffles
+</code></pre>
+<p>读取默认字典，将选中内部面改成边界面，并在新的网格时间目录写入结果。日志给出选面与新边界信息。</p>
+<h2>示例 2：使用另一套挡板位置</h2>
+<pre><code class="language-bash">createBaffles -dict system/createBaffles-obliqueDict
+</code></pre>
+<p>预先准备描述斜挡板的字典；-dict 选择该文件，便于在相同基础网格上比较不同挡板位置。</p>
+<h2>示例 3：直接更新预处理网格</h2>
+<pre><code class="language-bash">createBaffles -overwrite
+checkMesh
+</code></pre>
+<p>-overwrite 把改动写回当前网格。随后检查单元闭合、边界拓扑与网格质量，再继续初始化场。</p>
+<h2>示例 4：只处理流体区域</h2>
+<pre><code class="language-bash">createBaffles -region fluid -dict system/createBaffles-fluidDict -overwrite
+</code></pre>
+<p>多区域案例已有 fluid 网格；-region 限定修改对象，其他区域保持原有网格。结果是 fluid 内部新增的两侧挡板边界。</p>
+<h2>示例 5：挡板生成后拆分共用顶点</h2>
+<pre><code class="language-bash">createBaffles -overwrite
+mergeOrSplitBaffles -split -overwrite
+checkMesh
+</code></pre>
+<p>第一步创建面，第二步复制挡板两侧需要独立的顶点，适用于随后要让两侧独立运动的网格。最终检查拆分后的连通关系。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-dict &lt;file&gt;</code></td><td>改用指定字典文件。</td></tr><tr><td><code>-overwrite</code></td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-createbafflesdict/">createBafflesDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: createBaffles [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

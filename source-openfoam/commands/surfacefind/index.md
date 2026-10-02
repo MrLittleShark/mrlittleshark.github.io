@@ -5,7 +5,30 @@ description: "用于定位和检查表面坐标。"
 cms_slug: "command-surfacefind"
 ---
 
-<p>用于定位和检查表面坐标。</p><h2>用法</h2><pre><code class="language-bash">surfaceFind body.stl -x 0.1</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">surfaceFind body.stl -x 0.1 -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-x &lt;X&gt;</td><td>The point x-coordinate (if non-zero)</td></tr><tr><td>-y &lt;Y&gt;</td><td>The point y-coordinate (if non-zero)</td></tr><tr><td>-z &lt;Z&gt;</td><td>The point y-coordinate (if non-zero)</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceFind [OPTIONS] &lt;input&gt;
+<p>用于定位和检查表面坐标。</p><h2>开始前</h2>
+<p>给定表面文件和查询点；未指定的坐标分量为0。输出最近面、顶点等定位信息。</p>
+<h2>示例 1：查询原点附近表面</h2>
+<pre><code class="language-bash">surfaceFind body.stl
+</code></pre>
+<p>以(0,0,0)查询最近面与顶点，用于确认几何与坐标原点的位置关系。</p>
+<h2>示例 2：定位入口中心附近</h2>
+<pre><code class="language-bash">surfaceFind -x 0.1 body.stl
+</code></pre>
+<p>查询点为(0.1,0,0)，适合轴向沿x的管道入口或截面附近定位。</p>
+<h2>示例 3：查询侧壁附近</h2>
+<pre><code class="language-bash">surfaceFind -x 0.1 -y 0.025 body.stl
+</code></pre>
+<p>明确两个坐标分量，查询侧壁附近最近三角面，便于定位局部几何。</p>
+<h2>示例 4：查询三维缺陷点</h2>
+<pre><code class="language-bash">surfaceFind -x 0.1 -y 0.025 -z 0.01 body.stl
+</code></pre>
+<p>使用检查报告给出的三维坐标，找出对应面和顶点编号。</p>
+<h2>示例 5：比较修补前后位置</h2>
+<pre><code class="language-bash">surfaceFind -x 0.1 -y 0.025 -z 0.01 raw.stl
+surfaceFind -x 0.1 -y 0.025 -z 0.01 repaired.stl
+</code></pre>
+<p>对同一个查询点比较两份表面，观察最近点距离及所在面是否随修补发生明显改变。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-x &lt;X&gt;</code></td><td>The point x-coordinate (if non-zero)</td></tr><tr><td><code>-y &lt;Y&gt;</code></td><td>The point y-coordinate (if non-zero)</td></tr><tr><td><code>-z &lt;Z&gt;</code></td><td>The point y-coordinate (if non-zero)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceFind [OPTIONS] &lt;input&gt;
 Arguments:
   &lt;input&gt;           The input surface file
 Options:

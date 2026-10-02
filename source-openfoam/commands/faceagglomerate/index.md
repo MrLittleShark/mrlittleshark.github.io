@@ -1,11 +1,35 @@
 ---
-title: "faceAgglomerate · 用于视角因子计算的前处理"
+title: "faceAgglomerate · 把边界细面聚合为粗面并写映射"
 layout: reference
-description: "用于视角因子计算的前处理。"
+description: "把边界细面聚合为粗面并写映射。"
 cms_slug: "command-faceagglomerate"
 ---
 
-<p>用于视角因子计算的前处理。</p><h2>用法</h2><pre><code class="language-bash">faceAgglomerate</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">faceAgglomerate -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: faceAgglomerate [OPTIONS]
+<p>把边界细面聚合为粗面并写映射。</p><h2>开始前</h2>
+<p>已有边界网格和constant/viewFactorsDict，其中包含聚合参数与writeFacesAgglomeration。</p>
+<h2>示例 1：生成细面到粗面映射</h2>
+<pre><code class="language-bash">faceAgglomerate
+</code></pre>
+<p>读取默认viewFactorsDict，按pairPatchAgglomeration执行聚合，并写finalAgglom供视角因子计算使用。</p>
+<h2>示例 2：写出可视化分组场</h2>
+<pre><code class="language-bash">foamDictionary constant/viewFactorsDict -entry writeFacesAgglomeration -set true
+faceAgglomerate
+</code></pre>
+<p>启用聚合可视化场，便于在ParaView中检查哪些细面归入同一粗面。</p>
+<h2>示例 3：比较另一聚合设置</h2>
+<pre><code class="language-bash">faceAgglomerate -dict constant/viewFactors-coarseDict
+</code></pre>
+<p>替代字典采用不同粗化参数；在副本中比较粗面数量与后续视角因子计算成本。</p>
+<h2>示例 4：仅聚合指定区域</h2>
+<pre><code class="language-bash">faceAgglomerate -region enclosure
+</code></pre>
+<p>只为enclosure区域生成映射，适合多区域辐射计算的几何预处理。</p>
+<h2>示例 5：聚合后计算视角因子</h2>
+<pre><code class="language-bash">faceAgglomerate
+viewFactorsGen
+</code></pre>
+<p>使用viewFactorsGen流程的案例先创建finalAgglom，再计算粗面之间的辐射交换关系。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-dict &lt;file&gt;</code></td><td>改用指定字典文件。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: faceAgglomerate [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

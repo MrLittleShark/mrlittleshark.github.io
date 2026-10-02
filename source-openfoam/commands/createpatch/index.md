@@ -1,11 +1,34 @@
 ---
-title: "createPatch · 读取 createPatchDict，修改后使场边界与新网格对应"
+title: "createPatch · 把已有边界面或 faceSet 重组为指定 patch"
 layout: reference
-description: "读取 createPatchDict，修改后使场边界与新网格对应。"
+description: "把已有边界面或 faceSet 重组为指定 patch。"
 cms_slug: "command-createpatch"
 ---
 
-<p>读取 createPatchDict，修改后使场边界与新网格对应。</p><h2>用法</h2><pre><code class="language-bash">createPatch -overwrite</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">createPatch -overwrite -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-allRegions</td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-writeObj</td><td>Write obj files showing the cyclic matching process</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-createpatchdict/">createPatchDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: createPatch [OPTIONS]
+<p>把已有边界面或 faceSet 重组为指定 patch。</p><h2>开始前</h2>
+<p>已有网格和 system/createPatchDict；字典中的 patches/source 对应实际边界或 faceSet。</p>
+<h2>示例 1：按默认字典重组边界</h2>
+<pre><code class="language-bash">createPatch
+</code></pre>
+<p>读取 createPatchDict，把选定面归入新 patch，输出新网格时间目录；检查日志中的新 patch 名称和面数。</p>
+<h2>示例 2：将入口拆分方案写回网格</h2>
+<pre><code class="language-bash">createPatch -dict system/createPatch-inletDict -overwrite
+</code></pre>
+<p>替代字典描述入口面分组；-overwrite 更新当前 boundary 与相关网格文件，便于后续按新名称填写 0/ 下边界条件。</p>
+<h2>示例 3：检查周期面配对</h2>
+<pre><code class="language-bash">createPatch -writeObj
+</code></pre>
+<p>字典已经定义 cyclic 配对时，额外写 OBJ 匹配几何，供可视化检查两侧位置与对应关系。</p>
+<h2>示例 4：为指定区域整理边界</h2>
+<pre><code class="language-bash">createPatch -region fluid -overwrite
+</code></pre>
+<p>只重组 fluid 区域的边界，适合多区域案例中单独修正流体入口、出口和壁面名称。</p>
+<h2>示例 5：依次处理所有区域</h2>
+<pre><code class="language-bash">createPatch -allRegions -overwrite
+checkMesh -allRegions
+</code></pre>
+<p>regionProperties 已列出各区域且相应字典已准备好；-allRegions 对所有区域执行重组，再逐区域检查结果。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-allRegions</code></td><td>处理 regionProperties 中列出的所有区域。</td></tr><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-dict &lt;file&gt;</code></td><td>改用指定字典文件。</td></tr><tr><td><code>-overwrite</code></td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-writeObj</code></td><td>Write obj files showing the cyclic matching process</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-createpatchdict/">createPatchDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: createPatch [OPTIONS]
 Options:
   -allRegions       Use all regions in regionProperties
   -case &lt;dir&gt;       Case directory (instead of current directory)

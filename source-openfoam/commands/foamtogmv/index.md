@@ -1,11 +1,44 @@
 ---
-title: "foamToGMV · 结果供支持 GMV 格式的软件读取"
+title: "foamToGMV · 按 conversionProperties 导出六面体网格和字段为 GMV"
 layout: reference
-description: "结果供支持 GMV 格式的软件读取。"
+description: "按 conversionProperties 导出六面体网格和字段为 GMV。"
 cms_slug: "command-foamtogmv"
 ---
 
-<p>结果供支持 GMV 格式的软件读取。</p><h2>用法</h2><pre><code class="language-bash">foamToGMV</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">foamToGMV -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamToGMV [OPTIONS]
+<p>按 conversionProperties 导出六面体网格和字段为 GMV。</p><h2>开始前</h2>
+<p>网格采用hex单元，constant/conversionProperties定义startTime、vector、format、cells；该旧式工具从字典而非时间CLI选择起始范围。</p>
+<h2>示例 1：创建最小转换配置</h2>
+<pre><code class="language-bash">cat &gt; constant/conversionProperties &lt;&lt;'EOF'
+FoamFile { version 2.0; format ascii; class dictionary; object conversionProperties; }
+startTime -1;
+vector U;
+format ascii;
+cells hex;
+EOF
+foamToGMV
+</code></pre>
+<p>写入完整转换字典；导出晚于-1的数值时间，U作为GMV速度，结果命名为plotGMV.*。</p>
+<h2>示例 2：只处理较晚结果</h2>
+<pre><code class="language-bash">foamDictionary constant/conversionProperties -entry startTime -set 1
+foamToGMV
+</code></pre>
+<p>工具只转换严格晚于1的时间，适合跳过初始发展阶段。</p>
+<h2>示例 3：把平均速度作为GMV速度</h2>
+<pre><code class="language-bash">foamDictionary constant/conversionProperties -entry vector -set UMean
+foamToGMV
+</code></pre>
+<p>结果中已有UMean时，将它作为GMV的velocity数据，便于查看统计平均流场。</p>
+<h2>示例 4：导出生成的旋流场</h2>
+<pre><code class="language-bash">engineSwirl
+foamToGMV
+</code></pre>
+<p>发动机案例使用hex网格、vector为U且转换起始范围包含该场时，先生成初始旋流，再导出供GMV检查。</p>
+<h2>示例 5：检查ASCII文件结构</h2>
+<pre><code class="language-bash">foamToGMV
+head -n 8 plotGMV.1
+</code></pre>
+<p>转换后查看首个实际生成文件的头部；如编号不同，使用日志中的文件名。应能看到gmvinput和nodes等记录。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamToGMV [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

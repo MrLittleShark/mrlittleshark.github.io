@@ -1,11 +1,37 @@
 ---
-title: "foamFormatConvert · 输出格式由 controlDict 中的 writeFormat 指定，可设为 ascii 或 "
+title: "foamFormatConvert · 按 controlDict 写出设置转换现有场和网格文件格式"
 layout: reference
-description: "输出格式由 controlDict 中的 writeFormat 指定，可设为 ascii 或 binary。"
+description: "按 controlDict 写出设置转换现有场和网格文件格式。"
 cms_slug: "command-foamformatconvert"
 ---
 
-<p>输出格式由 controlDict 中的 writeFormat 指定，可设为 ascii 或 binary。</p><h2>用法</h2><pre><code class="language-bash">foamFormatConvert -latestTime</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">foamFormatConvert -latestTime -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noConstant</td><td>Exclude the &#x27;constant/&#x27; dir in the times list Do not execute function objects</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamFormatConvert [OPTIONS]
+<p>按 controlDict 写出设置转换现有场和网格文件格式。</p><h2>开始前</h2>
+<p>已有结果；目标格式、精度与压缩由controlDict中的writeFormat、writePrecision、writeCompression决定，文件会重写。 并行示例采用 4 个子域，分区设置与进程数一致。</p>
+<h2>示例 1：把最新结果转成ASCII</h2>
+<pre><code class="language-bash">foamDictionary system/controlDict -entry writeFormat -set ascii
+foamFormatConvert -latestTime
+</code></pre>
+<p>修改目标写格式后转换最新状态，便于直接查看字段数值。</p>
+<h2>示例 2：把一段结果转成二进制</h2>
+<pre><code class="language-bash">foamDictionary system/controlDict -entry writeFormat -set binary
+foamFormatConvert -time '1:2' -noConstant
+</code></pre>
+<p>将1至2秒结果改为二进制并跳过constant，适合减小场文件体积和读写时间。</p>
+<h2>示例 3：提高文本输出精度</h2>
+<pre><code class="language-bash">foamDictionary system/controlDict -entry writeFormat -set ascii
+foamDictionary system/controlDict -entry writePrecision -set 12
+foamFormatConvert -latestTime
+</code></pre>
+<p>以12位精度重写当前可读数据；输出精度提高，已有低精度文件丢失的数值位数仍无法补回。</p>
+<h2>示例 4：只转换流体区域</h2>
+<pre><code class="language-bash">foamFormatConvert -region fluid -latestTime
+</code></pre>
+<p>用当前controlDict写出设置处理fluid最新文件，保持其他区域原格式。</p>
+<h2>示例 5：转换并行结果格式</h2>
+<pre><code class="language-bash">mpirun -np 4 foamFormatConvert -parallel -latestTime
+</code></pre>
+<p>已有4分区，分别重写各processor的最新场，适合直接改变并行重启数据格式。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noConstant</code></td><td>Exclude the &#x27;constant/&#x27; dir in the times list Do not execute function objects</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamFormatConvert [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -constant         Include &#x27;constant/&#x27; dir in the times list

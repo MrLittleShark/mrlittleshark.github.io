@@ -6,7 +6,7 @@ dictionary: true
 cms_slug: "dictionary-snappyhexmeshdict"
 ---
 
-<p>设置表面几何、局部细化、表面贴合和边界层，供 snappyHexMesh 生成贴体网格。</p><p>位置：<code>system/snappyHexMeshDict</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-snappy-workflow.png" alt="snappyHexMesh 的几何与背景网格输入" loading="lazy"><figcaption><strong>snappyHexMesh 的几何与背景网格输入</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module3.pdf，p. 71 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>配置实例</h2><p>snappyHexMesh 包括切割细化、表面贴合和边界层生成三个阶段。运行 foamGetDict snappyHexMeshDict 获取带注释模板，在已建立的背景网格上配置几何和各阶段参数。</p>
+<p>设置表面几何、局部细化、表面贴合和边界层，供 snappyHexMesh 生成贴体网格。</p><p>位置：<code>system/snappyHexMeshDict</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-snappy-workflow.png" alt="snappyHexMesh 的几何与背景网格输入" loading="lazy"><figcaption><strong>snappyHexMesh 的几何与背景网格输入</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module3.pdf，p. 71</small></figcaption></figure><h2>配置实例</h2><p>snappyHexMesh 包括切割细化、表面贴合和边界层生成三个阶段。运行 foamGetDict snappyHexMeshDict 获取带注释模板，在已建立的背景网格上配置几何和各阶段参数。</p>
 <div class="table-scroll"><table>
 <tr><th>参数</th><th>含义</th><th>设置方法</th></tr>
 <tr><td>castellatedMesh、snap、addLayers</td><td>分别控制切割细化、贴体和边界层生成</td><td>先检查切割细化和贴体，再配置边界层</td></tr>

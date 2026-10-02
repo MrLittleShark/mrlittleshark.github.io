@@ -1,11 +1,33 @@
 ---
-title: "foamListTimes · foamListTimes -time '0.1:0.5' -rm 删除指定时段目录；移除 -r"
+title: "foamListTimes · 列出符合条件的案例时间目录"
 layout: reference
-description: "foamListTimes -time '0.1:0.5' -rm 删除指定时段目录；移除 -rm 可预览，-noZero 排除 0 目录。"
+description: "列出符合条件的案例时间目录。"
 cms_slug: "command-foamlisttimes"
 ---
 
-<p>foamListTimes -time &#x27;0.1:0.5&#x27; -rm 删除指定时段目录；移除 -rm 可预览，-noZero 排除 0 目录。</p><h2>用法</h2><pre><code class="language-bash">foamListTimes -latestTime</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">foamListTimes -latestTime -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-processor</td><td>List times from processor0/ directory</td></tr><tr><td>-rm</td><td>Remove selected time directories</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-verbose</td><td>Report progress of -rm option</td></tr><tr><td>-withZero</td><td>Include &#x27;0/&#x27; dir in the times list</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamListTimes [OPTIONS]
+<p>列出符合条件的案例时间目录。</p><h2>开始前</h2>
+<p>已有案例或processor结果；以下实例只列目录，不执行删除。</p>
+<h2>示例 1：列出计算结果时间</h2>
+<pre><code class="language-bash">foamListTimes
+</code></pre>
+<p>输出标准时间选择范围内的数值目录，可用于了解已保存的结果时刻。</p>
+<h2>示例 2：包含初始0目录</h2>
+<pre><code class="language-bash">foamListTimes -withZero
+</code></pre>
+<p>把0纳入结果列表，适合检查初场和输出时间是否齐全。</p>
+<h2>示例 3：查找最新结果</h2>
+<pre><code class="language-bash">foamListTimes -latestTime
+</code></pre>
+<p>输出最后一个可用数值时刻，常用于后处理脚本选择最终状态。</p>
+<h2>示例 4：筛选指定范围</h2>
+<pre><code class="language-bash">foamListTimes -time '0.1:0.5,1:2' -noZero
+</code></pre>
+<p>只列两个时间区间内的目录，方便决定重构、转换或动画的处理范围。</p>
+<h2>示例 5：查看并行输出时刻</h2>
+<pre><code class="language-bash">foamListTimes -processor -latestTime
+</code></pre>
+<p>从processor0读取时间列表，确定并行计算已写出的最新时刻，再决定是否重构。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-processor</code></td><td>List times from processor0/ directory</td></tr><tr><td><code>-rm</code></td><td>Remove selected time directories</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-verbose</code></td><td>Report progress of -rm option</td></tr><tr><td><code>-withZero</code></td><td>Include &#x27;0/&#x27; dir in the times list</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamListTimes [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -constant         Include &#x27;constant/&#x27; dir in the times list

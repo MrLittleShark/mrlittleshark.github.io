@@ -1,11 +1,36 @@
 ---
-title: "moveEngineMesh · 读取发动机网格及运动设置"
+title: "moveEngineMesh · 按发动机曲轴转角设置推进发动机网格运动"
 layout: reference
-description: "读取发动机网格及运动设置。"
+description: "按发动机曲轴转角设置推进发动机网格运动。"
 cms_slug: "command-moveenginemesh"
 ---
 
-<p>读取发动机网格及运动设置。</p><h2>用法</h2><pre><code class="language-bash">moveEngineMesh</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">moveEngineMesh -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: moveEngineMesh [OPTIONS]
+<p>按发动机曲轴转角设置推进发动机网格运动。</p><h2>开始前</h2>
+<p>已有 engineGeometry、发动机网格运动配置和初始网格；controlDict 的时间设置与 engineTime 的转角约定匹配。</p>
+<h2>示例 1：检查完整活塞运动</h2>
+<pre><code class="language-bash">moveEngineMesh
+</code></pre>
+<p>程序按发动机时间循环更新网格，日志以 CA-deg 显示曲轴转角，结果时间保存运动几何。</p>
+<h2>示例 2：只检查起始转角段</h2>
+<pre><code class="language-bash">foamDictionary system/controlDict -entry endTime -set 10
+moveEngineMesh
+</code></pre>
+<p>在以曲轴转角为用户时间、起始角小于10的案例中，将终止角设为10度，集中观察这一段活塞运动。</p>
+<h2>示例 3：减小转角步长</h2>
+<pre><code class="language-bash">foamDictionary system/controlDict -entry deltaT -set 0.25
+moveEngineMesh
+</code></pre>
+<p>本案例时间步以曲轴角计时；0.25度提供更密的运动状态，可比较单步变形与质量变化。</p>
+<h2>示例 4：比较另一发动机几何</h2>
+<pre><code class="language-bash">moveEngineMesh -case ./engine-longStroke
+</code></pre>
+<p>engine-longStroke 已有独立的行程和运动参数；生成该几何的运动序列，和基准案例比较活塞位置。</p>
+<h2>示例 5：检查运动末态网格</h2>
+<pre><code class="language-bash">moveEngineMesh
+checkMesh -latestTime
+</code></pre>
+<p>先完成运动，再检查最后保存状态的体积和质量，适合检查接近上止点的狭小空间。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: moveEngineMesh [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

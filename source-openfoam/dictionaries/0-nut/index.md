@@ -6,7 +6,7 @@ dictionary: true
 cms_slug: "dictionary-nut"
 ---
 
-<p>湍流运动黏度场，由湍流模型和近壁处理计算，单位为 m²/s。</p><p>位置：<code>0/nut</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-turbulence-wall-law.png" alt="无量纲壁面速度分布与近壁区域" loading="lazy"><figcaption><strong>无量纲壁面速度分布与近壁区域</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 21 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><p><code>nut</code> 是湍流运动黏度，单位 m²/s，用来表示湍流对动量输运的附加作用。它由湍流模型计算；分子运动黏度 <code>nu</code> 来自材料物性。采用涡黏性模型时，二者共同构成有效动量扩散。</p>
+<p>湍流运动黏度场，由湍流模型和近壁处理计算，单位为 m²/s。</p><p>位置：<code>0/nut</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-turbulence-wall-law.png" alt="无量纲壁面速度分布与近壁区域" loading="lazy"><figcaption><strong>无量纲壁面速度分布与近壁区域</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 21</small></figcaption></figure><p><code>nut</code> 是湍流运动黏度，单位 m²/s，用来表示湍流对动量输运的附加作用。它由湍流模型计算；分子运动黏度 <code>nu</code> 来自材料物性。采用涡黏性模型时，二者共同构成有效动量扩散。</p>
 <h3>示例：k–ε 案例的 nut 边界</h3>
 <p>在已有 <code>0/nut</code> 文件中，保留 <code>class volScalarField</code>、<code>object nut</code>，并设置：</p>
 <pre><code class="language-foam">dimensions [0 2 -1 0 0 0 0];

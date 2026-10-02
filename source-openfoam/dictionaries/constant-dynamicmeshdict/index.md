@@ -6,7 +6,7 @@ dictionary: true
 cms_slug: "dictionary-dynamicmeshdict"
 ---
 
-<p>选择动态网格类型、运动求解器及其系数，控制网格随时间的移动或拓扑变化。</p><p>位置：<code>constant/dynamicMeshDict</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-dynamic-mesh-modes.png" alt="预设运动、液面晃荡与网格变形" loading="lazy"><figcaption><strong>预设运动、液面晃荡与网格变形</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 146 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>dynamicMeshDict 规定网格怎样运动</h2>
+<p>选择动态网格类型、运动求解器及其系数，控制网格随时间的移动或拓扑变化。</p><p>位置：<code>constant/dynamicMeshDict</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-dynamic-mesh-modes.png" alt="预设运动、液面晃荡与网格变形" loading="lazy"><figcaption><strong>预设运动、液面晃荡与网格变形</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 146</small></figcaption></figure><h2>dynamicMeshDict 规定网格怎样运动</h2>
 <p><code>constant/dynamicMeshDict</code> 选择动态网格类型、运动求解器及运动参数。它适用于移动边界、旋转网格和相应动态细化等计算，具体字段由选择的模型读取。</p>
 <h3>一个区域做刚体旋转</h3>
 <p>下面是 v2512 <code>pimpleFoam/laminar/mixerVesselAMI2D</code> 的旋转配置主体，放在 <code>FoamFile</code> 文件头之后：</p>

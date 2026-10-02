@@ -1,11 +1,37 @@
 ---
-title: "engineSwirl · 读取发动机几何及旋流参数"
+title: "engineSwirl · 根据发动机几何参数生成初始旋流速度场"
 layout: reference
-description: "读取发动机几何及旋流参数。"
+description: "根据发动机几何参数生成初始旋流速度场。"
 cms_slug: "command-engineswirl"
 ---
 
-<p>读取发动机几何及旋流参数。</p><h2>用法</h2><pre><code class="language-bash">engineSwirl</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">engineSwirl -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: engineSwirl [OPTIONS]
+<p>根据发动机几何参数生成初始旋流速度场。</p><h2>开始前</h2>
+<p>已有U场和constant/engineGeometry，包含swirlAxis、swirlCenter、swirlRPMRatio、swirlProfile、bore及rpm。</p>
+<h2>示例 1：生成基准旋流</h2>
+<pre><code class="language-bash">engineSwirl
+</code></pre>
+<p>按缸径、转速和旋流剖面更新U，日志输出Umax，便于核对初始速度量级。</p>
+<h2>示例 2：提高旋流比</h2>
+<pre><code class="language-bash">foamDictionary constant/engineGeometry -entry swirlRPMRatio -set 1.5
+engineSwirl
+</code></pre>
+<p>旋流比设为1.5，保持发动机转速和几何不变；生成的切向速度幅值随旋流比改变。</p>
+<h2>示例 3：改变旋流中心</h2>
+<pre><code class="language-bash">foamDictionary constant/engineGeometry -entry swirlCenter -set '(0.01 0 0)'
+engineSwirl
+</code></pre>
+<p>将旋流轴中心平移到指定坐标，适合检查偏心初始旋流的空间分布。</p>
+<h2>示例 4：改为绕y轴旋转</h2>
+<pre><code class="language-bash">foamDictionary constant/engineGeometry -entry swirlAxis -set '(0 1 0)'
+engineSwirl
+</code></pre>
+<p>swirlAxis给出旋转轴方向；程序构造垂直于该轴的横截面，并在其中生成切向速度。</p>
+<h2>示例 5：导出初始旋流进行检查</h2>
+<pre><code class="language-bash">engineSwirl
+foamToVTK -time 0 -fields '(U)' -name VTK-swirl
+</code></pre>
+<p>初始时间为0时生成并导出U；用箭头或截面查看旋向、旋流中心和缸壁附近速度。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: engineSwirl [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

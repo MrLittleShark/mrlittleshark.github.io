@@ -6,7 +6,7 @@ dictionary: true
 cms_slug: "dictionary-mrfproperties"
 ---
 
-<p>在指定 cellZone 内设置旋转参考系，常用于固定网格上的叶轮流动近似。</p><p>位置：<code>constant/MRFProperties</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-dynamic-mrf-configuration.png" alt="MRF 的旋转区和壁面参考系" loading="lazy"><figcaption><strong>MRF 的旋转区和壁面参考系</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 154 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>MRFProperties 定义旋转参考系区域</h2>
+<p>在指定 cellZone 内设置旋转参考系，常用于固定网格上的叶轮流动近似。</p><p>位置：<code>constant/MRFProperties</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-dynamic-mrf-configuration.png" alt="MRF 的旋转区和壁面参考系" loading="lazy"><figcaption><strong>MRF 的旋转区和壁面参考系</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module8.pdf，p. 154</small></figcaption></figure><h2>MRFProperties 定义旋转参考系区域</h2>
 <p>MRF（Multiple Reference Frame）在指定体积区域中采用旋转参考系处理动量方程，常用于搅拌器和旋转机械的稳态近似。网格几何在计算中保持静止，区域内的旋转效应通过方程和通量处理体现。</p>
 <p>以下配置主体放在 <code>constant/MRFProperties</code> 的文件头之后：</p>
 <pre><code class="language-foam">MRF1

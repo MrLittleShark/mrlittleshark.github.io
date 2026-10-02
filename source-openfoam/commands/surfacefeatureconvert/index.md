@@ -5,7 +5,30 @@ description: "输入和输出采用该程序支持的边线格式。"
 cms_slug: "command-surfacefeatureconvert"
 ---
 
-<p>输入和输出采用该程序支持的边线格式。</p><h2>用法</h2><pre><code class="language-bash">surfaceFeatureConvert body.eMesh body.obj</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">surfaceFeatureConvert body.eMesh body.obj -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-scale &lt;factor&gt;</td><td>Input geometry scaling factor The output format (default: use file extension)</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceFeatureConvert [OPTIONS] &lt;input&gt; &lt;output&gt;
+<p>输入和输出采用该程序支持的边线格式。</p><h2>开始前</h2>
+<p>输入为边网格，而非三角表面；常见用途是将提取的eMesh特征边转换为可查看的OBJ线。</p>
+<h2>示例 1：显示提取的特征边</h2>
+<pre><code class="language-bash">surfaceFeatureConvert constant/triSurface/body.eMesh bodyEdges.obj
+</code></pre>
+<p>把已有特征边网格导出为OBJ线段，可与原STL叠加检查。</p>
+<h2>示例 2：将OBJ边转为eMesh</h2>
+<pre><code class="language-bash">surfaceFeatureConvert featureLines.obj featureLines.eMesh
+</code></pre>
+<p>输入OBJ应包含有效线段连接；输出可供支持eMesh的网格工具读取。</p>
+<h2>示例 3：缩放特征边单位</h2>
+<pre><code class="language-bash">surfaceFeatureConvert -scale 0.001 edges_mm.eMesh edges_m.eMesh
+</code></pre>
+<p>毫米特征边转换为米，使其与已经缩放的表面一致。</p>
+<h2>示例 4：读取无扩展名边文件</h2>
+<pre><code class="language-bash">surfaceFeatureConvert -read-format eMesh featureData edges.obj
+</code></pre>
+<p>featureData实际为OpenFOAM边网格时显式指定格式。</p>
+<h2>示例 5：指定输出格式并检查形状</h2>
+<pre><code class="language-bash">surfaceFeatureConvert -write-format obj body.eMesh edgePreview
+surfaceFeatureConvert -read-format obj edgePreview checked.eMesh
+</code></pre>
+<p>先输出无扩展名OBJ线，再读回eMesh；比较边数及坐标，检查格式转换是否保留连接。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-scale &lt;factor&gt;</code></td><td>Input geometry scaling factor The output format (default: use file extension)</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: surfaceFeatureConvert [OPTIONS] &lt;input&gt; &lt;output&gt;
 Arguments:
   &lt;input&gt;           The input edge file
   &lt;output&gt;          The output edge file

@@ -1,11 +1,34 @@
 ---
-title: "setExprFields · 示例修改已有 T 场；采用 -create 新建场时需设置 dimensions"
+title: "setExprFields · 用数学表达式创建或修改单元场"
 layout: reference
-description: "示例修改已有 T 场；采用 -create 新建场时需设置 dimensions。"
+description: "用数学表达式创建或修改单元场。"
 cms_slug: "command-setexprfields"
 ---
 
-<p>示例修改已有 T 场；采用 -create 新建场时需设置 dimensions。</p><h2>用法</h2><pre><code class="language-bash">setExprFields -field T -expression &#x27;300 + 10*pos().x()&#x27;</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">setExprFields -field T -expression &#x27;300 + 10*pos().x()&#x27; -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-ascii</td><td>Write in ASCII format instead of the controlDict setting</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-create</td><td>Create a new field (command-line operation)</td></tr><tr><td>-debug-parser</td><td>Additional debugging information Set named DebugSwitch (default value: 1). [Can be used multiple times] Alternative decomposePar dictionary file</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-dry-run</td><td>Evaluate but do not write</td></tr><tr><td>-dummy-phi</td><td>Provide a zero phi field (command-line operation) The expression to evaluate (command-line operation)</td></tr><tr><td>-field &lt;name&gt;</td><td>The field to create/overwrite (command-line operation) The field mask (logical condition) when to apply the expression (command-line operation) Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-keepPatches</td><td>Leave patches unaltered (command-line operation)</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-setexprfieldsdict/">setExprFieldsDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: setExprFields [OPTIONS]
+<p>用数学表达式创建或修改单元场。</p><h2>开始前</h2>
+<p>已有网格；修改模式要求目标场存在，创建模式需指定字段名、表达式和合适量纲。</p>
+<h2>示例 1：把已有标量场设为常数</h2>
+<pre><code class="language-bash">setExprFields -field T -expression '300' -time 0
+</code></pre>
+<p>T已存在时，将选中场值设为300；应按T的物理单位解释，温度场通常以K填写。</p>
+<h2>示例 2：创建无量纲标记场</h2>
+<pre><code class="language-bash">setExprFields -create -field marker -dimensions '[0 0 0 0 0 0 0]' -expression '1' -time 0
+</code></pre>
+<p>生成新的无量纲场marker，内部赋值1，可用作区域标记或后续表达式输入。</p>
+<h2>示例 3：由速度计算单位质量动能</h2>
+<pre><code class="language-bash">setExprFields -create -field kineticEnergy -dimensions '[0 2 -2 0 0 0 0]' -load-fields '(U)' -expression '0.5*magSqr(U)' -time 0
+</code></pre>
+<p>读取U，创建单位质量动能场，量纲为平方米每二次方秒；便于观察速度非均匀性。</p>
+<h2>示例 4：保留边界只改内部温度</h2>
+<pre><code class="language-bash">setExprFields -field T -expression '350' -keepPatches -time 0
+</code></pre>
+<p>内部T改为350，-keepPatches保留已有边界设置，适合调整初始温度而继续使用原边界条件。</p>
+<h2>示例 5：先检查字典中的多场表达式</h2>
+<pre><code class="language-bash">setExprFields -dict system/setExprFields-initialDict -dry-run -time 0
+setExprFields -dict system/setExprFields-initialDict -time 0
+</code></pre>
+<p>字典已配置多项场表达式时，先求值检查，再正式写入，适合同时构造速度、标量或几何指示场。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-ascii</code></td><td>Write in ASCII format instead of the controlDict setting</td></tr><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-create</code></td><td>Create a new field (command-line operation)</td></tr><tr><td><code>-debug-parser</code></td><td>Additional debugging information Set named DebugSwitch (default value: 1). [Can be used multiple times] Alternative decomposePar dictionary file</td></tr><tr><td><code>-dict &lt;file&gt;</code></td><td>改用指定字典文件。</td></tr><tr><td><code>-dry-run</code></td><td>Evaluate but do not write</td></tr><tr><td><code>-dummy-phi</code></td><td>Provide a zero phi field (command-line operation) The expression to evaluate (command-line operation)</td></tr><tr><td><code>-field &lt;name&gt;</code></td><td>The field to create/overwrite (command-line operation) The field mask (logical condition) when to apply the expression (command-line operation) Override the file handler type Per-subprocess root directories for distributed running. The host specification can be a regex. Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td><code>-keepPatches</code></td><td>Leave patches unaltered (command-line operation)</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-setexprfieldsdict/">setExprFieldsDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: setExprFields [OPTIONS]
 Options:
   -ascii            Write in ASCII format instead of the controlDict setting
   -case &lt;dir&gt;       Case directory (instead of current directory)

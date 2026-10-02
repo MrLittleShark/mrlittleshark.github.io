@@ -5,21 +5,31 @@ description: "从模板目录复制字典到当前算例。"
 cms_slug: "command-foamgetdict"
 ---
 
-<p>从模板目录复制字典到当前算例。</p><h2>复制常用配置模板</h2>
-<pre><code class="language-bash">foamGetDict decomposeParDict
-foamGetDict meshQualityDict
+<p>从模板目录复制字典到当前算例。</p><h2>开始前</h2>
+<p>先加载 v2512 环境，在个人工作目录中准备 caseA 算例副本。新目标目录使用未占用的名称。</p>
+<h2>示例 1：取得并行分解模板</h2>
+<pre><code class="language-bash">foamGetDict -case caseA decomposeParDict
 </code></pre>
-<p>模板来自 OpenFOAM 的 <code>etc/caseDicts</code> 或用户、站点配置目录。多数 system 字典写到 <code>system</code>，物性类文件按脚本规则选择目录。</p>
-<h2>指定输出目录</h2>
+<p>复制模板到 caseA/system/decomposeParDict，随后填写分区数和方法。</p>
+<h2>示例 2：取得网格质量模板</h2>
+<pre><code class="language-bash">foamGetDict -case caseA meshQualityDict
+</code></pre>
+<p>创建网格质量控制文件，可供 snappyHexMeshDict 通过 include 引用。</p>
+<h2>示例 3：取得切面采样配置</h2>
+<pre><code class="language-bash">foamGetDict -case caseA surfaces
+</code></pre>
+<p>获取函数对象模板，输出位置由脚本按模板类别选择；需再设置采样面和字段。</p>
+<h2>示例 4：把模板集中到目录</h2>
 <pre><code class="language-bash">mkdir -p templates
-foamGetDict -target templates snappyHexMeshDict
+foamGetDict -target templates createPatchDict
 </code></pre>
-<p>把模板保存到单独的 <code>templates</code> 目录，便于与当前算例比较。模板中的模型、几何和数值需按算例填写。</p>
-<h2>替换已有模板</h2>
-<pre><code class="language-bash">foamGetDict -force decomposeParDict
+<p>-target 指定输出目录，便于比较模板后再放入算例。</p>
+<h2>示例 5：更新已有字典</h2>
+<pre><code class="language-bash">cp caseA/system/decomposeParDict caseA/system/decomposeParDict.before
+foamGetDict -force -case caseA decomposeParDict
 </code></pre>
-<p><code>-force</code> 允许覆盖同名文件。需要保留原设置时，先复制备份，再比较新模板中的条目。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-ext</td><td>&lt;ext&gt;       File extension</td></tr><tr><td>-cfg</td><td>Same as &#x27;-ext cfg&#x27; for &#x27;.cfg&#x27; files</td></tr><tr><td>-f | -force</td><td>Force overwrite of existing files</td></tr><tr><td>-no-ext</td><td>Files without extension</td></tr><tr><td>-target &lt;dir&gt;</td><td>Target directory (default: system, or auto-detected)</td></tr><tr><td>-with-api=NUM</td><td>Alternative api value for searching</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamGetDict [OPTIONS] &lt;file&gt;
+<p>先备份再使用 -force 允许覆盖，新的分区设置仍需按算例填写。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-ext</code></td><td>&lt;ext&gt;       File extension</td></tr><tr><td><code>-cfg</code></td><td>Same as &#x27;-ext cfg&#x27; for &#x27;.cfg&#x27; files</td></tr><tr><td><code>-f | -force</code></td><td>Force overwrite of existing files</td></tr><tr><td><code>-no-ext</code></td><td>Files without extension</td></tr><tr><td><code>-target &lt;dir&gt;</code></td><td>Target directory (default: system, or auto-detected)</td></tr><tr><td><code>-with-api=NUM</code></td><td>Alternative api value for searching</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamGetDict [OPTIONS] &lt;file&gt;
 options:
   -case &lt;dir&gt;       Alternative case directory, default is the cwd
   -ext  &lt;ext&gt;       File extension

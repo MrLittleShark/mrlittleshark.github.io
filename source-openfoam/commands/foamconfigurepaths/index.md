@@ -5,8 +5,29 @@ description: "修改环境配置中的安装版本和硬编码路径。"
 cms_slug: "command-foamconfigurepaths"
 ---
 
-<p>修改环境配置中的安装版本和硬编码路径。</p><h2>用法</h2><pre><code class="language-bash"># 查看安装中的脚本；这条命令不会执行脚本
-sed -n &#x27;1,180p&#x27; &quot;$WM_PROJECT_DIR/bin/tools/foamConfigurePaths&quot;</code></pre><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-foamInstall DIR</td><td>[obsolete]</td></tr><tr><td>-projectName NAME</td><td>[obsolete]</td></tr><tr><td>-sigfpe|-no-sigfpe</td><td>[obsolete] now under etc/controlDict</td></tr><tr><td>-archOption 32|64</td><td>[obsolete] now edit WM_ARCH_OPTION manually</td></tr><tr><td>-version</td><td>--projectVersion | -foamVersion</td></tr><tr><td>-archOption</td><td>--archOption</td></tr><tr><td>-third</td><td>-ThirdParty</td></tr><tr><td>-paraview</td><td>--paraviewVersion | -paraviewVersion</td></tr><tr><td>-paraview-path</td><td>--paraviewInstall | -paraviewInstall</td></tr><tr><td>-scotch</td><td>--scotchVersion | -scotchVersion</td></tr><tr><td>-scotch-path</td><td>--scotchArchPath | -scotchArchPath</td></tr><tr><td>-system-compiler</td><td>-system</td></tr><tr><td>-third-compiler</td><td>-third</td></tr><tr><td>-sys-openmpi</td><td>-openmpi-system</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
+<p>修改环境配置中的安装版本和硬编码路径。</p><h2>开始前</h2>
+<p>加载 v2512 环境。内部脚本使用完整路径调用；在个人可写工作目录中生成输出。 此工具会改写 etc 配置文件。先复制配置到独立目录：configCopy=$(mktemp -d "$HOME/foam-etc.XXXXXX"); cp -a "$WM_PROJECT_DIR/etc/." "$configCopy/"。以下都用 -etc 指向副本。</p>
+<h2>示例 1：选择双精度</h2>
+<pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamConfigurePaths" -etc="$configCopy" -dp
+</code></pre>
+<p>修改副本 bashrc/cshrc 的默认浮点精度。</p>
+<h2>示例 2：设置索引位宽</h2>
+<pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamConfigurePaths" -etc="$configCopy" -int64
+</code></pre>
+<p>把默认 WM_LABEL_SIZE 改为 64，用于后续匹配构建。</p>
+<h2>示例 3：采用系统 GCC</h2>
+<pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamConfigurePaths" -etc="$configCopy" -system-compiler Gcc
+</code></pre>
+<p>同时设置编译器种类和来源为系统编译器。</p>
+<h2>示例 4：选择系统 OpenMPI</h2>
+<pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamConfigurePaths" -etc="$configCopy" -sys-openmpi
+</code></pre>
+<p>改写默认 WM_MPLIB；MPI 本身仍需安装。</p>
+<h2>示例 5：指定 ParaView 位置</h2>
+<pre><code class="language-bash">"$WM_PROJECT_DIR/bin/tools/foamConfigurePaths" -etc="$configCopy" -paraview-path /opt/ParaView
+</code></pre>
+<p>替换为真实可用安装路径，改变副本中的 ParaView_DIR 配置。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-foamInstall DIR</code></td><td>[obsolete]</td></tr><tr><td><code>-projectName NAME</code></td><td>[obsolete]</td></tr><tr><td><code>-sigfpe|-no-sigfpe</code></td><td>[obsolete] now under etc/controlDict</td></tr><tr><td><code>-archOption 32|64</code></td><td>[obsolete] now edit WM_ARCH_OPTION manually</td></tr><tr><td><code>-version</code></td><td>--projectVersion | -foamVersion</td></tr><tr><td><code>-archOption</code></td><td>--archOption</td></tr><tr><td><code>-third</code></td><td>-ThirdParty</td></tr><tr><td><code>-paraview</code></td><td>--paraviewVersion | -paraviewVersion</td></tr><tr><td><code>-paraview-path</code></td><td>--paraviewInstall | -paraviewInstall</td></tr><tr><td><code>-scotch</code></td><td>--scotchVersion | -scotchVersion</td></tr><tr><td><code>-scotch-path</code></td><td>--scotchArchPath | -scotchArchPath</td></tr><tr><td><code>-system-compiler</code></td><td>-system</td></tr><tr><td><code>-third-compiler</code></td><td>-third</td></tr><tr><td><code>-sys-openmpi</code></td><td>-openmpi-system</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">OpenFOAM v2512 script source evidence
 Command: foamConfigurePaths
 Source: https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/bin/tools/foamConfigurePaths
 

@@ -5,17 +5,32 @@ description: "切换到已编译的库目录。"
 cms_slug: "command-lib"
 ---
 
-<p>切换到已编译的库目录。</p><h2>调用示例</h2>
-<pre><code class="language-bash">source "$WM_PROJECT_DIR/etc/config.sh/aliases"
-lib
-pwd
+<p>切换到已编译的库目录。</p><h2>开始前</h2>
+<p>先加载 v2512 环境，在交互式 Bash 中逐行执行。lib 展开为 cd "$FOAM_LIBBIN"。</p>
+<h2>示例 1：查看核心库</h2>
+<pre><code class="language-bash">lib
+ls libOpenFOAM*
 </code></pre>
-<p>这是 cd 的别名，对应目录为 <code>$FOAM_LIBBIN</code>。先创建尚不存在的个人目录，再使用相应别名。</p>
-<h2>在脚本中查看定义</h2>
-<pre><code class="language-bash">type lib
+<p>进入当前编译配置的库目录，显示核心库文件。</p>
+<h2>示例 2：查找有限体积库</h2>
+<pre><code class="language-bash">lib
+ls libfiniteVolume*
 </code></pre>
-<p><code>type</code> 显示函数定义或别名展开，可用于确认当前终端加载的实现。</p>
-<details><summary>v2512 实现</summary>
-<pre><code class="language-bash">alias lib='cd ${FOAM_LIBBIN:?}'
+<p>库名供 Make/options 的 -lfiniteVolume 和运行时加载参考。</p>
+<h2>示例 3：检查 MPI 相关子目录</h2>
+<pre><code class="language-bash">lib
+find . -maxdepth 2 -name "*Pstream*"
 </code></pre>
-</details><h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/config.sh/aliases">源码与说明</a></p>
+<p>显示并行通信库实际路径，区分不同 MPI 配置。</p>
+<h2>示例 4：检查 Linux 动态依赖</h2>
+<pre><code class="language-bash">lib
+ldd libfiniteVolume.so
+</code></pre>
+<p>Linux 共享库安装中，ldd 展示依赖库及解析路径，找不到时显示 not found。</p>
+<h2>示例 5：比较库文件后回算例</h2>
+<pre><code class="language-bash">lib
+ls -lh libOpenFOAM.so libfiniteVolume.so
+cd -
+</code></pre>
+<p>显示当前配置下库的大小与时间，然后返回原目录。</p>
+<h2>参考</h2><p><a href="https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/etc/config.sh/aliases">源码与说明</a></p>

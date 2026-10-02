@@ -1,11 +1,34 @@
 ---
-title: "setAlphaField · 可用于平面、球面和圆柱面等界面的初始化"
+title: "setAlphaField · 按 setAlphaFieldDict 定义的几何方式初始化体积分数"
 layout: reference
-description: "可用于平面、球面和圆柱面等界面的初始化。"
+description: "按 setAlphaFieldDict 定义的几何方式初始化体积分数。"
 cms_slug: "command-setalphafield"
 ---
 
-<p>可用于平面、球面和圆柱面等界面的初始化。</p><h2>用法</h2><pre><code class="language-bash">setAlphaField</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">setAlphaField -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-dict &lt;file&gt;</td><td>改用指定字典文件。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;value&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-setalphafielddict/">setAlphaFieldDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: setAlphaField [OPTIONS]
+<p>按 setAlphaFieldDict 定义的几何方式初始化体积分数。</p><h2>开始前</h2>
+<p>已有网格、目标alpha场及system/setAlphaFieldDict；场名称、几何定义与模型配置一致。</p>
+<h2>示例 1：初始化默认体积分数</h2>
+<pre><code class="language-bash">setAlphaField
+</code></pre>
+<p>按默认字典计算各单元体积分数并写场，用于准备两相流初始界面。</p>
+<h2>示例 2：只更新初始时刻</h2>
+<pre><code class="language-bash">setAlphaField -time 0
+</code></pre>
+<p>指定0时刻，便于在网格修改后重新构造初始界面。</p>
+<h2>示例 3：采用另一界面位置</h2>
+<pre><code class="language-bash">setAlphaField -dict system/setAlphaField-highLevelDict -time 0
+</code></pre>
+<p>替代字典已定义较高液位或不同界面几何；在独立副本比较初始液体体积。</p>
+<h2>示例 4：为最新状态重新设界面</h2>
+<pre><code class="language-bash">setAlphaField -latestTime -dict system/setAlphaField-restartDict
+</code></pre>
+<p>选最后保存时刻，按重启方案重置体积分数，后续计算从这一状态继续。</p>
+<h2>示例 5：处理命名区域并导出</h2>
+<pre><code class="language-bash">setAlphaField -region fluid -time 0
+foamToVTK -region fluid -time 0 -fields '(alpha.water)'
+</code></pre>
+<p>fluid区域已有alpha.water时，初始化后导出该场，检查界面位置和过渡单元分布。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-dict &lt;file&gt;</code></td><td>改用指定字典文件。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-time &lt;value&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><h2>相关配置</h2><p><a href="/dictionaries/system-setalphafielddict/">setAlphaFieldDict</a></p><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: setAlphaField [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -constant         Include &#x27;constant/&#x27; dir in the times

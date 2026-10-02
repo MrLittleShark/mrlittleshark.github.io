@@ -5,7 +5,32 @@ description: "转换后运行 checkMesh。"
 cms_slug: "command-gambittofoam"
 ---
 
-<p>转换后运行 checkMesh。</p><h2>用法</h2><pre><code class="language-bash">gambitToFoam mesh.neu</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">gambitToFoam mesh.neu -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-scale &lt;factor&gt;</td><td>Geometry scaling factor - default is 1</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: gambitToFoam [OPTIONS] &lt;GAMBIT file&gt;
+<p>转换后运行 checkMesh。</p><h2>开始前</h2>
+<p>准备 GAMBIT Neutral 网格文件；该输入与 Fluent .msh 文件采用不同的格式。</p>
+<h2>示例 1：导入 Neutral 网格</h2>
+<pre><code class="language-bash">gambitToFoam mesh.neu
+</code></pre>
+<p>读取中性格式中的节点、单元和边界分组，建立 OpenFOAM 网格。核对转换日志中的组名及单元数。</p>
+<h2>示例 2：导入毫米模型</h2>
+<pre><code class="language-bash">gambitToFoam mesh.neu -scale 0.001
+</code></pre>
+<p>节点坐标换算为米，便于直接使用 SI 制物性参数。检查 bounding box 是否与实际尺寸一致。</p>
+<h2>示例 3：转换到目标案例并检查</h2>
+<pre><code class="language-bash">gambitToFoam /data/mesh.neu -case ../gambitCase
+checkMesh -case ../gambitCase -constant -allTopology
+</code></pre>
+<p>把网格写入指定案例并检查连接关系。关注多块网格之间是否出现意外的断开区域。</p>
+<h2>示例 4：将分散边界归并</h2>
+<pre><code class="language-bash">gambitToFoam mesh.neu
+createPatch -overwrite
+</code></pre>
+<p>前提是 createPatchDict 已按导入 patch 名称配置。将同一物理壁面对应的多个分组归并，减少后续边界条件重复配置。</p>
+<h2>示例 5：导出表面核对入口出口</h2>
+<pre><code class="language-bash">gambitToFoam mesh.neu -scale 0.001
+surfaceMeshExtract ports.obj -patches '(inlet outlet)' -constant
+</code></pre>
+<p>输入需包含 inlet 和 outlet 分组。单独导出两个端面，检查法向、面积和间距是否符合实际流动通道。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-scale &lt;factor&gt;</code></td><td>Geometry scaling factor - default is 1</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: gambitToFoam [OPTIONS] &lt;GAMBIT file&gt;
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

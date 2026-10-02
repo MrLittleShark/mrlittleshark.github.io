@@ -1,11 +1,34 @@
 ---
-title: "singleCellMesh · 用于边界数据处理"
+title: "singleCellMesh · 将场映射到内部面被移除的 singleCell 区域网格"
 layout: reference
-description: "用于边界数据处理。"
+description: "将场映射到内部面被移除的 singleCell 区域网格。"
 cms_slug: "command-singlecellmesh"
 ---
 
-<p>用于边界数据处理。</p><h2>用法</h2><pre><code class="language-bash">singleCellMesh</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">singleCellMesh -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: singleCellMesh [OPTIONS]
+<p>将场映射到内部面被移除的 singleCell 区域网格。</p><h2>开始前</h2>
+<p>已有体网格和结果场；输出区域名为 singleCell，适合保留边界信息并压缩内部表示。</p>
+<h2>示例 1：生成简化区域</h2>
+<pre><code class="language-bash">singleCellMesh
+</code></pre>
+<p>读取选择的结果时间，创建 singleCell 网格并映射场，输出到该区域的对应时间位置。</p>
+<h2>示例 2：只处理最终结果</h2>
+<pre><code class="language-bash">singleCellMesh -latestTime
+</code></pre>
+<p>选择最后一个保存时刻，减少转换量，适合展示最终边界分布。</p>
+<h2>示例 3：转换一段结果历史</h2>
+<pre><code class="language-bash">singleCellMesh -time '0.1:0.5'
+</code></pre>
+<p>处理区间内已有时刻，保留这一段的简化场时间序列。</p>
+<h2>示例 4：跳过初始状态</h2>
+<pre><code class="language-bash">singleCellMesh -noZero
+</code></pre>
+<p>处理已有结果而排除0时刻，适合只整理求解后的边界数据。</p>
+<h2>示例 5：导出简化区域</h2>
+<pre><code class="language-bash">singleCellMesh -latestTime
+foamToVTK -region singleCell -latestTime -name VTK-singleCell
+</code></pre>
+<p>先创建最后状态的简化区域，再导出该区域到独立VTK目录，用于边界数据可视化。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: singleCellMesh [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -constant         Include &#x27;constant/&#x27; dir in the times list

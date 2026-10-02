@@ -1,11 +1,33 @@
 ---
-title: "lumpedPointForces · 读取集中点运动模型数据"
+title: "lumpedPointForces · 从压力场提取 lumped-point 运动区域的合力和力矩"
 layout: reference
-description: "读取集中点运动模型数据。"
+description: "从压力场提取 lumped-point 运动区域的合力和力矩。"
 cms_slug: "command-lumpedpointforces"
 ---
 
-<p>读取集中点运动模型数据。</p><h2>用法</h2><pre><code class="language-bash">lumpedPointForces</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">lumpedPointForces -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-vtk</td><td>Create visualization files of the forces</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: lumpedPointForces [OPTIONS]
+<p>从压力场提取 lumped-point 运动区域的合力和力矩。</p><h2>开始前</h2>
+<p>案例采用lumpedPoint边界及运动描述，所选时间已有p；压力积分区域与参考点设置完整。 并行示例采用 4 个子域，分区设置与进程数一致。</p>
+<h2>示例 1：提取最终载荷</h2>
+<pre><code class="language-bash">lumpedPointForces -latestTime
+</code></pre>
+<p>读取最新压力，按集中点控制区计算合力、力矩并打印，适合核对结构输入载荷。</p>
+<h2>示例 2：输出载荷可视化</h2>
+<pre><code class="language-bash">lumpedPointForces -latestTime -vtk
+</code></pre>
+<p>额外生成力和力矩的VTP几何及文件序列，便于查看各控制点的载荷方向。</p>
+<h2>示例 3：提取整个载荷阶段</h2>
+<pre><code class="language-bash">lumpedPointForces -time '0.1:1' -vtk
+</code></pre>
+<p>对区间内已有时刻计算，形成载荷随时间变化的可视化序列。</p>
+<h2>示例 4：只处理指定流体区域</h2>
+<pre><code class="language-bash">lumpedPointForces -region fluid -latestTime -vtk
+</code></pre>
+<p>多区域案例中从fluid的p与耦合边界提取载荷，结果对应该区域的控制点。</p>
+<h2>示例 5：并行场的载荷积分</h2>
+<pre><code class="language-bash">mpirun -np 4 lumpedPointForces -parallel -latestTime -vtk
+</code></pre>
+<p>已有4分区且lumped-point设置一致；归集各分区压力贡献，得到全局控制区合力和力矩。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-vtk</code></td><td>Create visualization files of the forces</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: lumpedPointForces [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -constant         Include &#x27;constant/&#x27; dir in the times list

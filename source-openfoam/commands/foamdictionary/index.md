@@ -5,24 +5,30 @@ description: "读取、修改和展开 OpenFOAM 字典。"
 cms_slug: "command-foamdictionary"
 ---
 
-<p>读取、修改和展开 OpenFOAM 字典。</p><h2>读取一个数值</h2>
+<p>读取、修改和展开 OpenFOAM 字典。</p><h2>开始前</h2>
+<p>输入为 OpenFOAM 字典；修改示例在算例副本中执行。点号可定位嵌套条目。</p>
+<h2>示例 1：读取停止时刻</h2>
 <pre><code class="language-bash">foamDictionary system/controlDict -entry endTime -value
 </code></pre>
-<p>输出 <code>endTime</code> 的值，适合检查设置，也便于在脚本中取值。此命令读取文件。</p>
-<h2>修改结束时间</h2>
-<pre><code class="language-bash">foamDictionary system/controlDict -entry endTime -set 2
-</code></pre>
-<p>将 <code>endTime</code> 改成 <code>2</code> 并写回文件。单位由求解器的时间定义决定；瞬态计算通常是秒，稳态计算常用迭代计数。</p>
-<h2>读取嵌套条目</h2>
-<pre><code class="language-bash">foamDictionary system/fvSolution -entry solvers/p/tolerance -value
-</code></pre>
-<p><code>/</code> 分隔子字典层级。本例要求存在 <code>solvers</code> 下的 <code>p</code>，可先用下一组命令查看实际名称。</p>
-<h2>列出键和展开引用</h2>
+<p>只输出 endTime 的值，便于确认当前计算何时停止。</p>
+<h2>示例 2：列出求解器设置</h2>
 <pre><code class="language-bash">foamDictionary system/fvSolution -entry solvers -keywords
-foamDictionary system/fvSolution -expand &gt; fvSolution.expanded
 </code></pre>
-<p>第一行列出线性求解器的字段条目。第二行将展开内容保存到新文件，适合检查宏与 include；含 <code>#codeStream</code> 等条目时，展开过程会执行相应代码。</p>
-<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-add &lt;value&gt;</td><td>Add a new entry</td></tr><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-diff &lt;dict&gt;</td><td>Write differences with respect to the specified dictionary</td></tr><tr><td>-diff-etc &lt;dict&gt;</td><td>As per -diff, but locate the file as per foamEtcFile Disable expansion of dictionary directives - #include, #codeStream etc</td></tr><tr><td>-entry &lt;name&gt;</td><td>定位字典中的键或子字典路径。</td></tr><tr><td>-expand</td><td>展开字典引用和函数条目；#codeStream 等条目可能执行代码。</td></tr><tr><td>-includes</td><td>List the #include/#sinclude files to standard output Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td>-keywords</td><td>列出当前字典层级的键名。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-precision &lt;int&gt;</td><td>Set default write precision for IOstreams</td></tr><tr><td>-remove</td><td>Remove the entry Subprocess root directories for distributed running</td></tr><tr><td>-set &lt;value&gt;</td><td>设置条目值，会修改文件。</td></tr><tr><td>-value</td><td>仅输出所选条目的值。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamDictionary [OPTIONS] &lt;dict&gt;
+<p>列出 solvers 子字典内的键，如 p、pFinal、U；由此确认哪些字段有线性求解设置。</p>
+<h2>示例 3：修改时间步</h2>
+<pre><code class="language-bash">foamDictionary system/controlDict -entry deltaT -set 0.001
+</code></pre>
+<p>把 deltaT 改为0.001并保存原文件。瞬态计算中该值通常表示秒；实际步长还受自适应设置影响。</p>
+<h2>示例 4：修改嵌套入口值</h2>
+<pre><code class="language-bash">foamDictionary 0/U -entry boundaryField.inlet.value -set 'uniform (0.2 0 0)'
+</code></pre>
+<p>已有 inlet/value 时将其改为沿x方向0.2m/s；入口类型须使用 value 条目。</p>
+<h2>示例 5：展开包含文件并比较修改</h2>
+<pre><code class="language-bash">foamDictionary system/controlDict -expand &gt; controlDict.expanded
+foamDictionary system/controlDict -diff system/controlDict.original
+</code></pre>
+<p>先生成展开宏和包含后的文本，再与事先保存的原字典比较。展开文件另存，不覆盖工作字典。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-add &lt;value&gt;</code></td><td>Add a new entry</td></tr><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-diff &lt;dict&gt;</code></td><td>Write differences with respect to the specified dictionary</td></tr><tr><td><code>-diff-etc &lt;dict&gt;</code></td><td>As per -diff, but locate the file as per foamEtcFile Disable expansion of dictionary directives - #include, #codeStream etc</td></tr><tr><td><code>-entry &lt;name&gt;</code></td><td>定位字典中的键或子字典路径。</td></tr><tr><td><code>-expand</code></td><td>展开字典引用和函数条目；#codeStream 等条目可能执行代码。</td></tr><tr><td><code>-includes</code></td><td>List the #include/#sinclude files to standard output Set named InfoSwitch (default value: 1). [Can be used multiple times]</td></tr><tr><td><code>-keywords</code></td><td>列出当前字典层级的键名。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-precision &lt;int&gt;</code></td><td>Set default write precision for IOstreams</td></tr><tr><td><code>-remove</code></td><td>Remove the entry Subprocess root directories for distributed running</td></tr><tr><td><code>-set &lt;value&gt;</code></td><td>设置条目值，会修改文件。</td></tr><tr><td><code>-value</code></td><td>仅输出所选条目的值。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: foamDictionary [OPTIONS] &lt;dict&gt;
 Arguments:
   &lt;dict&gt;            The dictionary file to process
 Options:

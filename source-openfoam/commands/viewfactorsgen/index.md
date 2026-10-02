@@ -1,11 +1,37 @@
 ---
-title: "viewFactorsGen · 参数由对应辐射模型及字典定义"
+title: "viewFactorsGen · 计算表面间辐射视角因子及分布映射"
 layout: reference
-description: "参数由对应辐射模型及字典定义。"
+description: "计算表面间辐射视角因子及分布映射。"
 cms_slug: "command-viewfactorsgen"
 ---
 
-<p>参数由对应辐射模型及字典定义。</p><h2>用法</h2><pre><code class="language-bash">viewFactorsGen</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">viewFactorsGen -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: viewFactorsGen [OPTIONS]
+<p>计算表面间辐射视角因子及分布映射。</p><h2>开始前</h2>
+<p>已有constant/viewFactorsDict、辐射边界和需要的faceAgglomerate结果。 并行示例采用 4 个子域，分区设置与进程数一致。</p>
+<h2>示例 1：生成辐射交换数据</h2>
+<pre><code class="language-bash">viewFactorsGen
+</code></pre>
+<p>按网格表面可见关系计算视角因子，写出后续viewFactor辐射模型需要的矩阵和映射数据。</p>
+<h2>示例 2：写出视角因子矩阵诊断</h2>
+<pre><code class="language-bash">foamDictionary constant/viewFactorsDict -entry writeViewFactorMatrix -set true
+viewFactorsGen
+</code></pre>
+<p>开启矩阵输出选项，便于检查表面对之间的交换比例和结果分布。</p>
+<h2>示例 3：导出可见射线</h2>
+<pre><code class="language-bash">foamDictionary constant/viewFactorsDict -entry dumpRays -set true
+viewFactorsGen
+</code></pre>
+<p>额外生成allVisibleFaces.obj等可见性诊断，适合检查遮挡与表面朝向。</p>
+<h2>示例 4：针对命名区域计算</h2>
+<pre><code class="language-bash">faceAgglomerate -region enclosure
+viewFactorsGen -region enclosure
+</code></pre>
+<p>为enclosure生成聚合映射后计算其视角因子，适合多区域中的辐射腔体。</p>
+<h2>示例 5：并行生成</h2>
+<pre><code class="language-bash">mpirun -np 4 faceAgglomerate -parallel
+mpirun -np 4 viewFactorsGen -parallel
+</code></pre>
+<p>网格已有4分区且viewFactorsDict一致；先聚合再计算，输出与各分区对应的交换数据。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: viewFactorsGen [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -debug-switch &lt;name=val&gt;

@@ -1,11 +1,34 @@
 ---
-title: "orientFaceZone · 面方向用于通量计算及挡板处理"
+title: "orientFaceZone · 根据外部参考点统一 faceZone 的定向标记"
 layout: reference
-description: "面方向用于通量计算及挡板处理。"
+description: "根据外部参考点统一 faceZone 的定向标记。"
 cms_slug: "command-orientfacezone"
 ---
 
-<p>面方向用于通量计算及挡板处理。</p><h2>用法</h2><pre><code class="language-bash">orientFaceZone interface &#x27;(10 0 0)&#x27;</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">orientFaceZone interface &#x27;(10 0 0)&#x27; -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: orientFaceZone [OPTIONS] &lt;faceZone&gt; &lt;point&gt;
+<p>根据外部参考点统一 faceZone 的定向标记。</p><h2>开始前</h2>
+<p>已存在目标 faceZone；第二位置参数必须是网格外部参考点，用来确定面的外侧。 并行示例采用 4 个子域，分区设置与进程数一致。</p>
+<h2>示例 1：统一闭合区域朝向</h2>
+<pre><code class="language-bash">orientFaceZone shellFaces '(10 0 0)'
+</code></pre>
+<p>shellFaces 已包围目标区域，参考点(10,0,0)确在网格外；程序更新该zone的 flipMap 并报告翻转数量。</p>
+<h2>示例 2：对另一侧外部点定向</h2>
+<pre><code class="language-bash">orientFaceZone inletSection '(-10 0 0)'
+</code></pre>
+<p>入口截面附近的外部参考点位于负x方向，使定向与所选外侧对应；用于统一截面积分的符号约定。</p>
+<h2>示例 3：处理多区域中的界面</h2>
+<pre><code class="language-bash">orientFaceZone -region fluid interfaceFaces '(10 10 10)'
+</code></pre>
+<p>仅修改 fluid 的 interfaceFaces；参考点应位于该区域外，结果写入 fluid 的 faceZones。</p>
+<h2>示例 4：生成 zone 后定向</h2>
+<pre><code class="language-bash">topoSet -dict system/topoSet-interfaceDict
+orientFaceZone interfaceFaces '(0 0 10)'
+</code></pre>
+<p>topoSet 字典先创建 interfaceFaces faceZone，再用外部参考点统一朝向，适合作为界面通量统计的前处理。</p>
+<h2>示例 5：分区网格中同步定向</h2>
+<pre><code class="language-bash">mpirun -np 4 orientFaceZone -parallel shellFaces '(10 0 0)'
+</code></pre>
+<p>已有4分区且耦合面两侧都进入zone；并行交换定向信息，使跨处理器的 flipMap 一致。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: orientFaceZone [OPTIONS] &lt;faceZone&gt; &lt;point&gt;
 Arguments:
   &lt;faceZone&gt;
   &lt;point&gt;           A point outside of the mesh

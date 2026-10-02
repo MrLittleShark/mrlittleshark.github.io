@@ -6,7 +6,7 @@ dictionary: true
 cms_slug: "dictionary-meshqualitydict"
 ---
 
-<p>设置非正交角、偏斜、体积等网格质量限制。snappyHexMesh 可在生成网格时用这些阈值调整局部操作。</p><p>位置：<code>system/meshQualityDict</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-mesh-nonorthogonality.png" alt="非正交角的几何定义" loading="lazy"><figcaption><strong>非正交角的几何定义</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module3.pdf，p. 16 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>配置实例</h2><p>运行 foamGetDict meshQualityDict 获取模板，或通过 #includeEtc "caseDicts/meshQualityDict" 引入。下表列出常用质量指标及示例阈值，阈值应结合网格尺度和求解要求确定。</p>
+<p>设置非正交角、偏斜、体积等网格质量限制。snappyHexMesh 可在生成网格时用这些阈值调整局部操作。</p><p>位置：<code>system/meshQualityDict</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-mesh-nonorthogonality.png" alt="非正交角的几何定义" loading="lazy"><figcaption><strong>非正交角的几何定义</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module3.pdf，p. 16</small></figcaption></figure><h2>配置实例</h2><p>运行 foamGetDict meshQualityDict 获取模板，或通过 #includeEtc "caseDicts/meshQualityDict" 引入。下表列出常用质量指标及示例阈值，阈值应结合网格尺度和求解要求确定。</p>
 <div class="table-scroll"><table>
 <tr><th>参数</th><th>含义</th><th>示例值</th></tr>
 <tr><td>maxNonOrtho</td><td>最大非正交角</td><td>65</td></tr>

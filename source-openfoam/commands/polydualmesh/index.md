@@ -1,11 +1,34 @@
 ---
-title: "polyDualMesh · 生成后检查网格拓扑及场映射"
+title: "polyDualMesh · 把体网格转成保留几何特征的对偶多面体网格"
 layout: reference
-description: "生成后检查网格拓扑及场映射。"
+description: "把体网格转成保留几何特征的对偶多面体网格。"
 cms_slug: "command-polydualmesh"
 ---
 
-<p>生成后检查网格拓扑及场映射。</p><h2>用法</h2><pre><code class="language-bash">polyDualMesh 60 -overwrite</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">polyDualMesh 60 -overwrite -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-splitAllFaces</td><td>Have multiple faces in between cells</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: polyDualMesh [OPTIONS] &lt;featureAngle&gt;
+<p>把体网格转成保留几何特征的对偶多面体网格。</p><h2>开始前</h2>
+<p>已有可转换的 polyMesh；featureAngle 以度表示。各比较案例使用相同原始网格副本。</p>
+<h2>示例 1：按30度特征角生成对偶网格</h2>
+<pre><code class="language-bash">polyDualMesh 30
+</code></pre>
+<p>位置参数30控制边界特征识别；程序沿特征边与patch边界构造对偶单元，输出新网格时间。</p>
+<h2>示例 2：保留更细的几何转折</h2>
+<pre><code class="language-bash">polyDualMesh 15
+</code></pre>
+<p>较小特征角把更多法向变化识别为特征，适合比较对偶网格对较缓转折的保留程度。</p>
+<h2>示例 3：处理凹边附近的单元</h2>
+<pre><code class="language-bash">polyDualMesh 30 -concaveMultiCells
+</code></pre>
+<p>在凹边界边附近允许生成多个单元，改善该位置的对偶拓扑表达，随后检查凹角网格。</p>
+<h2>示例 4：让相邻单元之间保留多个面</h2>
+<pre><code class="language-bash">polyDualMesh 30 -splitAllFaces
+</code></pre>
+<p>-splitAllFaces 允许相邻对偶单元之间存在多个面，适合研究对偶拓扑及面拆分方式。</p>
+<h2>示例 5：忽略原 faceZone 保留并更新</h2>
+<pre><code class="language-bash">polyDualMesh 30 -doNotPreserveFaceZones -overwrite
+checkMesh
+</code></pre>
+<p>关闭默认的 faceZone 特殊保留策略，写回当前网格；用于不需要原面区约束的转换流程，随后检查网格。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-overwrite</code></td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td><code>-splitAllFaces</code></td><td>Have multiple faces in between cells</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: polyDualMesh [OPTIONS] &lt;featureAngle&gt;
 Arguments:
   &lt;featureAngle&gt;    in degrees [0-180]
 Options:

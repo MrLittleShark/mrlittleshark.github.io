@@ -1,11 +1,34 @@
 ---
-title: "postChannel · 按程序规定的周期方向及平均场定义进行统计"
+title: "postChannel · 把通道湍流统计场沿均匀方向平均为壁法向剖面"
 layout: reference
-description: "按程序规定的周期方向及平均场定义进行统计。"
+description: "把通道湍流统计场沿均匀方向平均为壁法向剖面。"
 cms_slug: "command-postchannel"
 ---
 
-<p>按程序规定的周期方向及平均场定义进行统计。</p><h2>用法</h2><pre><code class="language-bash">postChannel</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">postChannel -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: postChannel [OPTIONS]
+<p>把通道湍流统计场沿均匀方向平均为壁法向剖面。</p><h2>开始前</h2>
+<p>已有constant/postChannelDict、运动黏度及UMean、UPrime2Mean、pPrime2Mean；通道分层和对称设置与网格一致。</p>
+<h2>示例 1：处理最新统计结果</h2>
+<pre><code class="language-bash">postChannel -latestTime
+</code></pre>
+<p>读取统计场并沿通道均匀方向归并，输出平均速度、雷诺应力等壁法向曲线。</p>
+<h2>示例 2：处理指定统计时刻</h2>
+<pre><code class="language-bash">postChannel -time 100
+</code></pre>
+<p>时间100已包含完整平均场时，导出该统计积累阶段的通道剖面。</p>
+<h2>示例 3：比较多个平均窗口结果</h2>
+<pre><code class="language-bash">postChannel -time '100,200,300'
+</code></pre>
+<p>依次处理三个保存时刻，比较平均剖面随统计样本增加是否趋于稳定。</p>
+<h2>示例 4：跳过初始未统计场</h2>
+<pre><code class="language-bash">postChannel -noZero -time '100:300'
+</code></pre>
+<p>只对所选后期结果进行通道平均，避免把初始场当作统计结果。</p>
+<h2>示例 5：先重构统计场再处理</h2>
+<pre><code class="language-bash">reconstructPar -latestTime -fields '(UMean UPrime2Mean pPrime2Mean)'
+postChannel -latestTime
+</code></pre>
+<p>postChannel为串行工具；先从分区结果重构它实际需要的三个统计场，再生成全通道曲线。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: postChannel [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -constant         Include &#x27;constant/&#x27; dir in the times list

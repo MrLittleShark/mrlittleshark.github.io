@@ -6,7 +6,7 @@ dictionary: true
 cms_slug: "dictionary-blockmeshdict"
 ---
 
-<p>定义网格顶点、六面体块、单元数和边界，供 blockMesh 生成结构网格。</p><p>位置：<code>system/blockMeshDict</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-mesh-smooth-transition.png" alt="网格尺寸的突变与平滑过渡" loading="lazy"><figcaption><strong>网格尺寸的突变与平滑过渡</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module3.pdf，p. 19 · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>（裁剪）</small></figcaption></figure><h2>配置实例</h2><p>blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。</p>
+<p>定义网格顶点、六面体块、单元数和边界，供 blockMesh 生成结构网格。</p><p>位置：<code>system/blockMeshDict</code></p><figure class="wolf-figure"><img src="/assets/wolf/wolf-mesh-smooth-transition.png" alt="网格尺寸的突变与平滑过渡" loading="lazy"><figcaption><strong>网格尺寸的突变与平滑过渡</strong><small class="figure-source">来源：Joel Guerrero / <a href="https://www.wolfdynamics.com/tutorials.html?id=181&amp;layout=edit">Wolf Dynamics</a> · module3.pdf，p. 19</small></figcaption></figure><h2>配置实例</h2><p>blockMeshDict 通过 vertices 定义顶点，以 hex 后的 8 个顶点编号确定块的局部方向和体积符号。(Nx Ny Nz) 指定三个方向的单元数，scale 指定坐标缩放系数，simpleGrading 指定各方向末端与起始单元的尺寸比。</p>
 <p>下例建立长 1 m、宽 0.1 m、厚 0.01 m 的二维通道。厚度方向设置一层单元，两侧边界设为 empty。</p>
 <pre><code class="language-openfoam">FoamFile
 {

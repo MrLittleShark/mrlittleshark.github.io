@@ -5,7 +5,30 @@ description: "通过 concaveAngle 及质量约束控制合并。"
 cms_slug: "command-combinepatchfaces"
 ---
 
-<p>通过 concaveAngle 及质量约束控制合并。</p><h2>用法</h2><pre><code class="language-bash">combinePatchFaces 5 -overwrite</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">combinePatchFaces 5 -overwrite -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-meshQuality</td><td>Read user-defined mesh quality criteria from system/meshQualityDict</td></tr><tr><td>-overwrite</td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: combinePatchFaces [OPTIONS] &lt;featureAngle&gt;
+<p>通过 concaveAngle 及质量约束控制合并。</p><h2>开始前</h2>
+<p>网格某些单元在同一 patch 上有多个近共面的边界面；工具将符合角度与凸凹条件的面合并。示例应在独立案例副本比较。</p>
+<h2>示例 1：合并近共面的边界面</h2>
+<pre><code class="language-bash">combinePatchFaces 5
+</code></pre>
+<p>以 5° 特征角判断可合并面，写出修改后的网格。适合整理几乎共面的碎面，检查边界面数变化。</p>
+<h2>示例 2：提高允许折角</h2>
+<pre><code class="language-bash">combinePatchFaces 20
+</code></pre>
+<p>允许更大的夹角参与合并，简化程度通常提高。比较外形与网格质量，确认曲面细节仍满足所需分辨率。</p>
+<h2>示例 3：限制允许的凹角</h2>
+<pre><code class="language-bash">combinePatchFaces 10 -concaveAngle 15
+</code></pre>
+<p>同时使用 10° 特征角和 15° 凹角参数，控制形成多边形面的几何形状。检查输出面是否出现不适合的凹形结构。</p>
+<h2>示例 4：启用网格质量约束</h2>
+<pre><code class="language-bash">combinePatchFaces 10 -meshQuality
+</code></pre>
+<p>读取 system/meshQualityDict 中的质量约束来检查合并操作。该字典应已配置完整，适合在面简化时保留明确质量条件。</p>
+<h2>示例 5：在分解网格中合并</h2>
+<pre><code class="language-bash">mpirun -np 4 combinePatchFaces 10 -parallel -overwrite
+mpirun -np 4 checkMesh -parallel
+</code></pre>
+<p>四个子域均使用同一角度设置，直接更新分区网格。完成后检查处理器边界和新面质量。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-meshQuality</code></td><td>Read user-defined mesh quality criteria from system/meshQualityDict</td></tr><tr><td><code>-overwrite</code></td><td>将修改后的网格写回原位置。操作前保存需要保留的网格。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: combinePatchFaces [OPTIONS] &lt;featureAngle&gt;
 Arguments:
   &lt;featureAngle&gt;    in degrees [0-180]
 Options:

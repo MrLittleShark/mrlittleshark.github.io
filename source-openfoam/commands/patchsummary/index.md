@@ -1,11 +1,33 @@
 ---
-title: "patchSummary · 用于检查网格边界与场配置的对应关系"
+title: "patchSummary · 列出各边界patch上的字段边界条件"
 layout: reference
-description: "用于检查网格边界与场配置的对应关系。"
+description: "列出各边界patch上的字段边界条件。"
 cms_slug: "command-patchsummary"
 ---
 
-<p>用于检查网格边界与场配置的对应关系。</p><h2>用法</h2><pre><code class="language-bash">patchSummary -latestTime -expand</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">patchSummary -latestTime -expand -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-expand</td><td>展开字典引用和函数条目；#codeStream 等条目可能执行代码。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-parallel</td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td>-region &lt;name&gt;</td><td>指定网格区域名称。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: patchSummary [OPTIONS]
+<p>列出各边界patch上的字段边界条件。</p><h2>开始前</h2>
+<p>已有网格和所选时间的场；适合检查边界名称与各字段的类型是否一致。</p>
+<h2>示例 1：查看初始边界条件</h2>
+<pre><code class="language-bash">patchSummary -time 0
+</code></pre>
+<p>读取0时刻字段，汇总各patch采用的边界类型，适合求解前检查。</p>
+<h2>示例 2：逐patch展开显示</h2>
+<pre><code class="language-bash">patchSummary -time 0 -expand
+</code></pre>
+<p>关闭相同条件的合并展示，逐个列出patch，便于定位某一小边界。</p>
+<h2>示例 3：检查最新重启状态</h2>
+<pre><code class="language-bash">patchSummary -latestTime
+</code></pre>
+<p>查看最新结果场的边界类型，确认重启文件与预期边界设置一致。</p>
+<h2>示例 4：比较多个时刻</h2>
+<pre><code class="language-bash">patchSummary -time '0,1,2' -expand
+</code></pre>
+<p>三个时间均存在时，逐时刻列出边界条件，检查中途修改或重启是否改变了字段设置。</p>
+<h2>示例 5：检查多区域流体边界</h2>
+<pre><code class="language-bash">patchSummary -region fluid -latestTime -expand
+</code></pre>
+<p>仅查看fluid的最新场，便于把流固界面、入口和壁面条件分开核对。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-expand</code></td><td>展开字典引用和函数条目；#codeStream 等条目可能执行代码。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-parallel</code></td><td>启用并行运行；由 mpirun 启动相应进程数。</td></tr><tr><td><code>-region &lt;name&gt;</code></td><td>指定网格区域名称。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: patchSummary [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -constant         Include &#x27;constant/&#x27; dir in the times list

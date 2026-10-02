@@ -1,11 +1,33 @@
 ---
-title: "profilingSummary · 读取启用 profiling 后生成的性能统计文件"
+title: "profilingSummary · 汇总各处理器的性能剖析记录"
 layout: reference
-description: "读取启用 profiling 后生成的性能统计文件。"
+description: "汇总各处理器的性能剖析记录。"
 cms_slug: "command-profilingsummary"
 ---
 
-<p>读取启用 profiling 后生成的性能统计文件。</p><h2>用法</h2><pre><code class="language-bash">profilingSummary</code></pre><h2>指定算例目录</h2><pre><code class="language-bash">profilingSummary -case ../myCase</code></pre><p>把 ../myCase 换成已有算例目录，其余输入参数保持相应含义。</p><h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td>-case &lt;dir&gt;</td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td>-constant</td><td>将 constant 目录加入选择。</td></tr><tr><td>-latestTime</td><td>选择最近的结果时刻。</td></tr><tr><td>-noZero</td><td>跳过 0 时刻。</td></tr><tr><td>-time &lt;ranges&gt;</td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td>-withZero</td><td>Include &#x27;0/&#x27; dir in the times list</td></tr><tr><td>-help</td><td>显示常用参数。</td></tr><tr><td>-help-full</td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: profilingSummary [OPTIONS]
+<p>汇总各处理器的性能剖析记录。</p><h2>开始前</h2>
+<p>计算时已启用并写出profiling数据；工具读取对应时间中的记录，汇总调用数、耗时及可用内存信息。</p>
+<h2>示例 1：汇总最新性能记录</h2>
+<pre><code class="language-bash">profilingSummary -latestTime
+</code></pre>
+<p>选最后保存的profiling记录，对各处理器统计做汇总，写入postProcessing/profiling。</p>
+<h2>示例 2：汇总指定时刻</h2>
+<pre><code class="language-bash">profilingSummary -time 100
+</code></pre>
+<p>时间100已有性能记录时，生成该阶段的摘要，便于定位计算成本。</p>
+<h2>示例 3：比较多个阶段</h2>
+<pre><code class="language-bash">profilingSummary -time '100,200,300'
+</code></pre>
+<p>分别汇总三个时刻，比较网格更新、压力求解等模块的耗时变化。</p>
+<h2>示例 4：忽略初始阶段</h2>
+<pre><code class="language-bash">profilingSummary -time '200:500' -noZero
+</code></pre>
+<p>只整理后期时间段，适合分析进入稳定工作状态后的并行负载。</p>
+<h2>示例 5：比较另一并行规模</h2>
+<pre><code class="language-bash">profilingSummary -case ./run-16cores -latestTime
+</code></pre>
+<p>run-16cores已保存16核案例的profiling数据；与其他规模的摘要比较最大、平均、最小耗时，检查负载差异。</p>
+<h2>常用参数</h2><table><thead><tr><th>参数</th><th>作用</th></tr></thead><tbody><tr><td><code>-case &lt;dir&gt;</code></td><td>指定算例目录；省略时使用当前目录。</td></tr><tr><td><code>-constant</code></td><td>将 constant 目录加入选择。</td></tr><tr><td><code>-latestTime</code></td><td>选择最近的结果时刻。</td></tr><tr><td><code>-noZero</code></td><td>跳过 0 时刻。</td></tr><tr><td><code>-time &lt;ranges&gt;</code></td><td>选择时刻或时间范围，如 0.1:0.5。</td></tr><tr><td><code>-withZero</code></td><td>Include &#x27;0/&#x27; dir in the times list</td></tr><tr><td><code>-help</code></td><td>显示常用参数。</td></tr><tr><td><code>-help-full</code></td><td>显示完整参数。</td></tr></tbody></table><details><summary>完整命令帮助</summary><pre><code class="language-text">Usage: profilingSummary [OPTIONS]
 Options:
   -case &lt;dir&gt;       Case directory (instead of current directory)
   -constant         Include &#x27;constant/&#x27; dir in the times list
