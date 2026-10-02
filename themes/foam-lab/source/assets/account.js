@@ -1,12 +1,12 @@
 'use strict';
 (() => {
  const $=s=>document.querySelector(s);const shortcuts={"courses":"系统学习","topics":"专题学习","start":"快速开始","commands":"命令速查","dictionaries":"配置与字典","algorithms":"数值方法","linux":"Linux 入门","cpp":"C++ 入门","programming":"OpenFOAM 编程","tools":"工具生态","resources":"资料与算例","recommendations":"资源推荐","sharing":"实践与分享","authors":"作者专栏","community":"讨论中心","assignments":"作业与实践","announcements":"网站公告"};const defaultShortcuts=["courses", "topics", "commands", "dictionaries", "programming", "resources", "recommendations", "community"];const selectedShortcuts=value=>Array.isArray(value)?[...new Set(value)].filter(key=>Object.hasOwn(shortcuts,key)):defaultShortcuts;
- const state={client:null,user:null,profile:null,progress:[],configured:false,githubEnabled:false,dataError:false,loading:true,dataLoading:false,signingOut:false};window.foamAuth=state;
+ const state={client:null,user:null,profile:null,progress:[],pet:null,petError:false,configured:false,githubEnabled:false,dataError:false,loading:true,dataLoading:false,signingOut:false};window.foamAuth=state;
  let session=null,revision=0,initializing=true,reloadTimer,renderedProfile='';
  const report=message=>{const box=$('#account-error');if(box){box.hidden=false;box.textContent=message;}else window.foamNotify?.(message);};
  const text=(selector,value)=>{if($(selector))$(selector).textContent=value;};
- const emit=()=>{window.dispatchEvent(new CustomEvent('foam-auth-change',{detail:{user:state.user,progress:[...state.progress]}}));if(state.user&&location.pathname==='/account/'&&sessionStorage.getItem('foamlab.returnTo')==='admin'){sessionStorage.removeItem('foamlab.returnTo');location.replace('/admin/');}else if(state.user&&location.pathname==='/account/'){const dest=sessionStorage.getItem('foamlab.afterLogin');if(dest&&dest.startsWith('/')&&!dest.startsWith('//')){sessionStorage.removeItem('foamlab.afterLogin');location.replace(dest);}}};
- function render(){const signed=!!state.user;const nav=$('#account-nav-label');if(nav){nav.textContent=signed||state.loading?'个人中心':'登录 / 个人中心';nav.setAttribute('aria-busy',String(state.loading));}for(const button of document.querySelectorAll('#sign-out,#nav-sign-out')){button.hidden=!signed;button.disabled=state.signingOut;button.textContent=state.signingOut?'正在退出…':'退出登录';}const page=$('.account-page');if(!page)return;
+ const emit=(accountUpdated=false)=>{window.dispatchEvent(new CustomEvent('foam-auth-change',{detail:{user:state.user,progress:[...state.progress],accountUpdated}}));if(state.user&&location.pathname==='/account/'&&sessionStorage.getItem('foamlab.returnTo')==='admin'){sessionStorage.removeItem('foamlab.returnTo');location.replace('/admin/');}else if(state.user&&location.pathname==='/account/'){const dest=sessionStorage.getItem('foamlab.afterLogin');if(dest&&dest.startsWith('/')&&!dest.startsWith('//')){sessionStorage.removeItem('foamlab.afterLogin');location.replace(dest);}}};
+ function render(){const signed=!!state.user;const nav=$('#account-nav-label');if(nav){nav.textContent=signed||state.loading?'个人中心':'登录 / 个人中心';nav.setAttribute('aria-busy',String(state.loading));}for(const button of document.querySelectorAll('#sign-out,#nav-sign-out')){button.hidden=!signed;button.disabled=state.signingOut;button.textContent=state.signingOut?'正在退出…':'退出登录';}text('#home-panda-account',state.loading?'我的熊猫与学习记录 →':signed?'查看我的熊猫与学习记录 →':'登录后，查看熊猫与学习记录 →');const page=$('.account-page');if(!page)return;
  $('#sign-in').hidden=signed;$('#profile-fields').disabled=!signed||state.dataError||state.dataLoading;$('#sign-in').disabled=state.loading||!state.githubEnabled;
  if(state.loading){text('#account-name','正在恢复登录…');text('#account-state','');return;}
  if(!signed){text('#account-name','尚未登录');text('#account-state',state.githubEnabled?'使用 GitHub 登录，保存学习进度并参与讨论。':state.configured?'GitHub 登录正在配置中。课程、资料与公开课堂仍可访问。':'登录服务尚未启用。课程、资料与公开课堂仍可访问。');return;}
@@ -24,7 +24,7 @@
   const identityChanged=state.user?.id!==next?.user?.id;
   if(changed)revision++;
   session=next;state.user=next?.user||null;state.loading=false;
-  if(identityChanged||!next){state.profile=null;state.progress=[];state.dataError=false;state.dataLoading=!!next;renderedProfile='';delete state.visibleCompleted;delete state.totalLessons;}
+  if(identityChanged||!next){state.profile=null;state.progress=[];state.pet=null;state.petError=false;state.dataError=false;state.dataLoading=!!next;renderedProfile='';delete state.visibleCompleted;delete state.totalLessons;}
   if(changed||initializing){render();emit();}
   return changed;
  }
@@ -51,13 +51,18 @@
   if(state.dataError){report('已保持登录，个人资料暂时无法读取。请稍后重试。');}
   else{state.profile=profile.data;state.progress=(progress.data||[]).filter(x=>x.completed).map(x=>x.content_id);if($('#account-error'))$('#account-error').hidden=true;}
   render();
-  emit();
+  emit(true);
+ }
+ function updateAccount(){
+  const requestRevision=revision;
+  state.profileReady=loadAccount().catch(()=>{if(requestRevision!==revision)return;state.dataLoading=false;state.dataError=true;render();report('已保持登录，账号资料暂时无法更新。');});
+  return state.profileReady;
  }
  function scheduleAccount(){
   clearTimeout(reloadTimer);
   // Keep auth callbacks synchronous; perform follow-up API work after the SDK
   // has processed the session event.
-  reloadTimer=setTimeout(()=>loadAccount().catch(()=>report('已保持登录，账号资料暂时无法更新。')),0);
+  reloadTimer=setTimeout(updateAccount,0);
  }
  state.ready=(async()=>{
   try{
@@ -66,7 +71,7 @@
    const u=new URL(cfg.supabaseUrl);if(u.protocol!=='https:'||!u.hostname.endsWith('.supabase.co'))throw Error('认证服务地址配置不正确。');
    if(cfg.publishableKey.startsWith('sb_secret_'))throw Error('认证配置错误：网页不能使用服务端密钥。');
    if(!window.supabase?.createClient)throw Error('认证组件未能加载，请刷新页面。');
-   state.client=window.supabase.createClient(cfg.supabaseUrl,cfg.publishableKey,{auth:{flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'foamlab-auth'}});
+   state.client=window.supabase.createClient(cfg.supabaseUrl,cfg.publishableKey,{global:{fetch:(input,options={})=>{const url=typeof input==='string'?input:input.url||String(input);return fetch(input,url.includes('/auth/v1/user')?{...options,signal:AbortSignal.any([options.signal,AbortSignal.timeout(12000)].filter(Boolean))}:options);}},auth:{flowType:'pkce',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storage:window.localStorage,storageKey:'foamlab-auth'}});
    state.configured=true;state.githubEnabled=true;
    state.client.auth.onAuthStateChange((event,next)=>{
     if(!['INITIAL_SESSION','SIGNED_IN','SIGNED_OUT','TOKEN_REFRESHED','USER_UPDATED'].includes(event))return;
@@ -77,7 +82,7 @@
    const {data,error}=await state.client.auth.getSession();
    if(error)throw error;
    if(revision===before)applySession(data.session);
-   await loadAccount();
+   updateAccount();
   }catch(e){report(e.message||'认证服务暂时不可用，请稍后重试。');}
   finally{initializing=false;state.loading=false;render();}
   return state;
@@ -100,5 +105,5 @@
  };
  $('#sign-in')?.addEventListener('click',async()=>{const button=$('#sign-in');button.disabled=true;try{await state.signIn();}catch{report('无法发起 GitHub 登录。请检查网络，或稍后重试。');}finally{button.disabled=false;}});
  for(const button of document.querySelectorAll('#sign-out,#nav-sign-out'))button.addEventListener('click',()=>state.signOut());
- $('#profile-form')?.addEventListener('submit',async e=>{e.preventDefault();if(!state.user||state.dataError)return;const form=e.currentTarget,button=form.querySelector('button[type=submit]');if(!form.reportValidity())return;button.disabled=true;const data=new FormData(form);const profile={user_id:state.user.id};for(const key of ['display_name','institution','research','level','bio'])profile[key]=String(data.get(key)||'').trim();profile.shortcuts=selectedShortcuts(data.getAll('shortcuts'));try{const {error}=await state.client.from('foamlab_profiles').upsert(profile,{onConflict:'user_id'});if(error)throw error;state.profile=profile;render();text('#profile-message','个人资料已保存到账号。');}catch{text('#profile-message','保存失败，当前填写内容已保留。请检查网络后重试。');}finally{button.disabled=false;}});
+ $('#profile-form')?.addEventListener('submit',async e=>{e.preventDefault();if(!state.user||state.dataError)return;const form=e.currentTarget,button=form.querySelector('button[type=submit]');if(!form.reportValidity())return;button.disabled=true;const data=new FormData(form);const profile={user_id:state.user.id};for(const key of ['display_name','institution','research','level','bio'])profile[key]=String(data.get(key)||'').trim();profile.shortcuts=selectedShortcuts(data.getAll('shortcuts'));try{const {error}=await state.client.from('foamlab_profiles').upsert(profile,{onConflict:'user_id'});if(error)throw error;state.profile=profile;render();emit(true);text('#profile-message','个人资料已保存到账号。');}catch{text('#profile-message','保存失败，当前填写内容已保留。请检查网络后重试。');}finally{button.disabled=false;}});
 })();

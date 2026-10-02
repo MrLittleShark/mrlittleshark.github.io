@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="/assets/panda-animation.css">
   <link rel="stylesheet" href="/assets/panda-character.css">
   <link rel="stylesheet" href="/assets/foamlab-theme.css">
+  <link rel="stylesheet" href="/assets/account-menu.css">
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/site.js" defer></script>
@@ -33,6 +34,7 @@
   <script src="/assets/vendor/marked.js" defer></script>
   <script src="/assets/vendor/katex/katex.min.js" defer></script>
   <script src="/assets/lab.js" defer></script>
+  <script src="/assets/account-menu.js" defer></script>
   <script src="/assets/browser-code.js" defer></script>
   <script src="/assets/support.js" defer></script>
   <script src="/assets/refinements.js" defer></script>
@@ -85,7 +87,8 @@
   <div class="sidebar-bottom"><div class="tiny-label">软件版本</div><p>OpenFOAM v2512</p><a href="https://www.openfoam.com/news/main-news/openfoam-v2512" target="_blank" rel="noopener noreferrer">v2512 官方资料 ↗</a></div>
 </aside>
 <div class="app-shell">
-  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><%- icon('menu') %></button><% const parentPage=breadcrumb_parent(page); %><div class="breadcrumb"><a id="breadcrumb-parent" href="<%= parentPage.url %>"><%= parentPage.label %></a><% if(page.path!=='index.html'){ %> <span>/</span> <strong><%= page.title || '学习概览' %></strong><% } %></div><button class="search-trigger" data-open-search><%- icon('search') %><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><div class="account-actions" aria-label="账号"><a class="account-nav" href="/account/" id="account-nav-label" aria-busy="true">个人中心</a><button class="account-sign-out" id="nav-sign-out" type="button" hidden>退出登录</button></div><a class="github-link" href="https://github.com/foamlabshark/foamlabshark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><%- icon('github') %></a></header>
+  <header class="topbar"><button class="icon-button mobile-menu" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar"><%- icon('menu') %></button><% const parentPage=breadcrumb_parent(page); %><div class="breadcrumb"><a id="breadcrumb-parent" href="<%= parentPage.url %>"><%= parentPage.label %></a><% if(page.path!=='index.html'){ %> <span>/</span> <strong><%= page.title || '学习概览' %></strong><% } %></div><button class="search-trigger" data-open-search><%- icon('search') %><span>搜索课程、命令、配置…</span><kbd>Ctrl K</kbd></button><div class="account-actions" aria-label="账号"><button class="account-nav" type="button" id="account-nav-label" aria-busy="true" aria-expanded="false" aria-controls="account-panel" aria-haspopup="dialog">个人中心</button><button class="account-sign-out" id="nav-sign-out" type="button" hidden>退出登录</button></div><a class="github-link" href="https://github.com/foamlabshark/foamlabshark.github.io" target="_blank" rel="noopener noreferrer" aria-label="GitHub 仓库"><%- icon('github') %></a></header>
+  <%- partial('_partial/account-panel') %>
   <main id="main"><% if(page.path!=='index.html'){ %><div class="page-return"><a class="button secondary" id="page-back-link" href="<%= parentPage.url %>">← 返回<%= parentPage.label %></a></div><% } %><%- body %></main>
   <footer class="footer"><span>FoamLab · OpenFOAM v2512 学习站</span><span><a href="/read/?slug=sources-and-validation">资料来源</a> <a href="/support/" data-support-open>支持作者</a> <a href="/admin/" data-management-link hidden>管理入口</a></span></footer>
 </div>

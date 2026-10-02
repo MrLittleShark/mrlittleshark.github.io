@@ -5,7 +5,7 @@ const {chromium}=require('C:/Users/shark/.cache/codex-runtimes/codex-primary-run
 const {fixture,ORIGIN}=require('./check-cms-ui.cjs');
 const checks=[];
 const json=(route,body,status=200)=>route.fulfill({status,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify(body)});
-async function visit(page,path){await page.goto(ORIGIN+path);await page.evaluate(()=>window.foamAuth.ready);}
+async function visit(page,path){await page.goto(ORIGIN+path);await page.evaluate(async()=>{await window.foamAuth.ready;await window.foamAuth.profileReady;});}
 async function signed(page){assert.equal(await page.locator('#account-nav-label').textContent(),'个人中心');assert(await page.evaluate(()=>!!window.foamAuth.user));}
 const waitSigned=page=>page.waitForFunction(()=>window.foamAuth?.user&&!window.foamAuth.loading&&window.FoamLab?.user);
 const waitOut=page=>page.waitForFunction(()=>window.foamAuth&&!window.foamAuth.loading&&!window.foamAuth.user&&!window.FoamLab?.user);
