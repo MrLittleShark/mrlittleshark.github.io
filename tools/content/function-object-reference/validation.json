@@ -1,0 +1,850 @@
+{
+  "version": "v2512",
+  "dictionary_syntax": {
+    "checked": 615,
+    "failed": 0
+  },
+  "runtime_examples": [
+    {
+      "name": "mag",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "mag",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "mag",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "mag",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "mag",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "grad",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "grad",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "grad",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "grad",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "grad",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "vorticity",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "vorticity",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "vorticity",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "vorticity",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "vorticity",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "Q",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "Q",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "Q",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "Q",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "Q",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "Lambda2",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "Lambda2",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "Lambda2",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "Lambda2",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "Lambda2",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "flowType",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "flowType",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "flowType",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "flowType",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "flowType",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "components",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "components",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "components",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "components",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "components",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "fieldMinMax",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "fieldMinMax",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "fieldMinMax",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "fieldMinMax",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "fieldMinMax",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "volFieldValue",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "volFieldValue",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "volFieldValue",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "volFieldValue",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "volFieldValue",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "surfaceFieldValue",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "surfaceFieldValue",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "surfaceFieldValue",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "surfaceFieldValue",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "surfaceFieldValue",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "probes",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "probes",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "probes",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "probes",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "probes",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "patchProbes",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "patchProbes",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "patchProbes",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "patchProbes",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "patchProbes",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "sets",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "sets",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "sets",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "sets",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "sets",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "surfaces",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "surfaces",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "surfaces",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "surfaces",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "surfaces",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "fieldAverage",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "fieldAverage",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "fieldAverage",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "fieldAverage",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "fieldAverage",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "forces",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "forces",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "forces",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "forces",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "forces",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "forceCoeffs",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "forceCoeffs",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "forceCoeffs",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "forceCoeffs",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "forceCoeffs",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "yPlus",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "yPlus",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "yPlus",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "yPlus",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "yPlus",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "wallShearStress",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "wallShearStress",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "wallShearStress",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "wallShearStress",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "wallShearStress",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "turbulenceFields",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "turbulenceFields",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "turbulenceFields",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "turbulenceFields",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "turbulenceFields",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "pressure",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "pressure",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "pressure",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "pressure",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "pressure",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "wallHeatFlux",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "wallHeatFlux",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "wallHeatFlux",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "wallHeatFlux",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "wallHeatFlux",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "heatTransferCoeff",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "heatTransferCoeff",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "heatTransferCoeff",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "heatTransferCoeff",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "heatTransferCoeff",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "interfaceHeight",
+      "example": 1,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "interfaceHeight",
+      "example": 2,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "interfaceHeight",
+      "example": 3,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "interfaceHeight",
+      "example": 4,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    },
+    {
+      "name": "interfaceHeight",
+      "example": 5,
+      "exit": 0,
+      "error": "",
+      "warnings": []
+    }
+  ],
+  "runtime_scope": "Selected reference configurations run with the associated solver in postProcess mode on saved tutorial results."
+}

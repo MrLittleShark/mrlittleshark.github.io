@@ -71,8 +71,27 @@
   fetch('/assets/function-objects.json').then(response => {
     if (!response.ok) throw new Error('Index unavailable');
     return response.json();
-  }).then(data => { entries = data; render(); }).catch(() => {
+  }).then(async data => {
+    entries = data; render();
+    // Published reference records supply edits, visibility and new entries.
+    // The static index remains available when the content service is offline.
+    try {
+      const lab = window.FoamLab;
+      await lab.ready;
+      const rows = lab.check(await lab.client.from('foamlab_content')
+        .select('slug,title,summary,series,metadata').eq('kind', 'reference')
+        .eq('status', 'published').eq('metadata->>reference_type', 'functionObject')
+        .order('sort_order').limit(1000));
+      const original = new Map(data.map(item => [item.url, item]));
+      entries = rows.filter(row => /^\/function-objects\/[a-z0-9-]+\/$/.test(row.metadata?.canonical_path || '')).map(row => ({
+        ...(original.get(row.metadata.canonical_path) || {}),
+        name: row.title, description: row.summary, category: row.series,
+        url: original.has(row.metadata.canonical_path) ? row.metadata.canonical_path : '/read/?slug=' + encodeURIComponent(row.slug), linkLabel: '配置与示例'
+      }));
+      render();
+    } catch { /* Retain the already rendered local index. */ }
+  }).catch(() => {
     count.textContent = '速查索引暂时无法加载';
-    host.append(el('p', '请刷新页面，或通过上方入口阅读专题课程。', 'empty-state'));
+    host.append(el('p', '请刷新页面，或通过站内搜索查找工具名称。', 'empty-state'));
   });
 })();

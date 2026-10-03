@@ -1,4 +1,4 @@
-"""Build the quick-reference index from the published functionObject lessons."""
+"""Build the index with one independent reference route per functionObject."""
 import json
 import re
 from pathlib import Path
@@ -110,6 +110,12 @@ for name, description, parameters in [
     rows.append({'name': name, 'category': '采样与统计', 'description': description,
                  'parameters': parameters, 'url': '/read/?slug=function-objects-08', 'linkLabel': '参数与用法'})
 assert len({row['name'] for row in rows}) == len(rows), 'Duplicate type'
+profiles = json.loads((ROOT / 'tools/content/function-object-reference/profiles.json').read_text(encoding='utf-8'))
+for row in rows:
+    row['url'] = '/function-objects/' + row['name'].lower() + '/'
+    row['description'] = profiles[row['name']]['description']
+    row['linkLabel'] = '配置与示例'
+    row['lessonUrl'] = profiles[row['name']]['lesson']
 output = ROOT / 'source-openfoam/assets/function-objects.json'
 output.write_text(json.dumps(rows, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 print(f'{len(rows)} functionObject types -> {output}')

@@ -10,6 +10,7 @@ hexo.extend.helper.register('breadcrumb_parent', page => {
   if(/^[^/]+\/index\.html$/.test(path)&&page.layout!=='admin-redirect')return home;
   if(page.section==='admin'||path.startsWith('admin/'))return {url:'/admin/',label:'管理平台'};
   if(page.dictionary||path.startsWith('dictionaries/'))return {url:'/dictionaries/',label:'配置与字典速查'};
+  if(path.startsWith('function-objects/'))return {url:'/function-objects/',label:'functionObject 速查'};
   if(String(page.cms_slug||'').startsWith('command-')||path.startsWith('commands/'))return {url:'/commands/',label:'命令速查'};
   const labels={courses:'系统学习',lessons:'课程目录',topics:'专题学习',linux:'Linux 入门',cpp:'C++ 入门',programming:'OpenFOAM 编程',algorithms:'数值方法',tools:'工具生态',resources:'资料中心',recommendations:'资料中心',sharing:'实践与分享',authors:'实践与分享',community:'讨论中心',assignments:'作业与实践',announcements:'网站公告',reference:'参考手册',studio:'个人中心'};
   const section=page.section||path.split('/')[0],name=labels[section];

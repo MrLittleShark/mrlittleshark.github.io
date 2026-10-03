@@ -1,0 +1,2955 @@
+{
+  "mag": {
+    "description": "计算场的模，例如速度大小。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/mag/mag.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "speed\n{\n    type mag;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n    result speed;\n}",
+    "explanation": "把速度向量 U 转换为标量速度大小。field U 指定输入，result speed 指定输出名；保存后在 ParaView 中选择 speed 即可查看速度云图。",
+    "variants": []
+  },
+  "magSqr": {
+    "description": "计算场的模平方。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/magSqr/magSqr.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "speedSquared\n{\n    type magSqr;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    field U; result speedSquared;\n}",
+    "explanation": "以 U 为输入时，结果为速度大小的平方，量纲是 m²/s²。它常作为单位质量动能的中间量，动能还需要乘以 0.5。",
+    "variants": []
+  },
+  "components": {
+    "description": "拆分向量 / 张量分量",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/components/components.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "velocityComponents\n{\n    type components;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}",
+    "explanation": "把向量或张量拆成若干标量场。输入 U 时可得到 Ux、Uy、Uz，便于分别绘制各方向速度的剖面。",
+    "variants": []
+  },
+  "add": {
+    "description": "将多个场相加，生成结果场。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/add/add.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "doubleVelocity\n{\n    type add;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U U); result twoU;\n}",
+    "explanation": "fields 按列表指定参与相加的场，输入场采用相同量纲与兼容类型。本例 U 与自身相加，结果 twoU 是原速度的两倍。",
+    "variants": []
+  },
+  "subtract": {
+    "description": "将场相减，用于计算差值。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/subtract/subtract.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "pressureDifference\n{\n    type subtract;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    fields (p p); result zeroPressure;\n}",
+    "explanation": "按 fields 中的顺序，用第一个场依次减去后续场。本例用同一个场相减得到零场，可先确认输入与输出名称，再换成两组需要比较的结果。",
+    "variants": []
+  },
+  "multiply": {
+    "description": "将多个场相乘，生成结果场。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/multiply/multiply.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "pressureProduct\n{\n    type multiply;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    fields (p p); result pressureSquared;\n}",
+    "explanation": "按 fields 的列表组合相乘。输出场的类型和量纲由输入决定；标量系数场与向量场相乘可用于空间加权。",
+    "variants": []
+  },
+  "pow": {
+    "description": "幂运算",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/pow/pow.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOpow",
+    "tested": false,
+    "code": "pow1\n{\n    type            pow;\n    libs            (fieldFunctionObjects);\n    field           k;\n    n               0.25;\n    checkDimensions false;\n    scale           0.5;\n    offset          2.5;\n    result          powk;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0.1;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 5;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "对标量场做幂运算，随后缩放和偏移。本例的结果为 0.5×k^0.25+2.5，field、n、scale、offset 分别指定输入和运算系数。用于数值变换时可明确关闭量纲检查。",
+    "variants": [
+      {
+        "title": "取平方根",
+        "patch": {
+          "n": "0.5",
+          "scale": "1",
+          "offset": "0"
+        },
+        "explanation": "单独观察 k 的平方根，先去掉缩放与偏移，便于核对运算。"
+      },
+      {
+        "title": "线性放大平方",
+        "patch": {
+          "n": "2",
+          "scale": "2",
+          "offset": "0"
+        },
+        "explanation": "先平方再乘二，输出量纲和数值范围随之改变。"
+      }
+    ]
+  },
+  "log": {
+    "description": "标量对数及缩放",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/log/log.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOlog",
+    "tested": false,
+    "code": "log1\n{\n    type            log;\n    libs            (fieldFunctionObjects);\n    field           k;\n    clip            1e-3;\n    checkDimensions false;\n    scale           1.0;\n    offset          0.0;\n    result          logk;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0.1;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 5;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "对标量场取自然对数。先用 clip 截断过小的输入，再取对数、乘 scale 并加 offset；本例对湍动能 k 做变换，用于比较跨越多个数量级的数值。",
+    "variants": [
+      {
+        "title": "降低截断下限",
+        "patch": {
+          "clip": "1e-6"
+        },
+        "explanation": "保留更小正值之间的差异，对数结果在低值区会出现更负的数值。"
+      },
+      {
+        "title": "调整显示尺度",
+        "patch": {
+          "scale": "2",
+          "offset": "1"
+        },
+        "explanation": "在取对数后作线性变换，便于与其他诊断量比较。"
+      }
+    ]
+  },
+  "norm": {
+    "description": "按选定范数归一化场",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/norm/norm.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOnorm",
+    "tested": false,
+    "code": "norm_U_L1\n{\n    type            norm;\n    libs            (fieldFunctionObjects);\n    field           U;\n    norm            L1;\n    result          norm_U_L1;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  writeTime;\n    writeControl    writeTime;\n}",
+    "explanation": "按选定范数归一化输入场，生成一个新场。本例输入 U，norm L1 选择 L1 范数；换用不同范数会改变归一化后的分量数值。",
+    "variants": [
+      {
+        "title": "采用欧氏范数",
+        "patch": {
+          "norm": "L2",
+          "result": "normalisedU"
+        },
+        "explanation": "按 L2 范数归一化速度，保存为独立结果场。"
+      },
+      {
+        "title": "采用三阶范数",
+        "patch": {
+          "norm": "Lp",
+          "p": "3",
+          "result": "normalisedU3"
+        },
+        "explanation": "Lp 模式下用 p 指定指数，比较不同范数对各分量权重的影响。"
+      }
+    ]
+  },
+  "grad": {
+    "description": "计算标量场或向量场的梯度。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/grad/grad.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "velocityGradient\n{\n    type grad;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n    result gradU;\n}",
+    "explanation": "标量的梯度是向量，向量的梯度是二阶张量。本例读取 U 并生成 gradU，梯度离散采用 fvSchemes 中对应的 gradSchemes 设置。",
+    "variants": []
+  },
+  "div": {
+    "description": "计算场的散度。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/div/div.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "divFlux\n{\n    type div;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    field phi; result divPhi;\n}",
+    "explanation": "本例输入面通量 phi，计算各单元的净流出通量除以单元体积。输出 divPhi 可用于观察局部连续性误差；它的物理量纲随 phi 的定义变化。",
+    "variants": []
+  },
+  "ddt": {
+    "description": "计算体场对时间的一阶导数。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/ddt/ddt.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOddt",
+    "tested": false,
+    "code": "ddt1\n{\n    type            ddt;\n    libs            (fieldFunctionObjects);\n    field           U;\n    result          ddtU;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0.1;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 5;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "计算瞬态体场对时间的一阶导数。本例对 U 求导得到 ddtU，需要连续时间步中的历史值；计算采用 fvSchemes 中的时间离散格式。",
+    "variants": [
+      {
+        "title": "计算压力变化率",
+        "patch": {
+          "field": "p",
+          "result": "ddtP"
+        },
+        "explanation": "跟踪压力随时间的变化率，使用同一套连续时间步数据。"
+      },
+      {
+        "title": "每步更新导数",
+        "patch": {
+          "executeControl": "timeStep",
+          "executeInterval": "1"
+        },
+        "explanation": "让导数计算与时间推进同步，之后按需要降低文件保存频率。"
+      }
+    ]
+  },
+  "ddt2": {
+    "description": "计算体场一阶时间导数的模或模平方。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/ddt2/ddt2.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOddt2",
+    "tested": false,
+    "code": "ddt21\n{\n    type            ddt2;\n    libs            (fieldFunctionObjects);\n    fields          (U p);\n    mag           false;\n    result        d@@dt2;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         10;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    runTime;\n    writeInterval   1;\n}",
+    "explanation": "计算一阶时间导数的模或模平方。mag false 输出模平方，mag true 输出模；fields 可包含多个场，result 中的 @@ 会被输入场名替换。",
+    "variants": [
+      {
+        "title": "保存变化率的模",
+        "patch": {
+          "mag": "true"
+        },
+        "explanation": "结果与一阶导数具有相同量纲，适合直接比较变化率大小。"
+      },
+      {
+        "title": "只分析速度变化",
+        "patch": {
+          "fields": "(U)"
+        },
+        "explanation": "只对速度执行时间导数统计，减少输出字段。"
+      }
+    ]
+  },
+  "vorticity": {
+    "description": "由速度场计算涡量。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/vorticity/vorticity.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "vorticity\n{\n    type vorticity;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}",
+    "explanation": "对 U 求旋度，得到三分量涡量场，单位通常为 s⁻¹。在 ParaView 中既可查看涡量模，也可查看与二维流动平面垂直的分量。",
+    "variants": []
+  },
+  "enstrophy": {
+    "description": "由速度场计算拟涡能。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/enstrophy/enstrophy.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "enstrophy\n{\n    type enstrophy;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    field U;\n}",
+    "explanation": "根据 U 的旋度计算 0.5 倍涡量模平方。它是标量场，适合观察旋转强度的空间分布。",
+    "variants": []
+  },
+  "LambVector": {
+    "description": "计算涡量与速度的叉积。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/LambVector/LambVector.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "lambVector\n{\n    type LambVector;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    field U;\n}",
+    "explanation": "计算涡量与速度的叉积，得到向量场。先由 U 求涡量，再与同一速度场组合，适合分析旋涡与输运之间的关系。",
+    "variants": []
+  },
+  "Q": {
+    "description": "计算 Q 判据，用于观察旋转与应变的关系。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/Q/Q.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "Qcriterion\n{\n    type Q;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}",
+    "explanation": "由速度梯度的旋转部分和应变部分计算 Q。可在 ParaView 中对正 Q 值建立等值面，观察旋转占优区域。",
+    "variants": []
+  },
+  "Lambda2": {
+    "description": "计算 Lambda2，用于识别涡结构。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/Lambda2/Lambda2.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "lambda2\n{\n    type Lambda2;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}",
+    "explanation": "由速度梯度构造对称矩阵并取其中间特征值。常用负 Lambda2 等值面显示涡结构，等值面阈值应结合流动速度和长度尺度选择。",
+    "variants": []
+  },
+  "flowType": {
+    "description": "根据速度梯度区分局部流动类型。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/flowType/flowType.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "flowType\n{\n    type flowType;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}",
+    "explanation": "比较速度梯度中旋转与应变的强度。输出通常从旋转占优的负值过渡到应变占优的正值，简单剪切对应两者接近的情况。",
+    "variants": []
+  },
+  "surfaceInterpolate": {
+    "description": "单元场插值到面",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/surfaceInterpolate/surfaceInterpolate.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "facePressure\n{\n    type surfaceInterpolate;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    fields ((p pFace));\n}",
+    "explanation": "fields 中每一项都是输入、输出名称对。把单元中心的场插值到网格面上，结果保留为 surfaceField，适合后续通量计算。",
+    "variants": []
+  },
+  "fieldCoordinateSystemTransform": {
+    "description": "转换向量 / 张量坐标系",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/fieldCoordinateSystemTransform/fieldCoordinateSystemTransform.H",
+    "origin": "incompressible/simpleFoam/rotatingCylinders/system/controlDict",
+    "tested": false,
+    "code": "transform1\n{\n    type            fieldCoordinateSystemTransform;\n    libs            (fieldFunctionObjects);\n    writeControl    writeTime;\n    fields          (U);\n    coordinateSystem\n    {\n        origin      (0 0 0);\n        rotation    none;\n    }\n}",
+    "explanation": "把向量或张量转换到指定局部坐标系。本例用 U 演示字段选择，coordinateSystem 中的 origin 和 rotation 决定坐标系；rotation none 保持原轴向。",
+    "variants": [
+      {
+        "title": "同时转换速度与应力",
+        "patch": {
+          "fields": "(U UPrime2Mean)"
+        },
+        "explanation": "在已保存 UPrime2Mean 的算例中，将向量和二阶张量放在同一坐标系解释。"
+      },
+      {
+        "title": "只处理平均速度",
+        "patch": {
+          "fields": "(UMean)"
+        },
+        "explanation": "使用已有时间平均速度，获得局部坐标下的平均分量。"
+      }
+    ]
+  },
+  "exprField": {
+    "description": "表达式生成或修改场",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-07",
+    "source": "src/functionObjects/field/expressions/fvExpressionField.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "energy\n{\n    type exprField;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    field kineticEnergy; expression \"0.5*magSqr(U)\"; dimensions [0 2 -2 0 0 0 0];\n}",
+    "explanation": "用表达式创建一个命名场。本例的 0.5*magSqr(U) 计算单位质量动能，dimensions 指定其量纲，field 指定输出文件名。",
+    "variants": []
+  },
+  "reference": {
+    "description": "将输入场转换为相对于指定参考值的场。",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/reference/reference.H",
+    "origin": "incompressible/simpleFoam/simpleCar/system/referencePressure",
+    "tested": false,
+    "code": "reference2\n{\n    type            reference;\n    libs            (fieldFunctionObjects);\n    writeControl    writeTime;\n    field           p;\n    refValue        sample;\n    position        (1 0.2 0.05);\n}",
+    "explanation": "从输入场减去参考值，再加 offset 并乘 scale。示例 refValue sample 从指定 position 采样压力，输出整个区域相对于该点的压力差。",
+    "variants": [
+      {
+        "title": "改用固定参考值",
+        "patch": {
+          "refValue": "constant 0"
+        },
+        "explanation": "以固定零值为参考，便于核对输入与输出。"
+      },
+      {
+        "title": "放大相对压力",
+        "patch": {
+          "scale": "1000"
+        },
+        "explanation": "对减去参考值后的结果统一乘以 1000；使用运动压力时可结合参考密度解释实际压差。"
+      }
+    ]
+  },
+  "randomise": {
+    "description": "给场添加随机扰动",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/randomise/randomise.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOrandomise",
+    "tested": false,
+    "code": "randomise1\n{\n    type            randomise;\n    libs            (fieldFunctionObjects);\n    magPerturbation 0.1;\n    field           U;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0.25;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 5;\n    writeControl    timeStep;\n    writeInterval   25;\n}",
+    "explanation": "为输入场加入给定幅值的随机扰动。本例以 U 为输入、magPerturbation 0.1 为扰动尺度，可用于准备带扰动的初始流动。",
+    "variants": [
+      {
+        "title": "减小扰动",
+        "patch": {
+          "magPerturbation": "0.01"
+        },
+        "explanation": "把扰动幅值缩小十倍，观察初始扰动强度对后续流动的影响。"
+      },
+      {
+        "title": "增大扰动",
+        "patch": {
+          "magPerturbation": "0.2"
+        },
+        "explanation": "增加初始扰动幅值，比较流动响应时保持其他计算条件相同。"
+      }
+    ]
+  },
+  "zeroGradient": {
+    "description": "生成采用零梯度边界的派生场",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/zeroGradient/zeroGradient.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOzeroGradient",
+    "tested": false,
+    "code": "zeroGradient2\n{\n    type            zeroGradient;\n    libs            (fieldFunctionObjects);\n    fields          (U \"(epsilon|omega)\" p);\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0.25;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 5;\n    writeControl    timeStep;\n    writeInterval   25;\n}",
+    "explanation": "生成采用零梯度边界的派生场，保留输入场内部数值，便于某些后处理计算。fields 可用精确名称或匹配表达式选择多个场。",
+    "variants": [
+      {
+        "title": "只生成压力派生场",
+        "patch": {
+          "fields": "(p)"
+        },
+        "explanation": "保留原压力内部值，并为派生场配置零梯度边界。"
+      },
+      {
+        "title": "处理压力与速度",
+        "patch": {
+          "fields": "(p U)"
+        },
+        "explanation": "同时生成两类派生场，用于后续几何或场运算。"
+      }
+    ]
+  },
+  "limitFields": {
+    "description": "限定指定场的数值范围",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/limitFields/limitFields.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOlimitFields",
+    "tested": false,
+    "code": "limitFields1\n{\n    type            limitFields;\n    libs            (fieldFunctionObjects);\n    fields          (U p);\n    limit           both;\n    min             0;\n    max             5;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0.25;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 5;\n    writeControl    timeStep;\n    writeInterval   25;\n}",
+    "explanation": "在内存中把指定场限制到选定范围。limit both 同时启用 min 和 max；该操作会参与后续计算，应把上下限设为物理问题允许的范围。",
+    "variants": [
+      {
+        "title": "仅限制压力下限",
+        "patch": {
+          "fields": "(p)",
+          "limit": "min",
+          "min": "0"
+        },
+        "explanation": "仅对所选标量设置下限；物理问题允许负表压时应据其压力定义选择阈值。"
+      },
+      {
+        "title": "仅限制速度上限",
+        "patch": {
+          "fields": "(U)",
+          "limit": "max",
+          "max": "2"
+        },
+        "explanation": "把速度限制到给定上界，可用于特定数值控制流程。"
+      }
+    ]
+  },
+  "derivedFields": {
+    "description": "生成预定义派生量",
+    "category": "场运算",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/derivedFields/derivedFields.H",
+    "origin": "compressible/rhoSimpleFoam/gasMixing/injectorPipe/system/derivedFields",
+    "tested": false,
+    "code": "derivedFields\n{\n    type            derivedFields;\n    libs            (fieldFunctionObjects);\n    derived         (rhoU pTotal);\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         10000;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    none;\n    writeInterval  -1;\n}",
+    "explanation": "从求解器当前字段生成预定义派生量。本例 derived (rhoU pTotal) 分别生成动量密度和总压，供后续采样或写出对象使用。",
+    "variants": [
+      {
+        "title": "只生成动量密度",
+        "patch": {
+          "derived": "(rhoU)"
+        },
+        "explanation": "重点观察密度变化对动量分布的影响。"
+      },
+      {
+        "title": "只生成总压",
+        "patch": {
+          "derived": "(pTotal)"
+        },
+        "explanation": "供下游采样或写出对象读取总压。"
+      }
+    ]
+  },
+  "probes": {
+    "description": "记录指定空间位置上的场值。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-02",
+    "source": "src/sampling/probes/probes.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "pointHistory\n{\n    type probes;\n    libs (sampling);\n\n    writeControl timeStep;\n    writeInterval 1;\n    fields (U p);\n    probeLocations ((0.05 0.05 0.005) (0.05 0.075 0.005));\n    interpolationScheme cellPoint;\n    fixedLocations true;\n    includeOutOfBounds false;\n}",
+    "explanation": "在固定坐标连续记录速度和压力。本例的两个点位于边长 0.1 m 的方腔内部，z=0.005 m 位于薄层中面；每个字段的文件按时间排列，每列对应一个探针。",
+    "variants": [
+      {
+        "title": "只记录压力",
+        "patch": {
+          "fields": "(p)"
+        },
+        "explanation": "保留原探针位置，只保存压力时序。fields 控制采样变量，减少字段也会减少输出文件。"
+      },
+      {
+        "title": "沿方腔中线布置三个探针",
+        "patch": {
+          "probeLocations": "((0.05 0.025 0.005) (0.05 0.05 0.005) (0.05 0.075 0.005))",
+          "interpolationScheme": "cellPoint"
+        },
+        "explanation": "三个点具有相同 x、z 坐标，沿 y 方向排列。cellPoint 用单元与顶点信息插值，便于比较同一条线上的流速变化。"
+      }
+    ]
+  },
+  "patchProbes": {
+    "description": "记录边界面上指定位置的场值。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-02",
+    "source": "src/sampling/probes/patchProbes.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "lidProbes\n{\n    type patchProbes;\n    libs (sampling);\n\n    writeControl timeStep;\n    writeInterval 10;\n    patches (movingWall);\n    fields (p U);\n    probeLocations ((0.025 0.1 0.005) (0.075 0.1 0.005));\n}",
+    "explanation": "把探针位置投影到所选边界上并记录边界场值。本例 patches 选方腔的 movingWall，探针位于顶壁；这适合记录壁面压力，而域内测点使用 probes。",
+    "variants": [
+      {
+        "title": "只记录顶壁压力",
+        "patch": {
+          "fields": "(p)"
+        },
+        "explanation": "测点和 movingWall 保持一致，只输出边界压力。"
+      },
+      {
+        "title": "保存每步采样值供后续对象读取",
+        "patch": {
+          "sampleOnExecute": "true",
+          "executeControl": "timeStep",
+          "executeInterval": "1"
+        },
+        "explanation": "除了写出阶段，也在执行阶段更新内存中的采样值。依赖探针结果的后续功能对象应排在它后面。"
+      }
+    ]
+  },
+  "sets": {
+    "description": "沿线或点集采样，输出场值剖面。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-03",
+    "source": "src/sampling/sampledSet/sampledSets/sampledSets.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "centreLines\n{\n    type sets;\n    libs (sampling);\n\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U p);\n    interpolationScheme cellPoint;\n    setFormat raw;\n    sets\n    {\n        vertical\n        {\n            type uniform;\n            axis y;\n            start (0.05 0.0001 0.005);\n            end (0.05 0.0999 0.005);\n            nPoints 51;\n        }\n        horizontal\n        {\n            type uniform;\n            axis x;\n            start (0.0001 0.05 0.005);\n            end (0.0999 0.05 0.005);\n            nPoints 51;\n        }\n    }\n}",
+    "explanation": "沿给定点集采样。配置中的 start、end 决定采样线位置，nPoints 决定点数；输出文件第一列是 axis 指定的坐标或距离，后续列是场值。",
+    "variants": [
+      {
+        "title": "以 CSV 保存剖面",
+        "patch": {
+          "setFormat": "csv"
+        },
+        "explanation": "保持原采样点不变，改为逗号分隔的数据文件，便于导入表格或绘图程序。"
+      },
+      {
+        "title": "同时采样压力和速度",
+        "patch": {
+          "fields": "(p U)",
+          "interpolationScheme": "cellPoint"
+        },
+        "explanation": "在同一组采样位置上保存 p 与 U，方便将压力变化和速度剖面对照。"
+      }
+    ]
+  },
+  "surfaces": {
+    "description": "在截面、等值面或指定表面上采样。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-04",
+    "source": "src/sampling/sampledSurface/sampledSurfaces/sampledSurfaces.H",
+    "origin": "04-damBreak",
+    "tested": true,
+    "code": "freeSurface\n{\n    type surfaces;\n    libs (sampling);\n\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U p_rgh);\n    surfaceFormat vtk;\n    surfaces\n    {\n        waterAir\n        {\n            type isoSurfaceCell;\n            isoField alpha.water;\n            isoValue 0.5;\n            interpolate true;\n        }\n    }\n}",
+    "explanation": "在指定几何表面上提取场。本例从溃坝的 alpha.water=0.5 等值面提取水气界面，并在该表面采样 U、p_rgh；surfaceFormat vtk 便于用 ParaView 打开。",
+    "variants": [
+      {
+        "title": "只导出界面速度",
+        "patch": {
+          "fields": "(U)"
+        },
+        "explanation": "保留同一水气界面，只输出速度，减小每个时间目录的数据量。"
+      },
+      {
+        "title": "改用 EnSight 表面输出",
+        "patch": {
+          "surfaceFormat": "ensight"
+        },
+        "explanation": "几何选择保持不变，改变结果的文件格式，适合统一到 EnSight 数据处理流程。"
+      }
+    ]
+  },
+  "nearWallFields": {
+    "description": "距壁面指定距离处采样",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/nearWallFields/nearWallFields.H",
+    "origin": "incompressible/simpleFoam/motorBike/system/wallBoundedStreamLines",
+    "tested": false,
+    "code": "near\n{\n    type    nearWallFields;\n    libs    (fieldFunctionObjects);\n    writeControl    writeTime;\n    executeControl  writeTime;\n    fields\n    (\n        (U UNear)\n    );\n    patches         (motorBikeGroup);\n    distance        0.001;\n}",
+    "explanation": "沿壁面法向在给定距离处采样，把结果保存在新的字段中。本例距离为 0.001 m，输入 U、输出 UNear，供沿壁面流线追踪使用。",
+    "variants": [
+      {
+        "title": "靠近壁面采样",
+        "patch": {
+          "distance": "0.0005"
+        },
+        "explanation": "把采样高度从 1 mm 改为 0.5 mm，分析更近壁面的速度。"
+      },
+      {
+        "title": "远离壁面采样",
+        "patch": {
+          "distance": "0.002"
+        },
+        "explanation": "把采样高度增至 2 mm，与较低采样高度的结果对照。"
+      }
+    ]
+  },
+  "streamLine": {
+    "description": "从种子点出发追踪流线。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-04",
+    "source": "src/functionObjects/field/streamLine/streamLine.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "streamlines\n{\n    type streamLine;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    U U;\n    fields (U p);\n    setFormat vtk;\n    direction bidirectional;\n    lifeTime 200;\n    nSubCycle 5;\n    seedSampleSet\n    {\n        type uniform;\n        axis y;\n        start (0.05 0.01 0.005);\n        end (0.05 0.09 0.005);\n        nPoints 5;\n    }\n}",
+    "explanation": "从 seedSampleSet 指定的种子点沿 U 追踪流线。本例在方腔中线放置五个点，双向追踪并保存沿线的 U 与 p；nSubCycle 控制单元内的追踪细分。",
+    "variants": [
+      {
+        "title": "只向下游追踪",
+        "patch": {
+          "direction": "forward"
+        },
+        "explanation": "从种子点沿速度方向积分，适合观察流体之后经过的区域。"
+      },
+      {
+        "title": "增加单元内追踪步数",
+        "patch": {
+          "nSubCycle": "10"
+        },
+        "explanation": "提高轨迹在单元内的分辨率，代价是更多追踪计算。"
+      }
+    ]
+  },
+  "wallBoundedStreamLine": {
+    "description": "追踪受壁面约束的流线。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/wallBoundedStreamLine/wallBoundedStreamLine.H",
+    "origin": "incompressible/simpleFoam/motorBike/system/wallBoundedStreamLines",
+    "tested": false,
+    "code": "wallBoundedStreamLines\n{\n    type    wallBoundedStreamLine;\n    libs    (fieldFunctionObjects);\n    U           UNear;           \n    fields      (p U k UNear);   \n    setFormat   vtk;\n    direction   forward;\n    lifeTime    100;    \n    cloud       wallBoundedParticleTracks;\n    seedSampleSet\n    {\n        type        patchSeed;\n        uniformCoeffs\n        {\n            axis        x;  \n            start       (0.0035 0.0999 0.0001);\n            end         (0.0035 0.0999 0.0099);\n            nPoints     20;\n        }\n        cloudCoeffs\n        {\n            axis        x;  \n            points      ((0.351516548679288 -0.0116085375585099 1.24));\n        }\n        patchSeedCoeffs\n        {\n            patches     (motorBikeGroup);\n            axis        x;  \n            maxPoints   20000;\n        }\n    }\n    interpolationScheme cellPoint;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "在壁面附近追踪受壁面约束的流线。本例使用 nearWallFields 先生成的 UNear 作为追踪速度，并从 motorBikeGroup 边界布置种子。",
+    "variants": [
+      {
+        "title": "反向追踪",
+        "patch": {
+          "direction": "backward"
+        },
+        "explanation": "从壁面种子点逆速度方向追踪，观察流线来自何处。"
+      },
+      {
+        "title": "延长追踪",
+        "patch": {
+          "lifeTime": "200"
+        },
+        "explanation": "允许更多追踪步数，以观察更长的近壁路径。"
+      }
+    ]
+  },
+  "surfaceDistance": {
+    "description": "计算到几何表面的距离",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/surfaceDistance/surfaceDistance.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOsurfaceDistance",
+    "tested": false,
+    "code": "surfaceDistance1\n{\n    type            surfaceDistance;\n    libs            (fieldFunctionObjects);\n    geometry\n    {\n        pending.obj\n        {\n            type triSurfaceMesh;\n            name pending;\n        }\n    }\n    calculateCells  true;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  writeTime;\n    executeInterval -1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "计算到指定几何表面的距离。示例的 pending.obj 放在 constant/triSurface，geometry 定义其类型和名称，calculateCells 决定是否计算单元中心距离。",
+    "variants": [
+      {
+        "title": "只计算边界距离",
+        "patch": {
+          "calculateCells": "false"
+        },
+        "explanation": "省去内部单元的距离计算，保留边界相关结果。"
+      },
+      {
+        "title": "同时计算单元距离",
+        "patch": {
+          "calculateCells": "true"
+        },
+        "explanation": "保存计算域内的距离分布，便于按距离筛选区域。"
+      }
+    ]
+  },
+  "fieldExtents": {
+    "description": "场值超过阈值的空间范围",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/fieldExtents/fieldExtents.H",
+    "origin": "lagrangian/reactingParcelFoam/rivuletPanel/system/controlDict",
+    "tested": false,
+    "code": "fieldExtents\n{\n    type            fieldExtents;\n    libs            (fieldFunctionObjects);\n    region          wallFilmRegion;\n    threshold       0.5;\n    fields          (alpha);\n    internalField   yes;\n    patches         ();\n}",
+    "explanation": "求字段超过 threshold 的区域在空间中的包围范围。本例在 wallFilmRegion 中以 alpha>0.5 识别液膜覆盖区域，fields、region 和 threshold 共同决定统计对象。",
+    "variants": [
+      {
+        "title": "放宽识别阈值",
+        "patch": {
+          "threshold": "0.1"
+        },
+        "explanation": "把较薄的液膜也纳入范围统计。"
+      },
+      {
+        "title": "收紧识别阈值",
+        "patch": {
+          "threshold": "0.9"
+        },
+        "explanation": "聚焦相分数更高的连续液体区域。"
+      }
+    ]
+  },
+  "volFieldValue": {
+    "description": "对体区域计算平均、积分或其他归约值。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-05",
+    "source": "src/functionObjects/field/fieldValues/volFieldValue/volFieldValue.H",
+    "origin": "03-hotRoom",
+    "tested": true,
+    "code": "meanTemperature\n{\n    type volFieldValue;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 1;\n    regionType all;\n    operation volAverage;\n    fields (T);\n    writeFields false;\n}",
+    "explanation": "本例在整个热房间区域统计 T 的体积加权平均值。volAverage 使大小不同的单元按各自体积贡献权重，结果可直接作为域平均温度。",
+    "variants": [
+      {
+        "title": "查看最高温度",
+        "patch": {
+          "operation": "max"
+        },
+        "explanation": "同样选择全部单元，但改为找 T 的最大值，用于监测局部热点。"
+      },
+      {
+        "title": "计算温度的体积积分",
+        "patch": {
+          "operation": "volIntegrate"
+        },
+        "explanation": "得到各单元 T×体积的总和，单位为 K·m³。除以总体积后即为体积平均温度；计算热量还需要密度和比热。"
+      }
+    ]
+  },
+  "surfaceFieldValue": {
+    "description": "计算选定表面的流量、平均值或积分。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-06",
+    "source": "src/functionObjects/field/fieldValues/surfaceFieldValue/surfaceFieldValue.H",
+    "origin": "02-pitzDaily",
+    "tested": true,
+    "code": "inletFlux\n{\n    type surfaceFieldValue;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    regionType patch;\n    name inlet;\n    operation sum;\n    fields (phi);\n    writeFields false;\n}",
+    "explanation": "本例对 pitzDaily 的 inlet 面通量 phi 求和。phi 已包含面面积，因此 sum 给出总流量；入口法向朝外，流入通常表现为负值。",
+    "variants": [
+      {
+        "title": "监测出口流量",
+        "patch": {
+          "name": "outlet"
+        },
+        "explanation": "将统计边界改为 outlet。对照入口和出口的总流量可以检查质量或体积收支。"
+      },
+      {
+        "title": "计算入口平均压力",
+        "patch": {
+          "fields": "(p)",
+          "operation": "areaAverage"
+        },
+        "explanation": "压力是面上的强度量，使用面积加权平均。areaAverage 与对已积分面通量求和是两种不同的操作。"
+      }
+    ]
+  },
+  "multiFieldValue": {
+    "description": "多个归约值之间的运算",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-06",
+    "source": "src/functionObjects/field/multiFieldValue/multiFieldValue.H",
+    "origin": "02-pitzDaily",
+    "tested": true,
+    "code": "pressureDrop\n{\n    type multiFieldValue;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    operation subtract;\n    functions\n    {\n        inletMean\n        {\n            type surfaceFieldValue;\n            regionType patch;\n            name inlet;\n            operation areaAverage;\n            fields (p);\n            writeFields false;\n        }\n        outletMean\n        {\n            type surfaceFieldValue;\n            regionType patch;\n            name outlet;\n            operation areaAverage;\n            fields (p);\n            writeFields false;\n        }\n    }\n}",
+    "explanation": "在一个对象中先完成多个区域统计，再组合这些数值。本例分别求入口和出口的面积平均压力，随后相减得到压降；子对象次序决定相减顺序。",
+    "variants": [
+      {
+        "title": "计算两侧均值之和",
+        "patch": {
+          "operation": "add"
+        },
+        "explanation": "先得到两个区域的平均值，再相加。输入是子对象的统计结果，而非逐单元的压力场。"
+      },
+      {
+        "title": "比较两侧均值的比值",
+        "patch": {
+          "operation": "divide"
+        },
+        "explanation": "按子对象顺序计算比值，适合比较具有相同量纲且分母远离零的监测量。压力接近零时，优先采用压差。"
+      }
+    ]
+  },
+  "fieldMinMax": {
+    "description": "记录场的最小值、最大值及其位置。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-05",
+    "source": "src/functionObjects/field/fieldMinMax/fieldMinMax.H",
+    "origin": "04-damBreak",
+    "tested": true,
+    "code": "waterRange\n{\n    type fieldMinMax;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    fields (alpha.water);\n}",
+    "explanation": "逐次记录所选场的最小值和最大值。本例监测 alpha.water，可从输出中查看相分数的取值范围；对于向量场，mode 决定按模还是按分量比较。",
+    "variants": [
+      {
+        "title": "同时监测相分数和速度",
+        "patch": {
+          "fields": "(alpha.water U)",
+          "mode": "magnitude"
+        },
+        "explanation": "速度按模比较，输出最大速度所在位置；相分数仍按标量统计。"
+      },
+      {
+        "title": "仅保存极值而省略坐标",
+        "patch": {
+          "location": "false"
+        },
+        "explanation": "当只需要绘制极值随时间变化的曲线时，可以缩短每行输出。"
+      }
+    ]
+  },
+  "fieldStatistics": {
+    "description": "统计场值的空间分布特征。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-05",
+    "source": "src/functionObjects/field/fieldStatistics/fieldStatistics.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "statistics\n{\n    type fieldStatistics;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    fields (p U); statistics (min max mean variance); mode component; mean volumetric; internal true; extrema true;\n}",
+    "explanation": "一次配置输出多个空间统计量。本例分别统计 p 和 U 的 min、max、mean、variance，mode component 对向量按分量处理，mean volumetric 采用体积权重。",
+    "variants": [
+      {
+        "title": "只统计平均值与方差",
+        "patch": {
+          "statistics": "(mean variance)"
+        },
+        "explanation": "去掉极值列，重点观察空间平均水平及离散程度。这里的方差是空间统计量。"
+      },
+      {
+        "title": "按速度大小统计",
+        "patch": {
+          "fields": "(U)",
+          "mode": "magnitude"
+        },
+        "explanation": "把每个速度向量先转成大小，再统计其空间分布，得到的量与逐分量统计不同。"
+      }
+    ]
+  },
+  "histogram": {
+    "description": "分箱分布",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-05",
+    "source": "src/functionObjects/field/histogram/histogram.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "speedHistogram\n{\n    type histogram;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    field speed; model equalBinWidth; nBins 10; min 0; max 1;\n}",
+    "explanation": "将标量值按区间分箱。这里用已由 mag(U) 创建的 speed，0 到 1 m/s 分成 10 箱；把 speed 的生成对象放在 histogram 前面。",
+    "variants": [
+      {
+        "title": "加密速度分箱",
+        "patch": {
+          "nBins": "20"
+        },
+        "explanation": "统计范围不变，把箱宽从 0.1 m/s 缩小到 0.05 m/s，以观察更细的速度分布。"
+      },
+      {
+        "title": "关注低速区域",
+        "patch": {
+          "min": "0",
+          "max": "0.2",
+          "nBins": "10"
+        },
+        "explanation": "只统计 0 到 0.2 m/s 的速度段，用较细的区间观察回流区和近壁低速单元。"
+      }
+    ]
+  },
+  "columnAverage": {
+    "description": "沿网格柱方向平均",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/columnAverage/columnAverage.H",
+    "origin": "incompressible/pimpleFoam/LES/periodicHill/transient/system/controlDict",
+    "tested": false,
+    "code": "columnAverage\n{\n    type            columnAverage;\n    libs            (fieldFunctionObjects);\n    patches         (front \"proc.*throughfront\");\n    fields\n    (\n        p\n        U\n        UMean\n        UPrime2Mean\n    );\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       1500.5; \n    executeControl  writeTime;\n    writeControl    none;\n}",
+    "explanation": "沿结构化网格柱方向平均场值。本例选择 front 以及对应的并行周期边界，将 p、U 和已有时间统计场沿该方向平均。",
+    "variants": [
+      {
+        "title": "只平均速度",
+        "patch": {
+          "fields": "(U)"
+        },
+        "explanation": "减少统计字段，观察网格柱方向平均后的速度分布。"
+      },
+      {
+        "title": "只平均压力",
+        "patch": {
+          "fields": "(p)"
+        },
+        "explanation": "输出同一方向上的平均压力。"
+      }
+    ]
+  },
+  "binField": {
+    "description": "沿指定坐标分箱统计",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/binField/binField.H",
+    "origin": "incompressible/simpleFoam/motorBike/system/forceCoeffs",
+    "tested": false,
+    "code": "binField1\n{\n    type                    binField;\n    libs                    (fieldFunctionObjects);\n    binModel                singleDirectionUniformBin;\n    fields                  (forceCoeff);\n    patches                 (motorBikeGroup);\n    decomposePatchValues    true;\n    CofR                    (0.007 0 0.004);\n    binData\n    {\n        nBin        20;          \n        direction   (1 0 0);     \n        cumulative  yes;\n    }\n    writeControl            timeStep;\n}",
+    "explanation": "按空间位置把场值分箱。本例使用 singleDirectionUniformBin，沿 x 方向分成 20 箱，对 motorBikeGroup 上已生成的 forceCoeff 统计，cumulative 控制累计和。",
+    "variants": [
+      {
+        "title": "保留完整向量贡献",
+        "patch": {
+          "decomposePatchValues": "false"
+        },
+        "explanation": "不再拆分法向与切向贡献，直接统计字段本身。"
+      },
+      {
+        "title": "保留分量分解",
+        "patch": {
+          "decomposePatchValues": "true"
+        },
+        "explanation": "分别观察沿壁面法向和切向的贡献。"
+      }
+    ]
+  },
+  "fluxSummary": {
+    "description": "对选定面区汇总通量",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/fluxSummary/fluxSummary.H",
+    "origin": "compressible/rhoPorousSimpleFoam/angledDuct/implicit/system/fluxSummary",
+    "tested": false,
+    "code": "fluxSummary\n{\n    type    fluxSummary;\n    libs    (fieldFunctionObjects);\n    scaleFactor     1.205;\n    write           yes;\n    log             yes;\n    mode            cellZoneAndDirection;\n    cellZoneAndDirection\n    (\n        (porosity (1 1 0))\n    );\n}",
+    "explanation": "汇总指定面区域的通量，并可按方向区分流入和流出。本例由 porosity 单元区域及参考方向识别统计面，scaleFactor 对最终通量统一缩放。",
+    "variants": [
+      {
+        "title": "取消比例缩放",
+        "patch": {
+          "scaleFactor": "1"
+        },
+        "explanation": "按输入通量的原量纲输出，便于与边界通量直接核对。"
+      },
+      {
+        "title": "按十步间隔保存",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "10"
+        },
+        "explanation": "连续监测区域通量，同时减少日志与文本行数。"
+      }
+    ]
+  },
+  "momentum": {
+    "description": "动量统计及方程误差",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/momentum/momentum.H",
+    "origin": "incompressible/simpleFoam/pipeCyclic/system/momentum",
+    "tested": false,
+    "code": "momentum\n{\n    type    momentum;\n    libs    (fieldFunctionObjects);\n    log     true;\n    useNamePrefix   true;\n    executeInterval 10;\n    writeControl    writeTime;\n    writeMomentum   true;\n    writePosition   true;\n    writeVelocity   true;\n    regionType  all;\n    cylindrical true;\n    origin  (0 0 0);\n    rotation\n    {\n        type cylindrical;\n        axis (1 0 0);   \n    }\n}",
+    "explanation": "统计线动量和角动量。本例对整个区域计算，并使用以 x 轴为轴向的圆柱坐标；相关开关决定是否同时保存动量、位置和速度的分量场。",
+    "variants": [
+      {
+        "title": "只统计总量",
+        "patch": {
+          "writeMomentum": "false",
+          "writePosition": "false",
+          "writeVelocity": "false"
+        },
+        "explanation": "关闭附加分量场，以较小文件保留整体动量信息。"
+      },
+      {
+        "title": "输出动量场",
+        "patch": {
+          "writeMomentum": "true"
+        },
+        "explanation": "在总量之外查看动量的空间分布。"
+      }
+    ]
+  },
+  "momentumError": {
+    "description": "动量统计及方程误差",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/momentumError/momentumError.H",
+    "origin": "incompressible/simpleFoam/airFoil2D/system/controlDict",
+    "tested": false,
+    "code": "momErr\n{\n    type            momentumError;\n    libs            (fieldFunctionObjects);\n    executeControl  writeTime;\n    writeControl    writeTime;\n}",
+    "explanation": "根据当前速度、压力和动量输运模型计算动量方程的不平衡场，适合定位离散方程误差较大的区域。本例与求解器写出时刻同步更新和保存。",
+    "variants": [
+      {
+        "title": "每步计算误差",
+        "patch": {
+          "executeControl": "timeStep",
+          "executeInterval": "1"
+        },
+        "explanation": "更密集地检查误差随迭代或时间推进的变化。"
+      },
+      {
+        "title": "每十步保存误差场",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "10"
+        },
+        "explanation": "把保存频率与主结果输出分开设置。"
+      }
+    ]
+  },
+  "turbulenceFields": {
+    "description": "模型中的 k、耗散率、应力与黏度",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-10",
+    "source": "src/functionObjects/field/turbulenceFields/turbulenceFields.H",
+    "origin": "02-pitzDaily",
+    "tested": true,
+    "code": "turbulenceFields\n{\n    type turbulenceFields;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    fields (k epsilon nut R);\n}",
+    "explanation": "把湍流模型内部计算的量保存为可读场。pitzDaily 使用的模型提供 k、epsilon、nut 等量；fields 选择要提取的字段，prefix 用于区分来源。",
+    "variants": [
+      {
+        "title": "只保存 k 和 nut",
+        "patch": {
+          "fields": "(k nut)"
+        },
+        "explanation": "用湍动能和湍流黏度观察模型作用最强的区域。"
+      },
+      {
+        "title": "给输出增加独立前缀",
+        "patch": {
+          "prefix": "myTurbulence"
+        },
+        "explanation": "生成的场名称带 myTurbulence 前缀，避免与原来的求解字段混淆。"
+      }
+    ]
+  },
+  "yPlus": {
+    "description": "计算壁面的 y+，检查近壁网格。",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-10",
+    "source": "src/functionObjects/field/yPlus/yPlus.H",
+    "origin": "02-pitzDaily",
+    "tested": true,
+    "code": "yPlus\n{\n    type yPlus;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n}",
+    "explanation": "根据壁距、速度梯度和湍流模型计算 y+。在 pitzDaily 湍流算例中，输出既包括壁面场，也包括最小、最大和平均值，便于检查首层网格位置。",
+    "variants": [
+      {
+        "title": "直接由流场计算 y+",
+        "patch": {
+          "useWallFunction": "false"
+        },
+        "explanation": "改用场变量计算 y+，可以与壁面函数给出的值进行对照。"
+      },
+      {
+        "title": "只保留统计文本",
+        "patch": {
+          "writeFields": "false"
+        },
+        "explanation": "适合长时间计算中监测 y+ 的范围，减少完整壁面场文件。"
+      }
+    ]
+  },
+  "wallShearStress": {
+    "description": "输出壁面剪切应力。",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-10",
+    "source": "src/functionObjects/field/wallShearStress/wallShearStress.H",
+    "origin": "02-pitzDaily",
+    "tested": true,
+    "code": "wallShearStress\n{\n    type wallShearStress;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n}",
+    "explanation": "从动量输运模型取得壁面剪切应力。本例选择壁面，结果可用于识别低剪切或剪切方向改变的区域；不可压缩模型中的输出可能采用运动应力量纲。",
+    "variants": [
+      {
+        "title": "只检查下壁面",
+        "patch": {
+          "patches": "(lowerWall)"
+        },
+        "explanation": "保留研究对象对应的壁面数据，便于提取回流区附近的剪切应力。"
+      },
+      {
+        "title": "只保存统计信息",
+        "patch": {
+          "writeFields": "false"
+        },
+        "explanation": "保留监测输出，减少每个时刻的场文件。"
+      }
+    ]
+  },
+  "DESModelRegions": {
+    "description": "DES 的 RANS / LES 区域指标",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/DESModelRegions/DESModelRegions.H",
+    "origin": "incompressible/pimpleFoam/LES/wallMountedHump/setups.orig/common/system/volFields",
+    "tested": false,
+    "code": "DESModelRegions\n{\n    type            DESModelRegions;\n    libs            (fieldFunctionObjects);\n    enabled         true;\n    writeControl    writeTime;\n    result      DESField;\n}",
+    "explanation": "从 DES 模型提取 RANS 与 LES 工作区域的指示场。算例需要采用支持这一接口的 DES 类模型；result 指定保存该指示量的名称。",
+    "variants": [
+      {
+        "title": "为指示场重新命名",
+        "patch": {
+          "result": "RANSLESIndicator"
+        },
+        "explanation": "用容易识别的场名区分不同模型的结果。"
+      },
+      {
+        "title": "每二十步记录区域变化",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "20"
+        },
+        "explanation": "观察模型工作区域随非定常流动变化的过程。"
+      }
+    ]
+  },
+  "resolutionIndex": {
+    "description": "网格 / 湍流解析程度指标",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/resolutionIndex/resolutionIndex.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "resolutionIndexExample\n{\n    type resolutionIndex;\n    libs (fieldFunctionObjects);\nmodel CelikNuIndex;\n    result LESIndex;\n    writeControl writeTime;\n}",
+    "explanation": "计算 LES 网格解析程度指标。示例选择 CelikNuIndex，利用模型黏性与网格尺度相关量构造指标，适用于充分发展的湍流 LES 分析。",
+    "variants": [
+      {
+        "title": "采用 Pope 指标",
+        "patch": {
+          "model": "PopeIndex",
+          "result": "PopeIndex"
+        },
+        "explanation": "使用解析湍动能与总湍动能的关系，需要 UMean 等统计场；可先由 fieldAverage 保存平均速度。"
+      },
+      {
+        "title": "采用耗散尺度指标",
+        "patch": {
+          "model": "CelikEtaIndex",
+          "result": "CelikEtaIndex"
+        },
+        "explanation": "根据黏性与网格尺度构造另一种解析指标，用于与同一 LES 的黏性指标对照。"
+      }
+    ]
+  },
+  "energySpectrum": {
+    "description": "湍动能谱",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/randomProcesses/energySpectrum/energySpectrum.H",
+    "origin": "incompressible/pimpleFoam/LES/decayIsoTurb/system/controlDict",
+    "tested": false,
+    "code": "energySpectrum1\n{\n    type            energySpectrum;\n    libs            (randomProcessesFunctionObjects);\n    writeControl    writeTime;\n}",
+    "explanation": "用速度场计算能量随波数的分布。本例来自各向同性湍流衰减算例，依赖适合频谱计算的规则网格；结果用于比较不同尺度上的动能。",
+    "variants": [
+      {
+        "title": "每十步输出频谱",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "10"
+        },
+        "explanation": "更密集地观察湍动能向小尺度传递的变化。"
+      },
+      {
+        "title": "从指定时刻开始统计",
+        "patch": {
+          "timeStart": "0.1"
+        },
+        "explanation": "跳过最初的启动阶段，再保存频谱。"
+      }
+    ]
+  },
+  "DMD": {
+    "description": "动态模态、频率和模态贡献",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/DMD/DMD.H",
+    "origin": "incompressible/pimpleFoam/laminar/cylinder2D/system/DMDs/stdmd01",
+    "tested": false,
+    "code": "stdmd01\n{\n    type                DMD;\n    libs                (fieldFunctionObjects);\n    DMDModel            STDMD;\n    field               U;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       10;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 10;\n    writeControl    onEnd;\n    writeInterval   1;\n}",
+    "explanation": "对连续时刻的场快照进行动态模态分解。DMDModel STDMD 选择流式算法，field U 指定快照变量，executeInterval 决定快照间隔，计算结束时输出模态信息。",
+    "variants": [
+      {
+        "title": "提高快照采样频率",
+        "patch": {
+          "executeInterval": "1"
+        },
+        "explanation": "每个计算步都纳入快照，能够覆盖更高的时间频率，同时增加分解工作量。"
+      },
+      {
+        "title": "分析压力模态",
+        "patch": {
+          "field": "p"
+        },
+        "explanation": "从速度快照切换到压力快照，查看主要压力变化模式。"
+      }
+    ]
+  },
+  "Curle": {
+    "description": "基于表面压力等数据的声学估计",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/Curle/Curle.H",
+    "origin": "incompressible/pimpleFoam/LES/vortexShed/system/controlDict",
+    "tested": false,
+    "code": "curlePoint\n{\n    type            Curle;\n    libs            (fieldFunctionObjects);\n    patches         (cylinder);\n    c0              343;\n    input           point;\n    output          point;\n    observerPositions\n    (\n        (0.20 0.17 -0.01) \n        (0.22 0.15 -0.01) \n        (0.20 0.13 -0.01) \n        (0.18 0.15 -0.01) \n    );\n    p               p;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       100;\n    timeEnd         1000;\n    executeControl  runTime;\n    executeInterval 10;\n}",
+    "explanation": "根据固体表面的非定常载荷估算声压。本例选 cylinder 边界、343 m/s 的声速和四个观察点，适合查看载荷变化在不同观察方向上的声学响应。",
+    "variants": [
+      {
+        "title": "只保留一个观察点",
+        "patch": {
+          "observerPositions": "((0.20 0.17 -0.01))"
+        },
+        "explanation": "先检查一个测点的声压时序，再增加方向分布。"
+      },
+      {
+        "title": "提高载荷采样频率",
+        "patch": {
+          "executeControl": "timeStep",
+          "executeInterval": "1"
+        },
+        "explanation": "保留每步载荷变化，时间分辨率由求解器时间步决定。"
+      }
+    ]
+  },
+  "proudmanAcousticPower": {
+    "description": "各向同性湍流噪声功率估计",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/proudmanAcousticPower/proudmanAcousticPower.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOproudmanAcousticPower",
+    "tested": false,
+    "code": "proudmanAcousticPower1\n{\n    type            proudmanAcousticPower;\n    libs            (fieldFunctionObjects);\n    alphaEps        0.1;\n    aRef            340;\n    rhoInf          1.0;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         5000;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "按各向同性湍流假设估算局部声功率。需要湍动能、耗散率及声速等数据，alphaEps 为模型经验系数，结果用来识别潜在噪声源区域。",
+    "variants": [
+      {
+        "title": "使用空气参考值",
+        "patch": {
+          "rhoInf": "1.225",
+          "aRef": "343"
+        },
+        "explanation": "按研究条件选择参考密度和声速，保持其与物理工况一致。"
+      },
+      {
+        "title": "调整经验系数",
+        "patch": {
+          "alphaEps": "0.2"
+        },
+        "explanation": "比较经验系数对声功率估计的敏感性。"
+      }
+    ]
+  },
+  "blendingFactor": {
+    "description": "混合离散格式指标",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/blendingFactor/blendingFactor.H",
+    "origin": "incompressible/pimpleFoam/LES/NACA4412/system/volFields",
+    "tested": false,
+    "code": "blendingFactor\n{\n    type            blendingFactor;\n    libs            (fieldFunctionObjects);\n    field           U;\n    enabled         true;\n    writeControl    writeTime;\n    log             false;\n}",
+    "explanation": "输出混合对流格式使用的局部混合因子。本例选择速度 U，配合 fvSchemes 中对应的混合格式使用，以查看计算在不同区域更偏向哪一种格式。",
+    "variants": [
+      {
+        "title": "打开统计日志",
+        "patch": {
+          "log": "true"
+        },
+        "explanation": "在日志中查看格式混合相关信息。"
+      },
+      {
+        "title": "每十步保存混合场",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "10"
+        },
+        "explanation": "观察局部格式选择随迭代的变化。"
+      }
+    ]
+  },
+  "stabilityBlendingFactor": {
+    "description": "混合离散格式指标",
+    "category": "湍流与声学",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/stabilityBlendingFactor/stabilityBlendingFactor.H",
+    "origin": "incompressible/pisoFoam/LES/motorBike/motorBike/system/stabilizationSchemes",
+    "tested": false,
+    "code": "blendingFactor\n{\n    type                stabilityBlendingFactor;\n    libs                (fieldFunctionObjects);\n    field               U;\n    result              UBlendingFactor;\n    tolerance           0.001;\n    switchNonOrtho      yes;\n    maxNonOrthogonality 20;\n    minNonOrthogonality 60;\n    switchGradCc        no;\n    maxGradCc           3;\n    minGradCc           4;\n    switchResiduals     yes;\n    maxResidual         100;\n    P                   5;\n    I                   0.01;\n    D                   0.5;\n    switchFaceWeight    no;\n    minFaceWeight       0.3;\n    maxFaceWeight       0.2;\n    switchSkewness      no;\n    maxSkewness         2;\n    minSkewness         3;\n    switchCo            no;\n    Co1                 1;\n    Co2                 2;\n    writePrecision  10;\n    writeToFile     false;\n    useUserTime     true;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "根据网格质量、残差或 Courant 数生成局部格式混合因子。result 命名的面场交给 localBlended 格式使用；switch 开关分别启用各项判据。",
+    "variants": [
+      {
+        "title": "只启用非正交判据",
+        "patch": {
+          "switchResiduals": "false"
+        },
+        "explanation": "保留示例中的网格非正交控制，单独观察其作用。"
+      },
+      {
+        "title": "同时考虑 Courant 数",
+        "patch": {
+          "switchCo": "true",
+          "Co1": "1",
+          "Co2": "2"
+        },
+        "explanation": "在 Courant 数由 1 增至 2 的区间调整格式权重。"
+      }
+    ]
+  },
+  "forces": {
+    "description": "计算指定边界上的合力和力矩。",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-09",
+    "source": "src/functionObjects/forces/forces/forces.H",
+    "origin": "02-pitzDaily",
+    "tested": true,
+    "code": "wallForces\n{\n    type forces;\n    libs (forces);\n\n    writeControl timeStep;\n    writeInterval 10;\n    patches (upperWall lowerWall);\n    rho rhoInf;\n    rhoInf 1;\n    CofR (0 0 0);\n    pRef 0;\n}",
+    "explanation": "对指定壁面的压力和黏性应力积分，分别输出合力与关于 CofR 的力矩。本例选择 pitzDaily 上、下壁面，rho rhoInf 和 rhoInf 1 将运动压力换算为实际力。",
+    "variants": [
+      {
+        "title": "只统计下壁面",
+        "patch": {
+          "patches": "(lowerWall)"
+        },
+        "explanation": "将受力表面缩小到下壁面，其余密度和参考中心保持一致，便于比较不同壁面的贡献。"
+      },
+      {
+        "title": "更换力矩参考中心并保存受力场",
+        "patch": {
+          "CofR": "(0.1 0 0)",
+          "writeFields": "true"
+        },
+        "explanation": "合力与参考中心无关，力矩会随参考中心改变。writeFields 同时保存空间分布，便于观察哪些位置贡献较大。"
+      }
+    ]
+  },
+  "forceCoeffs": {
+    "description": "计算升力、阻力与力矩系数。",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-09",
+    "source": "src/functionObjects/forces/forceCoeffs/forceCoeffs.H",
+    "origin": "02-pitzDaily",
+    "tested": true,
+    "code": "wallCoefficients\n{\n    type forceCoeffs;\n    libs (forces);\n\n    writeControl timeStep;\n    writeInterval 10;\n    patches (upperWall lowerWall);\n    rho rhoInf;\n    rhoInf 1;\n    CofR (0 0 0);\n    dragDir (1 0 0);\n    liftDir (0 1 0);\n    magUInf 10;\n    lRef 0.0254;\n    Aref 0.0000254;\n}",
+    "explanation": "把压力和黏性载荷转换为无量纲系数。力系数的分母使用 0.5×rhoInf×magUInf²×Aref；力矩系数还要乘参考长度 lRef。参考值应对应所研究物体及来流。",
+    "variants": [
+      {
+        "title": "只计算下壁面的系数",
+        "patch": {
+          "patches": "(lowerWall)"
+        },
+        "explanation": "保持相同参考速度、面积和长度，单独比较下壁面对载荷系数的贡献。"
+      },
+      {
+        "title": "保存系数对应的场",
+        "patch": {
+          "writeFields": "true"
+        },
+        "explanation": "在总体系数之外保存空间分布，便于分析压力与黏性贡献的位置。"
+      }
+    ]
+  },
+  "phaseForces": {
+    "description": "相相关作用力",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/phaseSystems/phaseForces/phaseForces.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "phaseForcesExample\n{\n    type phaseForces;\n    libs (phaseFunctionObjects);\nphase air;\n    writeControl writeTime;\n}",
+    "explanation": "在 Euler 多相系统中输出所选相的作用力。phase 应与 phaseProperties 中的相名一致，示例选择 air；由相系统提供相间作用力模型。",
+    "variants": [
+      {
+        "title": "选择水相",
+        "patch": {
+          "phase": "water"
+        },
+        "explanation": "适用于相系统中存在 water 的气液算例；输出对应水相的模型作用力。"
+      },
+      {
+        "title": "以固定步数输出",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "20"
+        },
+        "explanation": "减少逐步场输出，同时保留作用力随计算变化的数据。"
+      }
+    ]
+  },
+  "propellerInfo": {
+    "description": "推进器和叶片载荷",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/forces/propellerInfo/propellerInfo.H",
+    "origin": "incompressible/pimpleFoam/RAS/propeller/system/propellerInfo",
+    "tested": false,
+    "code": "propellerInfo1\n{\n    type            propellerInfo;\n    libs            (forces);\n    writeControl    writeTime;\n    patches         (\"propeller.*\");\n    URef            functionObjectValue;\n    functionObject  propellerInfo1;\n    functionObjectResult UzMean;\n    rho             rhoInf; \n    rhoInf          1.2;\n    writePropellerPerformance yes;\n    radius          0.1;\n    rotationMode    specified;\n    origin          (0 -0.1 0);\n    axis            (0 1 0);\n    n               25.15;  \n    writeWakeFields yes;\n    sampleDisk\n    {\n        r1              0.05;\n        r2              0.2;\n        nTheta          36;\n        nRadial         10;\n        interpolationScheme cellPoint;\n        surfaceWriter   vtk;\n    }\n}",
+    "explanation": "对推进器载荷和尾流进行统计。origin、axis、n 定义转轴与转速，radius 和参考速度用于性能系数，sampleDisk 规定尾流采样圆盘。",
+    "variants": [
+      {
+        "title": "只保存性能指标",
+        "patch": {
+          "writeWakeFields": "false"
+        },
+        "explanation": "关闭尾流数据，重点监测推力、转矩及相关性能。"
+      },
+      {
+        "title": "同时保存尾流",
+        "patch": {
+          "writeWakeFields": "true"
+        },
+        "explanation": "保留采样圆盘上的流场信息，与推进器性能曲线对照。"
+      }
+    ]
+  },
+  "bladeForces": {
+    "description": "推进器和叶片载荷",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/forces/bladeForces/bladeForces.H",
+    "origin": "incompressible/pimpleFoam/RAS/propeller1/system/bladeForces",
+    "tested": false,
+    "code": "_bladeForces\n{\n    type    bladeForces;\n    libs    (forces);\n    writeControl    timeStep;\n    writeInterval   1;\n    writeFields     true;\n    fieldsInterval   1;\n    patches     (\"propeller.*\");\n    outputName  blades;\n    lefthand    true;       \n    rho         rhoInf;     \n    log         true;\n    rhoInf      1;          \n    origin      (0 0 0);    \n    axis        (1 0 0);\n    radius      0.5;        \n    nRadial     10;         \n    n           25;         \n    Uref        5;          \n    pRef        0;\n    nearCellValue   true;\n}",
+    "explanation": "分析旋转叶片上的载荷分布。本例以 x 轴为转轴、25 转/秒为转速，并沿半径分段；nearCellValue 选择从邻近流体单元读取速度的方式。",
+    "variants": [
+      {
+        "title": "减少径向分段",
+        "patch": {
+          "nRadial": "5"
+        },
+        "explanation": "较少分段便于先观察沿半径的总体变化。"
+      },
+      {
+        "title": "加密径向分段",
+        "patch": {
+          "nRadial": "20"
+        },
+        "explanation": "在几何与网格分辨率允许的条件下观察更细的叶片载荷分布。"
+      }
+    ]
+  },
+  "pressure": {
+    "description": "静压、总压和系数转换",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-09",
+    "source": "src/functionObjects/field/pressure/pressure.H",
+    "origin": "02-pitzDaily",
+    "tested": true,
+    "code": "staticPressure\n{\n    type pressure;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    mode static;\n    rho rhoInf;\n    rhoInf 1;\n    result pPa;\n}",
+    "explanation": "进行压力形式的转换。本例 mode static 配 rho rhoInf，把不可压缩求解器的运动压力转为实际静压；result pPa 指定输出名。",
+    "variants": [
+      {
+        "title": "计算总压",
+        "patch": {
+          "mode": "total",
+          "result": "pTotal"
+        },
+        "explanation": "在静压基础上加入速度对应的动压，适合比较管道或扩压段的总压损失。"
+      },
+      {
+        "title": "采用水的参考密度",
+        "patch": {
+          "rhoInf": "1000",
+          "result": "pWater"
+        },
+        "explanation": "相同运动压力乘以 1000 kg/m³，得到以水的密度换算的实际压力。参考密度应与物理问题一致。"
+      }
+    ]
+  },
+  "hydrostaticPressure": {
+    "description": "静水压力初始化 / 计算",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/initialisation/hydrostaticPressure/hydrostaticPressure.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "hydrostaticPressureExample\n{\n    type hydrostaticPressure;\n    libs (initialisationFunctionObjects);\np_rgh p_rgh;\n    ph_rgh ph_rgh;\n    rho rho;\n    U U;\n    nCorrectors 5;\n    reInitialise true;\n}",
+    "explanation": "根据重力、密度与热物性模型建立静水平衡压力。适用于已经准备 p_rgh、ph_rgh 及相应边界的浮力算例，nCorrectors 指定压力校正次数。",
+    "variants": [
+      {
+        "title": "增加压力校正次数",
+        "patch": {
+          "nCorrectors": "10"
+        },
+        "explanation": "对密度与压力耦合较强的初始化，增加校正以进一步调整静水平衡。"
+      },
+      {
+        "title": "延用已保存的初始化状态",
+        "patch": {
+          "reInitialise": "false"
+        },
+        "explanation": "在具备已有初始化结果的重启算例中保留该状态。"
+      }
+    ]
+  },
+  "wallHeatFlux": {
+    "description": "计算壁面热流密度与热流积分。",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-11",
+    "source": "src/functionObjects/field/wallHeatFlux/wallHeatFlux.H",
+    "origin": "03-hotRoom",
+    "tested": true,
+    "code": "wallHeatFlux\n{\n    type wallHeatFlux;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    model wall;\n}",
+    "explanation": "从传热模型计算壁面热流密度。本例 model wall 用于热房间壁面，输出各壁面的最小值、最大值和面积积分；热流积分可用于比较壁面的净传热。",
+    "variants": [
+      {
+        "title": "只统计地板",
+        "patch": {
+          "patches": "(floor)"
+        },
+        "explanation": "把热流统计限制在供热地板上，积分值对应该边界的总传热率。"
+      },
+      {
+        "title": "同时比较地板和顶板",
+        "patch": {
+          "patches": "(floor ceiling)"
+        },
+        "explanation": "在同一输出频率下对照两个边界的热流，观察热量进入与离开房间的过程。"
+      }
+    ]
+  },
+  "heatTransferCoeff": {
+    "description": "按所选模型计算换热系数。",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-11",
+    "source": "src/functionObjects/field/heatTransferCoeff/heatTransferCoeff.H",
+    "origin": "03-hotRoom",
+    "tested": true,
+    "code": "heatTransfer\n{\n    type heatTransferCoeff;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    field T;\n    patches (floor ceiling);\n    htcModel localReferenceTemperature;\n    result htc;\n}",
+    "explanation": "根据壁面热流与参考温差计算换热系数。本例 field T 读取温度，localReferenceTemperature 采用局部参考温度，结果 htc 用于观察不同壁面的换热强弱。",
+    "variants": [
+      {
+        "title": "只分析地板换热",
+        "patch": {
+          "patches": "(floor)"
+        },
+        "explanation": "供热壁面单独输出，便于绘制换热系数沿壁面的分布。"
+      },
+      {
+        "title": "单独输出顶板结果",
+        "patch": {
+          "patches": "(ceiling)",
+          "result": "ceilingHtc"
+        },
+        "explanation": "选择顶板并使用新的场名，方便与地板结果并列查看。"
+      }
+    ]
+  },
+  "viewFactorHeatFlux": {
+    "description": "视角系数辐射模型热流汇总",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/viewFactorHeatFlux/viewFactorHeatFlux.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "viewFactorHeatFluxExample\n{\n    type viewFactorHeatFlux;\n    libs (fieldFunctionObjects);\nqr qr;\n    writeControl writeTime;\n}",
+    "explanation": "汇总视角系数辐射模型的热流。算例先通过相应辐射设置生成 F 和 globalFaceFaces 数据，工具读取 qr 并按模型表面统计。",
+    "variants": [
+      {
+        "title": "读取改名后的辐射热流场",
+        "patch": {
+          "qr": "qrRadiation"
+        },
+        "explanation": "在算例将辐射热流字段命名为 qrRadiation 时使用该名称。"
+      },
+      {
+        "title": "每十步记录辐射热流",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "10"
+        },
+        "explanation": "用于观察辐射热流逐步趋于稳定的过程。"
+      }
+    ]
+  },
+  "radiometerProbes": {
+    "description": "辐射计与热电偶模型采样",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/radiometerProbes/radiometerProbes.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "radiometerProbesExample\n{\n    type radiometerProbes;\n    libs (utilityFunctionObjects);\nprobeLocations ((0.5 0.5 0.5));\n    probeNormals ((0 0 1));\n    writeControl timeStep;\n    writeInterval 10;\n}",
+    "explanation": "模拟具有方向的辐射计探针。每个 probeLocation 对应一个 probeNormal，法向决定探针接收辐射的方向；算例需要提供该工具使用的辐射模型。",
+    "variants": [
+      {
+        "title": "反向放置探针",
+        "patch": {
+          "probeNormals": "((0 0 -1))"
+        },
+        "explanation": "测点位置不变，接收方向反向，可比较来自两侧的辐射。"
+      },
+      {
+        "title": "同时放置两个定向探针",
+        "patch": {
+          "probeLocations": "((0.5 0.5 0.5) (0.5 0.5 0.8))",
+          "probeNormals": "((0 0 1) (0 0 1))"
+        },
+        "explanation": "两个探针沿相同方向测量，对照不同空间位置的辐射强度。"
+      }
+    ]
+  },
+  "thermoCoupleProbes": {
+    "description": "辐射计与热电偶模型采样",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/thermoCoupleProbes/thermoCoupleProbes.H",
+    "origin": "heatTransfer/buoyantPimpleFoam/thermocoupleTestCase/system/controlDict",
+    "tested": false,
+    "code": "probes\n{\n    type            thermoCoupleProbes;\n    libs            (utilityFunctionObjects);\n    writeControl    timeStep;\n    writeInterval   1;\n    solver          rodas23;\n    absTol          1e-12;\n    relTol          1e-8;\n    interpolationScheme cellPoint;\n    rho             8908;\n    Cp              440;\n    d               1e-3;\n    epsilon         0.85;\n    radiationField  G;\n    probeLocations  ((0.5 0.5 0.5));\n    fields          (T);\n}",
+    "explanation": "在探针位置求解热电偶温度响应，同时考虑对流与辐射。rho、Cp、d、epsilon 是热电偶材料和几何参数，G 为辐射模型提供的辐射场。",
+    "variants": [
+      {
+        "title": "采用更细热电偶",
+        "patch": {
+          "d": "0.0005"
+        },
+        "explanation": "减小直径会改变热惯性与对流换热响应，可对照流体温度检查响应延迟。"
+      },
+      {
+        "title": "降低发射率",
+        "patch": {
+          "epsilon": "0.5"
+        },
+        "explanation": "观察热电偶表面辐射性质对测量温度的影响。"
+      }
+    ]
+  },
+  "comfort": {
+    "description": "热舒适度指标",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/comfort/comfort.H",
+    "origin": "heatTransfer/buoyantSimpleFoam/comfortHotRoom/system/FOcomfort",
+    "tested": false,
+    "code": "comfort\n{\n    type            comfort;\n    libs            (fieldFunctionObjects);\n    clothing        0.5;\n    metabolicRate   1.2;\n    extWork         0.0;\n    relHumidity     60.0;\n    pSat            0.0;\n    tolerance       1e-4;\n    maxClothIter    100;\n    meanVelocity    false;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         10000;\n    executeControl  writeTime;\n    executeInterval -1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "根据速度、温度、湿度及人体参数计算热舒适度。本例 clothing 0.5、metabolicRate 1.2 描述衣着与活动水平，relHumidity 60 表示相对湿度为 60%。",
+    "variants": [
+      {
+        "title": "比较较厚衣着",
+        "patch": {
+          "clothing": "1"
+        },
+        "explanation": "衣着热阻提高后，比较相同环境下的舒适度变化。"
+      },
+      {
+        "title": "比较较高活动水平",
+        "patch": {
+          "metabolicRate": "2"
+        },
+        "explanation": "代谢率增大，人体产热相应变化；其余环境条件保持一致。"
+      }
+    ]
+  },
+  "XiReactionRate": {
+    "description": "反应率相关输出",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/XiReactionRate/XiReactionRate.H",
+    "origin": "combustion/XiDyMFoam/annularCombustorTurbine/system/FOXiReactionRate",
+    "tested": false,
+    "code": "XiReactionRate1\n{\n    type            XiReactionRate;\n    libs            (fieldFunctionObjects);\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "从 b–Xi 预混燃烧模型计算火焰传播和反应率相关输出。它使用对应燃烧求解器创建的模型与字段，适合比较火焰区的反应强度。",
+    "variants": [
+      {
+        "title": "逐步保存反应率",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "1"
+        },
+        "explanation": "保留火焰发展过程中的密集时间数据。"
+      },
+      {
+        "title": "只保存结束结果",
+        "patch": {
+          "writeControl": "onEnd"
+        },
+        "explanation": "用于只关注最终状态的计算对比。"
+      }
+    ]
+  },
+  "reactingEulerHtcModel": {
+    "description": "特定多相求解框架的换热",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/heatTransferCoeff/reactingEulerHtcModel/reactingEulerHtcModel.H",
+    "origin": "heatTransfer/chtMultiRegionTwoPhaseEulerFoam/solidQuenching2D/system/controlDict",
+    "tested": false,
+    "code": "htc\n{\n    type            reactingEulerHtcModel;\n    libs            (fieldFunctionObjects);\n    region          water;\n    field           T.liquid;\n    writeControl    writeTime;\n    writeInterval   1;\n    htcModel        fixedReferenceTemperature;\n    patches         (water_to_solid);\n    TRef            373;\n}",
+    "explanation": "在 Euler 多相传热框架中计算壁面换热系数。本例选择 water 区域的 T.liquid，在 water_to_solid 边界使用 373 K 的固定参考温度。",
+    "variants": [
+      {
+        "title": "改变参考温度",
+        "patch": {
+          "TRef": "353"
+        },
+        "explanation": "参考温度决定换热系数所用温差，应与对应的物理定义一致。"
+      },
+      {
+        "title": "单独命名换热结果",
+        "patch": {
+          "result": "liquidHtc"
+        },
+        "explanation": "把液相换热系数与其他区域的结果分开。"
+      }
+    ]
+  },
+  "multiphaseInterHtcModel": {
+    "description": "特定多相求解框架的换热",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/heatTransferCoeff/multiphaseInterHtcModel/multiphaseInterHtcModel.H",
+    "origin": "multiphase/icoReactingMultiphaseInterFoam/poolEvaporation/system/controlDict",
+    "tested": false,
+    "code": "htc\n{\n    type            multiphaseInterHtcModel;\n    libs            (fieldFunctionObjects);\n    field           T;\n    writeControl    writeTime;\n    writeInterval   1;\n    htcModel        fixedReferenceTemperature;\n    patches         (bottom);\n    TRef            373;\n}",
+    "explanation": "在相应界面捕捉多相框架中计算壁面换热系数。本例对 bottom 壁面使用 T 和 373 K 的固定参考温度，结合该模型的热流得到换热系数。",
+    "variants": [
+      {
+        "title": "改变参考温度",
+        "patch": {
+          "TRef": "353"
+        },
+        "explanation": "在相同壁面热流下比较参考温差定义对换热系数的影响。"
+      },
+      {
+        "title": "设置独立输出名",
+        "patch": {
+          "result": "bottomHtc"
+        },
+        "explanation": "便于在结果中识别底部壁面的换热系数。"
+      }
+    ]
+  },
+  "electricPotential": {
+    "description": "电势方程与相关量",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/solvers/electricPotential/electricPotential.H",
+    "origin": "multiphase/interFoam/RAS/electrostaticDeposition/system/FOelectricPotential",
+    "tested": false,
+    "code": "electricPotential\n{\n    type            electricPotential;\n    libs            (solverFunctionObjects);\n    phases\n    {\n        alpha.air\n        {\n            epsilonr      1.12940906737;\n            sigma         1e-10;\n        }\n        alpha.water\n        {\n            epsilonr      3.38822720212;\n            sigma         0.14;\n        }\n    }\n    nCorr                 1;\n    writeDerivedFields    true;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         100;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "在现有流场上求解电势方程，并可输出电场等派生量。示例为两相分别设置电导率和介电常数；算例还要准备电势边界及对应的线性求解配置。",
+    "variants": [
+      {
+        "title": "只保存电势",
+        "patch": {
+          "writeDerivedFields": "false"
+        },
+        "explanation": "先检查电势边界与分布，减少派生字段。"
+      },
+      {
+        "title": "增加电势校正",
+        "patch": {
+          "nCorr": "3"
+        },
+        "explanation": "增加外层校正次数，观察电势方程的迭代变化。"
+      }
+    ]
+  },
+  "scalarTransport": {
+    "description": "额外输运方程或流龄",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/solvers/scalarTransport/scalarTransport.H",
+    "origin": "compressible/rhoSimpleFoam/gasMixing/injectorPipe/system/scalarTransport",
+    "tested": false,
+    "code": "tracer0\n{\n    type  scalarTransport;\n    libs  (solverFunctionObjects);\n    log   off;\n    resetOnStartUp  false;\n    writeControl    writeTime;\n    field           tracer0;\n    D               0.001;\n}",
+    "explanation": "在已有速度或通量场中额外求解被动标量。本例对 tracer0 使用 0.001 的扩散系数；算例需要 tracer0 的初始与边界条件，以及离散和求解设置。",
+    "variants": [
+      {
+        "title": "减小分子扩散",
+        "patch": {
+          "D": "0.0001"
+        },
+        "explanation": "降低扩散后，标量分布更受对流支配；应同时检查网格和对流格式。"
+      },
+      {
+        "title": "启动时清零标量",
+        "patch": {
+          "resetOnStartUp": "true"
+        },
+        "explanation": "以新的零初始分布开始标量输运，入口注入条件仍由场边界决定。"
+      }
+    ]
+  },
+  "energyTransport": {
+    "description": "额外输运方程或流龄",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/solvers/energyTransport/energyTransport.H",
+    "origin": "multiphase/multiphaseInterFoam/laminar/mixerVessel2D/system/controlDict",
+    "tested": false,
+    "code": "sTransport\n{\n    type            energyTransport;\n    libs            (solverFunctionObjects);\n    enabled         true;\n    writeControl    writeTime;\n    writeInterval   1;\n    write           true;\n    field           T;\n    rho             rho;\n    phi             rhoPhi;\n    phaseThermos\n    {\n        alpha.air\n        {\n            Cp          1e3;\n            kappa       0.0243;\n        }\n        alpha.mercury\n        {\n            Cp          140;\n            kappa       8.2;\n        }\n        alpha.oil\n        {\n            Cp          2e3;\n            kappa       0.2;\n        }\n        alpha.water\n        {\n            Cp          4e3;\n            kappa       0.6;\n        }\n    }\n    fvOptions\n    {\n        viscousDissipation\n        {\n            type            viscousDissipation;\n            enabled         true;\n            viscousDissipationCoeffs\n            {\n                fields      (T);\n                rho         rho;\n            }\n        }\n    }\n}",
+    "explanation": "在现有流动上求解附加能量输运。本例对 T 使用质量通量 rhoPhi，各相的 Cp 和 kappa 决定热容与导热，并可通过 fvOptions 加入热源。",
+    "variants": [
+      {
+        "title": "增加温度校正",
+        "patch": {
+          "nCorr": "2"
+        },
+        "explanation": "对相同流场多执行校正，改善附加能量方程的代数求解。"
+      },
+      {
+        "title": "设置明确的停止容差",
+        "patch": {
+          "tolerance": "1e-6"
+        },
+        "explanation": "根据温度方程的初始残差控制校正过程。"
+      }
+    ]
+  },
+  "age": {
+    "description": "额外输运方程或流龄",
+    "category": "力与物理量",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/age/age.H",
+    "origin": "heatTransfer/buoyantSimpleFoam/comfortHotRoom/system/FOage",
+    "tested": false,
+    "code": "ageOfAir\n{\n    type            age;\n    libs            (fieldFunctionObjects);\n    phi             phi;\n    rho             rho;\n    schemesField    age;\n    tolerance       1e-5;\n    nCorr           5;\n    diffusion       on;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         10000;\n    executeControl  writeTime;\n    executeInterval -1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "求解流体平均年龄，用来评估通风、停留时间和流体更新。本例启用扩散项，schemesField age 对应离散与求解设置，nCorr 决定附加校正次数。",
+    "variants": [
+      {
+        "title": "关闭扩散项",
+        "patch": {
+          "diffusion": "false"
+        },
+        "explanation": "比较纯对流年龄与包含扩散时的更新差异。"
+      },
+      {
+        "title": "增加附加校正",
+        "patch": {
+          "nCorr": "10"
+        },
+        "explanation": "对同一流场更充分地迭代年龄方程。"
+      }
+    ]
+  },
+  "interfaceHeight": {
+    "description": "监测两相流的等效液位。",
+    "category": "颗粒与两相",
+    "lesson": "/read/?slug=function-objects-12",
+    "source": "src/functionObjects/field/interfaceHeight/interfaceHeight.H",
+    "origin": "04-damBreak",
+    "tested": true,
+    "code": "level\n{\n    type interfaceHeight;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    alpha alpha.water;\n    liquid true;\n    direction (0 -1 0);\n    locations ((0.1 0 0.0073) (0.3 0 0.0073));\n}",
+    "explanation": "沿给定方向积分相分数，得到等效液位。本例 alpha.water 表示水相，direction 指向重力方向；locations 指定水平位置，适合比较不同位置的液位变化。",
+    "variants": [
+      {
+        "title": "只保留一个液位测点",
+        "patch": {
+          "locations": "((0.2 0 0.073))"
+        },
+        "explanation": "在溃坝区域内选一个水平位置，得到一条液位时序。坐标的竖直分量应结合该算例的方向设置理解。"
+      },
+      {
+        "title": "增加液位测点",
+        "patch": {
+          "locations": "((0.2 0 0.073) (0.4 0 0.073))"
+        },
+        "explanation": "在相同竖直方向上比较两个水平位置，观察波前通过时的先后变化。"
+      }
+    ]
+  },
+  "regionSizeDistribution": {
+    "description": "统计连通相区域的等效直径分布。",
+    "category": "颗粒与两相",
+    "lesson": "/read/?slug=function-objects-12",
+    "source": "src/functionObjects/field/regionSizeDistribution/regionSizeDistribution.H",
+    "origin": "multiphase/twoPhaseEulerFoam/RAS/bubbleColumn/system/controlDict",
+    "tested": false,
+    "code": "regionSizeDistribution1\n{\n    type            regionSizeDistribution;\n    libs            (fieldFunctionObjects);\n    field           alpha.air;\n    patches         (inlet);\n    fields          (p U);\n    threshold       0.5;\n    maxDiameter     0.5;\n    nBins           100;\n    setFormat       gnuplot;\n    minDiameter     0.0;\n    isoPlanes       false;\n    writePrecision  12;\n    writeToFile     true;\n    useUserTime     true;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  onEnd;\n    writeControl    onEnd;\n}",
+    "explanation": "按相分数阈值识别连通区域，计算等效直径和分布。本例用 alpha.air>0.5 识别区域，并通过 inlet 区分与入口相连的核心区域；统计范围由直径上下限和箱数决定。",
+    "variants": [
+      {
+        "title": "减少粒径箱数",
+        "patch": {
+          "nBins": "50"
+        },
+        "explanation": "在相同直径范围内使用更宽的箱，观察总体分布。"
+      },
+      {
+        "title": "聚焦小尺度区域",
+        "patch": {
+          "maxDiameter": "0.1",
+          "nBins": "50"
+        },
+        "explanation": "收窄直径统计范围，并保留较细的分箱。"
+      }
+    ]
+  },
+  "extractEulerianParticles": {
+    "description": "从欧拉相分数输运中提取颗粒事件数据",
+    "category": "颗粒与两相",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/extractEulerianParticles/extractEulerianParticles/extractEulerianParticles.H",
+    "origin": "multiphase/interFoam/laminar/vofToLagrangian/eulerianInjection/system/controlDict",
+    "tested": false,
+    "code": "extractEulerianParticles1\n{\n    type            extractEulerianParticles;\n    libs            (fieldFunctionObjects);\n    faceZone        collector;\n    alpha           alpha.water;\n    alphaThreshold  0.1;\n    nLocations      20;\n    U               U;\n    rho             rho;\n    phi             phi;\n    writePrecision   6;\n    writeToFile      true;\n    useUserTime      false;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "在指定 faceZone 上从相分数输运记录颗粒事件，用于把欧拉界面数据转成后续拉格朗日注入数据。本例选择 collector，alphaThreshold 定义液相事件识别阈值。",
+    "variants": [
+      {
+        "title": "提高相分数阈值",
+        "patch": {
+          "alphaThreshold": "0.5"
+        },
+        "explanation": "以液相更集中的区域识别事件，比较阈值对提取结果的影响。"
+      },
+      {
+        "title": "增加注入分箱",
+        "patch": {
+          "nLocations": "40"
+        },
+        "explanation": "更细地组织收集面上的事件位置。"
+      }
+    ]
+  },
+  "cloudInfo": {
+    "description": "颗粒云的数量、质量等概要",
+    "category": "颗粒与两相",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/lagrangian/cloudInfo/cloudInfo.H",
+    "origin": "lagrangian/reactingParcelFoam/filter/system/cloudInfo",
+    "tested": false,
+    "code": "cloudInfo\n{\n    type    cloudInfo;\n    libs    (lagrangianFunctionObjects);\n    log     true;\n    timeStart 0.5;\n    writeControl    writeTime;\n    clouds  ( reactingCloud1 );\n    selection\n    {\n        all\n        {\n            action  all;\n        }\n        T\n        {\n            action  subset;\n            source  field;\n            field   T;\n            accept  (greater 280) and (less 300);\n        }\n        YH2O\n        {\n            action  subset;\n            source  field;\n            field   YH2O(l);\n            accept  (greater 0.5);\n        }\n        diameter\n        {\n            action  subset;\n            source  field;\n            field   d;\n            accept  (greater 1e-10);\n        }\n        Umin\n        {\n            action  subtract;\n            source  field;\n            field   U;\n            accept  (less 0.1);\n        }\n    }\n}",
+    "explanation": "统计颗粒云的数量、质量等信息。示例选择 reactingCloud1，并按温度、组分、粒径及速度筛选颗粒；selection 各操作按顺序缩小或调整统计对象。",
+    "variants": [
+      {
+        "title": "输出更多颗粒统计信息",
+        "patch": {
+          "verbose": "true"
+        },
+        "explanation": "在日志中保留更详细的统计。"
+      },
+      {
+        "title": "每步更新内存统计",
+        "patch": {
+          "sampleOnExecute": "true"
+        },
+        "explanation": "让下游对象可以读取本步更新后的结果。"
+      }
+    ]
+  },
+  "particleDistribution": {
+    "description": "颗粒属性或尺度分布",
+    "category": "颗粒与两相",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/particleDistribution/particleDistribution.H",
+    "origin": "lagrangian/sprayFoam/aachenBomb/system/controlDict",
+    "tested": false,
+    "code": "distribution1\n{\n    type            particleDistribution;\n    libs            (fieldFunctionObjects);\n    cloud           sprayCloud;\n    nameVsBinWidth\n    (\n        (d 1e-5)\n        (U 10)\n    );\n    setFormat       raw;\n    tagField        none;\n    writePrecision  10;\n    writeToFile     true;\n    useUserTime     true;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "对颗粒属性分箱统计。本例对 sprayCloud 的粒径 d 使用 10⁻⁵ m 箱宽，对速度使用 10 的箱宽，输出分布数据供绘图使用。",
+    "variants": [
+      {
+        "title": "粒径采用更细箱宽",
+        "patch": {
+          "nameVsBinWidth": "((d 5e-6))"
+        },
+        "explanation": "只分析粒径，并将分箱宽度减半。"
+      },
+      {
+        "title": "只统计速度分布",
+        "patch": {
+          "nameVsBinWidth": "((U 5))"
+        },
+        "explanation": "选择速度属性，便于比较颗粒速度的离散程度。"
+      }
+    ]
+  },
+  "sizeDistribution": {
+    "description": "颗粒属性或尺度分布",
+    "category": "颗粒与两相",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/phaseSystems/sizeDistribution/sizeDistribution.H",
+    "origin": "multiphase/reactingTwoPhaseEulerFoam/RAS/bubbleColumnPolydisperse/system/controlDict",
+    "tested": false,
+    "code": "bubbles\n{\n    type                sizeDistribution;\n    libs                (phaseFunctionObjects);\n    writeControl        runTime;\n    writeInterval       5;\n    log                 true;\n    functionType        numberDensity;\n    abszissaType        diameter;\n    selectionMode       cellZone;\n    cellZone            zone;\n    populationBalance   bubbles;\n}",
+    "explanation": "从群体平衡模型输出粒径分布。populationBalance 选择模型，selectionMode 选择统计区域，functionType 和 abszissaType 分别决定纵轴统计方式与横轴粒径定义。",
+    "variants": [
+      {
+        "title": "输出归一化分布",
+        "patch": {
+          "normalize": "true"
+        },
+        "explanation": "比较不同总颗粒数量下的分布形状。"
+      },
+      {
+        "title": "扩大到整个网格",
+        "patch": {
+          "selectionMode": "all"
+        },
+        "explanation": "统计全域分布，并与指定 cellZone 的局部分布比较。"
+      }
+    ]
+  },
+  "vtkCloud": {
+    "description": "颗粒数据格式导出",
+    "category": "颗粒与两相",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/lagrangian/vtkCloud/vtkCloud.H",
+    "origin": "lagrangian/coalChemistryFoam/simplifiedSiwek/system/vtkCloud",
+    "tested": false,
+    "code": "cloudWrite1\n{\n    type    vtkCloud;\n    libs    (lagrangianFunctionObjects);\n    log     true;\n    clouds  ( \".*\" );\n    fields  ( U T d \"Y.*\" );\n    writeControl    adjustable;\n    writeInterval   0.001;\n}",
+    "explanation": "将颗粒位置与属性写为 VTK。本例选择全部云，并导出 U、T、d 以及匹配 Y.* 的组分字段，便于在 ParaView 中查看颗粒温度与粒径分布。",
+    "variants": [
+      {
+        "title": "只导出速度与粒径",
+        "patch": {
+          "fields": "(U d)"
+        },
+        "explanation": "减少组分和温度属性，便于快速查看颗粒运动。"
+      },
+      {
+        "title": "省略空颗粒云",
+        "patch": {
+          "prune": "true"
+        },
+        "explanation": "避免生成没有颗粒位置的空输出。"
+      }
+    ]
+  },
+  "ensightCloud": {
+    "description": "颗粒数据格式导出",
+    "category": "颗粒与两相",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/lagrangian/ensightCloud/ensightCloudWriteObject.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "ensightCloudExample\n{\n    type ensightCloud;\n    libs (lagrangianFunctionObjects);\nclouds (kinematicCloud);\n    fields (U d);\n    format binary;\n    writeControl writeTime;\n}",
+    "explanation": "将拉格朗日颗粒云转换为 EnSight 输出。clouds 选择云，fields 选择颗粒属性；示例保留速度 U 和粒径 d。",
+    "variants": [
+      {
+        "title": "只导出颗粒直径",
+        "patch": {
+          "fields": "(d)"
+        },
+        "explanation": "减少属性文件数量，适合只查看粒径的空间分布。"
+      },
+      {
+        "title": "以文本格式查看所有云",
+        "patch": {
+          "clouds": "(\".*\")",
+          "format": "ascii"
+        },
+        "explanation": "匹配算例中的颗粒云，并以文本格式保存便于检查的属性值。"
+      }
+    ]
+  },
+  "icoUncoupledKinematicCloud": {
+    "description": "在给定流场中追踪单向耦合运动颗粒",
+    "category": "颗粒与两相",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/lagrangian/icoUncoupledKinematicCloud/icoUncoupledKinematicCloud.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "icoUncoupledKinematicCloudExample\n{\n    type icoUncoupledKinematicCloud;\n    libs (lagrangianFunctionObjects);\nU U;\n    kinematicCloud kinematicCloud;\n}",
+    "explanation": "在给定不可压缩流场中推进运动颗粒云。算例应备好 kinematicCloudProperties、粒子注入和物性设置；该对象使用已有 U 跟踪颗粒。",
+    "variants": [
+      {
+        "title": "使用另一组颗粒云",
+        "patch": {
+          "kinematicCloud": "tracerCloud"
+        },
+        "explanation": "与 constant/tracerCloudProperties 中定义的颗粒云对应，可分别设置粒径和注入方式。"
+      },
+      {
+        "title": "使用平均速度追踪颗粒",
+        "patch": {
+          "U": "UMean"
+        },
+        "explanation": "在已准备 UMean 场的算例中，以平均流动作为追踪速度，便于与瞬时流场结果比较。"
+      }
+    ]
+  },
+  "dsmcFields": {
+    "description": "DSMC 宏观统计量",
+    "category": "颗粒与两相",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/lagrangian/dsmcFields/dsmcFields.H",
+    "origin": "discreteMethods/dsmcFoam/freeSpacePeriodic/system/controlDict",
+    "tested": false,
+    "code": "dsmcFields1\n{\n    type            dsmcFields;\n    libs            (lagrangianFunctionObjects);\n    writeControl    writeTime;\n}",
+    "explanation": "把 DSMC 统计得到的密度、动量和能量等量组合为宏观物理场。使用已完成统计的 DSMC 算例，可得到速度、温度等结果。",
+    "variants": [
+      {
+        "title": "每十步输出宏观场",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "10"
+        },
+        "explanation": "观察统计量随采样积累的变化。"
+      },
+      {
+        "title": "只在结束时输出",
+        "patch": {
+          "writeControl": "onEnd"
+        },
+        "explanation": "将输出集中到统计结束后的状态。"
+      }
+    ]
+  },
+  "readFields": {
+    "description": "将指定场读入对象数据库。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-13",
+    "source": "src/functionObjects/field/readFields/readFields.H",
+    "origin": "03-hotRoom",
+    "tested": true,
+    "code": "readRadiation\n{\n    type readFields;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    fields (qin);\n    readOnStart true;\n}",
+    "explanation": "把时间目录中的场读入内存。需要后处理的字段不由当前求解器主动创建时，可先放一个 readFields 对象，再放依赖这些场的运算对象。",
+    "variants": [
+      {
+        "title": "读取压力与速度",
+        "patch": {
+          "fields": "(p U)"
+        },
+        "explanation": "后续对象可以在对象数据库中找到这两个场。"
+      },
+      {
+        "title": "延后到执行阶段读取",
+        "patch": {
+          "readOnStart": "false"
+        },
+        "explanation": "对象构造时暂不读取，待执行阶段再载入，适合数据由更早的步骤准备的流程。"
+      }
+    ]
+  },
+  "writeObjects": {
+    "description": "将对象数据库中的指定对象写入文件。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-13",
+    "source": "src/functionObjects/utilities/writeObjects/writeObjects.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOwriteObjects",
+    "tested": false,
+    "code": "writeObjects1\n{\n    type            writeObjects;\n    libs            (utilityFunctionObjects);\n    writeOption     log;\n    objects         ( \".*\" );\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval -1;\n    writeControl    onEnd;\n    writeInterval   -1;\n}",
+    "explanation": "将内存中选定对象写到时间目录。objects 控制名称筛选，writeOption 控制选择的写出属性；log 模式用于查看匹配到的对象信息。",
+    "variants": [
+      {
+        "title": "保存指定对象",
+        "patch": {
+          "writeOption": "anyWrite",
+          "objects": "(U p)"
+        },
+        "explanation": "选择 U 和 p，按本对象的写出时刻保存。"
+      },
+      {
+        "title": "仅保存自动写出对象",
+        "patch": {
+          "writeOption": "autoWrite",
+          "objects": "(\".*\")"
+        },
+        "explanation": "按对象自身 AUTO_WRITE 属性筛选。"
+      }
+    ]
+  },
+  "writeCellCentres": {
+    "description": "输出单元中心坐标。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-13",
+    "source": "src/functionObjects/field/writeCellCentres/writeCellCentres.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "centres\n{\n    type writeCellCentres;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n}",
+    "explanation": "将单元中心坐标保存为 C 以及各坐标分量。它适合检查网格位置，或与速度、温度等场一起导出后进行空间筛选。",
+    "variants": []
+  },
+  "writeCellVolumes": {
+    "description": "输出单元体积。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-13",
+    "source": "src/functionObjects/field/writeCellVolumes/writeCellVolumes.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "volumes\n{\n    type writeCellVolumes;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n}",
+    "explanation": "将各单元体积保存为 V 场。可用于观察网格尺寸变化，也可作为后续积分或加权统计的数据。",
+    "variants": []
+  },
+  "processorField": {
+    "description": "用场值标记单元所属的并行分区。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-14",
+    "source": "src/functionObjects/field/processorField/processorField.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "partition\n{\n    type processorField;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n}",
+    "explanation": "输出每个单元所属的并行进程编号。串行运行时编号一致；并行运行并重构结果后，可在 ParaView 中查看分区边界。",
+    "variants": []
+  },
+  "vtkWrite": {
+    "description": "将指定字段导出为 VTK 格式。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-13",
+    "source": "src/functionObjects/utilities/vtkWrite/vtkWrite.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "exportVTK\n{\n    type vtkWrite;\n    libs (utilityFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U p speed);\n    boundary true;\n    internal true;\n    format ascii;\n    interpolate false;\n}",
+    "explanation": "把指定体场和边界数据直接写成 VTK。本例同时导出 U、p 和已计算的 speed，目录结构由对象名和时间决定，可直接在 ParaView 中打开。",
+    "variants": [
+      {
+        "title": "只导出内部压力场",
+        "patch": {
+          "fields": "(p)",
+          "boundary": "false",
+          "internal": "true"
+        },
+        "explanation": "保留单元内部压力，省去边界数据，适合只需要内部剖面分析的情况。"
+      },
+      {
+        "title": "以二进制保存顶点插值结果",
+        "patch": {
+          "format": "binary",
+          "interpolate": "true"
+        },
+        "explanation": "二进制格式减少文本体积；顶点插值便于某些可视化操作，同时保留其与原单元值的区别。"
+      }
+    ]
+  },
+  "ensightWrite": {
+    "description": "将指定字段导出为 EnSight 格式。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-13",
+    "source": "src/functionObjects/utilities/ensightWrite/ensightWrite.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "exportEnsight\n{\n    type ensightWrite;\n    libs (utilityFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U p);\n    format ascii;\n}",
+    "explanation": "按 EnSight 格式输出选定字段。本例 fields (U p) 选择速度和压力，format ascii 便于直接检查文件内容。",
+    "variants": [
+      {
+        "title": "使用二进制输出",
+        "patch": {
+          "format": "binary"
+        },
+        "explanation": "数据量较大时采用二进制编码，保持相同字段与输出时刻。"
+      },
+      {
+        "title": "只输出内部速度",
+        "patch": {
+          "fields": "(U)",
+          "boundary": "false"
+        },
+        "explanation": "减少导出范围，方便单独处理流场内部的速度分布。"
+      }
+    ]
+  },
+  "areaWrite": {
+    "description": "体网格或有限面积场的格式导出",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/areaWrite/areaWrite.H",
+    "origin": "lagrangian/kinematicParcelFoam/drippingChair/system/areaWrite",
+    "tested": false,
+    "code": "areaWrite\n{\n    type    areaWrite;\n    libs    (utilityFunctionObjects);\n    log     true;\n    writeControl    writeTime;\n    writeInterval   1;\n    fields  (Uf_film hf_film pf_film);\n    surfaceFormat ensight;\n    formatOptions\n    {\n        default { format binary; }\n    }\n}",
+    "explanation": "导出有限面积网格上的场。本例的 Uf_film、hf_film、pf_film 是液膜速度、厚度和压力，surfaceFormat ensight 指定表面结果格式。",
+    "variants": [
+      {
+        "title": "只导出膜厚",
+        "patch": {
+          "fields": "(hf_film)"
+        },
+        "explanation": "重点分析薄膜厚度变化。"
+      },
+      {
+        "title": "改用 VTK 表面格式",
+        "patch": {
+          "surfaceFormat": "vtk"
+        },
+        "explanation": "将有限面积结果交给 VTK 可视化流程。"
+      }
+    ]
+  },
+  "mapFields": {
+    "description": "不同网格 / 区域之间映射字段",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/mapFields/mapFields.H",
+    "origin": "incompressible/pimpleFoam/laminar/cylinder2D/system/controlDict",
+    "tested": false,
+    "code": "mapFields1\n{\n    type            mapFields;\n    libs            (fieldFunctionObjects);\n    mapRegion       coarseMesh;\n    mapMethod       cellVolumeWeight;\n    consistent      no;\n    patchMap        ();\n    cuttingPatches  ();\n    fields\n    (\n        U\n        p\n    );\n    timeStart       10;\n    timeEnd         2000;\n    executeControl  timeStep;\n    executeInterval 10;\n    writeControl    timeStep;\n    writeInterval   50;\n}",
+    "explanation": "在同一次运行中把场映射到另一个网格区域。本例映射 U、p 到 coarseMesh，cellVolumeWeight 使用单元体积重叠关系进行插值。",
+    "variants": [
+      {
+        "title": "只映射速度",
+        "patch": {
+          "fields": "(U)"
+        },
+        "explanation": "将目标区域用于速度分析，减少其他字段的传递。"
+      },
+      {
+        "title": "只映射压力",
+        "patch": {
+          "fields": "(p)"
+        },
+        "explanation": "检查压力映射的平滑程度及边界处理。"
+      }
+    ]
+  },
+  "writeDictionary": {
+    "description": "监测并输出指定字典的内容。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/writeDictionary/writeDictionary.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "writeDictionaryExample\n{\n    type writeDictionary;\n    libs (utilityFunctionObjects);\ndictNames (controlDict fvSchemes fvSolution);\n    writeControl writeTime;\n}",
+    "explanation": "将指定字典写入日志，以便同时保留计算使用的设置。dictNames 可以选择 controlDict、fvSchemes 和 fvSolution，字典变化后可再次输出。",
+    "variants": [
+      {
+        "title": "只记录离散设置",
+        "patch": {
+          "dictNames": "(fvSchemes)"
+        },
+        "explanation": "用于比较不同离散格式的运行日志。"
+      },
+      {
+        "title": "记录求解和时间控制",
+        "patch": {
+          "dictNames": "(fvSolution controlDict)"
+        },
+        "explanation": "把线性求解容差与时间控制保存在同一份日志中。"
+      }
+    ]
+  },
+  "caseInfo": {
+    "description": "输出算例与网格等概要信息。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-14",
+    "source": "src/functionObjects/utilities/caseInfo/caseInfo.H",
+    "origin": "lagrangian/reactingParcelFoam/filter/system/caseInfo",
+    "tested": false,
+    "code": "caseInfo1\n{\n    type        caseInfo;\n    libs        (utilityFunctionObjects);\n    writeControl writeTime;\n    writeFormat json;\n    dictionaries\n    {\n        fvSolution\n        {\n            name        \"fvSolution\";\n        }\n        timeScheme\n        {\n            name        \"fvSchemes\";\n            include\n            (\n                \"/ddtSchemes/default\"\n            );\n        }\n        turbulence\n        {\n            name        \"turbulenceProperties\";\n        }\n        controlDict\n        {\n            path        \"<system>/controlDict\";\n            include\n            (\n                \"application\"\n                \"deltaT\"\n                \"startTime\"\n                \"endTime\"\n            );\n        }\n        field_p\n        {\n            path        \"0/p\"; \n            include\n            (\n                \"boundaryField/inlet/type\"\n                \"boundaryField/outlet/type\"\n            );\n        }\n        field_U\n        {\n            path        \"0/U\"; \n            include\n            (\n                \"boundaryField/inlet/type\"\n                \"boundaryField/outlet/type\"\n            );\n        }\n    }\n    functionObjects (sample1);\n}",
+    "explanation": "把算例、网格、字典和功能对象结果汇总为信息文件。本例选择 JSON，dictionaries 的 include 列表可以精确选择需要记录的配置路径。",
+    "variants": [
+      {
+        "title": "遇到缺项时发出提示",
+        "patch": {
+          "lookupMode": "warn"
+        },
+        "explanation": "收集现有信息，同时在日志中指出未找到的条目。"
+      },
+      {
+        "title": "每次完整输出同步汇总",
+        "patch": {
+          "writeControl": "writeTime",
+          "writeInterval": "1"
+        },
+        "explanation": "使信息文件与主计算结果对应。"
+      }
+    ]
+  },
+  "timeInfo": {
+    "description": "记录时间与运行消耗。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-14",
+    "source": "src/functionObjects/utilities/timeInfo/timeInfo.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "clock\n{\n    type timeInfo;\n    libs (utilityFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n}",
+    "explanation": "记录 CPU 时间和实际运行时间。perTimeStep 决定保存累计耗时还是本步耗时，便于比较网格或功能对象设置对运行速度的影响。",
+    "variants": [
+      {
+        "title": "记录每一步耗时",
+        "patch": {
+          "perTimeStep": "true"
+        },
+        "explanation": "观察某些计算步骤是否明显变慢，适合检查网格更新或输出文件带来的耗时。"
+      },
+      {
+        "title": "只在结束时汇总",
+        "patch": {
+          "perTimeStep": "false",
+          "writeControl": "onEnd"
+        },
+        "explanation": "保留最终累计耗时，适合批量比较多个算例。"
+      }
+    ]
+  },
+  "parProfiling": {
+    "description": "案例信息、时间消耗与并行分析",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/parProfiling/parProfiling.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "parProfilingExample\n{\n    type parProfiling;\n    libs (utilityFunctionObjects);\ndetail 0;\n    executeControl onEnd;\n    writeControl none;\n}",
+    "explanation": "统计 MPI 通信等并行活动的耗时。示例在结束时执行统计，writeControl none 表示不另设周期写出；在并行求解时使用更有意义。",
+    "variants": [
+      {
+        "title": "增加统计详细程度",
+        "patch": {
+          "detail": "1"
+        },
+        "explanation": "查看更详细的通信统计，便于分析进程之间的等待与通信开销。"
+      },
+      {
+        "title": "每 100 步报告一次",
+        "patch": {
+          "executeControl": "timeStep",
+          "executeInterval": "100"
+        },
+        "explanation": "持续观察计算过程中的并行开销，而不是仅查看结束时的汇总。"
+      }
+    ]
+  },
+  "solverInfo": {
+    "description": "记录线性求解器的残差与迭代信息。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-14",
+    "source": "src/functionObjects/utilities/solverInfo/solverInfo.H",
+    "origin": "05-autoStop",
+    "tested": true,
+    "code": "residuals\n{\n    type solverInfo;\n    libs (utilityFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 1;\n    fields (p U);\n}",
+    "explanation": "记录每个字段在线性求解中的初始残差、最终残差、迭代次数等信息。fields (p U) 同时监测压力和速度，可用这些数据检查代数求解过程。",
+    "variants": [
+      {
+        "title": "只跟踪压力方程",
+        "patch": {
+          "fields": "(p)"
+        },
+        "explanation": "减少日志中的字段数量，重点检查压力校正的收敛情况。"
+      },
+      {
+        "title": "输出残差分布场",
+        "patch": {
+          "writeResidualFields": "true"
+        },
+        "explanation": "除整体残差数值外，还保存初始残差的空间分布，帮助定位误差较大的单元。"
+      }
+    ]
+  },
+  "continuityError": {
+    "description": "监测连续性误差。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-14",
+    "source": "src/functionObjects/field/continuityError/continuityError.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "continuity\n{\n    type continuityError;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    phi phi;\n}",
+    "explanation": "用面通量 phi 统计局部、全局和累计连续性误差。把全局误差与入口、出口流量放在一起看，可以检查计算中的收支变化。",
+    "variants": []
+  },
+  "CourantNo": {
+    "description": "计算 Courant 数，检查时间步与流速的关系。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-14",
+    "source": "src/functionObjects/field/CourantNo/CourantNo.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "courant\n{\n    type CourantNo;\n    libs (fieldFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 10;\n    field phi;\n    result Co;\n}",
+    "explanation": "由面通量计算局部 Courant 数，输出 Co 场。查看其最大值和空间分布可以确定较大时间步主要影响了哪些单元。",
+    "variants": []
+  },
+  "PecletNo": {
+    "description": "计算 Peclet 数，比较对流与扩散的强弱。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-14",
+    "source": "src/functionObjects/field/PecletNo/PecletNo.H",
+    "origin": "incompressible/pisoFoam/RAS/cavity/system/FOs/FOPecletNo",
+    "tested": false,
+    "code": "PecletNo1\n{\n    type            PecletNo;\n    libs            (fieldFunctionObjects);\n    rho             rho;\n    field           phi;\n    result          PecletNoField;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0.1;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 5;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "根据面通量、网格尺度和扩散相关模型计算局部 Peclet 数，比较对流与扩散的强弱。示例读取 phi，并把输出场命名为 PecletNoField。",
+    "variants": [
+      {
+        "title": "单独命名诊断场",
+        "patch": {
+          "result": "Pe"
+        },
+        "explanation": "在可视化列表中使用较短名称。"
+      },
+      {
+        "title": "每十步保存",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "10"
+        },
+        "explanation": "观察随速度或有效扩散变化的局部 Peclet 数。"
+      }
+    ]
+  },
+  "MachNo": {
+    "description": "计算 Mach 数。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-14",
+    "source": "src/functionObjects/field/MachNo/MachNo.H",
+    "origin": "compressible/rhoPimpleFoam/RAS/aerofoilNACA0012/system/FOMachNo",
+    "tested": false,
+    "code": "MachNo1\n{\n    type            MachNo;\n    libs            (fieldFunctionObjects);\n    field           U;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    writeTime;\n    writeInterval   -1;\n}",
+    "explanation": "由速度大小与局部声速计算马赫数。算例需要可压缩热物性模型提供声速相关数据；可在结果中查看接近或超过音速的区域。",
+    "variants": [
+      {
+        "title": "单独命名马赫数场",
+        "patch": {
+          "result": "Ma"
+        },
+        "explanation": "区分其他速度相关诊断量。"
+      },
+      {
+        "title": "逐步保存马赫数",
+        "patch": {
+          "writeControl": "timeStep",
+          "writeInterval": "1"
+        },
+        "explanation": "用于观察快速传播的压缩波或激波变化。"
+      }
+    ]
+  },
+  "AMIWeights": {
+    "description": "检查 AMI 接口的插值权重。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-14",
+    "source": "src/functionObjects/field/AMIWeights/AMIWeights.H",
+    "origin": "incompressible/pimpleFoam/RAS/propeller/system/AMIWeights",
+    "tested": false,
+    "code": "AMIWeights1\n{\n    type             AMIWeights;\n    libs             (fieldFunctionObjects);\n    writeFields     true;\n    writePrecision   10;\n    writeToFile      true;\n    useUserTime      false;\n    region          region0;\n    enabled         true;\n    log             true;\n    timeStart       0;\n    timeEnd         1000;\n    executeControl  timeStep;\n    executeInterval 1;\n    writeControl    writeTime;\n    writeInterval  -1;\n}",
+    "explanation": "统计 AMI 接口的插值权重，并可把权重写成 VTK 场。适合检查旋转接口覆盖情况，以及几何运动时权重的变化。",
+    "variants": [
+      {
+        "title": "只记录统计值",
+        "patch": {
+          "writeFields": "false"
+        },
+        "explanation": "保留权重范围等信息，减少接口场文件。"
+      },
+      {
+        "title": "保存接口权重场",
+        "patch": {
+          "writeFields": "true"
+        },
+        "explanation": "在 ParaView 中定位覆盖或插值质量变化的具体区域。"
+      }
+    ]
+  },
+  "runTimeControl": {
+    "description": "根据残差、场值等条件控制计算过程。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-15",
+    "source": "src/functionObjects/utilities/runTimeControl/runTimeControl.H",
+    "origin": "05-autoStop",
+    "tested": true,
+    "code": "stopAfter\n{\n    type runTimeControl;\n    libs (utilityFunctionObjects);\n\n    writeControl timeStep;\n    writeInterval 1;\n    conditions { elapsed { type maxDuration; duration 0.2; } }\n    satisfiedAction end;\n    nWriteStep 0;\n}",
+    "explanation": "按 conditions 中的条件控制计算。示例用 maxDuration 限定该对象经历的模拟时间，并在条件满足后写出结果、结束运行；其他条件可监测残差或场统计值。",
+    "variants": [
+      {
+        "title": "条件满足后只报告",
+        "patch": {
+          "satisfiedAction": "none"
+        },
+        "explanation": "保留条件判断和记录，便于先观察触发时刻。"
+      },
+      {
+        "title": "结束前连续保存两步",
+        "patch": {
+          "nWriteStep": "2"
+        },
+        "explanation": "满足条件后继续保存两个时间步，使结束阶段留有相邻时刻的数据。"
+      }
+    ]
+  },
+  "setTimeStep": {
+    "description": "按指定规则设置时间步。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/setTimeStep/setTimeStepFunctionObject.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "setTimeStepExample\n{\n    type setTimeStep;\n    libs (utilityFunctionObjects);\ndeltaT 0.005;\n}",
+    "explanation": "用 deltaT 指定求解器下一步采用的时间步长。该值可写成常量，也可使用随时间变化的 Function1；放入算例后由运行中的求解器调用。",
+    "variants": [
+      {
+        "title": "把时间步减半",
+        "patch": {
+          "deltaT": "0.0025"
+        },
+        "explanation": "对相同流场和网格，时间步减半也会相应降低对流 Courant 数，同时增加推进相同时长所需的步数。"
+      },
+      {
+        "title": "分阶段改变时间步",
+        "patch": {
+          "deltaT": "table ((0 0.001) (0.1 0.005) (1 0.005))"
+        },
+        "explanation": "启动阶段从较小时间步开始，随后按表格插值过渡到 0.005；时间点采用模拟时间。"
+      }
+    ]
+  },
+  "abort": {
+    "description": "通过外部停止文件结束计算。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/abort/abort.H",
+    "origin": "compressible/rhoSimpleFoam/gasMixing/injectorPipe/system/abort",
+    "tested": false,
+    "code": "ABORT\n{\n    type    abort;\n    libs    (utilityFunctionObjects);\n    action  nextWrite;\n}",
+    "explanation": "运行时检查一个外部文件是否存在；发现文件后按 action 停止计算。对象名为 ABORT 且采用默认路径时，可在算例目录执行 touch ABORT 触发停止。",
+    "variants": [
+      {
+        "title": "触发后立即写出并停止",
+        "patch": {
+          "action": "writeNow"
+        },
+        "explanation": "适合需要尽快保存当前状态并结束的情况。"
+      },
+      {
+        "title": "指定单独的停止文件",
+        "patch": {
+          "file": "\"<case>/STOP\"",
+          "action": "nextWrite"
+        },
+        "explanation": "在算例目录创建 STOP 后，求解器等到下一次计划写出再结束。"
+      }
+    ]
+  },
+  "timeActivatedFileUpdate": {
+    "description": "按时间更新指定文件",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/timeActivatedFileUpdate/timeActivatedFileUpdate.H",
+    "origin": "IO/fileHandler_dynamicCode/system/controlDict",
+    "tested": false,
+    "code": "fvSolution\n{\n    type                timeActivatedFileUpdate;\n    libs                (utilityFunctionObjects);\n    writeControl        timeStep;\n    writeInterval       1;\n    fileToUpdate        \"<system>/fvSolution\";\n    timeVsFile\n    (\n        (-1     \"<system>/fvSolution.0\" )\n        ( 0.02  \"<system>/fvSolution.5\" )\n    );\n}",
+    "explanation": "在指定模拟时刻把预先准备的文件复制到目标位置。本例先采用 fvSolution.0，到 0.02 时改用 fvSolution.5，用于分阶段调整求解设置。",
+    "variants": [
+      {
+        "title": "把切换延后到 0.05",
+        "patch": {
+          "timeVsFile": "((-1 \"<system>/fvSolution.0\") (0.05 \"<system>/fvSolution.5\"))"
+        },
+        "explanation": "让初始求解设置维持更长时间，再进入下一阶段。"
+      },
+      {
+        "title": "每步检查更新",
+        "patch": {
+          "executeControl": "timeStep",
+          "executeInterval": "1"
+        },
+        "explanation": "让文件更新及时对应指定的模拟时间。"
+      }
+    ]
+  },
+  "multiRegion": {
+    "description": "在多个区域上组织同类功能对象",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/multiRegion/multiRegion.H",
+    "origin": "heatTransfer/chtMultiRegionSimpleFoam/multiRegionHeaterRadiation/system/controlDict",
+    "tested": false,
+    "code": "multiRegion\n{\n    type    multiRegion;\n    libs    (utilityFunctionObjects);\n    function\n    {\n        type    fieldMinMax;\n        libs    (fieldFunctionObjects);\n        fields  (T);\n    }\n}",
+    "explanation": "把同一个子功能对象应用到多个网格区域。本例对子区域分别运行 fieldMinMax，统计温度 T 的范围，适合共轭传热算例。",
+    "variants": [
+      {
+        "title": "只处理一个区域",
+        "patch": {
+          "regions": "(heater)"
+        },
+        "explanation": "在包含 heater 的共轭传热算例中单独统计该区域。"
+      },
+      {
+        "title": "选择两个区域",
+        "patch": {
+          "regions": "(heater topAir)"
+        },
+        "explanation": "在同一配置中对固体和上部空气区域分别执行温度统计。"
+      }
+    ]
+  },
+  "coded": {
+    "description": "在功能对象接口中嵌入 C++ 操作",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/codedFunctionObject/codedFunctionObject.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "codedExample\n{\n    type coded;\n    libs (utilityFunctionObjects);\nname reportTime;\n    codeExecute\n    #{\n        Info<< \"Time = \" << mesh().time().value() << nl;\n    #};\n}",
+    "explanation": "在功能对象接口中编译并执行一段 C++。name 给动态类命名，codeExecute 在执行阶段运行；本例只向日志写出当前模拟时间。",
+    "variants": [
+      {
+        "title": "每十步执行一次代码",
+        "patch": {
+          "executeControl": "timeStep",
+          "executeInterval": "10"
+        },
+        "explanation": "将打印频率降为每十步一次，便于在日志中观察而不会每步重复输出。"
+      },
+      {
+        "title": "在指定时间段执行代码",
+        "patch": {
+          "timeStart": "0.1",
+          "timeEnd": "0.3"
+        },
+        "explanation": "只在模拟时间 0.1 到 0.3 之间运行该对象，适合针对一个阶段添加诊断。"
+      }
+    ]
+  },
+  "systemCall": {
+    "description": "调用外部脚本或程序",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/systemCall/systemCall.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "systemCallExample\n{\n    type systemCall;\n    libs (utilityFunctionObjects);\nmaster true;\n    executeCalls (\"echo FoamLab-execute\");\n    writeCalls (\"echo FoamLab-write\");\n    endCalls (\"echo FoamLab-end\");\n}",
+    "explanation": "在执行、写出和结束阶段调用外部命令。示例只打印三个阶段的标记，master true 使并行计算仅由主进程调用；启用外部调用需要相应的系统操作权限设置。",
+    "variants": [
+      {
+        "title": "仅在写出时运行",
+        "patch": {
+          "executeCalls": "()",
+          "endCalls": "()"
+        },
+        "explanation": "保留 writeCalls，让外部命令与结果保存时刻对应。"
+      },
+      {
+        "title": "仅在结束时运行",
+        "patch": {
+          "executeCalls": "()",
+          "writeCalls": "()"
+        },
+        "explanation": "用 endCalls 在计算结束后执行收尾操作。"
+      }
+    ]
+  },
+  "externalCoupled": {
+    "description": "与外部程序交换数据",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/externalCoupled/externalCoupled.H",
+    "origin": "heatTransfer/chtMultiRegionFoam/externalCoupledHeater/system/externalCoupled",
+    "tested": false,
+    "code": "externalCoupled\n{\n    type            externalCoupled;\n    libs            (fieldFunctionObjects);\n    commsDir        \"<case>/comms\";\n    initByExternal  true;\n    regions\n    {\n        \"(topAir|heater)\"\n        {\n            coupleGroup\n            {\n                writeFields (T);\n                readFields  (T);\n            }\n        }\n    }\n    waitInterval    1;\n    statusDone      done;  \n    calcFrequency   1;\n    region              region0;\n    enabled             true;\n    log                 true;\n}",
+    "explanation": "通过通信目录与外部程序交换边界数据。本例交换温度 T，由外部程序提供初始数据，regions 定义参与耦合的区域和边界组。",
+    "variants": [
+      {
+        "title": "缩短等待轮询",
+        "patch": {
+          "waitInterval": "0.5"
+        },
+        "explanation": "更频繁地检查外部响应文件，适合交互延迟较短的耦合。"
+      },
+      {
+        "title": "限定最长等待时间",
+        "patch": {
+          "timeOut": "60"
+        },
+        "explanation": "外部程序在一分钟内响应，超时后由工具反馈通信问题。"
+      }
+    ]
+  },
+  "removeRegisteredObject": {
+    "description": "管理对象数据库和同步写出",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/removeRegisteredObject/removeRegisteredObject.H",
+    "origin": "按 v2512 接口配置",
+    "tested": false,
+    "code": "removeRegisteredObjectExample\n{\n    type removeRegisteredObject;\n    libs (utilityFunctionObjects);\nobjects (temporarySpeed);\n}",
+    "explanation": "从内存中的对象数据库移除指定对象。示例对象 temporarySpeed 应是前序步骤创建的临时量，移除之后其他对象将不再通过该名称读到它。",
+    "variants": [
+      {
+        "title": "移除两个临时对象",
+        "patch": {
+          "objects": "(temporarySpeed temporaryGradient)"
+        },
+        "explanation": "适合前序处理已经使用完多个中间结果的流程。"
+      },
+      {
+        "title": "仅在计算结束时清理",
+        "patch": {
+          "executeControl": "onEnd"
+        },
+        "explanation": "让临时对象在整个计算过程中可用，到结束阶段再移除。"
+      }
+    ]
+  },
+  "syncObjects": {
+    "description": "在进程或区域之间分发对象数据库中的 IOFields 数据。",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/syncObjects/syncObjects.H",
+    "origin": "multiphase/compressibleInterFoam/laminar/waterCooler/solid/system/controlDict",
+    "tested": false,
+    "code": "syncObjects\n{\n    type        syncObjects;\n    libs        (utilityFunctionObjects);\n}",
+    "explanation": "把本地对象数据库中的 IOFields 分发到其他进程或区域，常与 mapped 边界及松耦合计算配合使用。root 定位用于发送和接收数据的子对象数据库。",
+    "variants": [
+      {
+        "title": "每步同步",
+        "patch": {
+          "executeControl": "timeStep",
+          "executeInterval": "1"
+        },
+        "explanation": "在每次推进时更新耦合数据。"
+      },
+      {
+        "title": "每五步同步",
+        "patch": {
+          "executeControl": "timeStep",
+          "executeInterval": "5"
+        },
+        "explanation": "在较松的耦合流程中降低数据交换频率。"
+      }
+    ]
+  },
+  "setFlow": {
+    "description": "设置预定义流动场",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/field/setFlow/setFlow.H",
+    "origin": "multiphase/interIsoFoam/notchedDiscInSolidBodyRotation/system/controlDict",
+    "tested": false,
+    "code": "setVelocity\n{\n    type            setFlow;\n    libs            (fieldFunctionObjects);\n    writeControl    writeTime;\n    mode            rotation;\n    scale           1;\n    reverseTime     1;\n    omega           6.28318530718;\n    origin          (0.5 0 0.5);\n    refDir          (1 0 0);\n    axis            (0 1 0);\n}",
+    "explanation": "按解析规则设置速度和通量。本例绕 y 轴以 2π rad/s 旋转，origin 定义转动中心，reverseTime 1 使流动在 1 s 时反向，适合界面输运测试。",
+    "variants": [
+      {
+        "title": "将角速度减半",
+        "patch": {
+          "omega": "3.14159265359"
+        },
+        "explanation": "相同半径处的切向速度相应减半。"
+      },
+      {
+        "title": "延后反转时刻",
+        "patch": {
+          "reverseTime": "2"
+        },
+        "explanation": "维持原旋转方向到 2 s，再反向输运。"
+      }
+    ]
+  },
+  "foamReport": {
+    "description": "报告汇总与监测量曲线输出",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/foamReport/foamReport.H",
+    "origin": "incompressible/simpleFoam/motorBike/system/foamReport",
+    "tested": false,
+    "code": "foamReport1\n{\n    type            foamReport;\n    libs            (utilityFunctionObjects);\n    writeControl    writeTime;\n    template        \"<system>/myReportTemplate.md\";\n    substitutions\n    {\n        timing1\n        {\n            type        fileRegEx;\n            path        \"log.simpleFoam\";\n            entries\n            {\n                executionTime \"ExecutionTime = (.*) s  Clock.*\";\n            }\n        }\n        divSchemes1\n        {\n            type        dictionaryValue;\n            path        \"<system>/fvSchemes\";\n            entries\n            {\n                divSchemes      \"divSchemes\";\n            }\n        }\n        fvSolution1\n        {\n            type        dictionaryValue;\n            path        \"<system>/fvSolution\";\n            entries\n            {\n                solver_p        \"solvers/p/solver\";\n                solver_p_tol    \"solvers/p/tolerance\";\n                solver_p_reltol \"solvers/p/relTol\";\n                solver_U        \"solvers/U/solver\";\n                solver_U_tol    \"solvers/U/tolerance\";\n                solver_U_reltol \"solvers/U/relTol\";\n            }\n        }\n        controlDict1\n        {\n            type        dictionaryValue;\n            path        \"<system>/controlDict\";\n            entries\n            {\n                initial_deltaT       \"deltaT\";\n            }\n        }\n    }\n}",
+    "explanation": "用计算数据填充一个文本模板，生成报告。template 指定模板，substitutions 从字典或日志抽取数值并替换对应占位符；本例使用 motorBike 的配套模板。",
+    "variants": [
+      {
+        "title": "显示可用替换键",
+        "patch": {
+          "debugKeys": "true"
+        },
+        "explanation": "先检查数据来源与模板占位符的对应关系。"
+      },
+      {
+        "title": "只生成结束报告",
+        "patch": {
+          "writeControl": "onEnd"
+        },
+        "explanation": "让报告集中保存最终设置和结果。"
+      }
+    ]
+  },
+  "graphFunctionObject": {
+    "description": "报告汇总与监测量曲线输出",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/utilities/graphFunctionObject/graphFunctionObject.H",
+    "origin": "incompressible/simpleFoam/motorBike/system/graphFunctionObject",
+    "tested": false,
+    "code": "forceCoeffsGraph1\n{\n    type            graphFunctionObject;\n    libs            (utilityFunctionObjects);\n    writeControl    writeTime;\n    logScaleX       no;\n    logScaleY       no;\n    xLabel          \"Iteration\";\n    yLabel          \"Coefficient\";\n    yMin            -1;\n    yMax            1;\n    functions\n    {\n        Cd\n        {\n            object      forceCoeffs1;\n            entry       Cd;\n        }\n        Cd(f)\n        {\n            object      forceCoeffs1;\n            entry       Cd(f);\n        }\n        Cd(r)\n        {\n            object      forceCoeffs1;\n            entry       Cd(r);\n        }\n        Cl\n        {\n            object      forceCoeffs1;\n            entry       Cl;\n        }\n        Cl(f)\n        {\n            object      forceCoeffs1;\n            entry       Cl(f);\n            title       Cl(f);\n        }\n        Cl(r)\n        {\n            object      forceCoeffs1;\n            entry       Cl(r);\n            title       Cl(r);\n        }\n    }\n}",
+    "explanation": "将其他功能对象的数值结果绘制为 SVG 曲线。本例从 forceCoeffs1 读取 Cd、Cl 等系数，functions 中每个子字典定义一条曲线。",
+    "variants": [
+      {
+        "title": "扩大图像尺寸",
+        "patch": {
+          "width": "1200",
+          "height": "800"
+        },
+        "explanation": "为多条曲线和图例提供更多像素。"
+      },
+      {
+        "title": "限定系数显示范围",
+        "patch": {
+          "yMin": "-0.5",
+          "yMax": "0.5",
+          "drawGrid": "true"
+        },
+        "explanation": "聚焦较小的系数变化，并使用网格辅助读数。"
+      }
+    ]
+  },
+  "dataCloud": {
+    "description": "把指定颗粒云字段写成数据集合",
+    "category": "文件与控制",
+    "lesson": "/read/?slug=function-objects-16",
+    "source": "src/functionObjects/lagrangian/dataCloud/dataCloud.H",
+    "origin": "lagrangian/coalChemistryFoam/simplifiedSiwek/system/dataCloud",
+    "tested": false,
+    "code": "dataCloud\n{\n    type    dataCloud;\n    libs    (lagrangianFunctionObjects);\n    log     true;\n    cloud   coalCloud1;\n    field   d;\n}",
+    "explanation": "把选定颗粒云的单个属性写出为数据集合。本例读取 coalCloud1 的粒径 d，可进一步用于颗粒分布分析。",
+    "variants": [
+      {
+        "title": "导出颗粒温度",
+        "patch": {
+          "field": "T"
+        },
+        "explanation": "在具有 T 属性的煤颗粒云中读取温度数据。"
+      },
+      {
+        "title": "导出颗粒速度",
+        "patch": {
+          "field": "U"
+        },
+        "explanation": "将数据属性改为颗粒速度，便于分析运动分布。"
+      }
+    ]
+  },
+  "fieldAverage": {
+    "description": "计算场的时间平均值与脉动二阶矩。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-08",
+    "source": "src/functionObjects/field/fieldAverage/fieldAverage.H",
+    "origin": "01-cavity",
+    "tested": true,
+    "code": "averages\n{\n    type fieldAverage;\n    libs (fieldFunctionObjects);\n\n    writeControl writeTime;\n    writeInterval 1;\n    timeStart 0.1;\n    executeControl timeStep;\n    executeInterval 1;\n    restartOnRestart false;\n    fields\n    (\n        U { mean yes; prime2Mean yes; base time; }\n        p { mean yes; prime2Mean no; base time; }\n    );\n}",
+    "explanation": "按字段分别累积时间平均和二阶脉动矩。本例从 0.1 s 开始统计，U 同时生成 UMean 和 UPrime2Mean，p 只生成 pMean。base time 使可变时间步按实际时长加权。",
+    "variants": [
+      {
+        "title": "重启时重新开始平均",
+        "patch": {
+          "restartOnRestart": "true"
+        },
+        "explanation": "适合把本次重启后的计算当成新的统计阶段；此前保存的累计时间不会继续合并到新平均中。"
+      },
+      {
+        "title": "每次输出后重新统计",
+        "patch": {
+          "restartOnOutput": "true"
+        },
+        "explanation": "按相邻两次输出之间的时间段分别求平均，可比较不同时段的流动。"
+      }
+    ]
+  },
+  "valueAverage": {
+    "description": "对其他功能对象输出的数值做时间平均。",
+    "category": "采样与统计",
+    "lesson": "/read/?slug=function-objects-08",
+    "source": "src/functionObjects/field/valueAverage/valueAverage.H",
+    "origin": "incompressible/simpleFoam/simpleCar/system/referencePressure",
+    "tested": false,
+    "code": "average1\n{\n    type            valueAverage;\n    libs            (fieldFunctionObjects);\n    writeControl    writeTime;\n    functionObject  sample1;\n    fields          (average(p));\n}",
+    "explanation": "对另一个功能对象已经输出的数值继续做时间平均。functionObject 选数据来源，fields 写该对象的结果键，示例 average(p) 是区域压力平均值。",
+    "variants": [
+      {
+        "title": "使用有限平均窗口",
+        "patch": {
+          "window": "0.1"
+        },
+        "explanation": "以最近 0.1 个模拟时间单位的数据作为平均窗口，适合跟踪随时间缓慢变化的监测值。"
+      },
+      {
+        "title": "重启后重新累积",
+        "patch": {
+          "resetOnRestart": "true"
+        },
+        "explanation": "将重启后的监测值作为新的平均序列。"
+      }
+    ]
+  }
+}
