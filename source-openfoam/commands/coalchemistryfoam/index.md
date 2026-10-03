@@ -1,11 +1,11 @@
 ---
-title: "coalChemistryFoam · 煤与石灰石颗粒反应流"
+title: "coalChemistryFoam · 模拟煤和石灰石颗粒参与的反应流动"
 layout: reference
-description: "煤与石灰石颗粒反应流。"
+description: "模拟煤和石灰石颗粒参与的反应流动。"
 cms_slug: "command-coalchemistryfoam"
 ---
 
-<p>煤与石灰石颗粒反应流。</p><h2>开始前</h2>
+<p>模拟煤和石灰石颗粒参与的反应流动。</p><h2>开始前</h2>
 <p><code>coalChemistryFoam</code> 用于煤与石灰石颗粒反应流。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 颗粒算例同时需要连续相场、颗粒云配置以及对应的注入或初始颗粒数据。 配套输入可从<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/coalChemistryFoam/simplifiedSiwek">官方 <code>lagrangian/coalChemistryFoam/simplifiedSiwek</code> 算例</a>取得；先按该算例的 <code>Allrun</code> 完成网格和初始场准备。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">coalChemistryFoam -case baseCase &gt; baseCase/log.coalChemistryFoam 2&gt;&amp;1

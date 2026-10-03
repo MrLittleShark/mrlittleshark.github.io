@@ -1,11 +1,11 @@
 ---
-title: "foamNewFunctionObject · 在生成目录运行 wmake libso，随后在 functions 中配置并加载该对象"
+title: "foamNewFunctionObject · 创建自定义 functionObject 的源码和编译配置"
 layout: reference
-description: "在生成目录运行 wmake libso，随后在 functions 中配置并加载该对象。"
+description: "创建自定义 functionObject 的源码和编译配置。"
 cms_slug: "command-foamnewfunctionobject"
 ---
 
-<p>在生成目录运行 wmake libso，随后在 functions 中配置并加载该对象。</p><h2>开始前</h2>
+<p>创建自定义 functionObject 的源码和编译配置。</p><h2>开始前</h2>
 <p>在个人源码目录运行。生成的是开发骨架，execute/write 中的统计逻辑需自行编写。</p>
 <h2>示例 1：建立统计对象</h2>
 <pre><code class="language-bash">foamNewFunctionObject fieldSummary

@@ -1,11 +1,11 @@
 ---
-title: "potentialFreeSurfaceFoam · 以波高场近似单相自由表面"
+title: "potentialFreeSurfaceFoam · 通过波高场近似自由表面，求解单相液体流动"
 layout: reference
-description: "以波高场近似单相自由表面。"
+description: "通过波高场近似自由表面，求解单相液体流动。"
 cms_slug: "command-potentialfreesurfacefoam"
 ---
 
-<p>以波高场近似单相自由表面。</p><h2>开始前</h2>
+<p>通过波高场近似自由表面，求解单相液体流动。</p><h2>开始前</h2>
 <p><code>potentialFreeSurfaceFoam</code> 用于以波高场近似单相自由表面。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 配套输入可从<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/multiphase/potentialFreeSurfaceFoam/oscillatingBox">官方 <code>multiphase/potentialFreeSurfaceFoam/oscillatingBox</code> 算例</a>取得；先按该算例的 <code>Allrun</code> 完成网格和初始场准备。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">potentialFreeSurfaceFoam -case baseCase &gt; baseCase/log.potentialFreeSurfaceFoam 2&gt;&amp;1

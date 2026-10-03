@@ -1,11 +1,11 @@
 ---
-title: "foamSolverSweeps · 启动后交互输入日志名，如 log.simpleFoam"
+title: "foamSolverSweeps · 从求解日志中汇总代数求解器的迭代次数"
 layout: reference
-description: "启动后交互输入日志名，如 log.simpleFoam。脚本按预设的旧式日志行格式提取统计量。"
+description: "从求解日志中汇总代数求解器的迭代次数。"
 cms_slug: "command-foamsolversweeps"
 ---
 
-<p>启动后交互输入日志名，如 log.simpleFoam。脚本按预设的旧式日志行格式提取统计量。</p><h2>开始前</h2>
+<p>从求解日志中汇总代数求解器的迭代次数。</p><h2>开始前</h2>
 <p>这是读取日志的交互脚本，启动后从标准输入读一个文件名；统计固定格式的压力 p 和 U 求解行。日志中的 No Iterations 数值需位于第 15 个空白分隔字段；脚本使用固定 /tmp/FOAM_iters.* 临时文件，多个统计顺序执行。</p>
 <h2>示例 1：统计一次方腔求解</h2>
 <pre><code class="language-bash">printf '%s\n' caseA/log.icoFoam | foamSolverSweeps

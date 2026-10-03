@@ -1,11 +1,11 @@
 ---
-title: "surfacePointMerge · 距离阈值采用表面坐标的长度单位"
+title: "surfacePointMerge · 合并距离小于指定阈值的表面顶点"
 layout: reference
-description: "距离阈值采用表面坐标的长度单位。"
+description: "合并距离小于指定阈值的表面顶点。"
 cms_slug: "command-surfacepointmerge"
 ---
 
-<p>距离阈值采用表面坐标的长度单位。</p><h2>开始前</h2>
+<p>合并距离小于指定阈值的表面顶点。</p><h2>开始前</h2>
 <p>准备三角表面；距离使用当前表面坐标单位。先查看最小真实几何间隙，再选择明显小于该间隙的合并距离。</p>
 <h2>示例 1：合并近重合点</h2>
 <pre><code class="language-bash">surfacePointMerge body.stl 1e-8 body-merged.stl

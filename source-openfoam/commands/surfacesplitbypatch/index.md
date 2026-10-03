@@ -1,11 +1,11 @@
 ---
-title: "surfaceSplitByPatch · -patches 指定待拆分区域"
+title: "surfaceSplitByPatch · 将表面网格的各个区域分别保存为独立文件"
 layout: reference
-description: "-patches 指定待拆分区域。"
+description: "将表面网格的各个区域分别保存为独立文件。"
 cms_slug: "command-surfacesplitbypatch"
 ---
 
-<p>-patches 指定待拆分区域。</p><h2>开始前</h2>
+<p>将表面网格的各个区域分别保存为独立文件。</p><h2>开始前</h2>
 <p>准备带多个表面区域的 STL、OBJ 等文件；先检查区域名称，再设置选取列表。</p>
 <h2>示例 1：按全部区域拆分</h2>
 <pre><code class="language-bash">surfaceSplitByPatch assembly.stl

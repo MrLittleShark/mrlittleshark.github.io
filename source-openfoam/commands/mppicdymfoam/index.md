@@ -1,11 +1,11 @@
 ---
-title: "MPPICDyMFoam · 动网格上的 MPPIC 颗粒流"
+title: "MPPICDyMFoam · 在动网格上用 MPPIC 方法模拟颗粒群与流体的相互作用"
 layout: reference
-description: "动网格上的 MPPIC 颗粒流。"
+description: "在动网格上用 MPPIC 方法模拟颗粒群与流体的相互作用。"
 cms_slug: "command-mppicdymfoam"
 ---
 
-<p>动网格上的 MPPIC 颗粒流。</p><h2>开始前</h2>
+<p>在动网格上用 MPPIC 方法模拟颗粒群与流体的相互作用。</p><h2>开始前</h2>
 <p><code>MPPICDyMFoam</code> 用于动网格上的 MPPIC 颗粒流。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 颗粒算例同时需要连续相场、颗粒云配置以及对应的注入或初始颗粒数据。 配套输入可从<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/lagrangian/MPPICDyMFoam/column">官方 <code>lagrangian/MPPICDyMFoam/column</code> 算例</a>取得；先按该算例的 <code>Allrun</code> 完成网格和初始场准备。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">MPPICDyMFoam -case baseCase &gt; baseCase/log.MPPICDyMFoam 2&gt;&amp;1

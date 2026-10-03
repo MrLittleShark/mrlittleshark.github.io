@@ -1,11 +1,11 @@
 ---
-title: "scp · 通过 SSH 复制文件，替换账号与主机名后使用"
+title: "scp · 通过 SSH 在本机与远程计算机之间复制文件"
 layout: reference
-description: "通过 SSH 复制文件，替换账号与主机名后使用。"
+description: "通过 SSH 在本机与远程计算机之间复制文件。"
 cms_slug: "command-scp"
 ---
 
-<p>通过 SSH 复制文件，替换账号与主机名后使用。</p><h2>开始前</h2>
+<p>通过 SSH 在本机与远程计算机之间复制文件。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：上传字典</h2>
 <pre><code class="language-bash">scp caseA/system/controlDict student@compute.example.org:~/cases/caseA/system/

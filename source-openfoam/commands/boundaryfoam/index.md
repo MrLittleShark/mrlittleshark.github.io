@@ -1,11 +1,11 @@
 ---
-title: "boundaryFoam · 用于入口条件的一维湍流边界层"
+title: "boundaryFoam · 求解一维湍流边界层，生成可用于入口边界的流动剖面"
 layout: reference
-description: "用于入口条件的一维湍流边界层。"
+description: "求解一维湍流边界层，生成可用于入口边界的流动剖面。"
 cms_slug: "command-boundaryfoam"
 ---
 
-<p>用于入口条件的一维湍流边界层。</p><h2>开始前</h2>
+<p>求解一维湍流边界层，生成可用于入口边界的流动剖面。</p><h2>开始前</h2>
 <p>在已准备好一维网格、<code>U</code>、湍流量和 <code>constant/transportProperties</code> 的算例 <code>baseCase</code> 中学习。该求解器按指定平均速度迭代建立充分发展剖面；结果通过图线文件输出。新实验分别放入尚未存在的目录。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：计算一维速度与湍流剖面</h2>
 <pre><code class="language-bash">boundaryFoam -case baseCase &gt; baseCase/log.boundaryFoam 2&gt;&amp;1

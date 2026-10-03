@@ -1,11 +1,11 @@
 ---
-title: "refinementLevel · 用于贴体变形前的网格"
+title: "refinementLevel · 识别笛卡尔网格的细化层级，并找出需要补充细化的单元"
 layout: reference
-description: "用于贴体变形前的网格。"
+description: "识别笛卡尔网格的细化层级，并找出需要补充细化的单元。"
 cms_slug: "command-refinementlevel"
 ---
 
-<p>用于贴体变形前的网格。</p><h2>开始前</h2>
+<p>识别笛卡尔网格的细化层级，并找出需要补充细化的单元。</p><h2>开始前</h2>
 <p>用于经过 2×2×2 笛卡尔细化且尚未贴体变形的网格。程序按单元体积分类，写出级别场及相关集合。</p>
 <h2>示例 1：识别体积对应的细化级别</h2>
 <pre><code class="language-bash">refinementLevel

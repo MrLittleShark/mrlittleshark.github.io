@@ -1,11 +1,11 @@
 ---
-title: "PDRblockMesh · 读取 PDRblockMeshDict"
+title: "PDRblockMesh · 沿 x、y、z 方向生成供 PDR 阻力模型使用的单块直角网格"
 layout: reference
-description: "读取 PDRblockMeshDict。"
+description: "沿 x、y、z 方向生成供 PDR 阻力模型使用的单块直角网格。"
 cms_slug: "command-pdrblockmesh"
 ---
 
-<p>读取 PDRblockMeshDict。</p><h2>开始前</h2>
+<p>沿 x、y、z 方向生成供 PDR 阻力模型使用的单块直角网格。</p><h2>开始前</h2>
 <p>准备system/PDRblockMeshDict，其中包含x/y/z坐标分段、单元数与边界定义；生成操作在工作副本中进行。</p>
 <h2>示例 1：生成直角分段网格</h2>
 <pre><code class="language-bash">PDRblockMesh

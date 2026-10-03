@@ -1,11 +1,11 @@
 ---
-title: "selectCells · 读取选择字典，生成 selected 集合"
+title: "selectCells · 按字典中的几何条件选择网格单元，生成单元集合"
 layout: reference
-description: "读取选择字典，生成 selected 集合。"
+description: "按字典中的几何条件选择网格单元，生成单元集合。"
 cms_slug: "command-selectcells"
 ---
 
-<p>读取选择字典，生成 selected 集合。</p><h2>开始前</h2>
+<p>按字典中的几何条件选择网格单元，生成单元集合。</p><h2>开始前</h2>
 <p>准备网格、闭合三角表面和 system/selectCellsDict，含 surface、outsidePoints、useSurface、selectCut、selectInside、selectOutside、nearDistance。outsidePoints 取明确位于表面外侧的点。</p>
 <h2>示例 1：按现有设置划分单元</h2>
 <pre><code class="language-bash">selectCells

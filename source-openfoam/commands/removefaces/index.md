@@ -1,11 +1,11 @@
 ---
-title: "removeFaces · 输入为预先建立的 faceSet"
+title: "removeFaces · 移除选定内部面，将面两侧的单元合并"
 layout: reference
-description: "输入为预先建立的 faceSet。"
+description: "移除选定内部面，将面两侧的单元合并。"
 cms_slug: "command-removefaces"
 ---
 
-<p>输入为预先建立的 faceSet。</p><h2>开始前</h2>
+<p>移除选定内部面，将面两侧的单元合并。</p><h2>开始前</h2>
 <p>已有 faceSet，内含拟移除的内部面；移除这些面会合并相邻单元。使用案例副本并检查合并后单元形状。</p>
 <h2>示例 1：合并指定内部面两侧的单元</h2>
 <pre><code class="language-bash">removeFaces internalFaces

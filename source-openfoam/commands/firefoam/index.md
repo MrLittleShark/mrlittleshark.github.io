@@ -1,11 +1,11 @@
 ---
-title: "fireFoam · 火灾、扩散火焰与热解耦合"
+title: "fireFoam · 模拟火灾中的气相燃烧，并可耦合液滴、液膜和固体热解"
 layout: reference
-description: "火灾、扩散火焰与热解耦合。"
+description: "模拟火灾中的气相燃烧，并可耦合液滴、液膜和固体热解。"
 cms_slug: "command-firefoam"
 ---
 
-<p>火灾、扩散火焰与热解耦合。</p><h2>开始前</h2>
+<p>模拟火灾中的气相燃烧，并可耦合液滴、液膜和固体热解。</p><h2>开始前</h2>
 <p><code>fireFoam</code> 用于火灾、扩散火焰与热解耦合。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 配套输入可从<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/fireFoam/LES/compartmentFire">官方 <code>combustion/fireFoam/LES/compartmentFire</code> 算例</a>取得；先按该算例的 <code>Allrun</code> 完成网格和初始场准备。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">fireFoam -case baseCase &gt; baseCase/log.fireFoam 2&gt;&amp;1

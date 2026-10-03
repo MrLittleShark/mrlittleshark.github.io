@@ -1,11 +1,11 @@
 ---
-title: "getApplication · 读取 controlDict 中的 application"
+title: "getApplication · 读取 controlDict 中指定的求解器或应用程序名称"
 layout: reference
-description: "读取 controlDict 中的 application。"
+description: "读取 controlDict 中指定的求解器或应用程序名称。"
 cms_slug: "command-getapplication"
 ---
 
-<p>读取 controlDict 中的 application。</p><h2>开始前</h2>
+<p>读取 controlDict 中指定的求解器或应用程序名称。</p><h2>开始前</h2>
 <p>先在单独一行执行 source "$WM_PROJECT_DIR/bin/tools/RunFunctions"。示例在个人算例工作区操作，caseA、caseB 均为可修改的副本。</p>
 <h2>示例 1：读取求解器名称</h2>
 <pre><code class="language-bash">cd caseA

@@ -1,11 +1,11 @@
 ---
-title: "compressibleInterFilmFoam · 可压缩 VOF 流动与液膜耦合"
+title: "compressibleInterFilmFoam · 耦合模拟可压缩 VOF 两相流与表面液膜"
 layout: reference
-description: "可压缩 VOF 流动与液膜耦合。"
+description: "耦合模拟可压缩 VOF 两相流与表面液膜。"
 cms_slug: "command-compressibleinterfilmfoam"
 ---
 
-<p>可压缩 VOF 流动与液膜耦合。</p><h2>开始前</h2>
+<p>耦合模拟可压缩 VOF 两相流与表面液膜。</p><h2>开始前</h2>
 <p><code>compressibleInterFilmFoam</code> 用于可压缩 VOF 流动与液膜耦合。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">compressibleInterFilmFoam -case baseCase &gt; baseCase/log.compressibleInterFilmFoam 2&gt;&amp;1

@@ -1,11 +1,11 @@
 ---
-title: "dnsFoam · 各向同性湍流盒中的直接数值模拟"
+title: "dnsFoam · 直接求解各向同性湍流盒中的速度和压力，研究湍流演化"
 layout: reference
-description: "各向同性湍流盒中的直接数值模拟。"
+description: "直接求解各向同性湍流盒中的速度和压力，研究湍流演化。"
 cms_slug: "command-dnsfoam"
 ---
 
-<p>各向同性湍流盒中的直接数值模拟。</p><h2>开始前</h2>
+<p>直接求解各向同性湍流盒中的速度和压力，研究湍流演化。</p><h2>开始前</h2>
 <p>以下示例使用已完成网格和初始场准备的官方 boxTurb16 案例，目录记为 baseCase。其规则周期网格用于各向同性湍流盒，初始时间为 0，原时间步为 0.025，运动黏度为 0.025。每项对照从同一份初始数据开始，使用尚未存在的新目录。配套输入见<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/DNS/dnsFoam/boxTurb16">官方 boxTurb16 算例</a>。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行湍流盒基准计算</h2>
 <pre><code class="language-bash">dnsFoam -case baseCase &gt; baseCase/log.dnsFoam 2&gt;&amp;1

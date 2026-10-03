@@ -1,11 +1,11 @@
 ---
-title: "foamSequenceVTKFiles · 生成的符号链接供 ParaView 识别时间序列"
+title: "foamSequenceVTKFiles · 为 VTK 文件建立连续编号的链接，便于 ParaView 按时间序列读取"
 layout: reference
-description: "生成的符号链接供 ParaView 识别时间序列。"
+description: "为 VTK 文件建立连续编号的链接，便于 ParaView 按时间序列读取。"
 cms_slug: "command-foamsequencevtkfiles"
 ---
 
-<p>生成的符号链接供 ParaView 识别时间序列。</p><h2>开始前</h2>
+<p>为 VTK 文件建立连续编号的链接，便于 ParaView 按时间序列读取。</p><h2>开始前</h2>
 <p>准备按时间目录存放的 VTK 采样结果。此脚本创建符号链接序列，不重写网格数据；示例在支持符号链接的 Linux 文件系统中运行。 输入目录中相邻时间的文件需保持相同文件名。-out 分支在 v2512 中会多消耗一个参数，下例将其置于末尾并附加 --，用于吸收该次参数移动；输出目录中原有内容会被清理。</p>
 <h2>示例 1：整理默认 VTK 结果</h2>
 <pre><code class="language-bash">foamSequenceVTKFiles -case caseA

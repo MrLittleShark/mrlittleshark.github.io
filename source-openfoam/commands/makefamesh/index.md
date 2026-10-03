@@ -1,11 +1,11 @@
 ---
-title: "makeFaMesh · v2512 的常用字典位置为 system/finite-area/faMeshDefiniti"
+title: "makeFaMesh · 从体网格中选取表面面片，生成有限面积网格"
 layout: reference
-description: "v2512 的常用字典位置为 system/finite-area/faMeshDefinition。"
+description: "从体网格中选取表面面片，生成有限面积网格。"
 cms_slug: "command-makefamesh"
 ---
 
-<p>v2512 的常用字典位置为 system/finite-area/faMeshDefinition。</p><h2>开始前</h2>
+<p>从体网格中选取表面面片，生成有限面积网格。</p><h2>开始前</h2>
 <p>已有体网格及与其patch匹配的faMeshDefinition；命名面积区域还需对应区域配置。</p>
 <h2>示例 1：先构造但不保存</h2>
 <pre><code class="language-bash">makeFaMesh -dry-run

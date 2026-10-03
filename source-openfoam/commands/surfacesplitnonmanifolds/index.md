@@ -1,11 +1,11 @@
 ---
-title: "surfaceSplitNonManifolds · 拆分后使用 surfaceCheck 检查表面"
+title: "surfaceSplitNonManifolds · 拆分多重连接的表面边，分离非流形连接"
 layout: reference
-description: "拆分后使用 surfaceCheck 检查表面。"
+description: "拆分多重连接的表面边，分离非流形连接。"
 cms_slug: "command-surfacesplitnonmanifolds"
 ---
 
-<p>拆分后使用 surfaceCheck 检查表面。</p><h2>开始前</h2>
+<p>拆分多重连接的表面边，分离非流形连接。</p><h2>开始前</h2>
 <p>输入存在多个面共享同一条边的非流形连接。工具通过复制点分开这类连接，输出应结合预期零件拓扑检查。</p>
 <h2>示例 1：断开非流形连接</h2>
 <pre><code class="language-bash">surfaceSplitNonManifolds junction.stl junction-split.stl

@@ -1,11 +1,11 @@
 ---
-title: "rhoReactingFoam · 采用密度基热物性的反应流"
+title: "rhoReactingFoam · 使用密度基热物性模型求解可压缩反应流"
 layout: reference
-description: "采用密度基热物性的反应流。"
+description: "使用密度基热物性模型求解可压缩反应流。"
 cms_slug: "command-rhoreactingfoam"
 ---
 
-<p>采用密度基热物性的反应流。</p><h2>开始前</h2>
+<p>使用密度基热物性模型求解可压缩反应流。</p><h2>开始前</h2>
 <p><code>rhoReactingFoam</code> 用于采用密度基热物性的反应流。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 配套输入可从<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/combustion/rhoReactingFoam/groundAbsorption">官方 <code>combustion/rhoReactingFoam/groundAbsorption</code> 算例</a>取得；先按该算例的 <code>Allrun</code> 完成网格和初始场准备。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">rhoReactingFoam -case baseCase &gt; baseCase/log.rhoReactingFoam 2&gt;&amp;1

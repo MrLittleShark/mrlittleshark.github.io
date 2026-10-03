@@ -1,11 +1,11 @@
 ---
-title: "chtMultiRegionSimpleFoam · 流体与固体的多区域稳态共轭传热"
+title: "chtMultiRegionSimpleFoam · 耦合求解多个流体与固体区域之间的稳态传热"
 layout: reference
-description: "流体与固体的多区域稳态共轭传热。"
+description: "耦合求解多个流体与固体区域之间的稳态传热。"
 cms_slug: "command-chtmultiregionsimplefoam"
 ---
 
-<p>流体与固体的多区域稳态共轭传热。</p><h2>开始前</h2>
+<p>耦合求解多个流体与固体区域之间的稳态传热。</p><h2>开始前</h2>
 <p><code>chtMultiRegionSimpleFoam</code> 用于流体与固体的多区域稳态共轭传热。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 多区域算例应已经生成各区域网格，并设置 <code>constant/regionProperties</code> 和区域间耦合边界。 配套输入可从<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/heatTransfer/chtMultiRegionSimpleFoam/cpuCabinet">官方 <code>heatTransfer/chtMultiRegionSimpleFoam/cpuCabinet</code> 算例</a>取得；先按该算例的 <code>Allrun</code> 完成网格和初始场准备。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">chtMultiRegionSimpleFoam -case baseCase &gt; baseCase/log.chtMultiRegionSimpleFoam 2&gt;&amp;1

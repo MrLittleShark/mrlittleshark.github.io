@@ -1,11 +1,11 @@
 ---
-title: "foamMeshToFluent · 导出范围为网格数据，求解配置在 Fluent 中设置"
+title: "foamMeshToFluent · 将 OpenFOAM 体网格导出为 Fluent 网格文件"
 layout: reference
-description: "导出范围为网格数据，求解配置在 Fluent 中设置。"
+description: "将 OpenFOAM 体网格导出为 Fluent 网格文件。"
 cms_slug: "command-foammeshtofluent"
 ---
 
-<p>导出范围为网格数据，求解配置在 Fluent 中设置。</p><h2>开始前</h2>
+<p>将 OpenFOAM 体网格导出为 Fluent 网格文件。</p><h2>开始前</h2>
 <p>案例已有体网格；该工具导出 Fluent 网格，输出文件位置以终端报告为准。场结果的交换需要另选结果导出工具。</p>
 <h2>示例 1：导出已有网格</h2>
 <pre><code class="language-bash">foamMeshToFluent

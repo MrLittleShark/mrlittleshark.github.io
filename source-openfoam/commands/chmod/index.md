@@ -1,11 +1,11 @@
 ---
-title: "chmod · 设置脚本执行权限"
+title: "chmod · 修改文件或目录的读、写和执行权限"
 layout: reference
-description: "设置脚本执行权限。"
+description: "修改文件或目录的读、写和执行权限。"
 cms_slug: "command-chmod"
 ---
 
-<p>设置脚本执行权限。</p><h2>开始前</h2>
+<p>修改文件或目录的读、写和执行权限。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：运行自编脚本</h2>
 <pre><code class="language-bash">chmod u+x caseA/Allrun

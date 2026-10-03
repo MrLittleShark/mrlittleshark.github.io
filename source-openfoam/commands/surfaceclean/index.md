@@ -1,11 +1,11 @@
 ---
-title: "surfaceClean · 长度和质量阈值按几何尺度设置；清理会改变局部表面细节"
+title: "surfaceClean · 清理表面网格中的短边和劣质三角形"
 layout: reference
-description: "长度和质量阈值按几何尺度设置；清理会改变局部表面细节。"
+description: "清理表面网格中的短边和劣质三角形。"
 cms_slug: "command-surfaceclean"
 ---
 
-<p>长度和质量阈值按几何尺度设置；清理会改变局部表面细节。</p><h2>开始前</h2>
+<p>清理表面网格中的短边和劣质三角形。</p><h2>开始前</h2>
 <p>长度阈值使用缩放后的几何单位，quality为三角形质量阈值。先用surfaceCheck了解最小特征尺度，输出另存。</p>
 <h2>示例 1：清理极短边</h2>
 <pre><code class="language-bash">surfaceClean raw.stl 1e-6 1e-6 clean.stl

@@ -1,11 +1,11 @@
 ---
-title: "foamCheckJobs · 通过 FOAM_JOB_DIR 中的作业记录检查状态，访问远程主机时使用 SSH"
+title: "foamCheckJobs · 读取作业记录并检查本机或远程计算任务的运行状态"
 layout: reference
-description: "通过 FOAM_JOB_DIR 中的作业记录检查状态，访问远程主机时使用 SSH。"
+description: "读取作业记录并检查本机或远程计算任务的运行状态。"
 cms_slug: "command-foamcheckjobs"
 ---
 
-<p>通过 FOAM_JOB_DIR 中的作业记录检查状态，访问远程主机时使用 SSH。</p><h2>开始前</h2>
+<p>读取作业记录并检查本机或远程计算任务的运行状态。</p><h2>开始前</h2>
 <p>依赖传统 FOAM_JOB_DIR 的 runningJobs/finishedJobs 记录。该设施需由安装配置启用，作业主机通过 SSH 可达，且 foamProcessInfo 可用。foamCheckJobs 会检查失效锁并询问是否释放；它不是系统全部进程的查询器。</p>
 <h2>示例 1：处理默认作业目录</h2>
 <pre><code class="language-bash">foamCheckJobs

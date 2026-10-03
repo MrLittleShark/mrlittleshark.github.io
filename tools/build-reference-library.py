@@ -259,6 +259,12 @@ for name,item in commands.items():
         item['example']='foamLog log.simpleFoam\nfoamMonitor -l logs/p_0'
         item['details']=item['details'].replace('foamMonitor -l postProcessing/residuals/0/residuals.dat','foamLog log.simpleFoam；foamMonitor -l logs/p_0')
 
+# Editorial summaries take precedence over extracted source comments.
+for name, summary in load(ROOT/'tools/content/command-summary-overrides.json').items():
+    if name in commands:
+        commands[name]['description']=summary
+        commands[name]['title']=name+' · '+summary.rstrip('。')
+
 def command_body(item):
     name=item['name']
     body='<div class="source-note">'+esc(item['verificationText'])+'。帮助输出只能证明程序入口与选项，不等同于网格、求解和物理验证。</div>'

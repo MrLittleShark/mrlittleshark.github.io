@@ -1,11 +1,11 @@
 ---
-title: "modifyMesh · 按配置字典执行拓扑修改"
+title: "modifyMesh · 按字典设置修改网格中的点、面和单元连接关系"
 layout: reference
-description: "按配置字典执行拓扑修改。"
+description: "按字典设置修改网格中的点、面和单元连接关系。"
 cms_slug: "command-modifymesh"
 ---
 
-<p>按配置字典执行拓扑修改。</p><h2>开始前</h2>
+<p>按字典设置修改网格中的点、面和单元连接关系。</p><h2>开始前</h2>
 <p>准备 system/modifyMeshDict，含 pointsToMove、edgesToSplit、facesToTriangulate、edgesToCollapse、cellsToSplit 五个列表。下列坐标以 0–1 的单六面体为说明，每例从独立原始副本开始，先清空其他操作列表。</p>
 <h2>示例 1：移动一个边界点</h2>
 <pre><code class="language-bash">foamDictionary system/modifyMeshDict -entry pointsToMove -set '(((0 0 0) (-0.01 0 0)))'

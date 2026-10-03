@@ -1,11 +1,11 @@
 ---
-title: "sphereSurfactantFoam · 球面上的被动标量输运"
+title: "sphereSurfactantFoam · 在球面上求解被动标量输运方程"
 layout: reference
-description: "球面上的被动标量输运。"
+description: "在球面上求解被动标量输运方程。"
 cms_slug: "command-spheresurfactantfoam"
 ---
 
-<p>球面上的被动标量输运。</p><h2>开始前</h2>
+<p>在球面上求解被动标量输运方程。</p><h2>开始前</h2>
 <p><code>sphereSurfactantFoam</code> 用于球面上的被动标量输运。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 这里的网格包括由 <code>makeFaMesh</code> 建立的有限面积网格，求解变量定义在该表面上。 配套输入可从<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/finiteArea/sphereSurfactantFoam/sphereTransport">官方 <code>finiteArea/sphereSurfactantFoam/sphereTransport</code> 算例</a>取得；先按该算例的 <code>Allrun</code> 完成网格和初始场准备。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">sphereSurfactantFoam -case baseCase &gt; baseCase/log.sphereSurfactantFoam 2&gt;&amp;1

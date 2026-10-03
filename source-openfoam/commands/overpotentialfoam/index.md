@@ -1,11 +1,11 @@
 ---
-title: "overPotentialFoam · 重叠网格势流初始化"
+title: "overPotentialFoam · 在重叠网格上求解势流，生成初始速度和通量"
 layout: reference
-description: "重叠网格势流初始化。"
+description: "在重叠网格上求解势流，生成初始速度和通量。"
 cms_slug: "command-overpotentialfoam"
 ---
 
-<p>重叠网格势流初始化。</p><h2>开始前</h2>
+<p>在重叠网格上求解势流，生成初始速度和通量。</p><h2>开始前</h2>
 <p><code>overPotentialFoam</code> 用于重叠网格势流初始化。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 重叠网格算例还需要 <code>zoneID</code>、overset 边界和相应的插值设置。 配套输入可从<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/basic/overPotentialFoam/cylinder/cylinderAndBackground">官方 <code>basic/overPotentialFoam/cylinder/cylinderAndBackground</code> 算例</a>取得；先按该算例的 <code>Allrun</code> 完成网格和初始场准备。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：求解速度势并初始化速度</h2>
 <pre><code class="language-bash">overPotentialFoam -case baseCase

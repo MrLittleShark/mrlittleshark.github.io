@@ -60,6 +60,7 @@
   function update(push = false) {
     window.foamListState.write({q: query.value, category, sort: sort.value === 'common' ? '' : sort.value}, push);
     restore(); render();
+    window.FoamDirectory?.nav();
   }
   restore();
   window.foamListState.remember(host);

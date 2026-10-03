@@ -1,11 +1,11 @@
 ---
-title: "autoPatch · 重划边界后更新对应场边界"
+title: "autoPatch · 根据面法向夹角自动将外边界划分为多个 patch"
 layout: reference
-description: "重划边界后更新对应场边界。"
+description: "根据面法向夹角自动将外边界划分为多个 patch。"
 cms_slug: "command-autopatch"
 ---
 
-<p>重划边界后更新对应场边界。</p><h2>开始前</h2>
+<p>根据面法向夹角自动将外边界划分为多个 patch。</p><h2>开始前</h2>
 <p>已有体网格外边界；工具按外表面折角划分 patch。每个角度对比示例应从同一原始网格的独立副本开始。</p>
 <h2>示例 1：按常见特征角分区</h2>
 <pre><code class="language-bash">autoPatch 45

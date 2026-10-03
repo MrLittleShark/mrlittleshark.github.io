@@ -1,11 +1,11 @@
 ---
-title: "surfacePatch · 读取 surfacePatchDict"
+title: "surfacePatch · 按几何选择规则修改表面网格的区域划分"
 layout: reference
-description: "读取 surfacePatchDict。"
+description: "按几何选择规则修改表面网格的区域划分。"
 cms_slug: "command-surfacepatch"
 ---
 
-<p>读取 surfacePatchDict。</p><h2>开始前</h2>
+<p>按几何选择规则修改表面网格的区域划分。</p><h2>开始前</h2>
 <p>案例有 system/surfacePatchDict，geometry 中声明实际表面。以下字典修改针对 surfaces/body.stl；工具把变更表面另存为 body_patched.stl。</p>
 <h2>示例 1：按特征角拆分表面区域</h2>
 <pre><code class="language-bash">foamDictionary system/surfacePatchDict -entry 'surfaces/body.stl' -set '{ type autoPatch; featureAngle 45; }'

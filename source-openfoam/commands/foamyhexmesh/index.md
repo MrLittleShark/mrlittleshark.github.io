@@ -1,11 +1,11 @@
 ---
-title: "foamyHexMesh · 读取 foamyHexMeshDict 和相关几何，运行需具备对应编译依赖"
+title: "foamyHexMesh · 根据几何表面和尺寸控制，生成以六面体为主的贴体网格"
 layout: reference
-description: "读取 foamyHexMeshDict 和相关几何，运行需具备对应编译依赖。"
+description: "根据几何表面和尺寸控制，生成以六面体为主的贴体网格。"
 cms_slug: "command-foamyhexmesh"
 ---
 
-<p>读取 foamyHexMeshDict 和相关几何，运行需具备对应编译依赖。</p><h2>开始前</h2>
+<p>根据几何表面和尺寸控制，生成以六面体为主的贴体网格。</p><h2>开始前</h2>
 <p>准备完整foamyHexMeshDict与constant/triSurface几何；locationInMesh位于目标流体域，第三方依赖及程序已安装。</p>
 <h2>示例 1：检查输入几何</h2>
 <pre><code class="language-bash">foamyHexMesh -checkGeometry

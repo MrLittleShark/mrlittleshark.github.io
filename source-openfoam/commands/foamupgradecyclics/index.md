@@ -1,11 +1,11 @@
 ---
-title: "foamUpgradeCyclics · 用于迁移旧版算例"
+title: "foamUpgradeCyclics · 将旧式 cyclic 周期边界拆分为成对边界，并更新网格和场"
 layout: reference
-description: "用于迁移旧版算例。"
+description: "将旧式 cyclic 周期边界拆分为成对边界，并更新网格和场。"
 cms_slug: "command-foamupgradecyclics"
 ---
 
-<p>用于迁移旧版算例。</p><h2>开始前</h2>
+<p>将旧式 cyclic 周期边界拆分为成对边界，并更新网格和场。</p><h2>开始前</h2>
 <p>用于迁移采用旧式未拆分 cyclic 的网格与场。先对独立副本预览，再选择需转换的时间和区域。</p>
 <h2>示例 1：预览需要转换的内容</h2>
 <pre><code class="language-bash">foamUpgradeCyclics -dry-run

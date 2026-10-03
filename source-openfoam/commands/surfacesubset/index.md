@@ -1,11 +1,11 @@
 ---
-title: "surfaceSubset · 选择规则由输入字典定义"
+title: "surfaceSubset · 按选择规则从三角表面中提取所需区域"
 layout: reference
-description: "选择规则由输入字典定义。"
+description: "按选择规则从三角表面中提取所需区域。"
 cms_slug: "command-surfacesubset"
 ---
 
-<p>选择规则由输入字典定义。</p><h2>开始前</h2>
+<p>按选择规则从三角表面中提取所需区域。</p><h2>开始前</h2>
 <p>准备三角表面及选择字典。点、边、面编号均从 0 开始；每个示例都从完整基础字典开始或在其上修改。</p>
 <h2>示例 1：按面编号提取</h2>
 <pre><code class="language-bash">cat &gt; subsetDict &lt;&lt;'EOF'

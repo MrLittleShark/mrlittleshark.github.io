@@ -1,11 +1,11 @@
 ---
-title: "tar · 打包算例目录"
+title: "tar · 将多个文件和目录归档，也可提取已有归档中的文件"
 layout: reference
-description: "打包算例目录。"
+description: "将多个文件和目录归档，也可提取已有归档中的文件。"
 cms_slug: "command-tar"
 ---
 
-<p>打包算例目录。</p><h2>开始前</h2>
+<p>将多个文件和目录归档，也可提取已有归档中的文件。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：打包算例</h2>
 <pre><code class="language-bash">tar -czf caseA.tar.gz caseA

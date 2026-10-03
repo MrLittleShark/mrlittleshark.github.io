@@ -1,11 +1,11 @@
 ---
-title: "foamUpgradeFiniteArea · 将旧版文件调整为包含 finite-area 子目录的结构"
+title: "foamUpgradeFiniteArea · 将旧版有限面积网格和配置迁移到新的目录结构"
 layout: reference
-description: "将旧版文件调整为包含 finite-area 子目录的结构。-dry-run 预览迁移内容。"
+description: "将旧版有限面积网格和配置迁移到新的目录结构。"
 cms_slug: "command-foamupgradefinitearea"
 ---
 
-<p>将旧版文件调整为包含 finite-area 子目录的结构。-dry-run 预览迁移内容。</p><h2>开始前</h2>
+<p>将旧版有限面积网格和配置迁移到新的目录结构。</p><h2>开始前</h2>
 <p>先加载 v2512 环境，在个人工作目录中准备 caseA 算例副本。新目标目录使用未占用的名称。 用于旧有限面积文件位置的迁移，目标是新的 finite-area 子目录结构。</p>
 <h2>示例 1：先预览迁移</h2>
 <pre><code class="language-bash">foamUpgradeFiniteArea -dry-run -case caseA

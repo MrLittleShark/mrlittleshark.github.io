@@ -1,11 +1,11 @@
 ---
-title: "foamNewApp · 生成应用源码和 Make 文件"
+title: "foamNewApp · 创建新应用程序的源码目录、主程序和编译配置"
 layout: reference
-description: "生成应用源码和 Make 文件。在生成目录运行 wmake，程序通常输出至 FOAM_USER_APPBIN。"
+description: "创建新应用程序的源码目录、主程序和编译配置。"
 cms_slug: "command-foamnewapp"
 ---
 
-<p>生成应用源码和 Make 文件。在生成目录运行 wmake，程序通常输出至 FOAM_USER_APPBIN。</p><h2>开始前</h2>
+<p>创建新应用程序的源码目录、主程序和编译配置。</p><h2>开始前</h2>
 <p>在个人可写源码目录运行。每个应用名使用未占用的 C++ 标识符；生成骨架后自行实现功能。</p>
 <h2>示例 1：建立应用骨架</h2>
 <pre><code class="language-bash">foamNewApp inspectCase

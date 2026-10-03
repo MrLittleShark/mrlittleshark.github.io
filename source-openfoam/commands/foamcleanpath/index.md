@@ -1,11 +1,11 @@
 ---
-title: "foamCleanPath · 删除重复项或指定条目后输出路径文本，当前 shell 的 PATH 保持不变"
+title: "foamCleanPath · 整理以冒号分隔的路径列表，去除重复项或指定条目"
 layout: reference
-description: "删除重复项或指定条目后输出路径文本，当前 shell 的 PATH 保持不变。"
+description: "整理以冒号分隔的路径列表，去除重复项或指定条目。"
 cms_slug: "command-foamcleanpath"
 ---
 
-<p>删除重复项或指定条目后输出路径文本，当前 shell 的 PATH 保持不变。</p><h2>开始前</h2>
+<p>整理以冒号分隔的路径列表，去除重复项或指定条目。</p><h2>开始前</h2>
 <p>操作冒号分隔的路径字符串。默认打印结果，不直接修改父 shell；filter 按路径前缀匹配，并带有 sed 正则语义。</p>
 <h2>示例 1：消除重复项</h2>
 <pre><code class="language-bash">foamCleanPath "/usr/bin:/tmp/tools:/usr/bin"

@@ -1,11 +1,11 @@
 ---
-title: "find · 按路径和文件名查找文件"
+title: "find · 在目录树中按文件名、类型和时间等条件查找文件"
 layout: reference
-description: "按路径和文件名查找文件。"
+description: "在目录树中按文件名、类型和时间等条件查找文件。"
 cms_slug: "command-find"
 ---
 
-<p>按路径和文件名查找文件。</p><h2>开始前</h2>
+<p>在目录树中按文件名、类型和时间等条件查找文件。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：寻找控制字典</h2>
 <pre><code class="language-bash">find . -type f -name controlDict

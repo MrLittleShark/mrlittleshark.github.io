@@ -1,11 +1,11 @@
 ---
-title: "foam · 切换到OpenFOAM 安装根目录"
+title: "foam · 切换到 OpenFOAM 安装根目录"
 layout: reference
-description: "切换到OpenFOAM 安装根目录。"
+description: "切换到 OpenFOAM 安装根目录。"
 cms_slug: "command-foam"
 ---
 
-<p>切换到OpenFOAM 安装根目录。</p><h2>开始前</h2>
+<p>切换到 OpenFOAM 安装根目录。</p><h2>开始前</h2>
 <p>这是 Bash alias。先加载 v2512 的 etc/bashrc，再在交互式终端逐行执行。脚本中可直接写 cd "$WM_PROJECT_DIR"；使用 alias 时须先启用 shopt -s expand_aliases 并分行解析。</p>
 <h2>示例 1：进入OpenFOAM 根目录</h2>
 <pre><code class="language-bash">foam

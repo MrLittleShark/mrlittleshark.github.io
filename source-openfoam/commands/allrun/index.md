@@ -1,11 +1,11 @@
 ---
-title: "Allrun · 算例提供的运行脚本，具体执行步骤由该文件定义"
+title: "Allrun · 按算例脚本依次执行建网、初始化、求解和后处理"
 layout: reference
-description: "算例提供的运行脚本，具体执行步骤由该文件定义。"
+description: "按算例脚本依次执行建网、初始化、求解和后处理。"
 cms_slug: "command-allrun"
 ---
 
-<p>算例提供的运行脚本，具体执行步骤由该文件定义。</p><h2>开始前</h2>
+<p>按算例脚本依次执行建网、初始化、求解和后处理。</p><h2>开始前</h2>
 <p>这里指 tutorials/Allrun 测试驱动。先将需要测试的教程树复制到个人目录 tutorial-suite，保留顶层 Allrun 和其脚本依赖；本工具可运行大量案例。单个案例的 Allrun 参数由其源码决定。</p>
 <h2>示例 1：执行教程测试集</h2>
 <pre><code class="language-bash">cd tutorial-suite

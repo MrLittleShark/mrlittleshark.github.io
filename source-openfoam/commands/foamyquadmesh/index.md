@@ -1,11 +1,11 @@
 ---
-title: "foamyQuadMesh · 参数由专用字典定义，-pointsFile 可指定初始点"
+title: "foamyQuadMesh · 生成以四边形为主的二维网格"
 layout: reference
-description: "参数由专用字典定义，-pointsFile 可指定初始点。"
+description: "生成以四边形为主的二维网格。"
 cms_slug: "command-foamyquadmesh"
 ---
 
-<p>参数由专用字典定义，-pointsFile 可指定初始点。</p><h2>开始前</h2>
+<p>生成以四边形为主的二维网格。</p><h2>开始前</h2>
 <p>已有system/foamyQuadMeshDict及所引用的闭合几何、特征边；二维平面由locationInMesh的z坐标确定。</p>
 <h2>示例 1：生成平面网格</h2>
 <pre><code class="language-bash">foamyQuadMesh

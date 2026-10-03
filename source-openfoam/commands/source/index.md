@@ -1,11 +1,11 @@
 ---
-title: "source · 在当前 Bash 进程中执行环境脚本"
+title: "source · 在当前终端执行脚本，使脚本设置的环境变量和函数立即生效"
 layout: reference
-description: "在当前 Bash 进程中执行环境脚本。"
+description: "在当前终端执行脚本，使脚本设置的环境变量和函数立即生效。"
 cms_slug: "command-source"
 ---
 
-<p>在当前 Bash 进程中执行环境脚本。</p><h2>开始前</h2>
+<p>在当前终端执行脚本，使脚本设置的环境变量和函数立即生效。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：加载环境</h2>
 <pre><code class="language-bash">source /usr/lib/openfoam/openfoam2512/etc/bashrc

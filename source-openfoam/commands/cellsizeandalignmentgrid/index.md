@@ -1,11 +1,11 @@
 ---
-title: "cellSizeAndAlignmentGrid · 用于 foamyMesh 网格生成流程"
+title: "cellSizeAndAlignmentGrid · 为 foamy 网格生成流程构造网格尺寸与方向控制数据"
 layout: reference
-description: "用于 foamyMesh 网格生成流程。"
+description: "为 foamy 网格生成流程构造网格尺寸与方向控制数据。"
 cms_slug: "command-cellsizeandalignmentgrid"
 ---
 
-<p>用于 foamyMesh 网格生成流程。</p><h2>开始前</h2>
+<p>为 foamy 网格生成流程构造网格尺寸与方向控制数据。</p><h2>开始前</h2>
 <p>该开发工具需在本机可用；读取system/foamyHexMeshDict的geometry、surfaceConformation和尺寸控制，使用独立foamy算例副本。</p>
 <h2>示例 1：导出尺寸与方向控制数据</h2>
 <pre><code class="language-bash">cellSizeAndAlignmentGrid

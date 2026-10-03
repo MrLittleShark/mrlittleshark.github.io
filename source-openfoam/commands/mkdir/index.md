@@ -1,11 +1,11 @@
 ---
-title: "mkdir · 创建工作目录"
+title: "mkdir · 创建一个或多个目录"
 layout: reference
-description: "创建工作目录。"
+description: "创建一个或多个目录。"
 cms_slug: "command-mkdir"
 ---
 
-<p>创建工作目录。</p><h2>开始前</h2>
+<p>创建一个或多个目录。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：创建目录</h2>
 <pre><code class="language-bash">mkdir study

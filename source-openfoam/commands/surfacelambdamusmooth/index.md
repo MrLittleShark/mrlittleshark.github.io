@@ -1,11 +1,11 @@
 ---
-title: "surfaceLambdaMuSmooth · lambda 和 mu 均采用该程序定义的 [0,1] 系数"
+title: "surfaceLambdaMuSmooth · 通过 lambda/mu 平滑减少表面起伏，并可固定特征点"
 layout: reference
-description: "lambda 和 mu 均采用该程序定义的 [0,1] 系数。"
+description: "通过 lambda/mu 平滑减少表面起伏，并可固定特征点。"
 cms_slug: "command-surfacelambdamusmooth"
 ---
 
-<p>lambda 和 mu 均采用该程序定义的 [0,1] 系数。</p><h2>开始前</h2>
+<p>通过 lambda/mu 平滑减少表面起伏，并可固定特征点。</p><h2>开始前</h2>
 <p>输入为三角表面，lambda与mu按工具接口取0到1；输出另存，比较轮廓和体积变化。</p>
 <h2>示例 1：轻度拉普拉斯平滑</h2>
 <pre><code class="language-bash">surfaceLambdaMuSmooth raw.stl 0.2 0 5 smooth5.stl

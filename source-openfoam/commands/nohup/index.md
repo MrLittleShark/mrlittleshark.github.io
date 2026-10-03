@@ -1,11 +1,11 @@
 ---
-title: "nohup · 使程序忽略挂断信号并重定向日志"
+title: "nohup · 让程序在终端断开后继续运行，并保存终端输出"
 layout: reference
-description: "使程序忽略挂断信号并重定向日志。"
+description: "让程序在终端断开后继续运行，并保存终端输出。"
 cms_slug: "command-nohup"
 ---
 
-<p>使程序忽略挂断信号并重定向日志。</p><h2>开始前</h2>
+<p>让程序在终端断开后继续运行，并保存终端输出。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：后台启动</h2>
 <pre><code class="language-bash">nohup icoFoam -case caseA &gt; caseA/log.icoFoam 2&gt;&amp;1 &amp;

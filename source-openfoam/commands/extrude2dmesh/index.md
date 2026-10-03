@@ -1,11 +1,11 @@
 ---
-title: "extrude2DMesh · 读取 system/extrude2DMeshDict"
+title: "extrude2DMesh · 将二维网格沿厚度方向挤出为三维体网格"
 layout: reference
-description: "读取 system/extrude2DMeshDict。polyMesh2D 输入为仅含顶点和边的二维网格。"
+description: "将二维网格沿厚度方向挤出为三维体网格。"
 cms_slug: "command-extrude2dmesh"
 ---
 
-<p>读取 system/extrude2DMeshDict。polyMesh2D 输入为仅含顶点和边的二维网格。</p><h2>开始前</h2>
+<p>将二维网格沿厚度方向挤出为三维体网格。</p><h2>开始前</h2>
 <p>已有二维输入及system/extrude2DMeshDict。位置参数只接受polyMesh2D或MeshedSurface，大小写按源码填写。</p>
 <h2>示例 1：拉伸二维体网格</h2>
 <pre><code class="language-bash">extrude2DMesh polyMesh2D

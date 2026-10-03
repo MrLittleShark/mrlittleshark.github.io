@@ -1,11 +1,11 @@
 ---
-title: "foamNewCase · 模板来自用户或站点配置"
+title: "foamNewCase · 根据指定求解器的模板创建新算例"
 layout: reference
-description: "模板来自用户或站点配置。-list 列出可用模板；创建命令为 foamNewCase -app simpleFoam -case newCase。"
+description: "根据指定求解器的模板创建新算例。"
 cms_slug: "command-foamnewcase"
 ---
 
-<p>模板来自用户或站点配置。-list 列出可用模板；创建命令为 foamNewCase -app simpleFoam -case newCase。</p><h2>开始前</h2>
+<p>根据指定求解器的模板创建新算例。</p><h2>开始前</h2>
 <p>需要 rsync 和用户/站点应用模板。先执行 mkdir -p "$HOME/.OpenFOAM/appTemplates/2512"，再将完整初始算例复制为该目录下的 cavityStarter，保证其含 constant 和 system。</p>
 <h2>示例 1：查看可用模板</h2>
 <pre><code class="language-bash">foamNewCase -list

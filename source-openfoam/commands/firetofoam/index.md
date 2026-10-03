@@ -1,11 +1,11 @@
 ---
-title: "fireToFoam · 转换后检查长度单位"
+title: "fireToFoam · 将 AVL/FIRE 多面体网格转换为 OpenFOAM 体网格"
 layout: reference
-description: "转换后检查长度单位。"
+description: "将 AVL/FIRE 多面体网格转换为 OpenFOAM 体网格。"
 cms_slug: "command-firetofoam"
 ---
 
-<p>转换后检查长度单位。</p><h2>开始前</h2>
+<p>将 AVL/FIRE 多面体网格转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备 AVL FIRE 的多面体网格文件，目标案例包含基本 system 配置。</p>
 <h2>示例 1：导入 FIRE 网格</h2>
 <pre><code class="language-bash">fireToFoam mesh.fpma

@@ -1,11 +1,11 @@
 ---
-title: "foamNew · 示例生成 MyModel.H"
+title: "foamNew · 根据模板生成 OpenFOAM 源码文件"
 layout: reference
-description: "示例生成 MyModel.H。C、H、I、IO 和 App 等模板由 foamNewSource 配套提供。"
+description: "根据模板生成 OpenFOAM 源码文件。"
 cms_slug: "command-foamnew"
 ---
 
-<p>示例生成 MyModel.H。C、H、I、IO 和 App 等模板由 foamNewSource 配套提供。</p><h2>开始前</h2>
+<p>根据模板生成 OpenFOAM 源码文件。</p><h2>开始前</h2>
 <p>在独立源码练习目录操作，目标文件名不能已存在。source 生成普通类，template 生成带模板参数的类。</p>
 <h2>示例 1：生成类声明</h2>
 <pre><code class="language-bash">foamNew source H myModel

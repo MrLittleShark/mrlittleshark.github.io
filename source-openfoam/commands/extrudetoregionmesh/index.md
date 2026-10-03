@@ -1,11 +1,11 @@
 ---
-title: "extrudeToRegionMesh · 用于薄层或膜区域，源面和目标区域名称由字典指定"
+title: "extrudeToRegionMesh · 将选定面集挤出为独立网格区域，用于薄层、液膜等模型"
 layout: reference
-description: "用于薄层或膜区域，源面和目标区域名称由字典指定。"
+description: "将选定面集挤出为独立网格区域，用于薄层、液膜等模型。"
 cms_slug: "command-extrudetoregionmesh"
 ---
 
-<p>用于薄层或膜区域，源面和目标区域名称由字典指定。</p><h2>开始前</h2>
+<p>将选定面集挤出为独立网格区域，用于薄层、液膜等模型。</p><h2>开始前</h2>
 <p>已有faceZone或faceSet以及system/extrudeToRegionMeshDict；字典给出新region名、源面、厚度、层数和映射方式。</p>
 <h2>示例 1：生成壁膜区域</h2>
 <pre><code class="language-bash">extrudeToRegionMesh

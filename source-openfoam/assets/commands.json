@@ -270,8 +270,8 @@
   },
   {
     "name": "foamEtcFile",
-    "title": "foamEtcFile · 按用户、站点和安装目录搜索并输出文件路径",
-    "description": "按用户、站点和安装目录搜索并输出文件路径。-all 列出全部匹配项，-list 列出搜索目录。",
+    "title": "foamEtcFile · 在用户、站点和安装目录中查找 OpenFOAM 配置文件，返回匹配的路径",
+    "description": "在用户、站点和安装目录中查找 OpenFOAM 配置文件，返回匹配的路径。",
     "example": "foamEtcFile controlDict",
     "details": "按用户、站点和安装目录搜索并输出文件路径。-all 列出全部匹配项，-list 列出搜索目录。",
     "category": "系统工具",
@@ -341,8 +341,8 @@
   },
   {
     "name": "foamInstallationTest",
-    "title": "foamInstallationTest · 用于诊断安装路径及环境配置",
-    "description": "用于诊断安装路径及环境配置。",
+    "title": "foamInstallationTest · 检查运行 OpenFOAM 所需的软件组件、安装路径和环境设置",
+    "description": "检查运行 OpenFOAM 所需的软件组件、安装路径和环境设置。",
     "example": "foamInstallationTest",
     "details": "用于诊断安装路径及环境配置。",
     "category": "系统工具",
@@ -387,8 +387,8 @@
   },
   {
     "name": "foamSystemCheck",
-    "title": "foamSystemCheck · 检查构建所需的系统和编译条件",
-    "description": "检查构建所需的系统和编译条件。",
+    "title": "foamSystemCheck · 检查系统与编译工具是否满足 OpenFOAM 的安装要求",
+    "description": "检查系统与编译工具是否满足 OpenFOAM 的安装要求。",
     "example": "foamSystemCheck",
     "details": "检查构建所需的系统和编译条件。",
     "category": "系统工具",
@@ -433,8 +433,8 @@
   },
   {
     "name": "foamCloneCase",
-    "title": "foamCloneCase · 默认复制初始时刻、constant 和 system",
-    "description": "默认复制初始时刻、constant 和 system。-latestTime 选择最后时刻，-force 覆盖目标目录。",
+    "title": "foamCloneCase · 复制算例的配置、网格和选定时刻的场，建立新的算例目录",
+    "description": "复制算例的配置、网格和选定时刻的场，建立新的算例目录。",
     "example": "foamCloneCase caseA caseB",
     "details": "默认复制初始时刻、constant 和 system。-latestTime 选择最后时刻，-force 覆盖目标目录。",
     "category": "系统工具",
@@ -483,8 +483,8 @@
   },
   {
     "name": "foamCopySettings",
-    "title": "foamCopySettings · 采用 rsync，按 foamCopySettings.rc 定义的规则复制，不包含网格和计算结",
-    "description": "采用 rsync，按 foamCopySettings.rc 定义的规则复制，不包含网格和计算结果。",
+    "title": "foamCopySettings · 将一个算例的配置文件复制到另一个算例",
+    "description": "将一个算例的配置文件复制到另一个算例。",
     "example": "mkdir -p new-settings\nfoamCopySettings caseA new-settings",
     "details": "采用 rsync，按 foamCopySettings.rc 定义的规则复制，不包含网格和计算结果。",
     "category": "系统工具",
@@ -529,8 +529,8 @@
   },
   {
     "name": "foamNewCase",
-    "title": "foamNewCase · 模板来自用户或站点配置",
-    "description": "模板来自用户或站点配置。-list 列出可用模板；创建命令为 foamNewCase -app simpleFoam -case newCase。",
+    "title": "foamNewCase · 根据指定求解器的模板创建新算例",
+    "description": "根据指定求解器的模板创建新算例。",
     "example": "foamNewCase -list",
     "details": "模板来自用户或站点配置。-list 列出可用模板；创建命令为 foamNewCase -app simpleFoam -case newCase。",
     "category": "系统工具",
@@ -582,8 +582,8 @@
   },
   {
     "name": "foamRunTutorials",
-    "title": "foamRunTutorials · 执行目标目录中的 Allrun 或 Alltest",
-    "description": "执行目标目录中的 Allrun 或 Alltest。-dry-run 列出待执行脚本。",
+    "title": "foamRunTutorials · 批量运行指定目录及其子目录中的教程算例",
+    "description": "批量运行指定目录及其子目录中的教程算例。",
     "example": "foamRunTutorials -dry-run -case tutorial-study",
     "details": "执行目标目录中的 Allrun 或 Alltest。-dry-run 列出待执行脚本。",
     "category": "系统工具",
@@ -641,8 +641,8 @@
   },
   {
     "name": "foamTestTutorial",
-    "title": "foamTestTutorial · 默认在临时目录运行一个时间步",
-    "description": "默认在临时目录运行一个时间步。-full 执行完整教程，-output=DIR 保留输出，指定目录须预先建立。",
+    "title": "foamTestTutorial · 将指定教程复制到测试目录并运行，检查算例能否正常执行",
+    "description": "将指定教程复制到测试目录并运行，检查算例能否正常执行。",
     "example": "foamTestTutorial incompressible/icoFoam/cavity/cavity",
     "details": "默认在临时目录运行一个时间步。-full 执行完整教程，-output=DIR 保留输出，指定目录须预先建立。",
     "category": "系统工具",
@@ -695,8 +695,8 @@
   },
   {
     "name": "foamNew",
-    "title": "foamNew · 示例生成 MyModel.H",
-    "description": "示例生成 MyModel.H。C、H、I、IO 和 App 等模板由 foamNewSource 配套提供。",
+    "title": "foamNew · 根据模板生成 OpenFOAM 源码文件",
+    "description": "根据模板生成 OpenFOAM 源码文件。",
     "example": "foamNew source H myModel",
     "details": "示例生成 MyModel.H。C、H、I、IO 和 App 等模板由 foamNewSource 配套提供。",
     "category": "系统工具",
@@ -749,8 +749,8 @@
   },
   {
     "name": "foamNewApp",
-    "title": "foamNewApp · 生成应用源码和 Make 文件",
-    "description": "生成应用源码和 Make 文件。在生成目录运行 wmake，程序通常输出至 FOAM_USER_APPBIN。",
+    "title": "foamNewApp · 创建新应用程序的源码目录、主程序和编译配置",
+    "description": "创建新应用程序的源码目录、主程序和编译配置。",
     "example": "foamNewApp inspectCase",
     "details": "生成应用源码和 Make 文件。在生成目录运行 wmake，程序通常输出至 FOAM_USER_APPBIN。",
     "category": "系统工具",
@@ -795,8 +795,8 @@
   },
   {
     "name": "foamNewBC",
-    "title": "foamNewBC · 在生成目录运行 wmake libso，并在算例的 libs 中加载生成的库",
-    "description": "在生成目录运行 wmake libso，并在算例的 libs 中加载生成的库。",
+    "title": "foamNewBC · 创建自定义边界条件的源码和编译配置",
+    "description": "创建自定义边界条件的源码和编译配置。",
     "example": "foamNewBC fixedValue scalar heatedWall",
     "details": "在生成目录运行 wmake libso，并在算例的 libs 中加载生成的库。",
     "category": "系统工具",
@@ -855,8 +855,8 @@
   },
   {
     "name": "foamNewFunctionObject",
-    "title": "foamNewFunctionObject · 在生成目录运行 wmake libso，随后在 functions 中配置并加载该对象",
-    "description": "在生成目录运行 wmake libso，随后在 functions 中配置并加载该对象。",
+    "title": "foamNewFunctionObject · 创建自定义 functionObject 的源码和编译配置",
+    "description": "创建自定义 functionObject 的源码和编译配置。",
     "example": "foamNewFunctionObject fieldSummary",
     "details": "在生成目录运行 wmake libso，随后在 functions 中配置并加载该对象。",
     "category": "系统工具",
@@ -901,8 +901,8 @@
   },
   {
     "name": "foamCalc",
-    "title": "foamCalc · v2512 中该命令为标量计算器，旧版同名场处理程序采用不同接口",
-    "description": "v2512 中该命令为标量计算器，旧版同名场处理程序采用不同接口。",
+    "title": "foamCalc · 计算数学表达式并输出数值结果",
+    "description": "计算数学表达式并输出数值结果。",
     "example": "foamCalc '(2 + 3)*4'",
     "details": "v2512 中该命令为标量计算器，旧版同名场处理程序采用不同接口。",
     "category": "系统工具",
@@ -949,8 +949,8 @@
   },
   {
     "name": "foamExprParserInfo",
-    "title": "foamExprParserInfo · 用于查询表达式语法及解析器支持范围",
-    "description": "用于查询表达式语法及解析器支持范围。",
+    "title": "foamExprParserInfo · 显示 OpenFOAM 表达式解析器支持的符号与语法规则",
+    "description": "显示 OpenFOAM 表达式解析器支持的符号与语法规则。",
     "example": "foamExprParserInfo -field -tokens",
     "details": "用于查询表达式语法及解析器支持范围。",
     "category": "系统工具",
@@ -997,8 +997,8 @@
   },
   {
     "name": "foamCleanPath",
-    "title": "foamCleanPath · 删除重复项或指定条目后输出路径文本，当前 shell 的 PATH 保持不变",
-    "description": "删除重复项或指定条目后输出路径文本，当前 shell 的 PATH 保持不变。",
+    "title": "foamCleanPath · 整理以冒号分隔的路径列表，去除重复项或指定条目",
+    "description": "整理以冒号分隔的路径列表，去除重复项或指定条目。",
     "example": "foamCleanPath \"/usr/bin:/tmp/tools:/usr/bin\"",
     "details": "删除重复项或指定条目后输出路径文本，当前 shell 的 PATH 保持不变。",
     "category": "系统工具",
@@ -1055,8 +1055,8 @@
   },
   {
     "name": "foamHasLibrary",
-    "title": "foamHasLibrary · -detail 输出详细信息",
-    "description": "-detail 输出详细信息。",
+    "title": "foamHasLibrary · 检查指定的共享库能否成功加载",
+    "description": "检查指定的共享库能否成功加载。",
     "example": "foamHasLibrary libfiniteVolume.so",
     "details": "-detail 输出详细信息。",
     "category": "系统工具",
@@ -1120,8 +1120,8 @@
   },
   {
     "name": "foamListRegions",
-    "title": "foamListRegions · 可按 fluid、solid 等 regionType 筛选，-finite-area 选择有限",
-    "description": "可按 fluid、solid 等 regionType 筛选，-finite-area 选择有限面积区域。",
+    "title": "foamListRegions · 列出算例中的体网格区域或有限面积区域",
+    "description": "列出算例中的体网格区域或有限面积区域。",
     "example": "foamListRegions",
     "details": "可按 fluid、solid 等 regionType 筛选，-finite-area 选择有限面积区域。",
     "category": "系统工具",
@@ -1187,8 +1187,8 @@
   },
   {
     "name": "foamUpgradeFiniteArea",
-    "title": "foamUpgradeFiniteArea · 将旧版文件调整为包含 finite-area 子目录的结构",
-    "description": "将旧版文件调整为包含 finite-area 子目录的结构。-dry-run 预览迁移内容。",
+    "title": "foamUpgradeFiniteArea · 将旧版有限面积网格和配置迁移到新的目录结构",
+    "description": "将旧版有限面积网格和配置迁移到新的目录结构。",
     "example": "foamUpgradeFiniteArea -dry-run -case caseA",
     "details": "将旧版文件调整为包含 finite-area 子目录的结构。-dry-run 预览迁移内容。",
     "category": "系统工具",
@@ -1242,8 +1242,8 @@
   },
   {
     "name": "foamUpgradeCyclics",
-    "title": "foamUpgradeCyclics · 用于迁移旧版算例",
-    "description": "用于迁移旧版算例。",
+    "title": "foamUpgradeCyclics · 将旧式 cyclic 周期边界拆分为成对边界，并更新网格和场",
+    "description": "将旧式 cyclic 周期边界拆分为成对边界，并更新网格和场。",
     "example": "foamUpgradeCyclics -dry-run",
     "details": "用于迁移旧版算例。",
     "category": "系统工具",
@@ -1320,8 +1320,8 @@
   },
   {
     "name": "checkFaMesh",
-    "title": "checkFaMesh · 检查对象为有限面积网格",
-    "description": "检查对象为有限面积网格。",
+    "title": "checkFaMesh · 检查有限面积网格的几何与拓扑质量",
+    "description": "检查有限面积网格的几何与拓扑质量。",
     "example": "checkFaMesh",
     "details": "检查对象为有限面积网格。",
     "category": "前处理",
@@ -1398,8 +1398,8 @@
   },
   {
     "name": "makeFaMesh",
-    "title": "makeFaMesh · v2512 的常用字典位置为 system/finite-area/faMeshDefiniti",
-    "description": "v2512 的常用字典位置为 system/finite-area/faMeshDefinition。",
+    "title": "makeFaMesh · 从体网格中选取表面面片，生成有限面积网格",
+    "description": "从体网格中选取表面面片，生成有限面积网格。",
     "example": "makeFaMesh -dry-run",
     "details": "v2512 的常用字典位置为 system/finite-area/faMeshDefinition。",
     "category": "前处理",
@@ -1481,8 +1481,8 @@
   },
   {
     "name": "PDRblockMesh",
-    "title": "PDRblockMesh · 读取 PDRblockMeshDict",
-    "description": "读取 PDRblockMeshDict。",
+    "title": "PDRblockMesh · 沿 x、y、z 方向生成供 PDR 阻力模型使用的单块直角网格",
+    "description": "沿 x、y、z 方向生成供 PDR 阻力模型使用的单块直角网格。",
     "example": "PDRblockMesh",
     "details": "读取 PDRblockMeshDict。",
     "category": "前处理",
@@ -1627,8 +1627,8 @@
   },
   {
     "name": "extrudeMesh",
-    "title": "extrudeMesh · 读取 extrudeMeshDict",
-    "description": "读取 extrudeMeshDict。",
+    "title": "extrudeMesh · 按指定方向和层数挤出表面或网格边界，生成体网格",
+    "description": "按指定方向和层数挤出表面或网格边界，生成体网格。",
     "example": "extrudeMesh",
     "details": "读取 extrudeMeshDict。",
     "category": "前处理",
@@ -1705,8 +1705,8 @@
   },
   {
     "name": "extrudeToRegionMesh",
-    "title": "extrudeToRegionMesh · 用于薄层或膜区域，源面和目标区域名称由字典指定",
-    "description": "用于薄层或膜区域，源面和目标区域名称由字典指定。",
+    "title": "extrudeToRegionMesh · 将选定面集挤出为独立网格区域，用于薄层、液膜等模型",
+    "description": "将选定面集挤出为独立网格区域，用于薄层、液膜等模型。",
     "example": "extrudeToRegionMesh",
     "details": "用于薄层或膜区域，源面和目标区域名称由字典指定。",
     "category": "前处理",
@@ -1779,8 +1779,8 @@
   },
   {
     "name": "extrude2DMesh",
-    "title": "extrude2DMesh · 读取 system/extrude2DMeshDict",
-    "description": "读取 system/extrude2DMeshDict。polyMesh2D 输入为仅含顶点和边的二维网格。",
+    "title": "extrude2DMesh · 将二维网格沿厚度方向挤出为三维体网格",
+    "description": "将二维网格沿厚度方向挤出为三维体网格。",
     "example": "extrude2DMesh polyMesh2D",
     "details": "读取 system/extrude2DMeshDict。polyMesh2D 输入为仅含顶点和边的二维网格。",
     "category": "前处理",
@@ -1851,8 +1851,8 @@
   },
   {
     "name": "cellSizeAndAlignmentGrid",
-    "title": "cellSizeAndAlignmentGrid · 用于 foamyMesh 网格生成流程",
-    "description": "用于 foamyMesh 网格生成流程。",
+    "title": "cellSizeAndAlignmentGrid · 为 foamy 网格生成流程构造网格尺寸与方向控制数据",
+    "description": "为 foamy 网格生成流程构造网格尺寸与方向控制数据。",
     "example": "cellSizeAndAlignmentGrid",
     "details": "用于 foamyMesh 网格生成流程。",
     "category": "前处理",
@@ -1899,8 +1899,8 @@
   },
   {
     "name": "foamyHexMesh",
-    "title": "foamyHexMesh · 读取 foamyHexMeshDict 和相关几何，运行需具备对应编译依赖",
-    "description": "读取 foamyHexMeshDict 和相关几何，运行需具备对应编译依赖。",
+    "title": "foamyHexMesh · 根据几何表面和尺寸控制，生成以六面体为主的贴体网格",
+    "description": "根据几何表面和尺寸控制，生成以六面体为主的贴体网格。",
     "example": "foamyHexMesh -checkGeometry",
     "details": "读取 foamyHexMeshDict 和相关几何，运行需具备对应编译依赖。",
     "category": "前处理",
@@ -1972,8 +1972,8 @@
   },
   {
     "name": "foamyHexMeshBackgroundMesh",
-    "title": "foamyHexMeshBackgroundMesh · 为 foamyHexMesh 提供背景网格",
-    "description": "为 foamyHexMesh 提供背景网格。",
+    "title": "foamyHexMeshBackgroundMesh · 生成并导出 foamyHexMesh 使用的背景网格与距离表面",
+    "description": "生成并导出 foamyHexMesh 使用的背景网格与距离表面。",
     "example": "foamyHexMeshBackgroundMesh",
     "details": "为 foamyHexMesh 提供背景网格。",
     "category": "前处理",
@@ -2020,8 +2020,8 @@
   },
   {
     "name": "foamyHexMeshSurfaceSimplify",
-    "title": "foamyHexMeshSurfaceSimplify · 输出用于 triSurface 表面处理",
-    "description": "输出用于 triSurface 表面处理。",
+    "title": "foamyHexMeshSurfaceSimplify · 通过重新采样简化几何表面，减少表面网格的细节和面数",
+    "description": "通过重新采样简化几何表面，减少表面网格的细节和面数。",
     "example": "foamyHexMeshSurfaceSimplify '(40 40 40)' body40.stl",
     "details": "输出用于 triSurface 表面处理。",
     "category": "前处理",
@@ -2068,8 +2068,8 @@
   },
   {
     "name": "foamyQuadMesh",
-    "title": "foamyQuadMesh · 参数由专用字典定义，-pointsFile 可指定初始点",
-    "description": "参数由专用字典定义，-pointsFile 可指定初始点。",
+    "title": "foamyQuadMesh · 生成以四边形为主的二维网格",
+    "description": "生成以四边形为主的二维网格。",
     "example": "foamyQuadMesh",
     "details": "参数由专用字典定义，-pointsFile 可指定初始点。",
     "category": "前处理",
@@ -2316,8 +2316,8 @@
   },
   {
     "name": "surfaceAdd",
-    "title": "surfaceAdd · 连接两个表面数据集，不执行几何布尔并集",
-    "description": "连接两个表面数据集，不执行几何布尔并集。",
+    "title": "surfaceAdd · 合并两个表面网格的数据，并合并重合的顶点",
+    "description": "合并两个表面网格的数据，并合并重合的顶点。",
     "example": "surfaceAdd housing.stl rotor.stl assembly.stl",
     "details": "连接两个表面数据集，不执行几何布尔并集。",
     "category": "前处理",
@@ -2383,8 +2383,8 @@
   },
   {
     "name": "surfaceBooleanFeatures",
-    "title": "surfaceBooleanFeatures · 支持 intersection、union 和 difference，相关构建可依赖 CGAL",
-    "description": "支持 intersection、union 和 difference，相关构建可依赖 CGAL。",
+    "title": "surfaceBooleanFeatures · 提取两个表面进行并集、交集或差集运算时产生的交线特征",
+    "description": "提取两个表面进行并集、交集或差集运算时产生的交线特征。",
     "example": "surfaceBooleanFeatures union body.stl boss.stl",
     "details": "支持 intersection、union 和 difference，相关构建可依赖 CGAL。",
     "category": "前处理",
@@ -2522,8 +2522,8 @@
   },
   {
     "name": "surfaceClean",
-    "title": "surfaceClean · 长度和质量阈值按几何尺度设置；清理会改变局部表面细节",
-    "description": "长度和质量阈值按几何尺度设置；清理会改变局部表面细节。",
+    "title": "surfaceClean · 清理表面网格中的短边和劣质三角形",
+    "description": "清理表面网格中的短边和劣质三角形。",
     "example": "surfaceClean raw.stl 1e-6 1e-6 clean.stl",
     "details": "长度和质量阈值按几何尺度设置；清理会改变局部表面细节。",
     "category": "前处理",
@@ -2589,8 +2589,8 @@
   },
   {
     "name": "surfaceCoarsen",
-    "title": "surfaceCoarsen · 简化因子取值范围为 [0,1)，简化后检查几何完整性",
-    "description": "简化因子取值范围为 [0,1)，简化后检查几何完整性。",
+    "title": "surfaceCoarsen · 减少三角形数量，将表面网格粗化",
+    "description": "减少三角形数量，将表面网格粗化。",
     "example": "surfaceCoarsen fine.stl 0.8 coarse80.stl",
     "details": "简化因子取值范围为 [0,1)，简化后检查几何完整性。",
     "category": "前处理",
@@ -2653,8 +2653,8 @@
   },
   {
     "name": "surfaceConvert",
-    "title": "surfaceConvert · -scale 指定几何缩放系数，按输入与输出长度单位换算",
-    "description": "-scale 指定几何缩放系数，按输入与输出长度单位换算。",
+    "title": "surfaceConvert · 转换表面网格的文件格式，并可调整几何尺寸",
+    "description": "转换表面网格的文件格式，并可调整几何尺寸。",
     "example": "surfaceConvert body.stl body.obj",
     "details": "-scale 指定几何缩放系数，按输入与输出长度单位换算。",
     "category": "前处理",
@@ -2724,8 +2724,8 @@
   },
   {
     "name": "surfaceFeatureConvert",
-    "title": "surfaceFeatureConvert · 输入和输出采用该程序支持的边线格式",
-    "description": "输入和输出采用该程序支持的边线格式。",
+    "title": "surfaceFeatureConvert · 在不同的特征边线文件格式之间转换",
+    "description": "在不同的特征边线文件格式之间转换。",
     "example": "surfaceFeatureConvert constant/triSurface/body.eMesh bodyEdges.obj",
     "details": "输入和输出采用该程序支持的边线格式。",
     "category": "前处理",
@@ -2859,8 +2859,8 @@
   },
   {
     "name": "surfaceFind",
-    "title": "surfaceFind · 用于定位和检查表面坐标",
-    "description": "用于定位和检查表面坐标。",
+    "title": "surfaceFind · 查找表面网格中距离指定位置最近的面和顶点",
+    "description": "查找表面网格中距离指定位置最近的面和顶点。",
     "example": "surfaceFind body.stl",
     "details": "用于定位和检查表面坐标。",
     "category": "前处理",
@@ -2925,8 +2925,8 @@
   },
   {
     "name": "surfaceHookUp",
-    "title": "surfaceHookUp · 连接规则和输入表面由相应字典指定",
-    "description": "连接规则和输入表面由相应字典指定。",
+    "title": "surfaceHookUp · 连接距离接近的开放边缘，缝合表面网格",
+    "description": "连接距离接近的开放边缘，缝合表面网格。",
     "example": "surfaceHookUp 1e-5",
     "details": "连接规则和输入表面由相应字典指定。",
     "category": "前处理",
@@ -2990,8 +2990,8 @@
   },
   {
     "name": "surfaceInertia",
-    "title": "surfaceInertia · 按选项采用实体或薄壳模型，密度单位与几何长度单位保持一致",
-    "description": "按选项采用实体或薄壳模型，密度单位与几何长度单位保持一致。",
+    "title": "surfaceInertia · 根据表面几何计算实体或薄壳的惯性张量、主轴和主惯性矩",
+    "description": "根据表面几何计算实体或薄壳的惯性张量、主轴和主惯性矩。",
     "example": "surfaceInertia body.stl",
     "details": "按选项采用实体或薄壳模型，密度单位与几何长度单位保持一致。",
     "category": "前处理",
@@ -3056,8 +3056,8 @@
   },
   {
     "name": "surfaceInflate",
-    "title": "surfaceInflate · 安全因子范围为 [1,10]，膨胀后检查表面自相交",
-    "description": "安全因子范围为 [1,10]，膨胀后检查表面自相交。",
+    "title": "surfaceInflate · 沿表面法向移动顶点，生成膨胀后的表面",
+    "description": "沿表面法向移动顶点，生成膨胀后的表面。",
     "example": "surfaceInflate body.stl 0.001 1.2",
     "details": "安全因子范围为 [1,10]，膨胀后检查表面自相交。",
     "category": "前处理",
@@ -3123,8 +3123,8 @@
   },
   {
     "name": "surfaceLambdaMuSmooth",
-    "title": "surfaceLambdaMuSmooth · lambda 和 mu 均采用该程序定义的 [0,1] 系数",
-    "description": "lambda 和 mu 均采用该程序定义的 [0,1] 系数。",
+    "title": "surfaceLambdaMuSmooth · 通过 lambda/mu 平滑减少表面起伏，并可固定特征点",
+    "description": "通过 lambda/mu 平滑减少表面起伏，并可固定特征点。",
     "example": "surfaceLambdaMuSmooth raw.stl 0.2 0 5 smooth5.stl",
     "details": "lambda 和 mu 均采用该程序定义的 [0,1] 系数。",
     "category": "前处理",
@@ -3179,8 +3179,8 @@
   },
   {
     "name": "surfaceMeshConvert",
-    "title": "surfaceMeshConvert · 采用 surfaceMesh 读写接口",
-    "description": "采用 surfaceMesh 读写接口。",
+    "title": "surfaceMeshConvert · 转换表面网格格式，并可进行缩放、旋转和平移",
+    "description": "转换表面网格格式，并可进行缩放、旋转和平移。",
     "example": "surfaceMeshConvert body.obj body.stl",
     "details": "采用 surfaceMesh 读写接口。",
     "category": "前处理",
@@ -3253,8 +3253,8 @@
   },
   {
     "name": "surfaceMeshExport",
-    "title": "surfaceMeshExport · 输入为算例中已有的 surfaceMesh",
-    "description": "输入为算例中已有的 surfaceMesh。",
+    "title": "surfaceMeshExport · 将 OpenFOAM 的 surfMesh 导出为其他软件支持的表面格式",
+    "description": "将 OpenFOAM 的 surfMesh 导出为其他软件支持的表面格式。",
     "example": "surfaceMeshExport body.obj",
     "details": "输入为算例中已有的 surfaceMesh。",
     "category": "前处理",
@@ -3326,8 +3326,8 @@
   },
   {
     "name": "surfaceMeshExtract",
-    "title": "surfaceMeshExtract · -patches 指定网格中已有的边界名称",
-    "description": "-patches 指定网格中已有的边界名称。",
+    "title": "surfaceMeshExtract · 从体网格的边界或 faceZone 中提取表面网格",
+    "description": "从体网格的边界或 faceZone 中提取表面网格。",
     "example": "surfaceMeshExtract boundary.obj -constant",
     "details": "-patches 指定网格中已有的边界名称。",
     "category": "前处理",
@@ -3410,8 +3410,8 @@
   },
   {
     "name": "surfaceMeshImport",
-    "title": "surfaceMeshImport · 导入对象为表面网格，-name 指定名称",
-    "description": "导入对象为表面网格，-name 指定名称。",
+    "title": "surfaceMeshImport · 将外部表面网格导入为 OpenFOAM 的 surfMesh",
+    "description": "将外部表面网格导入为 OpenFOAM 的 surfMesh。",
     "example": "surfaceMeshImport body.stl",
     "details": "导入对象为表面网格，-name 指定名称。",
     "category": "前处理",
@@ -3483,8 +3483,8 @@
   },
   {
     "name": "surfaceMeshInfo",
-    "title": "surfaceMeshInfo · -areas 输出面积统计，可用于核查几何尺度",
-    "description": "-areas 输出面积统计，可用于核查几何尺度。",
+    "title": "surfaceMeshInfo · 显示表面网格的点数、面数、区域和面积等信息",
+    "description": "显示表面网格的点数、面数、区域和面积等信息。",
     "example": "surfaceMeshInfo body.stl",
     "details": "-areas 输出面积统计，可用于核查几何尺度。",
     "category": "前处理",
@@ -3549,8 +3549,8 @@
   },
   {
     "name": "surfaceOrient",
-    "title": "surfaceOrient · 默认按物体外部观察点定向，-inside 将指定点按内部点处理",
-    "description": "默认按物体外部观察点定向，-inside 将指定点按内部点处理。",
+    "title": "surfaceOrient · 根据参考点统一表面三角形的法向方向",
+    "description": "根据参考点统一表面三角形的法向方向。",
     "example": "surfaceOrient body.stl '(10 10 10)' body-oriented.stl",
     "details": "默认按物体外部观察点定向，-inside 将指定点按内部点处理。",
     "category": "前处理",
@@ -3615,8 +3615,8 @@
   },
   {
     "name": "surfacePatch",
-    "title": "surfacePatch · 读取 surfacePatchDict",
-    "description": "读取 surfacePatchDict。",
+    "title": "surfacePatch · 按几何选择规则修改表面网格的区域划分",
+    "description": "按几何选择规则修改表面网格的区域划分。",
     "example": "foamDictionary system/surfacePatchDict -entry 'surfaces/body.stl' -set '{ type autoPatch; featureAngle 45; }'\nsurfacePatch",
     "details": "读取 surfacePatchDict。",
     "category": "前处理",
@@ -3679,8 +3679,8 @@
   },
   {
     "name": "surfacePointMerge",
-    "title": "surfacePointMerge · 距离阈值采用表面坐标的长度单位",
-    "description": "距离阈值采用表面坐标的长度单位。",
+    "title": "surfacePointMerge · 合并距离小于指定阈值的表面顶点",
+    "description": "合并距离小于指定阈值的表面顶点。",
     "example": "surfacePointMerge body.stl 1e-8 body-merged.stl",
     "details": "距离阈值采用表面坐标的长度单位。",
     "category": "前处理",
@@ -3743,8 +3743,8 @@
   },
   {
     "name": "surfaceRedistributePar",
-    "title": "surfaceRedistributePar · 示例采用 4 个进程，并读取 constant/triSurface/body.stl",
-    "description": "示例采用 4 个进程，并读取 constant/triSurface/body.stl。分配方式包括 follow、independent、distributed 和 frozen；follow 按网格包围盒划分。",
+    "title": "surfaceRedistributePar · 按并行分区重新分配表面三角形，使各进程获得所需几何数据",
+    "description": "按并行分区重新分配表面三角形，使各进程获得所需几何数据。",
     "example": "mpirun -np 2 surfaceRedistributePar body.stl follow -parallel",
     "details": "示例采用 4 个进程，并读取 constant/triSurface/body.stl。分配方式包括 follow、independent、distributed 和 frozen；follow 按网格包围盒划分。",
     "category": "前处理",
@@ -3815,8 +3815,8 @@
   },
   {
     "name": "surfaceRefineRedGreen",
-    "title": "surfaceRefineRedGreen · -steps 指定细分次数",
-    "description": "-steps 指定细分次数。",
+    "title": "surfaceRefineRedGreen · 细分指定表面三角形，并调整相邻三角形以保持连接连续",
+    "description": "细分指定表面三角形，并调整相邻三角形以保持连接连续。",
     "example": "surfaceRefineRedGreen body.stl body-refined.stl",
     "details": "-steps 指定细分次数。",
     "category": "前处理",
@@ -3879,8 +3879,8 @@
   },
   {
     "name": "surfaceSplitByPatch",
-    "title": "surfaceSplitByPatch · -patches 指定待拆分区域",
-    "description": "-patches 指定待拆分区域。",
+    "title": "surfaceSplitByPatch · 将表面网格的各个区域分别保存为独立文件",
+    "description": "将表面网格的各个区域分别保存为独立文件。",
     "example": "surfaceSplitByPatch assembly.stl",
     "details": "-patches 指定待拆分区域。",
     "category": "前处理",
@@ -3945,8 +3945,8 @@
   },
   {
     "name": "surfaceSplitByTopology",
-    "title": "surfaceSplitByTopology · 用于分离拓扑不连通的部件",
-    "description": "用于分离拓扑不连通的部件。",
+    "title": "surfaceSplitByTopology · 按边的连接关系识别并剥离表面中的挡板部分",
+    "description": "按边的连接关系识别并剥离表面中的挡板部分。",
     "example": "surfaceSplitByTopology body-with-baffle.stl body-separated.stl",
     "details": "用于分离拓扑不连通的部件。",
     "category": "前处理",
@@ -4000,8 +4000,8 @@
   },
   {
     "name": "surfaceSplitNonManifolds",
-    "title": "surfaceSplitNonManifolds · 拆分后使用 surfaceCheck 检查表面",
-    "description": "拆分后使用 surfaceCheck 检查表面。",
+    "title": "surfaceSplitNonManifolds · 拆分多重连接的表面边，分离非流形连接",
+    "description": "拆分多重连接的表面边，分离非流形连接。",
     "example": "surfaceSplitNonManifolds junction.stl junction-split.stl",
     "details": "拆分后使用 surfaceCheck 检查表面。",
     "category": "前处理",
@@ -4064,8 +4064,8 @@
   },
   {
     "name": "surfaceSubset",
-    "title": "surfaceSubset · 选择规则由输入字典定义",
-    "description": "选择规则由输入字典定义。",
+    "title": "surfaceSubset · 按选择规则从三角表面中提取所需区域",
+    "description": "按选择规则从三角表面中提取所需区域。",
     "example": "cat > subsetDict <<'EOF'\nlocalPoints ();\nedges ();\nfaces (0 1 2);\nzone ();\naddFaceNeighbours no;\nEOF\nsurfaceSubset subsetDict body.stl selected.stl",
     "details": "选择规则由输入字典定义。",
     "category": "前处理",
@@ -4127,8 +4127,8 @@
   },
   {
     "name": "surfaceToPatch",
-    "title": "surfaceToPatch · 修改后同步检查场文件中的边界条目",
-    "description": "修改后同步检查场文件中的边界条目。",
+    "title": "surfaceToPatch · 根据输入表面的区域划分，重新分配体网格的边界面",
+    "description": "根据输入表面的区域划分，重新分配体网格的边界面。",
     "example": "surfaceToPatch constant/triSurface/body.stl",
     "details": "修改后同步检查场文件中的边界条目。",
     "category": "前处理",
@@ -4192,8 +4192,8 @@
   },
   {
     "name": "surfaceTransformPoints",
-    "title": "surfaceTransformPoints · -read-scale 和 -write-scale 分别指定读取和写出时的缩放系数",
-    "description": "-read-scale 和 -write-scale 分别指定读取和写出时的缩放系数。",
+    "title": "surfaceTransformPoints · 对表面网格进行平移、旋转或缩放",
+    "description": "对表面网格进行平移、旋转或缩放。",
     "example": "surfaceTransformPoints body-mm.stl body-m.stl -read-scale 0.001",
     "details": "-read-scale 和 -write-scale 分别指定读取和写出时的缩放系数。",
     "category": "前处理",
@@ -4272,8 +4272,8 @@
   },
   {
     "name": "ansysToFoam",
-    "title": "ansysToFoam · 输入采用转换器支持的 ANSYS 文件格式",
-    "description": "输入采用转换器支持的 ANSYS 文件格式。",
+    "title": "ansysToFoam · 将支持的 ANSYS 网格文件转换为 OpenFOAM 体网格",
+    "description": "将支持的 ANSYS 网格文件转换为 OpenFOAM 体网格。",
     "example": "ansysToFoam mesh.ans",
     "details": "输入采用转换器支持的 ANSYS 文件格式。",
     "category": "前处理",
@@ -4336,8 +4336,8 @@
   },
   {
     "name": "ccmToFoam",
-    "title": "ccmToFoam · 需编译 CCM 支持",
-    "description": "需编译 CCM 支持。-list 列出文件内容，移除该选项后执行转换。",
+    "title": "ccmToFoam · 将 STAR-CD 或 STAR-CCM+ 的 CCM 文件中的网格导入 OpenFOAM",
+    "description": "将 STAR-CD 或 STAR-CCM+ 的 CCM 文件中的网格导入 OpenFOAM。",
     "example": "ccmToFoam mesh.ccm",
     "details": "需编译 CCM 支持。-list 列出文件内容，移除该选项后执行转换。",
     "category": "前处理",
@@ -4384,8 +4384,8 @@
   },
   {
     "name": "foamToCcm",
-    "title": "foamToCcm · 需编译 CCM 库支持",
-    "description": "需编译 CCM 库支持。",
+    "title": "foamToCcm · 将 OpenFOAM 网格及计算结果导出为 CCM 格式",
+    "description": "将 OpenFOAM 网格及计算结果导出为 CCM 格式。",
     "example": "foamToCcm -latestTime",
     "details": "需编译 CCM 库支持。",
     "category": "前处理",
@@ -4432,8 +4432,8 @@
   },
   {
     "name": "cfx4ToFoam",
-    "title": "cfx4ToFoam · -scale 指定长度缩放系数",
-    "description": "-scale 指定长度缩放系数。",
+    "title": "cfx4ToFoam · 将 CFX4 网格转换为 OpenFOAM 体网格",
+    "description": "将 CFX4 网格转换为 OpenFOAM 体网格。",
     "example": "cfx4ToFoam mesh.geo",
     "details": "-scale 指定长度缩放系数。",
     "category": "前处理",
@@ -4496,8 +4496,8 @@
   },
   {
     "name": "datToFoam",
-    "title": "datToFoam · 输入内容须符合该转换器定义的 DAT 网格结构",
-    "description": "输入内容须符合该转换器定义的 DAT 网格结构。",
+    "title": "datToFoam · 从指定 DAT 格式中提取网格点坐标，供 blockMesh 建网使用",
+    "description": "从指定 DAT 格式中提取网格点坐标，供 blockMesh 建网使用。",
     "example": "blockMesh\ndatToFoam biconic.dat",
     "details": "输入内容须符合该转换器定义的 DAT 网格结构。",
     "category": "前处理",
@@ -4559,8 +4559,8 @@
   },
   {
     "name": "ensightToFoam",
-    "title": "ensightToFoam · 转换范围为几何网格，物理模型在目标算例中配置",
-    "description": "转换范围为几何网格，物理模型在目标算例中配置。",
+    "title": "ensightToFoam · 将 EnSight 几何网格转换为 OpenFOAM 体网格",
+    "description": "将 EnSight 几何网格转换为 OpenFOAM 体网格。",
     "example": "ensightToFoam mesh.geo",
     "details": "转换范围为几何网格，物理模型在目标算例中配置。",
     "category": "前处理",
@@ -4625,8 +4625,8 @@
   },
   {
     "name": "fireToFoam",
-    "title": "fireToFoam · 转换后检查长度单位",
-    "description": "转换后检查长度单位。",
+    "title": "fireToFoam · 将 AVL/FIRE 多面体网格转换为 OpenFOAM 体网格",
+    "description": "将 AVL/FIRE 多面体网格转换为 OpenFOAM 体网格。",
     "example": "fireToFoam mesh.fpma",
     "details": "转换后检查长度单位。",
     "category": "前处理",
@@ -4691,8 +4691,8 @@
   },
   {
     "name": "fluent3DMeshToFoam",
-    "title": "fluent3DMeshToFoam · 用于 Fluent 三维网格的专用转换，按输入格式选择",
-    "description": "用于 Fluent 三维网格的专用转换，按输入格式选择。",
+    "title": "fluent3DMeshToFoam · 将 Fluent 三维网格文件转换为 OpenFOAM 体网格",
+    "description": "将 Fluent 三维网格文件转换为 OpenFOAM 体网格。",
     "example": "fluent3DMeshToFoam mesh.msh",
     "details": "用于 Fluent 三维网格的专用转换，按输入格式选择。",
     "category": "前处理",
@@ -4758,8 +4758,8 @@
   },
   {
     "name": "fluentMeshToFoam",
-    "title": "fluentMeshToFoam · 输入采用 Fluent mesh 格式；Gmsh 文件使用 gmshToFoam 转换",
-    "description": "输入采用 Fluent mesh 格式；Gmsh 文件使用 gmshToFoam 转换。",
+    "title": "fluentMeshToFoam · 将 Fluent 网格文件转换为 OpenFOAM 体网格",
+    "description": "将 Fluent 网格文件转换为 OpenFOAM 体网格。",
     "example": "fluentMeshToFoam mesh.msh",
     "details": "输入采用 Fluent mesh 格式；Gmsh 文件使用 gmshToFoam 转换。",
     "category": "前处理",
@@ -4824,8 +4824,8 @@
   },
   {
     "name": "foamMeshToFluent",
-    "title": "foamMeshToFluent · 导出范围为网格数据，求解配置在 Fluent 中设置",
-    "description": "导出范围为网格数据，求解配置在 Fluent 中设置。",
+    "title": "foamMeshToFluent · 将 OpenFOAM 体网格导出为 Fluent 网格文件",
+    "description": "将 OpenFOAM 体网格导出为 Fluent 网格文件。",
     "example": "foamMeshToFluent",
     "details": "导出范围为网格数据，求解配置在 Fluent 中设置。",
     "category": "前处理",
@@ -4887,8 +4887,8 @@
   },
   {
     "name": "foamToFireMesh",
-    "title": "foamToFireMesh · -scale 指定长度缩放系数",
-    "description": "-scale 指定长度缩放系数。",
+    "title": "foamToFireMesh · 将 OpenFOAM 网格导出为 AVL/FIRE 的 FPMA 格式",
+    "description": "将 OpenFOAM 网格导出为 AVL/FIRE 的 FPMA 格式。",
     "example": "foamToFireMesh -constant",
     "details": "-scale 指定长度缩放系数。",
     "category": "前处理",
@@ -4956,8 +4956,8 @@
   },
   {
     "name": "foamToStarMesh",
-    "title": "foamToStarMesh · 输出 bnd、cel 和 vrt 等文件",
-    "description": "输出 bnd、cel 和 vrt 等文件。",
+    "title": "foamToStarMesh · 将 OpenFOAM 网格导出为 STAR-CD/PROSTAR 的 BND、CEL 和 VRT 文件",
+    "description": "将 OpenFOAM 网格导出为 STAR-CD/PROSTAR 的 BND、CEL 和 VRT 文件。",
     "example": "foamToStarMesh -constant",
     "details": "输出 bnd、cel 和 vrt 等文件。",
     "category": "前处理",
@@ -5025,8 +5025,8 @@
   },
   {
     "name": "foamToSurface",
-    "title": "foamToSurface · 用于几何检查及外部软件数据交换",
-    "description": "用于几何检查及外部软件数据交换。",
+    "title": "foamToSurface · 提取 OpenFOAM 网格的外边界，并导出为表面网格文件",
+    "description": "提取 OpenFOAM 网格的外边界，并导出为表面网格文件。",
     "example": "foamToSurface boundary.stl -constant",
     "details": "用于几何检查及外部软件数据交换。",
     "category": "前处理",
@@ -5094,8 +5094,8 @@
   },
   {
     "name": "gambitToFoam",
-    "title": "gambitToFoam · 转换后运行 checkMesh",
-    "description": "转换后运行 checkMesh。",
+    "title": "gambitToFoam · 将 GAMBIT 网格转换为 OpenFOAM 体网格",
+    "description": "将 GAMBIT 网格转换为 OpenFOAM 体网格。",
     "example": "gambitToFoam mesh.neu",
     "details": "转换后运行 checkMesh。",
     "category": "前处理",
@@ -5158,8 +5158,8 @@
   },
   {
     "name": "gmshToFoam",
-    "title": "gmshToFoam · 常用输入为 ASCII MSH2",
-    "description": "常用输入为 ASCII MSH2。转换后检查物理组与边界名称。",
+    "title": "gmshToFoam · 将 Gmsh 的 MSH 网格及物理分组导入 OpenFOAM",
+    "description": "将 Gmsh 的 MSH 网格及物理分组导入 OpenFOAM。",
     "example": "gmshToFoam mesh.msh",
     "details": "常用输入为 ASCII MSH2。转换后检查物理组与边界名称。",
     "category": "前处理",
@@ -5223,8 +5223,8 @@
   },
   {
     "name": "ideasUnvToFoam",
-    "title": "ideasUnvToFoam · 转换后检查边界、长度单位和单元类型",
-    "description": "转换后检查边界、长度单位和单元类型。",
+    "title": "ideasUnvToFoam · 将 I-DEAS UNV 网格及其边界分组导入 OpenFOAM",
+    "description": "将 I-DEAS UNV 网格及其边界分组导入 OpenFOAM。",
     "example": "ideasUnvToFoam mesh.unv",
     "details": "转换后检查边界、长度单位和单元类型。",
     "category": "前处理",
@@ -5287,8 +5287,8 @@
   },
   {
     "name": "kivaToFoam",
-    "title": "kivaToFoam · 输入为 KIVA3v 发动机网格",
-    "description": "输入为 KIVA3v 发动机网格。",
+    "title": "kivaToFoam · 将 KIVA3v 发动机网格转换为 OpenFOAM 体网格",
+    "description": "将 KIVA3v 发动机网格转换为 OpenFOAM 体网格。",
     "example": "kivaToFoam",
     "details": "输入为 KIVA3v 发动机网格。",
     "category": "前处理",
@@ -5353,8 +5353,8 @@
   },
   {
     "name": "mshToFoam",
-    "title": "mshToFoam · 输入须符合该转换器定义的 MSH 结构；Gmsh 网格使用 gmshToFoam",
-    "description": "输入须符合该转换器定义的 MSH 结构；Gmsh 网格使用 gmshToFoam。",
+    "title": "mshToFoam · 将 Adventure 系统的 MSH 网格转换为 OpenFOAM 体网格",
+    "description": "将 Adventure 系统的 MSH 网格转换为 OpenFOAM 体网格。",
     "example": "mshToFoam mesh.msh",
     "details": "输入须符合该转换器定义的 MSH 结构；Gmsh 网格使用 gmshToFoam。",
     "category": "前处理",
@@ -5417,8 +5417,8 @@
   },
   {
     "name": "netgenNeutralToFoam",
-    "title": "netgenNeutralToFoam · 转换后检查边界划分",
-    "description": "转换后检查边界划分。",
+    "title": "netgenNeutralToFoam · 将 Netgen Neutral 网格转换为 OpenFOAM 体网格",
+    "description": "将 Netgen Neutral 网格转换为 OpenFOAM 体网格。",
     "example": "netgenNeutralToFoam mesh.neu",
     "details": "转换后检查边界划分。",
     "category": "前处理",
@@ -5488,8 +5488,8 @@
   },
   {
     "name": "plot3dToFoam",
-    "title": "plot3dToFoam · -singleBlock 和 -2D 等选项用于指定输入网格形式",
-    "description": "-singleBlock 和 -2D 等选项用于指定输入网格形式。",
+    "title": "plot3dToFoam · 将 PLOT3D 结构网格转换为 OpenFOAM 体网格",
+    "description": "将 PLOT3D 结构网格转换为 OpenFOAM 体网格。",
     "example": "plot3dToFoam mesh.xyz",
     "details": "-singleBlock 和 -2D 等选项用于指定输入网格形式。",
     "category": "前处理",
@@ -5554,8 +5554,8 @@
   },
   {
     "name": "star4ToFoam",
-    "title": "star4ToFoam · 按文件名前缀读取 mesh.vrt、mesh.cel 等配套文件",
-    "description": "按文件名前缀读取 mesh.vrt、mesh.cel 等配套文件。",
+    "title": "star4ToFoam · 将 STAR-CD/PROSTAR v4 网格转换为 OpenFOAM 体网格",
+    "description": "将 STAR-CD/PROSTAR v4 网格转换为 OpenFOAM 体网格。",
     "example": "star4ToFoam mesh",
     "details": "按文件名前缀读取 mesh.vrt、mesh.cel 等配套文件。",
     "category": "前处理",
@@ -5620,8 +5620,8 @@
   },
   {
     "name": "tetgenToFoam",
-    "title": "tetgenToFoam · 按前缀读取配套的 node、ele 和 face 等文件",
-    "description": "按前缀读取配套的 node、ele 和 face 等文件。",
+    "title": "tetgenToFoam · 将 TetGen 的节点、单元和边界面文件转换为 OpenFOAM 网格",
+    "description": "将 TetGen 的节点、单元和边界面文件转换为 OpenFOAM 网格。",
     "example": "tetgenToFoam mesh.1",
     "details": "按前缀读取配套的 node、ele 和 face 等文件。",
     "category": "前处理",
@@ -5692,8 +5692,8 @@
   },
   {
     "name": "vtkUnstructuredToFoam",
-    "title": "vtkUnstructuredToFoam · 输入采用旧式 ASCII VTK 格式",
-    "description": "输入采用旧式 ASCII VTK 格式。",
+    "title": "vtkUnstructuredToFoam · 将旧式 ASCII VTK 非结构网格转换为 OpenFOAM 体网格",
+    "description": "将旧式 ASCII VTK 非结构网格转换为 OpenFOAM 体网格。",
     "example": "vtkUnstructuredToFoam mesh.vtk",
     "details": "输入采用旧式 ASCII VTK 格式。",
     "category": "前处理",
@@ -5756,8 +5756,8 @@
   },
   {
     "name": "writeMeshObj",
-    "title": "writeMeshObj · -cell、-face、-point 和 -cellSet 等选项指定诊断对象",
-    "description": "-cell、-face、-point 和 -cellSet 等选项指定诊断对象。",
+    "title": "writeMeshObj · 将网格点、面中心、单元中心和指定边界导出为 OBJ 文件，便于检查几何",
+    "description": "将网格点、面中心、单元中心和指定边界导出为 OBJ 文件，便于检查几何。",
     "example": "writeMeshObj -cell 0 -constant",
     "details": "-cell、-face、-point 和 -cellSet 等选项指定诊断对象。",
     "category": "前处理",
@@ -5839,8 +5839,8 @@
   },
   {
     "name": "PDRMesh",
-    "title": "PDRMesh · 输入包括 blockedCells、blockedFaces 等集合",
-    "description": "输入包括 blockedCells、blockedFaces 等集合。",
+    "title": "PDRMesh · 按阻塞单元和阻塞面集合修改网格，并更新 PDR 算例的场数据",
+    "description": "按阻塞单元和阻塞面集合修改网格，并更新 PDR 算例的场数据。",
     "example": "PDRMesh",
     "details": "输入包括 blockedCells、blockedFaces 等集合。",
     "category": "前处理",
@@ -5911,8 +5911,8 @@
   },
   {
     "name": "collapseEdges",
-    "title": "collapseEdges · 读取 collapseDict 或指定字典，折叠操作可改变网格拓扑",
-    "description": "读取 collapseDict 或指定字典，折叠操作可改变网格拓扑。",
+    "title": "collapseEdges · 折叠短边、合并共线边并处理退化面，简化网格",
+    "description": "折叠短边、合并共线边并处理退化面，简化网格。",
     "example": "collapseEdges",
     "details": "读取 collapseDict 或指定字典，折叠操作可改变网格拓扑。",
     "category": "前处理",
@@ -5990,8 +5990,8 @@
   },
   {
     "name": "combinePatchFaces",
-    "title": "combinePatchFaces · 通过 concaveAngle 及质量约束控制合并",
-    "description": "通过 concaveAngle 及质量约束控制合并。",
+    "title": "combinePatchFaces · 将同一单元上符合角度和质量要求的相邻边界面合并",
+    "description": "将同一单元上符合角度和质量要求的相邻边界面合并。",
     "example": "combinePatchFaces 5",
     "details": "通过 concaveAngle 及质量约束控制合并。",
     "category": "前处理",
@@ -6064,8 +6064,8 @@
   },
   {
     "name": "modifyMesh",
-    "title": "modifyMesh · 按配置字典执行拓扑修改",
-    "description": "按配置字典执行拓扑修改。",
+    "title": "modifyMesh · 按字典设置修改网格中的点、面和单元连接关系",
+    "description": "按字典设置修改网格中的点、面和单元连接关系。",
     "example": "foamDictionary system/modifyMeshDict -entry pointsToMove -set '(((0 0 0) (-0.01 0 0)))'\nmodifyMesh",
     "details": "按配置字典执行拓扑修改。",
     "category": "前处理",
@@ -6137,8 +6137,8 @@
   },
   {
     "name": "refineHexMesh",
-    "title": "refineHexMesh · 待细化集合可通过 topoSet 建立",
-    "description": "待细化集合可通过 topoSet 建立。",
+    "title": "refineHexMesh · 将指定单元集合中的六面体按 2×2×2 方式细分",
+    "description": "将指定单元集合中的六面体按 2×2×2 方式细分。",
     "example": "refineHexMesh refineCells",
     "details": "待细化集合可通过 topoSet 建立。",
     "category": "前处理",
@@ -6211,8 +6211,8 @@
   },
   {
     "name": "refineWallLayer",
-    "title": "refineWallLayer · 输入比例指定边的细分位置",
-    "description": "输入比例指定边的细分位置。",
+    "title": "refineWallLayer · 按指定厚度比例细分靠近选定边界的网格单元",
+    "description": "按指定厚度比例细分靠近选定边界的网格单元。",
     "example": "refineWallLayer '(walls)' 0.5",
     "details": "输入比例指定边的细分位置。",
     "category": "前处理",
@@ -6284,8 +6284,8 @@
   },
   {
     "name": "refinementLevel",
-    "title": "refinementLevel · 用于贴体变形前的网格",
-    "description": "用于贴体变形前的网格。",
+    "title": "refinementLevel · 识别笛卡尔网格的细化层级，并找出需要补充细化的单元",
+    "description": "识别笛卡尔网格的细化层级，并找出需要补充细化的单元。",
     "example": "refinementLevel",
     "details": "用于贴体变形前的网格。",
     "category": "前处理",
@@ -6356,8 +6356,8 @@
   },
   {
     "name": "removeFaces",
-    "title": "removeFaces · 输入为预先建立的 faceSet",
-    "description": "输入为预先建立的 faceSet。",
+    "title": "removeFaces · 移除选定内部面，将面两侧的单元合并",
+    "description": "移除选定内部面，将面两侧的单元合并。",
     "example": "removeFaces internalFaces",
     "details": "输入为预先建立的 faceSet。",
     "category": "前处理",
@@ -6428,8 +6428,8 @@
   },
   {
     "name": "selectCells",
-    "title": "selectCells · 读取选择字典，生成 selected 集合",
-    "description": "读取选择字典，生成 selected 集合。",
+    "title": "selectCells · 按字典中的几何条件选择网格单元，生成单元集合",
+    "description": "按字典中的几何条件选择网格单元，生成单元集合。",
     "example": "selectCells",
     "details": "读取选择字典，生成 selected 集合。",
     "category": "前处理",
@@ -6491,8 +6491,8 @@
   },
   {
     "name": "snappyRefineMesh",
-    "title": "snappyRefineMesh · 输入为待处理表面及细化字典",
-    "description": "输入为待处理表面及细化字典。",
+    "title": "snappyRefineMesh · 细化靠近指定几何表面的网格单元",
+    "description": "细化靠近指定几何表面的网格单元。",
     "example": "snappyRefineMesh",
     "details": "输入为待处理表面及细化字典。",
     "category": "前处理",
@@ -6554,8 +6554,8 @@
   },
   {
     "name": "splitCells",
-    "title": "splitCells · 用于网格单元的拓扑修复",
-    "description": "用于网格单元的拓扑修复。",
+    "title": "splitCells · 按面夹角等条件拆分单元，处理形状不合适的网格单元",
+    "description": "按面夹角等条件拆分单元，处理形状不合适的网格单元。",
     "example": "splitCells 180",
     "details": "用于网格单元的拓扑修复。",
     "category": "前处理",
@@ -6621,8 +6621,8 @@
   },
   {
     "name": "attachMesh",
-    "title": "attachMesh · 用于相应的拓扑连接流程",
-    "description": "用于相应的拓扑连接流程。",
+    "title": "attachMesh · 按网格修改器的设置，连接拓扑上分离的网格部分",
+    "description": "按网格修改器的设置，连接拓扑上分离的网格部分。",
     "example": "attachMesh",
     "details": "用于相应的拓扑连接流程。",
     "category": "前处理",
@@ -6685,8 +6685,8 @@
   },
   {
     "name": "autoPatch",
-    "title": "autoPatch · 重划边界后更新对应场边界",
-    "description": "重划边界后更新对应场边界。",
+    "title": "autoPatch · 根据面法向夹角自动将外边界划分为多个 patch",
+    "description": "根据面法向夹角自动将外边界划分为多个 patch。",
     "example": "autoPatch 45",
     "details": "重划边界后更新对应场边界。",
     "category": "前处理",
@@ -10548,8 +10548,8 @@
   },
   {
     "name": "foamJob",
-    "title": "foamJob · 默认日志名为 log",
-    "description": "默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。",
+    "title": "foamJob · 启动求解程序并保存运行日志，支持串行和并行计算",
+    "description": "启动求解程序并保存运行日志，支持串行和并行计算。",
     "example": "foamJob -case caseA icoFoam",
     "details": "默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。",
     "category": "求解与并行",
@@ -10610,8 +10610,8 @@
   },
   {
     "name": "foamEndJob",
-    "title": "foamEndJob · 需启用 runTimeModifiable",
-    "description": "需启用 runTimeModifiable。默认在下一写出时刻结束，-now 请求立即写出并结束；PID 使用实际进程号。",
+    "title": "foamEndJob · 修改正在运行算例的停止设置，使求解器写出结果并结束计算",
+    "description": "修改正在运行算例的停止设置，使求解器写出结果并结束计算。",
     "example": "foamEndJob -case caseA \"$solverPid\"",
     "details": "需启用 runTimeModifiable。默认在下一写出时刻结束，-now 请求立即写出并结束；PID 使用实际进程号。",
     "category": "求解与并行",
@@ -10661,8 +10661,8 @@
   },
   {
     "name": "foamCheckJobs",
-    "title": "foamCheckJobs · 通过 FOAM_JOB_DIR 中的作业记录检查状态，访问远程主机时使用 SSH",
-    "description": "通过 FOAM_JOB_DIR 中的作业记录检查状态，访问远程主机时使用 SSH。",
+    "title": "foamCheckJobs · 读取作业记录并检查本机或远程计算任务的运行状态",
+    "description": "读取作业记录并检查本机或远程计算任务的运行状态。",
     "example": "foamCheckJobs",
     "details": "通过 FOAM_JOB_DIR 中的作业记录检查状态，访问远程主机时使用 SSH。",
     "category": "求解与并行",
@@ -10707,8 +10707,8 @@
   },
   {
     "name": "foamPrintJobs",
-    "title": "foamPrintJobs · 与 foamCheckJobs 配合使用",
-    "description": "与 foamCheckJobs 配合使用。",
+    "title": "foamPrintJobs · 汇总显示正在运行和已经结束的 OpenFOAM 作业记录",
+    "description": "汇总显示正在运行和已经结束的 OpenFOAM 作业记录。",
     "example": "foamPrintJobs",
     "details": "与 foamCheckJobs 配合使用。",
     "category": "求解与并行",
@@ -10753,8 +10753,8 @@
   },
   {
     "name": "mpirunDebug",
-    "title": "mpirunDebug · 计算前完成分区",
-    "description": "计算前完成分区。图形调试模式需配置 xterm 及对应调试器。",
+    "title": "mpirunDebug · 在 MPI 并行运行中为各进程启动调试器",
+    "description": "在 MPI 并行运行中为各进程启动调试器。",
     "example": "cd caseA\nmpirunDebug -normal -np 2 icoFoam -parallel",
     "details": "计算前完成分区。图形调试模式需配置 xterm 及对应调试器。",
     "category": "求解与并行",
@@ -11461,8 +11461,8 @@
   },
   {
     "name": "foamSolverSweeps",
-    "title": "foamSolverSweeps · 启动后交互输入日志名，如 log.simpleFoam",
-    "description": "启动后交互输入日志名，如 log.simpleFoam。脚本按预设的旧式日志行格式提取统计量。",
+    "title": "foamSolverSweeps · 从求解日志中汇总代数求解器的迭代次数",
+    "description": "从求解日志中汇总代数求解器的迭代次数。",
     "example": "printf '%s\\n' caseA/log.icoFoam | foamSolverSweeps",
     "details": "启动后交互输入日志名，如 log.simpleFoam。脚本按预设的旧式日志行格式提取统计量。",
     "category": "后处理",
@@ -12305,8 +12305,8 @@
   },
   {
     "name": "foamSequenceVTKFiles",
-    "title": "foamSequenceVTKFiles · 生成的符号链接供 ParaView 识别时间序列",
-    "description": "生成的符号链接供 ParaView 识别时间序列。",
+    "title": "foamSequenceVTKFiles · 为 VTK 文件建立连续编号的链接，便于 ParaView 按时间序列读取",
+    "description": "为 VTK 文件建立连续编号的链接，便于 ParaView 按时间序列读取。",
     "example": "foamSequenceVTKFiles -case caseA",
     "details": "生成的符号链接供 ParaView 识别时间序列。",
     "category": "后处理",
@@ -12359,8 +12359,8 @@
   },
   {
     "name": "foamCreateVideo",
-    "title": "foamCreateVideo · 通过 ffmpeg 等工具处理图像序列，默认名称为 image.0000.png 等",
-    "description": "通过 ffmpeg 等工具处理图像序列，默认名称为 image.0000.png 等。-image 指定图像前缀。",
+    "title": "foamCreateVideo · 将连续编号的计算结果图片合成为视频",
+    "description": "将连续编号的计算结果图片合成为视频。",
     "example": "foamCreateVideo -tool=ffmpeg -dir frames",
     "details": "通过 ffmpeg 等工具处理图像序列，默认名称为 image.0000.png 等。-image 指定图像前缀。",
     "category": "后处理",
@@ -12415,8 +12415,8 @@
   },
   {
     "name": "foamCleanPolyMesh",
-    "title": "foamCleanPolyMesh · -dry-run 预览清理范围，移除该选项后执行删除",
-    "description": "-dry-run 预览清理范围，移除该选项后执行删除。",
+    "title": "foamCleanPolyMesh · 清理算例中的体网格及相关辅助文件",
+    "description": "清理算例中的体网格及相关辅助文件。",
     "example": "foamCleanPolyMesh -dry-run -case caseA",
     "details": "-dry-run 预览清理范围，移除该选项后执行删除。",
     "category": "后处理",
@@ -12467,8 +12467,8 @@
   },
   {
     "name": "foamCleanFaMesh",
-    "title": "foamCleanFaMesh · 对应 constant/finite-area/faMesh，-area-region 指定有限",
-    "description": "对应 constant/finite-area/faMesh，-area-region 指定有限面积区域。",
+    "title": "foamCleanFaMesh · 清理算例中的有限面积网格文件",
+    "description": "清理算例中的有限面积网格文件。",
     "example": "foamCleanFaMesh -dry-run -case caseA",
     "details": "对应 constant/finite-area/faMesh，-area-region 指定有限面积区域。",
     "category": "后处理",
@@ -12519,8 +12519,8 @@
   },
   {
     "name": "foamCleanTutorials",
-    "title": "foamCleanTutorials · 按规则删除结果并执行相关 Allclean；存在 0.orig 时，默认清理过程可移除 0 目录",
-    "description": "按规则删除结果并执行相关 Allclean；存在 0.orig 时，默认清理过程可移除 0 目录。",
+    "title": "foamCleanTutorials · 批量清理教程算例生成的网格、结果和日志",
+    "description": "批量清理教程算例生成的网格、结果和日志。",
     "example": "foamCleanTutorials -case tutorial-clean-demo",
     "details": "按规则删除结果并执行相关 Allclean；存在 0.orig 时，默认清理过程可移除 0 目录。",
     "category": "后处理",
@@ -13985,8 +13985,8 @@
   },
   {
     "name": "foamVersion",
-    "title": "foamVersion · v2512 源码提供的环境函数，可查询或切换版本；部分打包环境或非交互 shell 未加载该函数",
-    "description": "v2512 源码提供的环境函数，可查询或切换版本；部分打包环境或非交互 shell 未加载该函数时，直接检查 WM_PROJECT_VERSION。",
+    "title": "foamVersion · 查询当前 OpenFOAM 版本，或切换到指定版本的环境",
+    "description": "查询当前 OpenFOAM 版本，或切换到指定版本的环境。",
     "example": "foamVersion",
     "details": "v2512 源码提供的环境函数，可查询或切换版本；部分打包环境或非交互 shell 未加载该函数时，直接检查 WM_PROJECT_VERSION。",
     "category": "环境与编译",
@@ -14177,8 +14177,8 @@
   },
   {
     "name": "Allwmake",
-    "title": "Allwmake · 项目提供的批量编译脚本；需先阅读脚本和构建说明",
-    "description": "项目提供的批量编译脚本；需先阅读脚本和构建说明。",
+    "title": "Allwmake · 按项目脚本规定的顺序批量编译库和应用程序",
+    "description": "按项目脚本规定的顺序批量编译库和应用程序。",
     "example": "cd \"$WM_PROJECT_DIR\"\n./Allwmake",
     "details": "项目提供的批量编译脚本；需先阅读脚本和构建说明。",
     "category": "环境与编译",
@@ -14223,8 +14223,8 @@
   },
   {
     "name": "Allrun",
-    "title": "Allrun · 算例提供的运行脚本，具体执行步骤由该文件定义",
-    "description": "算例提供的运行脚本，具体执行步骤由该文件定义。",
+    "title": "Allrun · 按算例脚本依次执行建网、初始化、求解和后处理",
+    "description": "按算例脚本依次执行建网、初始化、求解和后处理。",
     "example": "cd tutorial-suite\n./Allrun",
     "details": "算例提供的运行脚本，具体执行步骤由该文件定义。",
     "category": "环境与编译",
@@ -14274,8 +14274,8 @@
   },
   {
     "name": "Allclean",
-    "title": "Allclean · 算例提供的清理脚本，执行前检查其删除范围",
-    "description": "算例提供的清理脚本，执行前检查其删除范围。",
+    "title": "Allclean · 按算例脚本清理计算生成的网格、结果和日志",
+    "description": "按算例脚本清理计算生成的网格、结果和日志。",
     "example": "cd tutorial-clean-demo\n./Allclean",
     "details": "算例提供的清理脚本，执行前检查其删除范围。",
     "category": "环境与编译",
@@ -14449,8 +14449,8 @@
   },
   {
     "name": "foam",
-    "title": "foam · 切换到OpenFOAM 安装根目录",
-    "description": "切换到OpenFOAM 安装根目录。",
+    "title": "foam · 切换到 OpenFOAM 安装根目录",
+    "description": "切换到 OpenFOAM 安装根目录。",
     "example": "foam\npwd\nls",
     "details": "切换到OpenFOAM 安装根目录。",
     "category": "环境与编译",
@@ -14492,8 +14492,8 @@
   },
   {
     "name": "src",
-    "title": "src · 切换到C++ 库源码目录",
-    "description": "切换到C++ 库源码目录。",
+    "title": "src · 切换到 OpenFOAM 的 C++ 库源码目录",
+    "description": "切换到 OpenFOAM 的 C++ 库源码目录。",
     "example": "src\npwd\nls",
     "details": "切换到C++ 库源码目录。",
     "category": "环境与编译",
@@ -14583,8 +14583,8 @@
   },
   {
     "name": "source",
-    "title": "source · 在当前 Bash 进程中执行环境脚本",
-    "description": "在当前 Bash 进程中执行环境脚本。",
+    "title": "source · 在当前终端执行脚本，使脚本设置的环境变量和函数立即生效",
+    "description": "在当前终端执行脚本，使脚本设置的环境变量和函数立即生效。",
     "example": "source /usr/lib/openfoam/openfoam2512/etc/bashrc\ncommand -v blockMesh",
     "details": "在当前 Bash 进程中执行环境脚本。",
     "category": "Linux",
@@ -14709,8 +14709,8 @@
   },
   {
     "name": "cd",
-    "title": "cd · 切换工作目录；含空格的路径使用引号",
-    "description": "切换工作目录；含空格的路径使用引号。",
+    "title": "cd · 切换当前工作目录",
+    "description": "切换当前工作目录。",
     "example": "cd caseA\npwd",
     "details": "切换工作目录；含空格的路径使用引号。",
     "category": "Linux",
@@ -14751,8 +14751,8 @@
   },
   {
     "name": "mkdir",
-    "title": "mkdir · 创建工作目录",
-    "description": "创建工作目录。",
+    "title": "mkdir · 创建一个或多个目录",
+    "description": "创建一个或多个目录。",
     "example": "mkdir study",
     "details": "创建工作目录。",
     "category": "Linux",
@@ -14793,8 +14793,8 @@
   },
   {
     "name": "cp",
-    "title": "cp · 复制算例与配置文件",
-    "description": "复制算例与配置文件。",
+    "title": "cp · 复制文件或目录",
+    "description": "复制文件或目录。",
     "example": "cp caseA/system/controlDict controlDict.before",
     "details": "复制算例与配置文件。",
     "category": "Linux",
@@ -14835,8 +14835,8 @@
   },
   {
     "name": "mv",
-    "title": "mv · 移动或重命名文件；检查目标是否已存在",
-    "description": "移动或重命名文件；检查目标是否已存在。",
+    "title": "mv · 移动文件或目录，也可用于重命名",
+    "description": "移动文件或目录，也可用于重命名。",
     "example": "mv log.checkMesh mesh-quality.log",
     "details": "移动或重命名文件；检查目标是否已存在。",
     "category": "Linux",
@@ -14877,8 +14877,8 @@
   },
   {
     "name": "rm",
-    "title": "rm · 删除文件；删除前逐项核对路径，删除通常无法撤销",
-    "description": "删除文件；删除前逐项核对路径，删除通常无法撤销。",
+    "title": "rm · 删除指定的文件或目录",
+    "description": "删除指定的文件或目录。",
     "example": "printf 'temporary\\n' > discard.txt\nrm -i discard.txt",
     "details": "删除文件；删除前逐项核对路径，删除通常无法撤销。",
     "category": "Linux",
@@ -14919,8 +14919,8 @@
   },
   {
     "name": "cat",
-    "title": "cat · 查看短文本文件",
-    "description": "查看短文本文件。",
+    "title": "cat · 将文本文件内容输出到终端，也可合并多个文件的内容",
+    "description": "将文本文件内容输出到终端，也可合并多个文件的内容。",
     "example": "cat caseA/system/controlDict",
     "details": "查看短文本文件。",
     "category": "Linux",
@@ -15129,8 +15129,8 @@
   },
   {
     "name": "find",
-    "title": "find · 按路径和文件名查找文件",
-    "description": "按路径和文件名查找文件。",
+    "title": "find · 在目录树中按文件名、类型和时间等条件查找文件",
+    "description": "在目录树中按文件名、类型和时间等条件查找文件。",
     "example": "find . -type f -name controlDict",
     "details": "按路径和文件名查找文件。",
     "category": "Linux",
@@ -15297,8 +15297,8 @@
   },
   {
     "name": "ps",
-    "title": "ps · 查看当前用户的进程",
-    "description": "查看当前用户的进程。",
+    "title": "ps · 显示进程及其进程号、运行状态等信息",
+    "description": "显示进程及其进程号、运行状态等信息。",
     "example": "ps -u \"$USER\"",
     "details": "查看当前用户的进程。",
     "category": "Linux",
@@ -15381,8 +15381,8 @@
   },
   {
     "name": "nohup",
-    "title": "nohup · 使程序忽略挂断信号并重定向日志",
-    "description": "使程序忽略挂断信号并重定向日志。",
+    "title": "nohup · 让程序在终端断开后继续运行，并保存终端输出",
+    "description": "让程序在终端断开后继续运行，并保存终端输出。",
     "example": "nohup icoFoam -case caseA > caseA/log.icoFoam 2>&1 &\nsolverPid=$!",
     "details": "使程序忽略挂断信号并重定向日志。",
     "category": "Linux",
@@ -15423,8 +15423,8 @@
   },
   {
     "name": "tmux",
-    "title": "tmux · 创建可分离终端会话；需安装 tmux",
-    "description": "创建可分离终端会话；需安装 tmux。",
+    "title": "tmux · 创建可分离、可恢复的终端会话，便于管理长时间计算",
+    "description": "创建可分离、可恢复的终端会话，便于管理长时间计算。",
     "example": "tmux new-session -s foam",
     "details": "创建可分离终端会话；需安装 tmux。",
     "category": "Linux",
@@ -15465,8 +15465,8 @@
   },
   {
     "name": "ssh",
-    "title": "ssh · 连接计算服务器",
-    "description": "连接计算服务器。",
+    "title": "ssh · 通过加密连接登录远程计算机并执行命令",
+    "description": "通过加密连接登录远程计算机并执行命令。",
     "example": "ssh student@compute.example.org",
     "details": "连接计算服务器。",
     "category": "Linux",
@@ -15507,8 +15507,8 @@
   },
   {
     "name": "scp",
-    "title": "scp · 通过 SSH 复制文件，替换账号与主机名后使用",
-    "description": "通过 SSH 复制文件，替换账号与主机名后使用。",
+    "title": "scp · 通过 SSH 在本机与远程计算机之间复制文件",
+    "description": "通过 SSH 在本机与远程计算机之间复制文件。",
     "example": "scp caseA/system/controlDict student@compute.example.org:~/cases/caseA/system/",
     "details": "通过 SSH 复制文件，替换账号与主机名后使用。",
     "category": "Linux",
@@ -15549,8 +15549,8 @@
   },
   {
     "name": "tar",
-    "title": "tar · 打包算例目录",
-    "description": "打包算例目录。",
+    "title": "tar · 将多个文件和目录归档，也可提取已有归档中的文件",
+    "description": "将多个文件和目录归档，也可提取已有归档中的文件。",
     "example": "tar -czf caseA.tar.gz caseA",
     "details": "打包算例目录。",
     "category": "Linux",
@@ -15591,8 +15591,8 @@
   },
   {
     "name": "chmod",
-    "title": "chmod · 设置脚本执行权限",
-    "description": "设置脚本执行权限。",
+    "title": "chmod · 修改文件或目录的读、写和执行权限",
+    "description": "修改文件或目录的读、写和执行权限。",
     "example": "chmod u+x caseA/Allrun\n./caseA/Allrun",
     "details": "设置脚本执行权限。",
     "category": "Linux",
@@ -15633,8 +15633,8 @@
   },
   {
     "name": "command",
-    "title": "command · 查询外部程序的实际位置",
-    "description": "查询外部程序的实际位置。",
+    "title": "command · 查询命令的位置，或绕过同名 shell 函数执行命令",
+    "description": "查询命令的位置，或绕过同名 shell 函数执行命令。",
     "example": "command -v blockMesh",
     "details": "查询外部程序的实际位置。",
     "category": "Linux",
@@ -15773,8 +15773,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "dnsFoam · 各向同性湍流盒中的直接数值模拟",
-    "description": "各向同性湍流盒中的直接数值模拟。",
+    "title": "dnsFoam · 直接求解各向同性湍流盒中的速度和压力，研究湍流演化",
+    "description": "直接求解各向同性湍流盒中的速度和压力，研究湍流演化。",
     "category": "求解与并行",
     "example": "dnsFoam -case baseCase > baseCase/log.dnsFoam 2>&1\ntail -n 30 baseCase/log.dnsFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/DNS/dnsFoam/dnsFoam.C",
@@ -15864,8 +15864,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "acousticFoam · 声压波动方程",
-    "description": "声压波动方程。",
+    "title": "acousticFoam · 求解声压波动方程，模拟声波传播",
+    "description": "求解声压波动方程，模拟声波传播。",
     "category": "求解与并行",
     "example": "acousticFoam -case baseCase > baseCase/log.acousticFoam 2>&1\ntail -n 20 baseCase/log.acousticFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/acoustic/acousticFoam/acousticFoam.C",
@@ -16052,8 +16052,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "overLaplacianDyMFoam · 重叠动网格上的标量扩散",
-    "description": "重叠动网格上的标量扩散。",
+    "title": "overLaplacianDyMFoam · 在重叠动网格上求解标量扩散方程",
+    "description": "在重叠动网格上求解标量扩散方程。",
     "category": "求解与并行",
     "example": "overLaplacianDyMFoam -case baseCase > baseCase/log.overLaplacianDyMFoam 2>&1\ntail -n 20 baseCase/log.overLaplacianDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/basic/laplacianFoam/overLaplacianDyMFoam/overLaplacianDyMFoam.C",
@@ -16242,8 +16242,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "overPotentialFoam · 重叠网格势流初始化",
-    "description": "重叠网格势流初始化。",
+    "title": "overPotentialFoam · 在重叠网格上求解势流，生成初始速度和通量",
+    "description": "在重叠网格上求解势流，生成初始速度和通量。",
     "category": "求解与并行",
     "example": "overPotentialFoam -case baseCase",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/basic/potentialFoam/overPotentialFoam/overPotentialFoam.C",
@@ -16434,8 +16434,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "PDRFoam · 基于阻力模型的预混燃烧",
-    "description": "基于阻力模型的预混燃烧。",
+    "title": "PDRFoam · 用等效阻力描述未解析障碍物，模拟预混火焰传播",
+    "description": "用等效阻力描述未解析障碍物，模拟预混火焰传播。",
     "category": "求解与并行",
     "example": "PDRFoam -case baseCase > baseCase/log.PDRFoam 2>&1\ntail -n 20 baseCase/log.PDRFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/combustion/PDRFoam/XiModels/XiModel/XiModel.C",
@@ -16529,8 +16529,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "XiFoam · 基于 b–Xi 模型的预混燃烧",
-    "description": "基于 b–Xi 模型的预混燃烧。",
+    "title": "XiFoam · 用 b–Xi 火焰褶皱模型模拟可压缩预混燃烧",
+    "description": "用 b–Xi 火焰褶皱模型模拟可压缩预混燃烧。",
     "category": "求解与并行",
     "example": "XiFoam -case baseCase > baseCase/log.XiFoam 2>&1\ntail -n 20 baseCase/log.XiFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/combustion/XiFoam/XiFoam.C",
@@ -16624,8 +16624,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "XiDyMFoam · 动网格预混燃烧",
-    "description": "动网格预混燃烧。",
+    "title": "XiDyMFoam · 在动网格上模拟采用 b–Xi 模型的预混燃烧",
+    "description": "在动网格上模拟采用 b–Xi 模型的预混燃烧。",
     "category": "求解与并行",
     "example": "XiDyMFoam -case baseCase > baseCase/log.XiDyMFoam 2>&1\ntail -n 20 baseCase/log.XiDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/combustion/XiFoam/XiDyMFoam/XiDyMFoam.C",
@@ -16717,8 +16717,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "XiEngineFoam · 内燃机中的 b–Xi 燃烧模型",
-    "description": "内燃机中的 b–Xi 燃烧模型。",
+    "title": "XiEngineFoam · 用 b–Xi 模型模拟内燃机中的预混燃烧",
+    "description": "用 b–Xi 模型模拟内燃机中的预混燃烧。",
     "category": "求解与并行",
     "example": "XiEngineFoam -case baseCase > baseCase/log.XiEngineFoam 2>&1\ntail -n 20 baseCase/log.XiEngineFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/combustion/XiFoam/XiEngineFoam/XiEngineFoam.C",
@@ -16810,8 +16810,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "chemFoam · 单单元化学反应积分",
-    "description": "单单元化学反应积分。",
+    "title": "chemFoam · 在单个计算单元中积分化学反应方程，研究组分和温度随时间的变化",
+    "description": "在单个计算单元中积分化学反应方程，研究组分和温度随时间的变化。",
     "category": "求解与并行",
     "example": "chemFoam -case baseCase > baseCase/log.chemFoam 2>&1\nhead -n 6 baseCase/chemFoam.out",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/combustion/chemFoam/chemFoam.C",
@@ -16893,8 +16893,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "coldEngineFoam · 内燃机冷态流动",
-    "description": "内燃机冷态流动。",
+    "title": "coldEngineFoam · 模拟内燃机中的非燃烧流动及活塞驱动的网格运动",
+    "description": "模拟内燃机中的非燃烧流动及活塞驱动的网格运动。",
     "category": "求解与并行",
     "example": "coldEngineFoam -case baseCase > baseCase/log.coldEngineFoam 2>&1\ntail -n 20 baseCase/log.coldEngineFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/combustion/coldEngineFoam/coldEngineFoam.C",
@@ -16986,8 +16986,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "fireFoam · 火灾、扩散火焰与热解耦合",
-    "description": "火灾、扩散火焰与热解耦合。",
+    "title": "fireFoam · 模拟火灾中的气相燃烧，并可耦合液滴、液膜和固体热解",
+    "description": "模拟火灾中的气相燃烧，并可耦合液滴、液膜和固体热解。",
     "category": "求解与并行",
     "example": "fireFoam -case baseCase > baseCase/log.fireFoam 2>&1\ntail -n 20 baseCase/log.fireFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/combustion/fireFoam/fireFoam.C",
@@ -17081,8 +17081,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "reactingFoam · 化学反应与燃烧流动",
-    "description": "化学反应与燃烧流动。",
+    "title": "reactingFoam · 求解可压缩反应流，计算流动、传热和化学反应",
+    "description": "求解可压缩反应流，计算流动、传热和化学反应。",
     "category": "求解与并行",
     "example": "reactingFoam -case baseCase > baseCase/log.reactingFoam 2>&1\ntail -n 20 baseCase/log.reactingFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/combustion/reactingFoam/reactingFoam.C",
@@ -17176,8 +17176,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "rhoReactingBuoyantFoam · 含浮力处理的密度基反应流",
-    "description": "含浮力处理的密度基反应流。",
+    "title": "rhoReactingBuoyantFoam · 模拟包含浮力作用的可压缩反应流",
+    "description": "模拟包含浮力作用的可压缩反应流。",
     "category": "求解与并行",
     "example": "rhoReactingBuoyantFoam -case baseCase > baseCase/log.rhoReactingBuoyantFoam 2>&1\ntail -n 20 baseCase/log.rhoReactingBuoyantFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/combustion/reactingFoam/rhoReactingBuoyantFoam/rhoReactingBuoyantFoam.C",
@@ -17271,8 +17271,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "rhoReactingFoam · 采用密度基热物性的反应流",
-    "description": "采用密度基热物性的反应流。",
+    "title": "rhoReactingFoam · 使用密度基热物性模型求解可压缩反应流",
+    "description": "使用密度基热物性模型求解可压缩反应流。",
     "category": "求解与并行",
     "example": "rhoReactingFoam -case baseCase > baseCase/log.rhoReactingFoam 2>&1\ntail -n 20 baseCase/log.rhoReactingFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/combustion/reactingFoam/rhoReactingFoam/rhoReactingFoam.C",
@@ -17366,8 +17366,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "rhoCentralFoam · 中心迎风格式的可压缩流动",
-    "description": "中心迎风格式的可压缩流动。",
+    "title": "rhoCentralFoam · 使用中心迎风格式求解可压缩流动，适用于含激波的问题",
+    "description": "使用中心迎风格式求解可压缩流动，适用于含激波的问题。",
     "category": "求解与并行",
     "example": "rhoCentralFoam -case baseCase > baseCase/log.rhoCentralFoam 2>&1\ntail -n 20 baseCase/log.rhoCentralFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/compressible/rhoCentralFoam/rhoCentralFoam.C",
@@ -17460,8 +17460,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "rhoPimpleAdiabaticFoam · 低马赫数气动声学中的弱可压缩流动",
-    "description": "低马赫数气动声学中的弱可压缩流动。",
+    "title": "rhoPimpleAdiabaticFoam · 求解绝热可压缩流动，侧重低马赫数气动声学问题",
+    "description": "求解绝热可压缩流动，侧重低马赫数气动声学问题。",
     "category": "求解与并行",
     "example": "rhoPimpleAdiabaticFoam -case baseCase > baseCase/log.rhoPimpleAdiabaticFoam 2>&1\ntail -n 20 baseCase/log.rhoPimpleAdiabaticFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/compressible/rhoPimpleAdiabaticFoam/rhoPimpleAdiabaticFoam.C",
@@ -17555,8 +17555,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "rhoPimpleFoam · 瞬态可压缩流动与 PIMPLE",
-    "description": "瞬态可压缩流动与 PIMPLE。",
+    "title": "rhoPimpleFoam · 使用 PIMPLE 算法求解瞬态可压缩流动",
+    "description": "使用 PIMPLE 算法求解瞬态可压缩流动。",
     "category": "求解与并行",
     "example": "rhoPimpleFoam -case baseCase > baseCase/log.rhoPimpleFoam 2>&1\ntail -n 20 baseCase/log.rhoPimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/compressible/rhoPimpleFoam/rhoPimpleFoam.C",
@@ -17650,8 +17650,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "overRhoPimpleDyMFoam · 重叠动网格可压缩瞬态流动",
-    "description": "重叠动网格可压缩瞬态流动。",
+    "title": "overRhoPimpleDyMFoam · 在重叠动网格上求解瞬态可压缩流动",
+    "description": "在重叠动网格上求解瞬态可压缩流动。",
     "category": "求解与并行",
     "example": "overRhoPimpleDyMFoam -case baseCase > baseCase/log.overRhoPimpleDyMFoam 2>&1\ntail -n 20 baseCase/log.overRhoPimpleDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/compressible/rhoPimpleFoam/overRhoPimpleDyMFoam/overRhoPimpleDyMFoam.C",
@@ -17742,8 +17742,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "rhoSimpleFoam · 稳态可压缩湍流",
-    "description": "稳态可压缩湍流。",
+    "title": "rhoSimpleFoam · 使用 SIMPLE 算法求解稳态可压缩流动",
+    "description": "使用 SIMPLE 算法求解稳态可压缩流动。",
     "category": "求解与并行",
     "example": "rhoSimpleFoam -case baseCase > baseCase/log.rhoSimpleFoam 2>&1\ntail -n 20 baseCase/log.rhoSimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/compressible/rhoSimpleFoam/rhoSimpleFoam.C",
@@ -17837,8 +17837,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "overRhoSimpleFoam · 重叠网格稳态可压缩流动",
-    "description": "重叠网格稳态可压缩流动。",
+    "title": "overRhoSimpleFoam · 在重叠网格上求解稳态可压缩流动",
+    "description": "在重叠网格上求解稳态可压缩流动。",
     "category": "求解与并行",
     "example": "overRhoSimpleFoam -case baseCase > baseCase/log.overRhoSimpleFoam 2>&1\ntail -n 20 baseCase/log.overRhoSimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/compressible/rhoSimpleFoam/overRhoSimpleFoam/overRhoSimpleFoam.C",
@@ -17930,8 +17930,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "rhoPorousSimpleFoam · 含多孔阻力的稳态可压缩流动",
-    "description": "含多孔阻力的稳态可压缩流动。",
+    "title": "rhoPorousSimpleFoam · 求解含多孔阻力的稳态可压缩流动",
+    "description": "求解含多孔阻力的稳态可压缩流动。",
     "category": "求解与并行",
     "example": "rhoPorousSimpleFoam -case baseCase > baseCase/log.rhoPorousSimpleFoam 2>&1\ntail -n 20 baseCase/log.rhoPorousSimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/compressible/rhoSimpleFoam/rhoPorousSimpleFoam/rhoPorousSimpleFoam.C",
@@ -18025,8 +18025,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "sonicFoam · 跨声速与超声速气体流动",
-    "description": "跨声速与超声速气体流动。",
+    "title": "sonicFoam · 求解瞬态可压缩气体流动，适用于跨声速和超声速问题",
+    "description": "求解瞬态可压缩气体流动，适用于跨声速和超声速问题。",
     "category": "求解与并行",
     "example": "sonicFoam -case baseCase > baseCase/log.sonicFoam 2>&1\ntail -n 20 baseCase/log.sonicFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/compressible/sonicFoam/sonicFoam.C",
@@ -18120,8 +18120,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "sonicDyMFoam · 动网格跨声速与超声速气体流动",
-    "description": "动网格跨声速与超声速气体流动。",
+    "title": "sonicDyMFoam · 在动网格上求解跨声速和超声速气体流动",
+    "description": "在动网格上求解跨声速和超声速气体流动。",
     "category": "求解与并行",
     "example": "sonicDyMFoam -case baseCase > baseCase/log.sonicDyMFoam 2>&1\ntail -n 20 baseCase/log.sonicDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/compressible/sonicFoam/sonicDyMFoam/sonicDyMFoam.C",
@@ -18213,8 +18213,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "sonicLiquidFoam · 可压缩液体的跨声速流动",
-    "description": "可压缩液体的跨声速流动。",
+    "title": "sonicLiquidFoam · 求解可压缩液体的跨声速流动",
+    "description": "求解可压缩液体的跨声速流动。",
     "category": "求解与并行",
     "example": "sonicLiquidFoam -case baseCase > baseCase/log.sonicLiquidFoam 2>&1\ntail -n 20 baseCase/log.sonicLiquidFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/compressible/sonicFoam/sonicLiquidFoam/sonicLiquidFoam.C",
@@ -18306,8 +18306,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "dsmcFoam · 多组分稀薄气体的 DSMC 模拟",
-    "description": "多组分稀薄气体的 DSMC 模拟。",
+    "title": "dsmcFoam · 用直接模拟蒙特卡洛方法模拟多组分稀薄气体流动",
+    "description": "用直接模拟蒙特卡洛方法模拟多组分稀薄气体流动。",
     "category": "求解与并行",
     "example": "dsmcFoam -case baseCase > baseCase/log.dsmcFoam 2>&1\ntail -n 20 baseCase/log.dsmcFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/discreteMethods/dsmc/dsmcFoam/dsmcFoam.C",
@@ -18399,8 +18399,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "mdEquilibrationFoam · 分子动力学系统的预平衡",
-    "description": "分子动力学系统的预平衡。",
+    "title": "mdEquilibrationFoam · 通过分子动力学计算使初始分子系统达到预平衡状态",
+    "description": "通过分子动力学计算使初始分子系统达到预平衡状态。",
     "category": "求解与并行",
     "example": "mdEquilibrationFoam -case baseCase > baseCase/log.mdEquilibrationFoam 2>&1\ntail -n 20 baseCase/log.mdEquilibrationFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/discreteMethods/molecularDynamics/mdEquilibrationFoam/mdEquilibrationFoam.C",
@@ -18491,8 +18491,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "mdFoam · 流体分子动力学",
-    "description": "流体分子动力学。",
+    "title": "mdFoam · 跟踪分子运动及相互作用，模拟流体的分子动力学过程",
+    "description": "跟踪分子运动及相互作用，模拟流体的分子动力学过程。",
     "category": "求解与并行",
     "example": "mdFoam -case baseCase > baseCase/log.mdFoam 2>&1\ntail -n 20 baseCase/log.mdFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/discreteMethods/molecularDynamics/mdFoam/mdFoam.C",
@@ -18582,8 +18582,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "electrostaticFoam · 静电场",
-    "description": "静电场。",
+    "title": "electrostaticFoam · 根据电荷分布求解静电势和电场",
+    "description": "根据电荷分布求解静电势和电场。",
     "category": "求解与并行",
     "example": "electrostaticFoam -case baseCase > baseCase/log.electrostaticFoam 2>&1\ntail -n 20 baseCase/log.electrostaticFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/electromagnetics/electrostaticFoam/electrostaticFoam.C",
@@ -18674,8 +18674,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "magneticFoam · 永磁体产生的磁场",
-    "description": "永磁体产生的磁场。",
+    "title": "magneticFoam · 计算永磁体产生的磁场",
+    "description": "计算永磁体产生的磁场。",
     "category": "求解与并行",
     "example": "magneticFoam -case baseCase",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/electromagnetics/magneticFoam/magneticFoam.C",
@@ -18769,8 +18769,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "mhdFoam · 导电流体的不可压缩磁流体力学",
-    "description": "导电流体的不可压缩磁流体力学。",
+    "title": "mhdFoam · 求解不可压缩导电流体与磁场相互作用的流动",
+    "description": "求解不可压缩导电流体与磁场相互作用的流动。",
     "category": "求解与并行",
     "example": "mhdFoam -case baseCase > baseCase/log.mhdFoam 2>&1\ntail -n 20 baseCase/log.mhdFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/electromagnetics/mhdFoam/mhdFoam.C",
@@ -18862,8 +18862,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "financialFoam · Black–Scholes 金融定价方程",
-    "description": "Black–Scholes 金融定价方程。",
+    "title": "financialFoam · 求解 Black–Scholes 方程，计算金融衍生品价格",
+    "description": "求解 Black–Scholes 方程，计算金融衍生品价格。",
     "category": "求解与并行",
     "example": "financialFoam -case baseCase > baseCase/log.financialFoam 2>&1",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/financial/financialFoam/financialFoam.C",
@@ -18955,8 +18955,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "liquidFilmFoam · 有限面积液膜流动",
-    "description": "有限面积液膜流动。",
+    "title": "liquidFilmFoam · 用有限面积方法计算表面上的薄液膜流动",
+    "description": "用有限面积方法计算表面上的薄液膜流动。",
     "category": "求解与并行",
     "example": "liquidFilmFoam -case baseCase > baseCase/log.liquidFilmFoam 2>&1\ntail -n 20 baseCase/log.liquidFilmFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/finiteArea/liquidFilmFoam/liquidFilmFoam.C",
@@ -19045,8 +19045,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "sphereSurfactantFoam · 球面上的被动标量输运",
-    "description": "球面上的被动标量输运。",
+    "title": "sphereSurfactantFoam · 在球面上求解被动标量输运方程",
+    "description": "在球面上求解被动标量输运方程。",
     "category": "求解与并行",
     "example": "sphereSurfactantFoam -case baseCase > baseCase/log.sphereSurfactantFoam 2>&1\ntail -n 20 baseCase/log.sphereSurfactantFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/finiteArea/sphereSurfactantFoam/sphereSurfactantFoam.C",
@@ -19135,8 +19135,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "surfactantFoam · 有限面积被动标量输运",
-    "description": "有限面积被动标量输运。",
+    "title": "surfactantFoam · 用有限面积方法求解表面上的被动标量输运",
+    "description": "用有限面积方法求解表面上的被动标量输运。",
     "category": "求解与并行",
     "example": "surfactantFoam -case baseCase > baseCase/log.surfactantFoam 2>&1\ntail -n 20 baseCase/log.surfactantFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/finiteArea/surfactantFoam/surfactantFoam.C",
@@ -19225,8 +19225,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "buoyantBoussinesqPimpleFoam · Boussinesq 近似的瞬态浮力流动",
-    "description": "Boussinesq 近似的瞬态浮力流动。",
+    "title": "buoyantBoussinesqPimpleFoam · 采用 Boussinesq 近似求解温差引起的瞬态浮力流动",
+    "description": "采用 Boussinesq 近似求解温差引起的瞬态浮力流动。",
     "category": "求解与并行",
     "example": "buoyantBoussinesqPimpleFoam -case baseCase > baseCase/log.buoyantBoussinesqPimpleFoam 2>&1\ntail -n 20 baseCase/log.buoyantBoussinesqPimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/heatTransfer/buoyantBoussinesqPimpleFoam/buoyantBoussinesqPimpleFoam.C",
@@ -19320,8 +19320,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "buoyantBoussinesqSimpleFoam · Boussinesq 近似的稳态浮力流动",
-    "description": "Boussinesq 近似的稳态浮力流动。",
+    "title": "buoyantBoussinesqSimpleFoam · 采用 Boussinesq 近似求解温差引起的稳态浮力流动",
+    "description": "采用 Boussinesq 近似求解温差引起的稳态浮力流动。",
     "category": "求解与并行",
     "example": "buoyantBoussinesqSimpleFoam -case baseCase > baseCase/log.buoyantBoussinesqSimpleFoam 2>&1\ntail -n 20 baseCase/log.buoyantBoussinesqSimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/heatTransfer/buoyantBoussinesqSimpleFoam/buoyantBoussinesqSimpleFoam.C",
@@ -19415,8 +19415,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "buoyantPimpleFoam · 含热物性变化的瞬态浮力流动",
-    "description": "含热物性变化的瞬态浮力流动。",
+    "title": "buoyantPimpleFoam · 求解瞬态浮力流动与传热，并考虑热物性的变化",
+    "description": "求解瞬态浮力流动与传热，并考虑热物性的变化。",
     "category": "求解与并行",
     "example": "buoyantPimpleFoam -case baseCase > baseCase/log.buoyantPimpleFoam 2>&1\ntail -n 20 baseCase/log.buoyantPimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/heatTransfer/buoyantPimpleFoam/buoyantPimpleFoam.C",
@@ -19510,8 +19510,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "overBuoyantPimpleDyMFoam · 重叠动网格上的瞬态浮力流动",
-    "description": "重叠动网格上的瞬态浮力流动。",
+    "title": "overBuoyantPimpleDyMFoam · 在重叠动网格上求解瞬态浮力流动与传热",
+    "description": "在重叠动网格上求解瞬态浮力流动与传热。",
     "category": "求解与并行",
     "example": "overBuoyantPimpleDyMFoam -case baseCase > baseCase/log.overBuoyantPimpleDyMFoam 2>&1\ntail -n 20 baseCase/log.overBuoyantPimpleDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/heatTransfer/buoyantPimpleFoam/overBuoyantPimpleDyMFoam/overBuoyantPimpleDyMFoam.C",
@@ -19605,8 +19605,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "buoyantSimpleFoam · 稳态浮力传热与辐射",
-    "description": "稳态浮力传热与辐射。",
+    "title": "buoyantSimpleFoam · 求解稳态浮力流动与传热，并可考虑辐射",
+    "description": "求解稳态浮力流动与传热，并可考虑辐射。",
     "category": "求解与并行",
     "example": "buoyantSimpleFoam -case baseCase > baseCase/log.buoyantSimpleFoam 2>&1\ntail -n 20 baseCase/log.buoyantSimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/heatTransfer/buoyantSimpleFoam/buoyantSimpleFoam.C",
@@ -19700,8 +19700,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "chtMultiRegionFoam · 流体与固体的多区域瞬态共轭传热",
-    "description": "流体与固体的多区域瞬态共轭传热。",
+    "title": "chtMultiRegionFoam · 耦合求解多个流体与固体区域之间的瞬态传热",
+    "description": "耦合求解多个流体与固体区域之间的瞬态传热。",
     "category": "求解与并行",
     "example": "chtMultiRegionFoam -case baseCase > baseCase/log.chtMultiRegionFoam 2>&1\ntail -n 20 baseCase/log.chtMultiRegionFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/heatTransfer/chtMultiRegionFoam/fluid/compressibleCourantNo.C",
@@ -19795,8 +19795,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "chtMultiRegionSimpleFoam · 流体与固体的多区域稳态共轭传热",
-    "description": "流体与固体的多区域稳态共轭传热。",
+    "title": "chtMultiRegionSimpleFoam · 耦合求解多个流体与固体区域之间的稳态传热",
+    "description": "耦合求解多个流体与固体区域之间的稳态传热。",
     "category": "求解与并行",
     "example": "chtMultiRegionSimpleFoam -case baseCase > baseCase/log.chtMultiRegionSimpleFoam 2>&1\ntail -n 20 baseCase/log.chtMultiRegionSimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/heatTransfer/chtMultiRegionFoam/chtMultiRegionSimpleFoam/chtMultiRegionSimpleFoam.C",
@@ -19890,8 +19890,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "chtMultiRegionTwoPhaseEulerFoam · 两流体与固体区域的共轭传热",
-    "description": "两流体与固体区域的共轭传热。",
+    "title": "chtMultiRegionTwoPhaseEulerFoam · 耦合求解 Euler–Euler 两相流与固体区域之间的传热",
+    "description": "耦合求解 Euler–Euler 两相流与固体区域之间的传热。",
     "category": "求解与并行",
     "example": "chtMultiRegionTwoPhaseEulerFoam -case baseCase > baseCase/log.chtMultiRegionTwoPhaseEulerFoam 2>&1\ntail -n 20 baseCase/log.chtMultiRegionTwoPhaseEulerFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/heatTransfer/chtMultiRegionFoam/chtMultiRegionTwoPhaseEulerFoam/derivedFvPatchFields/turbulentTemperatureTwoPhaseRadCoupledMixed/turbulentTemperatureTwoPhaseRadCoupledMixedFvPatchScalarField.C",
@@ -19977,8 +19977,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "solidFoam · 固体区域中的热传导",
-    "description": "固体区域中的热传导。",
+    "title": "solidFoam · 求解固体区域中的瞬态热传导",
+    "description": "求解固体区域中的瞬态热传导。",
     "category": "求解与并行",
     "example": "solidFoam -case baseCase > baseCase/log.solidFoam 2>&1\ntail -n 20 baseCase/log.solidFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/heatTransfer/solidFoam/solidFoam.C",
@@ -20071,8 +20071,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "thermoFoam · 冻结流场上的能量输运",
-    "description": "冻结流场上的能量输运。",
+    "title": "thermoFoam · 在给定流场上求解能量方程，计算温度变化",
+    "description": "在给定流场上求解能量方程，计算温度变化。",
     "category": "求解与并行",
     "example": "thermoFoam -case baseCase > baseCase/log.thermoFoam 2>&1\ntail -n 20 baseCase/log.thermoFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/heatTransfer/thermoFoam/thermoFoam.C",
@@ -20166,8 +20166,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "adjointOptimisationFoam · 伴随优化循环与设计变量更新",
-    "description": "伴随优化循环与设计变量更新。",
+    "title": "adjointOptimisationFoam · 利用伴随灵敏度更新设计变量，执行流动优化计算",
+    "description": "利用伴随灵敏度更新设计变量，执行流动优化计算。",
     "category": "求解与并行",
     "example": "adjointOptimisationFoam -case baseCase > baseCase/log.optimisation 2>&1",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/adjointOptimisationFoam/adjointOptimisationFoam.C",
@@ -20251,8 +20251,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "adjointShapeOptimizationFoam · 不可压缩流动的伴随形状优化",
-    "description": "不可压缩流动的伴随形状优化。",
+    "title": "adjointShapeOptimizationFoam · 利用伴随方法优化不可压缩流动中的几何形状",
+    "description": "利用伴随方法优化不可压缩流动中的几何形状。",
     "category": "求解与并行",
     "example": "adjointShapeOptimizationFoam -case baseCase > baseCase/log.adjointShapeOptimizationFoam 2>&1\ntail -n 20 baseCase/log.adjointShapeOptimizationFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/adjointShapeOptimizationFoam/adjointOutletPressure/adjointOutletPressureFvPatchScalarField.C",
@@ -20346,8 +20346,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "boundaryFoam · 用于入口条件的一维湍流边界层",
-    "description": "用于入口条件的一维湍流边界层。",
+    "title": "boundaryFoam · 求解一维湍流边界层，生成可用于入口边界的流动剖面",
+    "description": "求解一维湍流边界层，生成可用于入口边界的流动剖面。",
     "category": "求解与并行",
     "example": "boundaryFoam -case baseCase > baseCase/log.boundaryFoam 2>&1",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/boundaryFoam/boundaryFoam.C",
@@ -20530,8 +20530,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "nonNewtonianIcoFoam · 不可压缩非牛顿流体瞬态层流",
-    "description": "不可压缩非牛顿流体瞬态层流。",
+    "title": "nonNewtonianIcoFoam · 求解不可压缩非牛顿流体的瞬态层流",
+    "description": "求解不可压缩非牛顿流体的瞬态层流。",
     "category": "求解与并行",
     "example": "nonNewtonianIcoFoam -case baseCase > baseCase/log.nonNewtonianIcoFoam 2>&1\ntail -n 20 baseCase/log.nonNewtonianIcoFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/nonNewtonianIcoFoam/nonNewtonianIcoFoam.C",
@@ -20718,8 +20718,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "SRFPimpleFoam · 单旋转参考系中的瞬态流动",
-    "description": "单旋转参考系中的瞬态流动。",
+    "title": "SRFPimpleFoam · 在单一旋转参考系中求解瞬态不可压缩流动",
+    "description": "在单一旋转参考系中求解瞬态不可压缩流动。",
     "category": "求解与并行",
     "example": "SRFPimpleFoam -case baseCase > baseCase/log.SRFPimpleFoam 2>&1\ntail -n 20 baseCase/log.SRFPimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/pimpleFoam/SRFPimpleFoam/SRFPimpleFoam.C",
@@ -20813,8 +20813,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "overPimpleDyMFoam · 重叠动网格上的不可压缩瞬态流动",
-    "description": "重叠动网格上的不可压缩瞬态流动。",
+    "title": "overPimpleDyMFoam · 在重叠动网格上求解瞬态不可压缩流动",
+    "description": "在重叠动网格上求解瞬态不可压缩流动。",
     "category": "求解与并行",
     "example": "overPimpleDyMFoam -case baseCase > baseCase/log.overPimpleDyMFoam 2>&1\ntail -n 20 baseCase/log.overPimpleDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/pimpleFoam/overPimpleDyMFoam/overPimpleDyMFoam.C",
@@ -20906,8 +20906,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "pisoFoam · PISO 不可压缩瞬态湍流",
-    "description": "PISO 不可压缩瞬态湍流。",
+    "title": "pisoFoam · 使用 PISO 算法求解瞬态不可压缩湍流",
+    "description": "使用 PISO 算法求解瞬态不可压缩湍流。",
     "category": "求解与并行",
     "example": "pisoFoam -case baseCase > baseCase/log.pisoFoam 2>&1\ntail -n 20 baseCase/log.pisoFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/pisoFoam/pisoFoam.C",
@@ -21001,8 +21001,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "shallowWaterFoam · 含旋转效应的无黏浅水方程",
-    "description": "含旋转效应的无黏浅水方程。",
+    "title": "shallowWaterFoam · 求解无黏浅水方程，计算水深和水平流动，并可考虑旋转效应",
+    "description": "求解无黏浅水方程，计算水深和水平流动，并可考虑旋转效应。",
     "category": "求解与并行",
     "example": "shallowWaterFoam -case baseCase > baseCase/log.shallowWaterFoam 2>&1\ntail -n 20 baseCase/log.shallowWaterFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/shallowWaterFoam/shallowWaterFoam.C",
@@ -21189,8 +21189,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "SRFSimpleFoam · 单旋转参考系中的稳态流动",
-    "description": "单旋转参考系中的稳态流动。",
+    "title": "SRFSimpleFoam · 在单一旋转参考系中求解稳态不可压缩流动",
+    "description": "在单一旋转参考系中求解稳态不可压缩流动。",
     "category": "求解与并行",
     "example": "SRFSimpleFoam -case baseCase > baseCase/log.SRFSimpleFoam 2>&1\ntail -n 20 baseCase/log.SRFSimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/simpleFoam/SRFSimpleFoam/SRFSimpleFoam.C",
@@ -21284,8 +21284,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "overSimpleFoam · 重叠网格上的不可压缩稳态流动",
-    "description": "重叠网格上的不可压缩稳态流动。",
+    "title": "overSimpleFoam · 在重叠网格上求解稳态不可压缩流动",
+    "description": "在重叠网格上求解稳态不可压缩流动。",
     "category": "求解与并行",
     "example": "overSimpleFoam -case baseCase > baseCase/log.overSimpleFoam 2>&1\ntail -n 20 baseCase/log.overSimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/simpleFoam/overSimpleFoam/overSimpleFoam.C",
@@ -21377,8 +21377,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "porousSimpleFoam · 多孔介质中的不可压缩稳态流动",
-    "description": "多孔介质中的不可压缩稳态流动。",
+    "title": "porousSimpleFoam · 求解多孔介质中的稳态不可压缩流动",
+    "description": "求解多孔介质中的稳态不可压缩流动。",
     "category": "求解与并行",
     "example": "porousSimpleFoam -case baseCase > baseCase/log.porousSimpleFoam 2>&1\ntail -n 20 baseCase/log.porousSimpleFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/incompressible/simpleFoam/porousSimpleFoam/porousSimpleFoam.C",
@@ -21472,8 +21472,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "MPPICDyMFoam · 动网格上的 MPPIC 颗粒流",
-    "description": "动网格上的 MPPIC 颗粒流。",
+    "title": "MPPICDyMFoam · 在动网格上用 MPPIC 方法模拟颗粒群与流体的相互作用",
+    "description": "在动网格上用 MPPIC 方法模拟颗粒群与流体的相互作用。",
     "category": "求解与并行",
     "example": "MPPICDyMFoam -case baseCase > baseCase/log.MPPICDyMFoam 2>&1\ntail -n 20 baseCase/log.MPPICDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/DPMFoam/DPMDyMFoam/MPPICDyMFoam/MPPICDyMFoam.C",
@@ -21564,8 +21564,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "DPMDyMFoam · 动网格上的稠密颗粒耦合输运",
-    "description": "动网格上的稠密颗粒耦合输运。",
+    "title": "DPMDyMFoam · 在动网格上模拟稠密颗粒与流体的双向耦合运动",
+    "description": "在动网格上模拟稠密颗粒与流体的双向耦合运动。",
     "category": "求解与并行",
     "example": "DPMDyMFoam -case baseCase > baseCase/log.DPMDyMFoam 2>&1\ntail -n 20 baseCase/log.DPMDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/DPMFoam/DPMDyMFoam/DPMDyMFoam.C",
@@ -21656,8 +21656,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "MPPICFoam · MPPIC 颗粒碰撞与连续相耦合",
-    "description": "MPPIC 颗粒碰撞与连续相耦合。",
+    "title": "MPPICFoam · 用 MPPIC 方法模拟稠密颗粒群与连续流体的耦合运动",
+    "description": "用 MPPIC 方法模拟稠密颗粒群与连续流体的耦合运动。",
     "category": "求解与并行",
     "example": "MPPICFoam -case baseCase > baseCase/log.MPPICFoam 2>&1\ntail -n 20 baseCase/log.MPPICFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/DPMFoam/MPPICFoam/MPPICFoam.C",
@@ -21750,8 +21750,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "DPMFoam · 考虑颗粒体积分数的颗粒耦合输运",
-    "description": "考虑颗粒体积分数的颗粒耦合输运。",
+    "title": "DPMFoam · 模拟颗粒与流体的双向耦合，并考虑颗粒占据的体积",
+    "description": "模拟颗粒与流体的双向耦合，并考虑颗粒占据的体积。",
     "category": "求解与并行",
     "example": "DPMFoam -case baseCase > baseCase/log.DPMFoam 2>&1\ntail -n 20 baseCase/log.DPMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/DPMFoam/DPMFoam.C",
@@ -21844,8 +21844,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "coalChemistryFoam · 煤与石灰石颗粒反应流",
-    "description": "煤与石灰石颗粒反应流。",
+    "title": "coalChemistryFoam · 模拟煤和石灰石颗粒参与的反应流动",
+    "description": "模拟煤和石灰石颗粒参与的反应流动。",
     "category": "求解与并行",
     "example": "coalChemistryFoam -case baseCase > baseCase/log.coalChemistryFoam 2>&1\ntail -n 20 baseCase/log.coalChemistryFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/coalChemistryFoam/coalChemistryFoam.C",
@@ -21939,8 +21939,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "icoUncoupledKinematicParcelFoam · 预计算不可压缩流场中的被动颗粒",
-    "description": "预计算不可压缩流场中的被动颗粒。",
+    "title": "icoUncoupledKinematicParcelFoam · 在预先计算好的不可压缩流场中追踪颗粒运动",
+    "description": "在预先计算好的不可压缩流场中追踪颗粒运动。",
     "category": "求解与并行",
     "example": "icoUncoupledKinematicParcelFoam -case baseCase > baseCase/log.icoUncoupledKinematicParcelFoam 2>&1\ntail -n 20 baseCase/log.icoUncoupledKinematicParcelFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/icoUncoupledKinematicParcelFoam/icoUncoupledKinematicParcelFoam.C",
@@ -22034,8 +22034,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "icoUncoupledKinematicParcelDyMFoam · 动网格与预计算流场中的被动颗粒",
-    "description": "动网格与预计算流场中的被动颗粒。",
+    "title": "icoUncoupledKinematicParcelDyMFoam · 在含动网格的预计算不可压缩流场中追踪颗粒运动",
+    "description": "在含动网格的预计算不可压缩流场中追踪颗粒运动。",
     "category": "求解与并行",
     "example": "icoUncoupledKinematicParcelDyMFoam -case baseCase > baseCase/log.icoUncoupledKinematicParcelDyMFoam 2>&1\ntail -n 20 baseCase/log.icoUncoupledKinematicParcelDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/icoUncoupledKinematicParcelFoam/icoUncoupledKinematicParcelDyMFoam/icoUncoupledKinematicParcelDyMFoam.C",
@@ -22127,8 +22127,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "kinematicParcelFoam · 不可压缩流动与运动学颗粒云",
-    "description": "不可压缩流动与运动学颗粒云。",
+    "title": "kinematicParcelFoam · 耦合求解不可压缩流体与运动颗粒云",
+    "description": "耦合求解不可压缩流体与运动颗粒云。",
     "category": "求解与并行",
     "example": "kinematicParcelFoam -case baseCase > baseCase/log.kinematicParcelFoam 2>&1\ntail -n 20 baseCase/log.kinematicParcelFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/kinematicParcelFoam/kinematicParcelFoam.C",
@@ -22222,8 +22222,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "reactingParcelFoam · 可压缩流动与多相反应颗粒云",
-    "description": "可压缩流动与多相反应颗粒云。",
+    "title": "reactingParcelFoam · 耦合求解可压缩流体与发生传热、传质和反应的颗粒云",
+    "description": "耦合求解可压缩流体与发生传热、传质和反应的颗粒云。",
     "category": "求解与并行",
     "example": "reactingParcelFoam -case baseCase > baseCase/log.reactingParcelFoam 2>&1\ntail -n 20 baseCase/log.reactingParcelFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/reactingParcelFoam/reactingParcelFoam.C",
@@ -22317,8 +22317,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "reactingHeterogenousParcelFoam · 异相反应颗粒与连续相耦合",
-    "description": "异相反应颗粒与连续相耦合。",
+    "title": "reactingHeterogenousParcelFoam · 耦合求解连续流体与发生异相反应的颗粒",
+    "description": "耦合求解连续流体与发生异相反应的颗粒。",
     "category": "求解与并行",
     "example": "reactingHeterogenousParcelFoam -case baseCase > baseCase/log.reactingHeterogenousParcelFoam 2>&1\ntail -n 20 baseCase/log.reactingHeterogenousParcelFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/reactingParcelFoam/reactingHeterogenousParcelFoam/reactingHeterogenousParcelFoam.C",
@@ -22412,8 +22412,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "simpleReactingParcelFoam · 稳态可压缩反应颗粒流",
-    "description": "稳态可压缩反应颗粒流。",
+    "title": "simpleReactingParcelFoam · 求解稳态可压缩流体与反应颗粒的耦合运动",
+    "description": "求解稳态可压缩流体与反应颗粒的耦合运动。",
     "category": "求解与并行",
     "example": "simpleReactingParcelFoam -case baseCase > baseCase/log.simpleReactingParcelFoam 2>&1\ntail -n 20 baseCase/log.simpleReactingParcelFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/reactingParcelFoam/simpleReactingParcelFoam/simpleReactingParcelFoam.C",
@@ -22507,8 +22507,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "simpleCoalParcelFoam · 稳态可压缩煤颗粒流",
-    "description": "稳态可压缩煤颗粒流。",
+    "title": "simpleCoalParcelFoam · 求解含煤颗粒的稳态可压缩反应流",
+    "description": "求解含煤颗粒的稳态可压缩反应流。",
     "category": "求解与并行",
     "example": "simpleCoalParcelFoam -case baseCase > baseCase/log.simpleCoalParcelFoam 2>&1\ntail -n 20 baseCase/log.simpleCoalParcelFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/simpleCoalParcelFoam/simpleCoalParcelFoam.C",
@@ -22602,8 +22602,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "sprayFoam · 瞬态可压缩喷雾",
-    "description": "瞬态可压缩喷雾。",
+    "title": "sprayFoam · 求解可压缩流体与喷雾液滴的瞬态耦合运动",
+    "description": "求解可压缩流体与喷雾液滴的瞬态耦合运动。",
     "category": "求解与并行",
     "example": "sprayFoam -case baseCase > baseCase/log.sprayFoam 2>&1\ntail -n 20 baseCase/log.sprayFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/sprayFoam/sprayFoam.C",
@@ -22697,8 +22697,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "engineFoam · 内燃机中的瞬态喷雾流动",
-    "description": "内燃机中的瞬态喷雾流动。",
+    "title": "engineFoam · 模拟内燃机中随活塞运动变化的喷雾与流动",
+    "description": "模拟内燃机中随活塞运动变化的喷雾与流动。",
     "category": "求解与并行",
     "example": "engineFoam -case baseCase > baseCase/log.engineFoam 2>&1\ntail -n 20 baseCase/log.engineFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/sprayFoam/engineFoam/engineFoam.C",
@@ -22790,8 +22790,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "simpleSprayFoam · 稳态可压缩喷雾",
-    "description": "稳态可压缩喷雾。",
+    "title": "simpleSprayFoam · 求解可压缩流体与喷雾液滴的稳态耦合运动",
+    "description": "求解可压缩流体与喷雾液滴的稳态耦合运动。",
     "category": "求解与并行",
     "example": "simpleSprayFoam -case baseCase > baseCase/log.simpleSprayFoam 2>&1\ntail -n 20 baseCase/log.simpleSprayFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/sprayFoam/simpleSprayFoam/simpleSprayFoam.C",
@@ -22885,8 +22885,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "sprayDyMFoam · 动网格上的瞬态喷雾",
-    "description": "动网格上的瞬态喷雾。",
+    "title": "sprayDyMFoam · 在动网格上模拟瞬态可压缩喷雾流动",
+    "description": "在动网格上模拟瞬态可压缩喷雾流动。",
     "category": "求解与并行",
     "example": "sprayDyMFoam -case baseCase > baseCase/log.sprayDyMFoam 2>&1\ntail -n 20 baseCase/log.sprayDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/sprayFoam/sprayDyMFoam/sprayDyMFoam.C",
@@ -22978,8 +22978,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "uncoupledKinematicParcelFoam · 预计算流场中的被动颗粒云",
-    "description": "预计算流场中的被动颗粒云。",
+    "title": "uncoupledKinematicParcelFoam · 在给定流场中追踪颗粒云的运动",
+    "description": "在给定流场中追踪颗粒云的运动。",
     "category": "求解与并行",
     "example": "uncoupledKinematicParcelFoam -case baseCase > baseCase/log.uncoupledKinematicParcelFoam 2>&1\ntail -n 20 baseCase/log.uncoupledKinematicParcelFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/uncoupledKinematicParcelFoam/uncoupledKinematicParcelFoam.C",
@@ -23073,8 +23073,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "uncoupledKinematicParcelDyMFoam · 动网格预计算流场中的被动颗粒云",
-    "description": "动网格预计算流场中的被动颗粒云。",
+    "title": "uncoupledKinematicParcelDyMFoam · 在含动网格的给定流场中追踪颗粒云的运动",
+    "description": "在含动网格的给定流场中追踪颗粒云的运动。",
     "category": "求解与并行",
     "example": "uncoupledKinematicParcelDyMFoam -case baseCase > baseCase/log.uncoupledKinematicParcelDyMFoam 2>&1\ntail -n 20 baseCase/log.uncoupledKinematicParcelDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/lagrangian/uncoupledKinematicParcelFoam/uncoupledKinematicParcelDyMFoam/uncoupledKinematicParcelDyMFoam.C",
@@ -23166,8 +23166,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "MPPICInterFoam · VOF 两相流与 MPPIC 颗粒云",
-    "description": "VOF 两相流与 MPPIC 颗粒云。",
+    "title": "MPPICInterFoam · 耦合模拟 VOF 两相界面与 MPPIC 颗粒云",
+    "description": "耦合模拟 VOF 两相界面与 MPPIC 颗粒云。",
     "category": "求解与并行",
     "example": "MPPICInterFoam -case baseCase > baseCase/log.MPPICInterFoam 2>&1\ntail -n 20 baseCase/log.MPPICInterFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/MPPICInterFoam/MPPICInterFoam.C",
@@ -23260,8 +23260,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "cavitatingFoam · 均相平衡模型的空化流动",
-    "description": "均相平衡模型的空化流动。",
+    "title": "cavitatingFoam · 采用均相平衡模型模拟液体中的空化流动",
+    "description": "采用均相平衡模型模拟液体中的空化流动。",
     "category": "求解与并行",
     "example": "cavitatingFoam -case baseCase > baseCase/log.cavitatingFoam 2>&1\ntail -n 20 baseCase/log.cavitatingFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/cavitatingFoam/cavitatingFoam.C",
@@ -23354,8 +23354,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "cavitatingDyMFoam · 动网格均相平衡空化流动",
-    "description": "动网格均相平衡空化流动。",
+    "title": "cavitatingDyMFoam · 在动网格上采用均相平衡模型模拟空化流动",
+    "description": "在动网格上采用均相平衡模型模拟空化流动。",
     "category": "求解与并行",
     "example": "cavitatingDyMFoam -case baseCase > baseCase/log.cavitatingDyMFoam 2>&1\ntail -n 20 baseCase/log.cavitatingDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/cavitatingFoam/cavitatingDyMFoam/cavitatingDyMFoam.C",
@@ -23446,8 +23446,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "compressibleInterFoam · 两种可压缩非等温流体的 VOF 输运",
-    "description": "两种可压缩非等温流体的 VOF 输运。",
+    "title": "compressibleInterFoam · 用 VOF 方法模拟两种可压缩流体的界面运动与传热",
+    "description": "用 VOF 方法模拟两种可压缩流体的界面运动与传热。",
     "category": "求解与并行",
     "example": "compressibleInterFoam -case baseCase > baseCase/log.compressibleInterFoam 2>&1\ntail -n 20 baseCase/log.compressibleInterFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/compressibleInterFoam/compressibleInterFoam.C",
@@ -23541,8 +23541,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "compressibleInterDyMFoam · 动网格上的可压缩非等温 VOF 输运",
-    "description": "动网格上的可压缩非等温 VOF 输运。",
+    "title": "compressibleInterDyMFoam · 在动网格上模拟两种可压缩流体的界面运动与传热",
+    "description": "在动网格上模拟两种可压缩流体的界面运动与传热。",
     "category": "求解与并行",
     "example": "compressibleInterDyMFoam -case baseCase > baseCase/log.compressibleInterDyMFoam 2>&1\ntail -n 20 baseCase/log.compressibleInterDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/compressibleInterFoam/compressibleInterDyMFoam/compressibleInterDyMFoam.C",
@@ -23634,8 +23634,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "compressibleInterFilmFoam · 可压缩 VOF 流动与液膜耦合",
-    "description": "可压缩 VOF 流动与液膜耦合。",
+    "title": "compressibleInterFilmFoam · 耦合模拟可压缩 VOF 两相流与表面液膜",
+    "description": "耦合模拟可压缩 VOF 两相流与表面液膜。",
     "category": "求解与并行",
     "example": "compressibleInterFilmFoam -case baseCase > baseCase/log.compressibleInterFilmFoam 2>&1\ntail -n 20 baseCase/log.compressibleInterFilmFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/compressibleInterFoam/compressibleInterFilmFoam/VoFPatchTransfer/VoFPatchTransfer.C",
@@ -23729,8 +23729,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "compressibleInterIsoFoam · 可压缩两相流的 isoAdvector 输运",
-    "description": "可压缩两相流的 isoAdvector 输运。",
+    "title": "compressibleInterIsoFoam · 采用 isoAdvector 界面输运方法求解可压缩两相流",
+    "description": "采用 isoAdvector 界面输运方法求解可压缩两相流。",
     "category": "求解与并行",
     "example": "compressibleInterIsoFoam -case baseCase > baseCase/log.compressibleInterIsoFoam 2>&1\ntail -n 20 baseCase/log.compressibleInterIsoFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/compressibleInterFoam/compressibleInterIsoFoam/compressibleInterIsoFoam.C",
@@ -23822,8 +23822,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "overCompressibleInterDyMFoam · 重叠动网格上的可压缩 VOF 输运",
-    "description": "重叠动网格上的可压缩 VOF 输运。",
+    "title": "overCompressibleInterDyMFoam · 在重叠动网格上求解可压缩 VOF 两相流",
+    "description": "在重叠动网格上求解可压缩 VOF 两相流。",
     "category": "求解与并行",
     "example": "overCompressibleInterDyMFoam -case baseCase > baseCase/log.overCompressibleInterDyMFoam 2>&1\ntail -n 20 baseCase/log.overCompressibleInterDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/compressibleInterFoam/overCompressibleInterDyMFoam/overCompressibleInterDyMFoam.C",
@@ -23917,8 +23917,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "compressibleMultiphaseInterFoam · 多种可压缩非等温流体的界面输运",
-    "description": "多种可压缩非等温流体的界面输运。",
+    "title": "compressibleMultiphaseInterFoam · 模拟多种可压缩流体的界面运动与传热",
+    "description": "模拟多种可压缩流体的界面运动与传热。",
     "category": "求解与并行",
     "example": "compressibleMultiphaseInterFoam -case baseCase > baseCase/log.compressibleMultiphaseInterFoam 2>&1\ntail -n 20 baseCase/log.compressibleMultiphaseInterFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/compressibleMultiphaseInterFoam/compressibleMultiphaseInterFoam.C",
@@ -24011,8 +24011,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "driftFluxFoam · 漂移通量混合物模型",
-    "description": "漂移通量混合物模型。",
+    "title": "driftFluxFoam · 用漂移通量模型模拟混合物中各相的相对运动",
+    "description": "用漂移通量模型模拟混合物中各相的相对运动。",
     "category": "求解与并行",
     "example": "driftFluxFoam -case baseCase > baseCase/log.driftFluxFoam 2>&1\ntail -n 20 baseCase/log.driftFluxFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/driftFluxFoam/incompressibleTwoPhaseInteractingMixture/incompressibleTwoPhaseInteractingMixture.C",
@@ -24105,8 +24105,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "icoReactingMultiphaseInterFoam · 含相变的多种不可压缩流体界面输运",
-    "description": "含相变的多种不可压缩流体界面输运。",
+    "title": "icoReactingMultiphaseInterFoam · 模拟多种不可压缩流体的界面运动，并可考虑相间传质与相变",
+    "description": "模拟多种不可压缩流体的界面运动，并可考虑相间传质与相变。",
     "category": "求解与并行",
     "example": "icoReactingMultiphaseInterFoam -case baseCase > baseCase/log.icoReactingMultiphaseInterFoam 2>&1\ntail -n 20 baseCase/log.icoReactingMultiphaseInterFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/icoReactingMultiphaseInterFoam/icoReactingMultiphaseInterFoam.C",
@@ -24198,8 +24198,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "interCondensatingEvaporatingFoam · 液体与蒸气的蒸发凝结界面输运",
-    "description": "液体与蒸气的蒸发凝结界面输运。",
+    "title": "interCondensatingEvaporatingFoam · 模拟液体与蒸气界面的运动、蒸发和凝结",
+    "description": "模拟液体与蒸气界面的运动、蒸发和凝结。",
     "category": "求解与并行",
     "example": "interCondensatingEvaporatingFoam -case baseCase > baseCase/log.interCondensatingEvaporatingFoam 2>&1\ntail -n 20 baseCase/log.interCondensatingEvaporatingFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interCondensatingEvaporatingFoam/interCondensatingEvaporatingFoam.C",
@@ -24388,8 +24388,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "interMixingFoam · 三流体中可混合与不可混合相的输运",
-    "description": "三流体中可混合与不可混合相的输运。",
+    "title": "interMixingFoam · 模拟三种流体的运动，其中两种可相互混合，另一种与它们形成界面",
+    "description": "模拟三种流体的运动，其中两种可相互混合，另一种与它们形成界面。",
     "category": "求解与并行",
     "example": "interMixingFoam -case baseCase > baseCase/log.interMixingFoam 2>&1\ntail -n 20 baseCase/log.interMixingFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interFoam/interMixingFoam/incompressibleThreePhaseMixture/incompressibleThreePhaseMixture.C",
@@ -24483,8 +24483,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "overInterDyMFoam · 重叠动网格上的不可压缩 VOF 输运",
-    "description": "重叠动网格上的不可压缩 VOF 输运。",
+    "title": "overInterDyMFoam · 在重叠动网格上求解不可压缩 VOF 两相流",
+    "description": "在重叠动网格上求解不可压缩 VOF 两相流。",
     "category": "求解与并行",
     "example": "overInterDyMFoam -case baseCase > baseCase/log.overInterDyMFoam 2>&1\ntail -n 20 baseCase/log.overInterDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interFoam/overInterDyMFoam/overInterDyMFoam.C",
@@ -24576,8 +24576,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "interIsoFoam · 不可压缩两相流的 isoAdvector 输运",
-    "description": "不可压缩两相流的 isoAdvector 输运。",
+    "title": "interIsoFoam · 采用 isoAdvector 界面输运方法求解不可压缩两相流",
+    "description": "采用 isoAdvector 界面输运方法求解不可压缩两相流。",
     "category": "求解与并行",
     "example": "interIsoFoam -case baseCase > baseCase/log.interIsoFoam 2>&1\ntail -n 20 baseCase/log.interIsoFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interIsoFoam/interIsoFoam.C",
@@ -24671,8 +24671,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "interPhaseChangeFoam · 含空化等相变的不可压缩两相 VOF 输运",
-    "description": "含空化等相变的不可压缩两相 VOF 输运。",
+    "title": "interPhaseChangeFoam · 用 VOF 方法求解包含空化等相变过程的不可压缩两相流",
+    "description": "用 VOF 方法求解包含空化等相变过程的不可压缩两相流。",
     "category": "求解与并行",
     "example": "interPhaseChangeFoam -case baseCase > baseCase/log.interPhaseChangeFoam 2>&1\ntail -n 20 baseCase/log.interPhaseChangeFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interPhaseChangeFoam/interPhaseChangeFoam.C",
@@ -24766,8 +24766,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "interPhaseChangeDyMFoam · 动网格两相 VOF 相变流动",
-    "description": "动网格两相 VOF 相变流动。",
+    "title": "interPhaseChangeDyMFoam · 在动网格上求解包含相变的不可压缩 VOF 两相流",
+    "description": "在动网格上求解包含相变的不可压缩 VOF 两相流。",
     "category": "求解与并行",
     "example": "interPhaseChangeDyMFoam -case baseCase > baseCase/log.interPhaseChangeDyMFoam 2>&1\ntail -n 20 baseCase/log.interPhaseChangeDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interPhaseChangeFoam/interPhaseChangeDyMFoam/interPhaseChangeDyMFoam.C",
@@ -24859,8 +24859,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "overInterPhaseChangeDyMFoam · 重叠动网格两相 VOF 相变流动",
-    "description": "重叠动网格两相 VOF 相变流动。",
+    "title": "overInterPhaseChangeDyMFoam · 在重叠动网格上求解包含相变的不可压缩 VOF 两相流",
+    "description": "在重叠动网格上求解包含相变的不可压缩 VOF 两相流。",
     "category": "求解与并行",
     "example": "overInterPhaseChangeDyMFoam -case baseCase > baseCase/log.overInterPhaseChangeDyMFoam 2>&1\ntail -n 20 baseCase/log.overInterPhaseChangeDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/interPhaseChangeFoam/overInterPhaseChangeDyMFoam/overInterPhaseChangeDyMFoam.C",
@@ -24952,8 +24952,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "multiphaseEulerFoam · 含传热的多相 Euler–Euler 模型",
-    "description": "含传热的多相 Euler–Euler 模型。",
+    "title": "multiphaseEulerFoam · 用 Euler–Euler 方法分别求解多个相的流动与传热",
+    "description": "用 Euler–Euler 方法分别求解多个相的流动与传热。",
     "category": "求解与并行",
     "example": "multiphaseEulerFoam -case baseCase > baseCase/log.multiphaseEulerFoam 2>&1\ntail -n 20 baseCase/log.multiphaseEulerFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/multiphaseEulerFoam/multiphaseEulerFoam.C",
@@ -25046,8 +25046,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "multiphaseInterFoam · 多种不可压缩流体的界面输运",
-    "description": "多种不可压缩流体的界面输运。",
+    "title": "multiphaseInterFoam · 用界面捕捉方法模拟多种不可压缩、不混溶流体的运动",
+    "description": "用界面捕捉方法模拟多种不可压缩、不混溶流体的运动。",
     "category": "求解与并行",
     "example": "multiphaseInterFoam -case baseCase > baseCase/log.multiphaseInterFoam 2>&1\ntail -n 20 baseCase/log.multiphaseInterFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/multiphaseInterFoam/multiphaseInterFoam.C",
@@ -25141,8 +25141,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "potentialFreeSurfaceFoam · 以波高场近似单相自由表面",
-    "description": "以波高场近似单相自由表面。",
+    "title": "potentialFreeSurfaceFoam · 通过波高场近似自由表面，求解单相液体流动",
+    "description": "通过波高场近似自由表面，求解单相液体流动。",
     "category": "求解与并行",
     "example": "potentialFreeSurfaceFoam -case baseCase > baseCase/log.potentialFreeSurfaceFoam 2>&1\ntail -n 20 baseCase/log.potentialFreeSurfaceFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/potentialFreeSurfaceFoam/potentialFreeSurfaceFoam.C",
@@ -25236,8 +25236,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "potentialFreeSurfaceDyMFoam · 动网格单相自由表面近似",
-    "description": "动网格单相自由表面近似。",
+    "title": "potentialFreeSurfaceDyMFoam · 在动网格上通过波高场近似自由表面流动",
+    "description": "在动网格上通过波高场近似自由表面流动。",
     "category": "求解与并行",
     "example": "potentialFreeSurfaceDyMFoam -case baseCase > baseCase/log.potentialFreeSurfaceDyMFoam 2>&1\ntail -n 20 baseCase/log.potentialFreeSurfaceDyMFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/potentialFreeSurfaceFoam/potentialFreeSurfaceDyMFoam/potentialFreeSurfaceDyMFoam.C",
@@ -25329,8 +25329,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "reactingMultiphaseEulerFoam · 可反应的多流体 Euler–Euler 模型",
-    "description": "可反应的多流体 Euler–Euler 模型。",
+    "title": "reactingMultiphaseEulerFoam · 分别求解多个连续相的流动、传热及反应",
+    "description": "分别求解多个连续相的流动、传热及反应。",
     "category": "求解与并行",
     "example": "reactingMultiphaseEulerFoam -case baseCase > baseCase/log.reactingMultiphaseEulerFoam 2>&1\ntail -n 20 baseCase/log.reactingMultiphaseEulerFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/reactingMultiphaseEulerFoam/reactingMultiphaseEulerFoam.C",
@@ -25416,8 +25416,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "reactingTwoPhaseEulerFoam · 可反应的两流体 Euler–Euler 模型",
-    "description": "可反应的两流体 Euler–Euler 模型。",
+    "title": "reactingTwoPhaseEulerFoam · 用 Euler–Euler 方法求解两相之间的流动、传热及反应",
+    "description": "用 Euler–Euler 方法求解两相之间的流动、传热及反应。",
     "category": "求解与并行",
     "example": "reactingTwoPhaseEulerFoam -case baseCase > baseCase/log.reactingTwoPhaseEulerFoam 2>&1\ntail -n 20 baseCase/log.reactingTwoPhaseEulerFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/reactingTwoPhaseEulerFoam/reactingTwoPhaseEulerFoam.C",
@@ -25510,8 +25510,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "twoLiquidMixingFoam · 两种不可压缩流体的混合",
-    "description": "两种不可压缩流体的混合。",
+    "title": "twoLiquidMixingFoam · 求解两种可混合、不可压缩液体的混合过程",
+    "description": "求解两种可混合、不可压缩液体的混合过程。",
     "category": "求解与并行",
     "example": "twoLiquidMixingFoam -case baseCase > baseCase/log.twoLiquidMixingFoam 2>&1\ntail -n 20 baseCase/log.twoLiquidMixingFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/twoLiquidMixingFoam/twoLiquidMixingFoam.C",
@@ -25604,8 +25604,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "twoPhaseEulerFoam · 含分散相与传热的两流体模型",
-    "description": "含分散相与传热的两流体模型。",
+    "title": "twoPhaseEulerFoam · 用两流体模型求解连续相与分散相的流动和传热",
+    "description": "用两流体模型求解连续相与分散相的流动和传热。",
     "category": "求解与并行",
     "example": "twoPhaseEulerFoam -case baseCase > baseCase/log.twoPhaseEulerFoam 2>&1\ntail -n 20 baseCase/log.twoPhaseEulerFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/multiphase/twoPhaseEulerFoam/twoPhaseEulerFoam.C",
@@ -25698,8 +25698,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "solidDisplacementFoam · 线弹性固体位移",
-    "description": "线弹性固体位移。",
+    "title": "solidDisplacementFoam · 求解线弹性固体的位移与应力",
+    "description": "求解线弹性固体的位移与应力。",
     "category": "求解与并行",
     "example": "solidDisplacementFoam -case baseCase > baseCase/log.solidDisplacementFoam 2>&1\ntail -n 20 baseCase/log.solidDisplacementFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/stressAnalysis/solidDisplacementFoam/tractionDisplacement/tractionDisplacementFvPatchVectorField.C",
@@ -25791,8 +25791,8 @@
         "url": "/dictionaries/system-fvsolution/"
       }
     ],
-    "title": "solidEquilibriumDisplacementFoam · 固体平衡位移",
-    "description": "固体平衡位移。",
+    "title": "solidEquilibriumDisplacementFoam · 求解静力平衡下线弹性固体的位移与应力",
+    "description": "求解静力平衡下线弹性固体的位移与应力。",
     "category": "求解与并行",
     "example": "solidEquilibriumDisplacementFoam -case baseCase > baseCase/log.solidEquilibriumDisplacementFoam 2>&1\ntail -n 20 baseCase/log.solidEquilibriumDisplacementFoam",
     "source": "https://gitlab.com/openfoam/core/openfoam/-/blob/OpenFOAM-v2512/applications/solvers/stressAnalysis/solidEquilibriumDisplacementFoam/tractionDisplacementCorrection/tractionDisplacementCorrectionFvPatchVectorField.C",
@@ -27841,8 +27841,8 @@
     "verificationText": "v2512 脚本源码已收录；未执行脚本",
     "version": "v2512",
     "sourceDescription": "",
-    "title": "Allmake · 该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码",
-    "description": "该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码。",
+    "title": "Allmake · 编译 wmake 使用的依赖扫描与代码生成工具",
+    "description": "编译 wmake 使用的依赖扫描与代码生成工具。",
     "category": "环境与编译",
     "example": "cp -a \"$WM_PROJECT_DIR/wmake/src\" tools-src\nWMAKE_BIN=\"$PWD/tools-bin\" bash tools-src/Allmake",
     "details": "该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码。",
@@ -27887,8 +27887,8 @@
     "verificationText": "v2512 脚本源码已收录；未执行脚本",
     "version": "v2512",
     "sourceDescription": "",
-    "title": "createCode · 该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码",
-    "description": "该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码。",
+    "title": "createCode · 调用 Ragel，根据规则文件生成 wmkdepend 的源码依赖扫描器",
+    "description": "调用 Ragel，根据规则文件生成 wmkdepend 的源码依赖扫描器。",
     "category": "环境与编译",
     "example": "bash scanner-demo/createCode",
     "details": "该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码。",
@@ -28444,8 +28444,8 @@
   },
   {
     "name": "getApplication",
-    "title": "getApplication · 读取 controlDict 中的 application",
-    "description": "读取 controlDict 中的 application。",
+    "title": "getApplication · 读取 controlDict 中指定的求解器或应用程序名称",
+    "description": "读取 controlDict 中指定的求解器或应用程序名称。",
     "details": "读取 controlDict 中的 application。",
     "example": "cd caseA\ngetApplication",
     "category": "环境与编译",
@@ -28530,8 +28530,8 @@
   },
   {
     "name": "getNumberOfProcessors",
-    "title": "getNumberOfProcessors · 读取 decomposeParDict 中的 numberOfSubdomains",
-    "description": "读取 decomposeParDict 中的 numberOfSubdomains。",
+    "title": "getNumberOfProcessors · 读取 decomposeParDict 中设置的并行分区数量",
+    "description": "读取 decomposeParDict 中设置的并行分区数量。",
     "details": "读取 decomposeParDict 中的 numberOfSubdomains。",
     "example": "cd caseA\ngetNumberOfProcessors",
     "category": "环境与编译",
@@ -29959,8 +29959,8 @@
   },
   {
     "name": "wmDP",
-    "title": "wmDP · 重新加载环境并设置 WM_PRECISION_OPTION=DP",
-    "description": "重新加载环境并设置 WM_PRECISION_OPTION=DP。",
+    "title": "wmDP · 重新加载 OpenFOAM 环境，并选择双精度浮点数",
+    "description": "重新加载 OpenFOAM 环境，并选择双精度浮点数。",
     "details": "重新加载环境并设置 WM_PRECISION_OPTION=DP。",
     "example": "wmDP\necho \"$WM_PRECISION_OPTION\"",
     "category": "环境与编译",
@@ -30002,8 +30002,8 @@
   },
   {
     "name": "wmInt32",
-    "title": "wmInt32 · 重新加载环境并设置 WM_LABEL_SIZE=32",
-    "description": "重新加载环境并设置 WM_LABEL_SIZE=32。",
+    "title": "wmInt32 · 重新加载 OpenFOAM 环境，并选择 32 位网格编号",
+    "description": "重新加载 OpenFOAM 环境，并选择 32 位网格编号。",
     "details": "重新加载环境并设置 WM_LABEL_SIZE=32。",
     "example": "wmInt32\necho \"$WM_LABEL_SIZE\"",
     "category": "环境与编译",
@@ -30045,8 +30045,8 @@
   },
   {
     "name": "wmInt64",
-    "title": "wmInt64 · 重新加载环境并设置 WM_LABEL_SIZE=64",
-    "description": "重新加载环境并设置 WM_LABEL_SIZE=64。",
+    "title": "wmInt64 · 重新加载 OpenFOAM 环境，并选择 64 位网格编号",
+    "description": "重新加载 OpenFOAM 环境，并选择 64 位网格编号。",
     "details": "重新加载环境并设置 WM_LABEL_SIZE=64。",
     "example": "wmInt64\necho \"$WM_LABEL_SIZE\"",
     "category": "环境与编译",
@@ -30131,8 +30131,8 @@
   },
   {
     "name": "wmSP",
-    "title": "wmSP · 重新加载环境并设置 WM_PRECISION_OPTION=SP",
-    "description": "重新加载环境并设置 WM_PRECISION_OPTION=SP。",
+    "title": "wmSP · 重新加载 OpenFOAM 环境，并选择单精度浮点数",
+    "description": "重新加载 OpenFOAM 环境，并选择单精度浮点数。",
     "details": "重新加载环境并设置 WM_PRECISION_OPTION=SP。",
     "example": "wmSP\necho \"$WM_PRECISION_OPTION\"",
     "category": "环境与编译",
@@ -30174,8 +30174,8 @@
   },
   {
     "name": "wmSPDP",
-    "title": "wmSPDP · 重新加载环境并设置 WM_PRECISION_OPTION=SPDP",
-    "description": "重新加载环境并设置 WM_PRECISION_OPTION=SPDP。",
+    "title": "wmSPDP · 重新加载 OpenFOAM 环境，并选择单精度场与双精度求解的混合模式",
+    "description": "重新加载 OpenFOAM 环境，并选择单精度场与双精度求解的混合模式。",
     "details": "重新加载环境并设置 WM_PRECISION_OPTION=SPDP。",
     "example": "wmSPDP\necho \"$WM_PRECISION_OPTION\"",
     "category": "环境与编译",

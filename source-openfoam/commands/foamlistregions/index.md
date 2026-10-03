@@ -1,11 +1,11 @@
 ---
-title: "foamListRegions · 可按 fluid、solid 等 regionType 筛选，-finite-area 选择有限"
+title: "foamListRegions · 列出算例中的体网格区域或有限面积区域"
 layout: reference
-description: "可按 fluid、solid 等 regionType 筛选，-finite-area 选择有限面积区域。"
+description: "列出算例中的体网格区域或有限面积区域。"
 cms_slug: "command-foamlistregions"
 ---
 
-<p>可按 fluid、solid 等 regionType 筛选，-finite-area 选择有限面积区域。</p><h2>开始前</h2>
+<p>列出算例中的体网格区域或有限面积区域。</p><h2>开始前</h2>
 <p>体区域名称与分类来自 constant/regionProperties；有限面积区域来自 constant/finite-area/regionProperties。</p>
 <h2>示例 1：列出全部体区域</h2>
 <pre><code class="language-bash">foamListRegions

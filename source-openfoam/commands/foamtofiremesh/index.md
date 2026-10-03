@@ -1,11 +1,11 @@
 ---
-title: "foamToFireMesh · -scale 指定长度缩放系数"
+title: "foamToFireMesh · 将 OpenFOAM 网格导出为 AVL/FIRE 的 FPMA 格式"
 layout: reference
-description: "-scale 指定长度缩放系数。"
+description: "将 OpenFOAM 网格导出为 AVL/FIRE 的 FPMA 格式。"
 cms_slug: "command-foamtofiremesh"
 ---
 
-<p>-scale 指定长度缩放系数。</p><h2>开始前</h2>
+<p>将 OpenFOAM 网格导出为 AVL/FIRE 的 FPMA 格式。</p><h2>开始前</h2>
 <p>案例已有体网格；按时间导出示例需要相应网格时间目录。输出用于 AVL FIRE 格式交换。</p>
 <h2>示例 1：导出初始网格</h2>
 <pre><code class="language-bash">foamToFireMesh -constant

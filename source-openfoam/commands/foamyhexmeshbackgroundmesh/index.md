@@ -1,11 +1,11 @@
 ---
-title: "foamyHexMeshBackgroundMesh · 为 foamyHexMesh 提供背景网格"
+title: "foamyHexMeshBackgroundMesh · 生成并导出 foamyHexMesh 使用的背景网格与距离表面"
 layout: reference
-description: "为 foamyHexMesh 提供背景网格。"
+description: "生成并导出 foamyHexMesh 使用的背景网格与距离表面。"
 cms_slug: "command-foamyhexmeshbackgroundmesh"
 ---
 
-<p>为 foamyHexMesh 提供背景网格。</p><h2>开始前</h2>
+<p>生成并导出 foamyHexMesh 使用的背景网格与距离表面。</p><h2>开始前</h2>
 <p>该开发工具需在本机可用；使用完整foamyHexMeshDict及表面几何，输出用于检查背景网格与距离表面。</p>
 <h2>示例 1：生成几何表示</h2>
 <pre><code class="language-bash">foamyHexMeshBackgroundMesh

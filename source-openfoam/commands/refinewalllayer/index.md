@@ -1,11 +1,11 @@
 ---
-title: "refineWallLayer · 输入比例指定边的细分位置"
+title: "refineWallLayer · 按指定厚度比例细分靠近选定边界的网格单元"
 layout: reference
-description: "输入比例指定边的细分位置。"
+description: "按指定厚度比例细分靠近选定边界的网格单元。"
 cms_slug: "command-refinewalllayer"
 ---
 
-<p>输入比例指定边的细分位置。</p><h2>开始前</h2>
+<p>按指定厚度比例细分靠近选定边界的网格单元。</p><h2>开始前</h2>
 <p>已有包含指定壁面 patch 的网格；edgeFraction 决定沿壁面相连边切分的位置，取 0–1 之间的比例。</p>
 <h2>示例 1：细化一个壁面附近的单元</h2>
 <pre><code class="language-bash">refineWallLayer '(walls)' 0.5

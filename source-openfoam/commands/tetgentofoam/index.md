@@ -1,11 +1,11 @@
 ---
-title: "tetgenToFoam · 按前缀读取配套的 node、ele 和 face 等文件"
+title: "tetgenToFoam · 将 TetGen 的节点、单元和边界面文件转换为 OpenFOAM 网格"
 layout: reference
-description: "按前缀读取配套的 node、ele 和 face 等文件。"
+description: "将 TetGen 的节点、单元和边界面文件转换为 OpenFOAM 网格。"
 cms_slug: "command-tetgentofoam"
 ---
 
-<p>按前缀读取配套的 node、ele 和 face 等文件。</p><h2>开始前</h2>
+<p>将 TetGen 的节点、单元和边界面文件转换为 OpenFOAM 网格。</p><h2>开始前</h2>
 <p>准备 TetGen 同名前缀的 .node、.ele 和 .face 文件；边界标记用于建立表面分区。</p>
 <h2>示例 1：按前缀导入</h2>
 <pre><code class="language-bash">tetgenToFoam mesh.1

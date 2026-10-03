@@ -1,11 +1,11 @@
 ---
-title: "surfaceConvert · -scale 指定几何缩放系数，按输入与输出长度单位换算"
+title: "surfaceConvert · 转换表面网格的文件格式，并可调整几何尺寸"
 layout: reference
-description: "-scale 指定几何缩放系数，按输入与输出长度单位换算。"
+description: "转换表面网格的文件格式，并可调整几何尺寸。"
 cms_slug: "command-surfaceconvert"
 ---
 
-<p>-scale 指定几何缩放系数，按输入与输出长度单位换算。</p><h2>开始前</h2>
+<p>转换表面网格的文件格式，并可调整几何尺寸。</p><h2>开始前</h2>
 <p>输入与输出格式由扩展名识别，也可显式指定；该工具使用三角表面表示。</p>
 <h2>示例 1：将STL转为OBJ</h2>
 <pre><code class="language-bash">surfaceConvert body.stl body.obj

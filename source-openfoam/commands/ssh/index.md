@@ -1,11 +1,11 @@
 ---
-title: "ssh · 连接计算服务器"
+title: "ssh · 通过加密连接登录远程计算机并执行命令"
 layout: reference
-description: "连接计算服务器。"
+description: "通过加密连接登录远程计算机并执行命令。"
 cms_slug: "command-ssh"
 ---
 
-<p>连接计算服务器。</p><h2>开始前</h2>
+<p>通过加密连接登录远程计算机并执行命令。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：登录远端</h2>
 <pre><code class="language-bash">ssh student@compute.example.org

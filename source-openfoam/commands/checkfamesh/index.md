@@ -1,11 +1,11 @@
 ---
-title: "checkFaMesh · 检查对象为有限面积网格"
+title: "checkFaMesh · 检查有限面积网格的几何与拓扑质量"
 layout: reference
-description: "检查对象为有限面积网格。"
+description: "检查有限面积网格的几何与拓扑质量。"
 cms_slug: "command-checkfamesh"
 ---
 
-<p>检查对象为有限面积网格。</p><h2>开始前</h2>
+<p>检查有限面积网格的几何与拓扑质量。</p><h2>开始前</h2>
 <p>已由 makeFaMesh 建立有限面积网格。area-region 指面积网格区域，region 指其所属体网格区域。</p>
 <h2>示例 1：检查默认面积网格</h2>
 <pre><code class="language-bash">checkFaMesh

@@ -1,11 +1,11 @@
 ---
-title: "getNumberOfProcessors · 读取 decomposeParDict 中的 numberOfSubdomains"
+title: "getNumberOfProcessors · 读取 decomposeParDict 中设置的并行分区数量"
 layout: reference
-description: "读取 decomposeParDict 中的 numberOfSubdomains。"
+description: "读取 decomposeParDict 中设置的并行分区数量。"
 cms_slug: "command-getnumberofprocessors"
 ---
 
-<p>读取 decomposeParDict 中的 numberOfSubdomains。</p><h2>开始前</h2>
+<p>读取 decomposeParDict 中设置的并行分区数量。</p><h2>开始前</h2>
 <p>先在单独一行执行 source "$WM_PROJECT_DIR/bin/tools/RunFunctions"。示例在个人算例工作区操作，caseA、caseB 均为可修改的副本。</p>
 <h2>示例 1：读取默认分解数</h2>
 <pre><code class="language-bash">cd caseA

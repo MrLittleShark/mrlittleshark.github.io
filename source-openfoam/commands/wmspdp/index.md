@@ -1,11 +1,11 @@
 ---
-title: "wmSPDP · 重新加载环境并设置 WM_PRECISION_OPTION=SPDP"
+title: "wmSPDP · 重新加载 OpenFOAM 环境，并选择单精度场与双精度求解的混合模式"
 layout: reference
-description: "重新加载环境并设置 WM_PRECISION_OPTION=SPDP。"
+description: "重新加载 OpenFOAM 环境，并选择单精度场与双精度求解的混合模式。"
 cms_slug: "command-wmspdp"
 ---
 
-<p>重新加载环境并设置 WM_PRECISION_OPTION=SPDP。</p><h2>开始前</h2>
+<p>重新加载 OpenFOAM 环境，并选择单精度场与双精度求解的混合模式。</p><h2>开始前</h2>
 <p>先加载 v2512 环境，在交互式 Bash 中逐行执行。此 alias 重新加载环境并选择 WM_PRECISION_OPTION=SPDP；对应编译配置的程序和库需已安装，或在可写源码树中自行构建。</p>
 <h2>示例 1：选择编译配置</h2>
 <pre><code class="language-bash">wmSPDP

@@ -1,11 +1,11 @@
 ---
-title: "surfaceInertia · 按选项采用实体或薄壳模型，密度单位与几何长度单位保持一致"
+title: "surfaceInertia · 根据表面几何计算实体或薄壳的惯性张量、主轴和主惯性矩"
 layout: reference
-description: "按选项采用实体或薄壳模型，密度单位与几何长度单位保持一致。"
+description: "根据表面几何计算实体或薄壳的惯性张量、主轴和主惯性矩。"
 cms_slug: "command-surfaceinertia"
 ---
 
-<p>按选项采用实体或薄壳模型，密度单位与几何长度单位保持一致。</p><h2>开始前</h2>
+<p>根据表面几何计算实体或薄壳的惯性张量、主轴和主惯性矩。</p><h2>开始前</h2>
 <p>实体惯量使用闭合且法向一致的表面；薄壳模式使用面密度。几何坐标按米准备。</p>
 <h2>示例 1：计算单位密度实体惯量</h2>
 <pre><code class="language-bash">surfaceInertia body.stl

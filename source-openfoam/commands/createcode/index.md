@@ -1,11 +1,11 @@
 ---
-title: "createCode · 该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码"
+title: "createCode · 调用 Ragel，根据规则文件生成 wmkdepend 的源码依赖扫描器"
 layout: reference
-description: "该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码。"
+description: "调用 Ragel，根据规则文件生成 wmkdepend 的源码依赖扫描器。"
 cms_slug: "command-createcode"
 ---
 
-<p>该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码。</p><h2>开始前</h2>
+<p>调用 Ragel，根据规则文件生成 wmkdepend 的源码依赖扫描器。</p><h2>开始前</h2>
 <p>先加载 v2512 环境。内部工具使用完整路径；所有输出放在个人可写目录。 需要 Ragel。先 cp -a "$WM_PROJECT_DIR/wmake/src" scanner-demo；脚本会进入自身目录，固定为 wmkdepend.rl 生成扫描器。以下只处理 scanner-demo 副本。</p>
 <h2>示例 1：生成依赖分析扫描器</h2>
 <pre><code class="language-bash">bash scanner-demo/createCode

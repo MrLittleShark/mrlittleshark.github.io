@@ -1,11 +1,11 @@
 ---
-title: "mv · 移动或重命名文件；检查目标是否已存在"
+title: "mv · 移动文件或目录，也可用于重命名"
 layout: reference
-description: "移动或重命名文件；检查目标是否已存在。"
+description: "移动文件或目录，也可用于重命名。"
 cms_slug: "command-mv"
 ---
 
-<p>移动或重命名文件；检查目标是否已存在。</p><h2>开始前</h2>
+<p>移动文件或目录，也可用于重命名。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：重命名日志</h2>
 <pre><code class="language-bash">mv log.checkMesh mesh-quality.log

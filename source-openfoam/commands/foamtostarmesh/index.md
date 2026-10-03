@@ -1,11 +1,11 @@
 ---
-title: "foamToStarMesh · 输出 bnd、cel 和 vrt 等文件"
+title: "foamToStarMesh · 将 OpenFOAM 网格导出为 STAR-CD/PROSTAR 的 BND、CEL 和 VRT 文件"
 layout: reference
-description: "输出 bnd、cel 和 vrt 等文件。"
+description: "将 OpenFOAM 网格导出为 STAR-CD/PROSTAR 的 BND、CEL 和 VRT 文件。"
 cms_slug: "command-foamtostarmesh"
 ---
 
-<p>输出 bnd、cel 和 vrt 等文件。</p><h2>开始前</h2>
+<p>将 OpenFOAM 网格导出为 STAR-CD/PROSTAR 的 BND、CEL 和 VRT 文件。</p><h2>开始前</h2>
 <p>案例已有网格；默认导出比例为 1000，即常见米制 OpenFOAM 网格转为毫米制 STAR-CD 坐标。</p>
 <h2>示例 1：按默认比例导出</h2>
 <pre><code class="language-bash">foamToStarMesh -constant

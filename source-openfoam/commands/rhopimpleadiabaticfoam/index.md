@@ -1,11 +1,11 @@
 ---
-title: "rhoPimpleAdiabaticFoam · 低马赫数气动声学中的弱可压缩流动"
+title: "rhoPimpleAdiabaticFoam · 求解绝热可压缩流动，侧重低马赫数气动声学问题"
 layout: reference
-description: "低马赫数气动声学中的弱可压缩流动。"
+description: "求解绝热可压缩流动，侧重低马赫数气动声学问题。"
 cms_slug: "command-rhopimpleadiabaticfoam"
 ---
 
-<p>低马赫数气动声学中的弱可压缩流动。</p><h2>开始前</h2>
+<p>求解绝热可压缩流动，侧重低马赫数气动声学问题。</p><h2>开始前</h2>
 <p><code>rhoPimpleAdiabaticFoam</code> 用于低马赫数气动声学中的弱可压缩流动。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 配套输入可从<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/compressible/rhoPimpleAdiabaticFoam/rutlandVortex2D">官方 <code>compressible/rhoPimpleAdiabaticFoam/rutlandVortex2D</code> 算例</a>取得；先按该算例的 <code>Allrun</code> 完成网格和初始场准备。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">rhoPimpleAdiabaticFoam -case baseCase &gt; baseCase/log.rhoPimpleAdiabaticFoam 2&gt;&amp;1

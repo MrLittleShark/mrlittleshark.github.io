@@ -1,11 +1,11 @@
 ---
-title: "foamCleanFaMesh · 对应 constant/finite-area/faMesh，-area-region 指定有限"
+title: "foamCleanFaMesh · 清理算例中的有限面积网格文件"
 layout: reference
-description: "对应 constant/finite-area/faMesh，-area-region 指定有限面积区域。"
+description: "清理算例中的有限面积网格文件。"
 cms_slug: "command-foamcleanfamesh"
 ---
 
-<p>对应 constant/finite-area/faMesh，-area-region 指定有限面积区域。</p><h2>开始前</h2>
+<p>清理算例中的有限面积网格文件。</p><h2>开始前</h2>
 <p>加载 v2512 环境，使用个人算例副本 caseA。并行示例先配置 decomposeParDict 并完成 decomposePar，程序和字典须匹配。 下列移除示例只在可重建网格的副本中使用；-dry-run 可先查看文件清单。</p>
 <h2>示例 1：预览默认区域</h2>
 <pre><code class="language-bash">foamCleanFaMesh -dry-run -case caseA

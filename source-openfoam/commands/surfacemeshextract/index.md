@@ -1,11 +1,11 @@
 ---
-title: "surfaceMeshExtract · -patches 指定网格中已有的边界名称"
+title: "surfaceMeshExtract · 从体网格的边界或 faceZone 中提取表面网格"
 layout: reference
-description: "-patches 指定网格中已有的边界名称。"
+description: "从体网格的边界或 faceZone 中提取表面网格。"
 cms_slug: "command-surfacemeshextract"
 ---
 
-<p>-patches 指定网格中已有的边界名称。</p><h2>开始前</h2>
+<p>从体网格的边界或 faceZone 中提取表面网格。</p><h2>开始前</h2>
 <p>案例已有体网格和边界名称；含 faceZone 的示例还需先建立相应面区域。</p>
 <h2>示例 1：提取全部边界</h2>
 <pre><code class="language-bash">surfaceMeshExtract boundary.obj -constant

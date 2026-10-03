@@ -1,11 +1,11 @@
 ---
-title: "kivaToFoam · 输入为 KIVA3v 发动机网格"
+title: "kivaToFoam · 将 KIVA3v 发动机网格转换为 OpenFOAM 体网格"
 layout: reference
-description: "输入为 KIVA3v 发动机网格。"
+description: "将 KIVA3v 发动机网格转换为 OpenFOAM 体网格。"
 cms_slug: "command-kivatofoam"
 ---
 
-<p>输入为 KIVA3v 发动机网格。</p><h2>开始前</h2>
+<p>将 KIVA3v 发动机网格转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备 KIVA3 或 KIVA3v 网格文件；目标案例是独立副本，转换后需核对缸体、活塞及缸盖边界。</p>
 <h2>示例 1：导入默认文件</h2>
 <pre><code class="language-bash">kivaToFoam

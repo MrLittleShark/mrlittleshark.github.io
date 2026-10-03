@@ -1,11 +1,11 @@
 ---
-title: "magneticFoam · 永磁体产生的磁场"
+title: "magneticFoam · 计算永磁体产生的磁场"
 layout: reference
-description: "永磁体产生的磁场。"
+description: "计算永磁体产生的磁场。"
 cms_slug: "command-magneticfoam"
 ---
 
-<p>永磁体产生的磁场。</p><h2>开始前</h2>
+<p>计算永磁体产生的磁场。</p><h2>开始前</h2>
 <p><code>magneticFoam</code> 用于永磁体产生的磁场。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。</p>
 <h2>示例 1：计算磁场</h2>
 <pre><code class="language-bash">magneticFoam -case baseCase

@@ -1,11 +1,11 @@
 ---
-title: "foamPrintJobs · 与 foamCheckJobs 配合使用"
+title: "foamPrintJobs · 汇总显示正在运行和已经结束的 OpenFOAM 作业记录"
 layout: reference
-description: "与 foamCheckJobs 配合使用。"
+description: "汇总显示正在运行和已经结束的 OpenFOAM 作业记录。"
 cms_slug: "command-foamprintjobs"
 ---
 
-<p>与 foamCheckJobs 配合使用。</p><h2>开始前</h2>
+<p>汇总显示正在运行和已经结束的 OpenFOAM 作业记录。</p><h2>开始前</h2>
 <p>依赖传统 FOAM_JOB_DIR 的 runningJobs/finishedJobs 记录。该设施需由安装配置启用，作业主机通过 SSH 可达，且 foamProcessInfo 可用。foamCheckJobs 会检查失效锁并询问是否释放；它不是系统全部进程的查询器。</p>
 <h2>示例 1：处理默认作业目录</h2>
 <pre><code class="language-bash">foamPrintJobs

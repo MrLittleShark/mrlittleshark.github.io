@@ -1,11 +1,11 @@
 ---
-title: "collapseEdges · 读取 collapseDict 或指定字典，折叠操作可改变网格拓扑"
+title: "collapseEdges · 折叠短边、合并共线边并处理退化面，简化网格"
 layout: reference
-description: "读取 collapseDict 或指定字典，折叠操作可改变网格拓扑。"
+description: "折叠短边、合并共线边并处理退化面，简化网格。"
 cms_slug: "command-collapseedges"
 ---
 
-<p>读取 collapseDict 或指定字典，折叠操作可改变网格拓扑。</p><h2>开始前</h2>
+<p>折叠短边、合并共线边并处理退化面，简化网格。</p><h2>开始前</h2>
 <p>准备网格和 system/collapseDict，至少含 collapseEdgesCoeffs.minimumEdgeLength 与 maximumMergeAngle；长度采用网格单位。在独立副本试验。</p>
 <h2>示例 1：按现有阈值合并短边</h2>
 <pre><code class="language-bash">collapseEdges

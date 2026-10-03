@@ -1,11 +1,11 @@
 ---
-title: "snappyRefineMesh · 输入为待处理表面及细化字典"
+title: "snappyRefineMesh · 细化靠近指定几何表面的网格单元"
 layout: reference
-description: "输入为待处理表面及细化字典。"
+description: "细化靠近指定几何表面的网格单元。"
 cms_slug: "command-snappyrefinemesh"
 ---
 
-<p>输入为待处理表面及细化字典。</p><h2>开始前</h2>
+<p>细化靠近指定几何表面的网格单元。</p><h2>开始前</h2>
 <p>准备适用于 snappyRefineMesh 的完整 system/snappyRefineMeshDict、背景网格及三角表面。该字典使用 surface、minEdgeLen、maxEdgeLen 等条目，与 snappyHexMeshDict 分别配置。</p>
 <h2>示例 1：按现有表面细化设置运行</h2>
 <pre><code class="language-bash">snappyRefineMesh

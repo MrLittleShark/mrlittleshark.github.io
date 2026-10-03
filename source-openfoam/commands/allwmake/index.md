@@ -1,11 +1,11 @@
 ---
-title: "Allwmake · 项目提供的批量编译脚本；需先阅读脚本和构建说明"
+title: "Allwmake · 按项目脚本规定的顺序批量编译库和应用程序"
 layout: reference
-description: "项目提供的批量编译脚本；需先阅读脚本和构建说明。"
+description: "按项目脚本规定的顺序批量编译库和应用程序。"
 cms_slug: "command-allwmake"
 ---
 
-<p>项目提供的批量编译脚本；需先阅读脚本和构建说明。</p><h2>开始前</h2>
+<p>按项目脚本规定的顺序批量编译库和应用程序。</p><h2>开始前</h2>
 <p>这里指 OpenFOAM 根目录的 Allwmake。使用可写的完整源码安装，并加载该源码树的 etc/bashrc；将依次构建 wmake 工具、依赖、库和应用，需充足时间与磁盘。</p>
 <h2>示例 1：构建完整源码</h2>
 <pre><code class="language-bash">cd "$WM_PROJECT_DIR"

@@ -1,11 +1,11 @@
 ---
-title: "attachMesh · 用于相应的拓扑连接流程"
+title: "attachMesh · 按网格修改器的设置，连接拓扑上分离的网格部分"
 layout: reference
-description: "用于相应的拓扑连接流程。"
+description: "按网格修改器的设置，连接拓扑上分离的网格部分。"
 cms_slug: "command-attachmesh"
 ---
 
-<p>用于相应的拓扑连接流程。</p><h2>开始前</h2>
+<p>按网格修改器的设置，连接拓扑上分离的网格部分。</p><h2>开始前</h2>
 <p>已有拓扑分离的接口，以及 polyMesh/meshModifiers 中为其定义的网格修改器和对应 zone。工具按这些设置连接接口，在独立副本运行。</p>
 <h2>示例 1：连接已定义的滑移接口</h2>
 <pre><code class="language-bash">attachMesh

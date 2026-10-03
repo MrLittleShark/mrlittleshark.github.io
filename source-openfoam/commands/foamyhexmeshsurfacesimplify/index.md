@@ -1,11 +1,11 @@
 ---
-title: "foamyHexMeshSurfaceSimplify · 输出用于 triSurface 表面处理"
+title: "foamyHexMeshSurfaceSimplify · 通过重新采样简化几何表面，减少表面网格的细节和面数"
 layout: reference
-description: "输出用于 triSurface 表面处理。"
+description: "通过重新采样简化几何表面，减少表面网格的细节和面数。"
 cms_slug: "command-foamyhexmeshsurfacesimplify"
 ---
 
-<p>输出用于 triSurface 表面处理。</p><h2>开始前</h2>
+<p>通过重新采样简化几何表面，减少表面网格的细节和面数。</p><h2>开始前</h2>
 <p>该开发工具需在本机可用；输入表面来自system/foamyHexMeshDict的geometry，两个位置参数为三方向采样数和输出表面名。</p>
 <h2>示例 1：进行粗采样</h2>
 <pre><code class="language-bash">foamyHexMeshSurfaceSimplify '(40 40 40)' body40.stl

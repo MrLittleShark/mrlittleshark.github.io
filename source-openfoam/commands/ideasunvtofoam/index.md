@@ -1,11 +1,11 @@
 ---
-title: "ideasUnvToFoam · 转换后检查边界、长度单位和单元类型"
+title: "ideasUnvToFoam · 将 I-DEAS UNV 网格及其边界分组导入 OpenFOAM"
 layout: reference
-description: "转换后检查边界、长度单位和单元类型。"
+description: "将 I-DEAS UNV 网格及其边界分组导入 OpenFOAM。"
 cms_slug: "command-ideasunvtofoam"
 ---
 
-<p>转换后检查边界、长度单位和单元类型。</p><h2>开始前</h2>
+<p>将 I-DEAS UNV 网格及其边界分组导入 OpenFOAM。</p><h2>开始前</h2>
 <p>准备 I-DEAS Universal .unv 文件；按实际导出单位核对坐标，确保所需边界分组随文件一并导出。</p>
 <h2>示例 1：导入 UNV 网格</h2>
 <pre><code class="language-bash">ideasUnvToFoam mesh.unv

@@ -1,11 +1,11 @@
 ---
-title: "extrudeMesh · 读取 extrudeMeshDict"
+title: "extrudeMesh · 按指定方向和层数挤出表面或网格边界，生成体网格"
 layout: reference
-description: "读取 extrudeMeshDict。"
+description: "按指定方向和层数挤出表面或网格边界，生成体网格。"
 cms_slug: "command-extrudemesh"
 ---
 
-<p>读取 extrudeMeshDict。</p><h2>开始前</h2>
+<p>按指定方向和层数挤出表面或网格边界，生成体网格。</p><h2>开始前</h2>
 <p>已有待拉伸patch或字典指定的源表面，并准备system/extrudeMeshDict；其中确定源、方向、层数和厚度。</p>
 <h2>示例 1：按默认字典拉伸</h2>
 <pre><code class="language-bash">extrudeMesh

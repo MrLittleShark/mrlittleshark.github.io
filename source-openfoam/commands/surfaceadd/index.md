@@ -1,11 +1,11 @@
 ---
-title: "surfaceAdd · 连接两个表面数据集，不执行几何布尔并集"
+title: "surfaceAdd · 合并两个表面网格的数据，并合并重合的顶点"
 layout: reference
-description: "连接两个表面数据集，不执行几何布尔并集。"
+description: "合并两个表面网格的数据，并合并重合的顶点。"
 cms_slug: "command-surfaceadd"
 ---
 
-<p>连接两个表面数据集，不执行几何布尔并集。</p><h2>开始前</h2>
+<p>合并两个表面网格的数据，并合并重合的顶点。</p><h2>开始前</h2>
 <p>两个输入为可读取的表面文件，坐标系和长度单位一致；输出文件使用新名称。</p>
 <h2>示例 1：合并两个部件</h2>
 <pre><code class="language-bash">surfaceAdd housing.stl rotor.stl assembly.stl

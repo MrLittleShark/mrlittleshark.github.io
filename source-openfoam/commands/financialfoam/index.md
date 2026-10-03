@@ -1,11 +1,11 @@
 ---
-title: "financialFoam · Black–Scholes 金融定价方程"
+title: "financialFoam · 求解 Black–Scholes 方程，计算金融衍生品价格"
 layout: reference
-description: "Black–Scholes 金融定价方程。"
+description: "求解 Black–Scholes 方程，计算金融衍生品价格。"
 cms_slug: "command-financialfoam"
 ---
 
-<p>Black–Scholes 金融定价方程。</p><h2>开始前</h2>
+<p>求解 Black–Scholes 方程，计算金融衍生品价格。</p><h2>开始前</h2>
 <p>使用欧洲看涨期权算例 <code>baseCase</code>。<code>financialFoam</code> 用网格横坐标表示标的价格，读取 <code>constant/financialProperties</code> 中的执行价、利率和波动率，初始化到期收益后求解 Black–Scholes 方程。以下各组从同一输入独立计算。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：计算期权价值曲线</h2>
 <pre><code class="language-bash">financialFoam -case baseCase &gt; baseCase/log.financialFoam 2&gt;&amp;1

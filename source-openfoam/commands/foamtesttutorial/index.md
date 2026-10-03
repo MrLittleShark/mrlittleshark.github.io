@@ -1,11 +1,11 @@
 ---
-title: "foamTestTutorial · 默认在临时目录运行一个时间步"
+title: "foamTestTutorial · 将指定教程复制到测试目录并运行，检查算例能否正常执行"
 layout: reference
-description: "默认在临时目录运行一个时间步。-full 执行完整教程，-output=DIR 保留输出，指定目录须预先建立。"
+description: "将指定教程复制到测试目录并运行，检查算例能否正常执行。"
 cms_slug: "command-foamtesttutorial"
 ---
 
-<p>默认在临时目录运行一个时间步。-full 执行完整教程，-output=DIR 保留输出，指定目录须预先建立。</p><h2>开始前</h2>
+<p>将指定教程复制到测试目录并运行，检查算例能否正常执行。</p><h2>开始前</h2>
 <p>加载 v2512 环境。输入使用相对于 $FOAM_TUTORIALS 的教程路径，例如 incompressible/icoFoam/cavity/cavity。指定 -output 时须先建立该目录。工具将教程复制到独立目录后测试。</p>
 <h2>示例 1：运行一步检查</h2>
 <pre><code class="language-bash">foamTestTutorial incompressible/icoFoam/cavity/cavity

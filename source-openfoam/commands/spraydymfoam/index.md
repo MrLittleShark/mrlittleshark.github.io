@@ -1,11 +1,11 @@
 ---
-title: "sprayDyMFoam · 动网格上的瞬态喷雾"
+title: "sprayDyMFoam · 在动网格上模拟瞬态可压缩喷雾流动"
 layout: reference
-description: "动网格上的瞬态喷雾。"
+description: "在动网格上模拟瞬态可压缩喷雾流动。"
 cms_slug: "command-spraydymfoam"
 ---
 
-<p>动网格上的瞬态喷雾。</p><h2>开始前</h2>
+<p>在动网格上模拟瞬态可压缩喷雾流动。</p><h2>开始前</h2>
 <p><code>sprayDyMFoam</code> 用于动网格上的瞬态喷雾。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 颗粒算例同时需要连续相场、颗粒云配置以及对应的注入或初始颗粒数据。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">sprayDyMFoam -case baseCase &gt; baseCase/log.sprayDyMFoam 2&gt;&amp;1

@@ -1,11 +1,11 @@
 ---
-title: "foamVersion · v2512 源码提供的环境函数，可查询或切换版本；部分打包环境或非交互 shell 未加载该函数"
+title: "foamVersion · 查询当前 OpenFOAM 版本，或切换到指定版本的环境"
 layout: reference
-description: "v2512 源码提供的环境函数，可查询或切换版本；部分打包环境或非交互 shell 未加载该函数时，直接检查 WM_PROJECT_VERSION。"
+description: "查询当前 OpenFOAM 版本，或切换到指定版本的环境。"
 cms_slug: "command-foamversion"
 ---
 
-<p>v2512 源码提供的环境函数，可查询或切换版本；部分打包环境或非交互 shell 未加载该函数时，直接检查 WM_PROJECT_VERSION。</p><h2>开始前</h2>
+<p>查询当前 OpenFOAM 版本，或切换到指定版本的环境。</p><h2>开始前</h2>
 <p>先加载 v2512 的 etc/bashrc。foamVersion 是 shell 函数；查询文字写到标准错误。切换只搜索当前安装目录的同级 OpenFOAM-&lt;版本&gt;。</p>
 <h2>示例 1：查询当前版本</h2>
 <pre><code class="language-bash">foamVersion

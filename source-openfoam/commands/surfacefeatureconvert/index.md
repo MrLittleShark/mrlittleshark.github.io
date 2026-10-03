@@ -1,11 +1,11 @@
 ---
-title: "surfaceFeatureConvert · 输入和输出采用该程序支持的边线格式"
+title: "surfaceFeatureConvert · 在不同的特征边线文件格式之间转换"
 layout: reference
-description: "输入和输出采用该程序支持的边线格式。"
+description: "在不同的特征边线文件格式之间转换。"
 cms_slug: "command-surfacefeatureconvert"
 ---
 
-<p>输入和输出采用该程序支持的边线格式。</p><h2>开始前</h2>
+<p>在不同的特征边线文件格式之间转换。</p><h2>开始前</h2>
 <p>输入为边网格，而非三角表面；常见用途是将提取的eMesh特征边转换为可查看的OBJ线。</p>
 <h2>示例 1：显示提取的特征边</h2>
 <pre><code class="language-bash">surfaceFeatureConvert constant/triSurface/body.eMesh bodyEdges.obj

@@ -1,11 +1,11 @@
 ---
-title: "surfaceMeshExport · 输入为算例中已有的 surfaceMesh"
+title: "surfaceMeshExport · 将 OpenFOAM 的 surfMesh 导出为其他软件支持的表面格式"
 layout: reference
-description: "输入为算例中已有的 surfaceMesh。"
+description: "将 OpenFOAM 的 surfMesh 导出为其他软件支持的表面格式。"
 cms_slug: "command-surfacemeshexport"
 ---
 
-<p>输入为算例中已有的 surfaceMesh。</p><h2>开始前</h2>
+<p>将 OpenFOAM 的 surfMesh 导出为其他软件支持的表面格式。</p><h2>开始前</h2>
 <p>案例内已有 surfMesh；可先使用 surfaceMeshImport 导入。它导出存储的表面网格，体网格边界另用 surfaceMeshExtract。</p>
 <h2>示例 1：导出默认表面</h2>
 <pre><code class="language-bash">surfaceMeshExport body.obj

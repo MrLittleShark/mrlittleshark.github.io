@@ -1,11 +1,11 @@
 ---
-title: "rm · 删除文件；删除前逐项核对路径，删除通常无法撤销"
+title: "rm · 删除指定的文件或目录"
 layout: reference
-description: "删除文件；删除前逐项核对路径，删除通常无法撤销。"
+description: "删除指定的文件或目录。"
 cms_slug: "command-rm"
 ---
 
-<p>删除文件；删除前逐项核对路径，删除通常无法撤销。</p><h2>开始前</h2>
+<p>删除指定的文件或目录。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：删除单个临时文件</h2>
 <pre><code class="language-bash">printf 'temporary\n' &gt; discard.txt

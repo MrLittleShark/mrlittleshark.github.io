@@ -1,11 +1,11 @@
 ---
-title: "foamToSurface · 用于几何检查及外部软件数据交换"
+title: "foamToSurface · 提取 OpenFOAM 网格的外边界，并导出为表面网格文件"
 layout: reference
-description: "用于几何检查及外部软件数据交换。"
+description: "提取 OpenFOAM 网格的外边界，并导出为表面网格文件。"
 cms_slug: "command-foamtosurface"
 ---
 
-<p>用于几何检查及外部软件数据交换。</p><h2>开始前</h2>
+<p>提取 OpenFOAM 网格的外边界，并导出为表面网格文件。</p><h2>开始前</h2>
 <p>案例已有体网格；工具导出体网格边界表面，输出格式由文件扩展名决定。</p>
 <h2>示例 1：导出初始边界</h2>
 <pre><code class="language-bash">foamToSurface boundary.stl -constant

@@ -1,11 +1,11 @@
 ---
-title: "ccmToFoam · 需编译 CCM 支持"
+title: "ccmToFoam · 将 STAR-CD 或 STAR-CCM+ 的 CCM 文件中的网格导入 OpenFOAM"
 layout: reference
-description: "需编译 CCM 支持。-list 列出文件内容，移除该选项后执行转换。"
+description: "将 STAR-CD 或 STAR-CCM+ 的 CCM 文件中的网格导入 OpenFOAM。"
 cms_slug: "command-ccmtofoam"
 ---
 
-<p>需编译 CCM 支持。-list 列出文件内容，移除该选项后执行转换。</p><h2>开始前</h2>
+<p>将 STAR-CD 或 STAR-CCM+ 的 CCM 文件中的网格导入 OpenFOAM。</p><h2>开始前</h2>
 <p>安装带 CCM 支持的 OpenFOAM 工具，准备 STAR-CCM+ 导出的 .ccm 文件；操作在单独案例目录进行。</p>
 <h2>示例 1：导入 CCM 网格</h2>
 <pre><code class="language-bash">ccmToFoam mesh.ccm

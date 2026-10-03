@@ -1,11 +1,11 @@
 ---
-title: "surfaceCoarsen · 简化因子取值范围为 [0,1)，简化后检查几何完整性"
+title: "surfaceCoarsen · 减少三角形数量，将表面网格粗化"
 layout: reference
-description: "简化因子取值范围为 [0,1)，简化后检查几何完整性。"
+description: "减少三角形数量，将表面网格粗化。"
 cms_slug: "command-surfacecoarsen"
 ---
 
-<p>简化因子取值范围为 [0,1)，简化后检查几何完整性。</p><h2>开始前</h2>
+<p>减少三角形数量，将表面网格粗化。</p><h2>开始前</h2>
 <p>输入为三角表面。源码按factor×原顶点数确定目标顶点数；使用0到1之间的正因子，输出另存。</p>
 <h2>示例 1：温和减少顶点</h2>
 <pre><code class="language-bash">surfaceCoarsen fine.stl 0.8 coarse80.stl

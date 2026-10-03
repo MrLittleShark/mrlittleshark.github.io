@@ -1,11 +1,11 @@
 ---
-title: "ps · 查看当前用户的进程"
+title: "ps · 显示进程及其进程号、运行状态等信息"
 layout: reference
-description: "查看当前用户的进程。"
+description: "显示进程及其进程号、运行状态等信息。"
 cms_slug: "command-ps"
 ---
 
-<p>查看当前用户的进程。</p><h2>开始前</h2>
+<p>显示进程及其进程号、运行状态等信息。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：查看自己的进程</h2>
 <pre><code class="language-bash">ps -u "$USER"

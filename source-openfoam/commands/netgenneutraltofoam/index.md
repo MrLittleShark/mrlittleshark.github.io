@@ -1,11 +1,11 @@
 ---
-title: "netgenNeutralToFoam · 转换后检查边界划分"
+title: "netgenNeutralToFoam · 将 Netgen Neutral 网格转换为 OpenFOAM 体网格"
 layout: reference
-description: "转换后检查边界划分。"
+description: "将 Netgen Neutral 网格转换为 OpenFOAM 体网格。"
 cms_slug: "command-netgenneutraltofoam"
 ---
 
-<p>转换后检查边界划分。</p><h2>开始前</h2>
+<p>将 Netgen Neutral 网格转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备 NETGEN Neutral 格式文件；边界标签随输入读取，转换后需根据几何位置核对各 patch。</p>
 <h2>示例 1：导入四面体网格</h2>
 <pre><code class="language-bash">netgenNeutralToFoam mesh.neu

@@ -1,11 +1,11 @@
 ---
-title: "foamCloneCase · 默认复制初始时刻、constant 和 system"
+title: "foamCloneCase · 复制算例的配置、网格和选定时刻的场，建立新的算例目录"
 layout: reference
-description: "默认复制初始时刻、constant 和 system。-latestTime 选择最后时刻，-force 覆盖目标目录。"
+description: "复制算例的配置、网格和选定时刻的场，建立新的算例目录。"
 cms_slug: "command-foamclonecase"
 ---
 
-<p>默认复制初始时刻、constant 和 system。-latestTime 选择最后时刻，-force 覆盖目标目录。</p><h2>开始前</h2>
+<p>复制算例的配置、网格和选定时刻的场，建立新的算例目录。</p><h2>开始前</h2>
 <p>先加载 v2512 环境，在个人工作目录中准备 caseA 算例副本。新目标目录使用未占用的名称。 默认复制首个时间目录及 constant/system，包含源网格。</p>
 <h2>示例 1：从现有输入开始</h2>
 <pre><code class="language-bash">foamCloneCase caseA caseB

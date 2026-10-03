@@ -1,11 +1,11 @@
 ---
-title: "gmshToFoam · 常用输入为 ASCII MSH2"
+title: "gmshToFoam · 将 Gmsh 的 MSH 网格及物理分组导入 OpenFOAM"
 layout: reference
-description: "常用输入为 ASCII MSH2。转换后检查物理组与边界名称。"
+description: "将 Gmsh 的 MSH 网格及物理分组导入 OpenFOAM。"
 cms_slug: "command-gmshtofoam"
 ---
 
-<p>常用输入为 ASCII MSH2。转换后检查物理组与边界名称。</p><h2>开始前</h2>
+<p>将 Gmsh 的 MSH 网格及物理分组导入 OpenFOAM。</p><h2>开始前</h2>
 <p>准备 Gmsh 的 ASCII MSH 2 格式网格；建议在 Gmsh 中定义 Physical Volume 和 Physical Surface 来表达体区及边界。</p>
 <h2>示例 1：导入现有 Gmsh 网格</h2>
 <pre><code class="language-bash">gmshToFoam mesh.msh

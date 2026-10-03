@@ -1,11 +1,11 @@
 ---
-title: "splitCells · 用于网格单元的拓扑修复"
+title: "splitCells · 按面夹角等条件拆分单元，处理形状不合适的网格单元"
 layout: reference
-description: "用于网格单元的拓扑修复。"
+description: "按面夹角等条件拆分单元，处理形状不合适的网格单元。"
 cms_slug: "command-splitcells"
 ---
 
-<p>用于网格单元的拓扑修复。</p><h2>开始前</h2>
+<p>按面夹角等条件拆分单元，处理形状不合适的网格单元。</p><h2>开始前</h2>
 <p>已有可进行平面切分的网格，按需要准备 cellSet。edgeAngle 以度给出，控制工具识别相关边的几何判据。</p>
 <h2>示例 1：按角度判据分裂单元</h2>
 <pre><code class="language-bash">splitCells 180

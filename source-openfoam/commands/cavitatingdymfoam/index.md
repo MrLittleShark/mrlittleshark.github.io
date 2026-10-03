@@ -1,11 +1,11 @@
 ---
-title: "cavitatingDyMFoam · 动网格均相平衡空化流动"
+title: "cavitatingDyMFoam · 在动网格上采用均相平衡模型模拟空化流动"
 layout: reference
-description: "动网格均相平衡空化流动。"
+description: "在动网格上采用均相平衡模型模拟空化流动。"
 cms_slug: "command-cavitatingdymfoam"
 ---
 
-<p>动网格均相平衡空化流动。</p><h2>开始前</h2>
+<p>在动网格上采用均相平衡模型模拟空化流动。</p><h2>开始前</h2>
 <p><code>cavitatingDyMFoam</code> 用于动网格均相平衡空化流动。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">cavitatingDyMFoam -case baseCase &gt; baseCase/log.cavitatingDyMFoam 2&gt;&amp;1

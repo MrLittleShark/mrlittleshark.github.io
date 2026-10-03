@@ -1,11 +1,11 @@
 ---
-title: "surfaceTransformPoints · -read-scale 和 -write-scale 分别指定读取和写出时的缩放系数"
+title: "surfaceTransformPoints · 对表面网格进行平移、旋转或缩放"
 layout: reference
-description: "-read-scale 和 -write-scale 分别指定读取和写出时的缩放系数。"
+description: "对表面网格进行平移、旋转或缩放。"
 cms_slug: "command-surfacetransformpoints"
 ---
 
-<p>-read-scale 和 -write-scale 分别指定读取和写出时的缩放系数。</p><h2>开始前</h2>
+<p>对表面网格进行平移、旋转或缩放。</p><h2>开始前</h2>
 <p>准备受支持的表面文件；输入与输出使用不同文件名，便于直接比较变换前后的边界框。</p>
 <h2>示例 1：将毫米转换为米</h2>
 <pre><code class="language-bash">surfaceTransformPoints body-mm.stl body-m.stl -read-scale 0.001

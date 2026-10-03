@@ -1,11 +1,11 @@
 ---
-title: "tmux · 创建可分离终端会话；需安装 tmux"
+title: "tmux · 创建可分离、可恢复的终端会话，便于管理长时间计算"
 layout: reference
-description: "创建可分离终端会话；需安装 tmux。"
+description: "创建可分离、可恢复的终端会话，便于管理长时间计算。"
 cms_slug: "command-tmux"
 ---
 
-<p>创建可分离终端会话；需安装 tmux。</p><h2>开始前</h2>
+<p>创建可分离、可恢复的终端会话，便于管理长时间计算。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：新建会话</h2>
 <pre><code class="language-bash">tmux new-session -s foam

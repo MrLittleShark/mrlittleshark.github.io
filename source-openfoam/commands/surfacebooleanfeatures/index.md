@@ -1,11 +1,11 @@
 ---
-title: "surfaceBooleanFeatures · 支持 intersection、union 和 difference，相关构建可依赖 CGAL"
+title: "surfaceBooleanFeatures · 提取两个表面进行并集、交集或差集运算时产生的交线特征"
 layout: reference
-description: "支持 intersection、union 和 difference，相关构建可依赖 CGAL。"
+description: "提取两个表面进行并集、交集或差集运算时产生的交线特征。"
 cms_slug: "command-surfacebooleanfeatures"
 ---
 
-<p>支持 intersection、union 和 difference，相关构建可依赖 CGAL。</p><h2>开始前</h2>
+<p>提取两个表面进行并集、交集或差集运算时产生的交线特征。</p><h2>开始前</h2>
 <p>准备相交的两个表面，并在含controlDict的工作算例中运行。输出是布尔界面的extendedFeatureEdgeMesh特征线。</p>
 <h2>示例 1：提取并集的交界特征</h2>
 <pre><code class="language-bash">surfaceBooleanFeatures union body.stl boss.stl

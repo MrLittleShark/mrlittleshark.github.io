@@ -1,11 +1,11 @@
 ---
-title: "ensightToFoam · 转换范围为几何网格，物理模型在目标算例中配置"
+title: "ensightToFoam · 将 EnSight 几何网格转换为 OpenFOAM 体网格"
 layout: reference
-description: "转换范围为几何网格，物理模型在目标算例中配置。"
+description: "将 EnSight 几何网格转换为 OpenFOAM 体网格。"
 cms_slug: "command-ensighttofoam"
 ---
 
-<p>转换范围为几何网格，物理模型在目标算例中配置。</p><h2>开始前</h2>
+<p>将 EnSight 几何网格转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备 EnSight Gold 几何 .geo 文件；转换几何后，求解器的初始场和数值设置需在案例中另行配置。</p>
 <h2>示例 1：导入几何</h2>
 <pre><code class="language-bash">ensightToFoam mesh.geo

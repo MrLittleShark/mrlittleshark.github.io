@@ -1,11 +1,11 @@
 ---
-title: "datToFoam · 输入内容须符合该转换器定义的 DAT 网格结构"
+title: "datToFoam · 从指定 DAT 格式中提取网格点坐标，供 blockMesh 建网使用"
 layout: reference
-description: "输入内容须符合该转换器定义的 DAT 网格结构。"
+description: "从指定 DAT 格式中提取网格点坐标，供 blockMesh 建网使用。"
 cms_slug: "command-dattofoam"
 ---
 
-<p>输入内容须符合该转换器定义的 DAT 网格结构。</p><h2>开始前</h2>
+<p>从指定 DAT 格式中提取网格点坐标，供 blockMesh 建网使用。</p><h2>开始前</h2>
 <p>这是配合特定双锥结构化网格数据使用的 points 转换器。准备格式正确的 DAT 和顶点编号匹配的 blockMeshDict；工具会替换 constant/polyMesh/points，宜在副本操作。</p>
 <h2>示例 1：用 DAT 坐标替换块网格顶点</h2>
 <pre><code class="language-bash">blockMesh

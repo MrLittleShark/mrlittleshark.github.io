@@ -1,11 +1,11 @@
 ---
-title: "foamCreateVideo · 通过 ffmpeg 等工具处理图像序列，默认名称为 image.0000.png 等"
+title: "foamCreateVideo · 将连续编号的计算结果图片合成为视频"
 layout: reference
-description: "通过 ffmpeg 等工具处理图像序列，默认名称为 image.0000.png 等。-image 指定图像前缀。"
+description: "将连续编号的计算结果图片合成为视频。"
 cms_slug: "command-foamcreatevideo"
 ---
 
-<p>通过 ffmpeg 等工具处理图像序列，默认名称为 image.0000.png 等。-image 指定图像前缀。</p><h2>开始前</h2>
+<p>将连续编号的计算结果图片合成为视频。</p><h2>开始前</h2>
 <p>先从 ParaView 导出同尺寸 PNG 序列，例如 frames/image.0000.png、image.0001.png；需要 ffmpeg 或脚本支持的视频工具。</p>
 <h2>示例 1：用默认帧率生成视频</h2>
 <pre><code class="language-bash">foamCreateVideo -tool=ffmpeg -dir frames

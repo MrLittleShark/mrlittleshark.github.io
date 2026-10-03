@@ -1,11 +1,11 @@
 ---
-title: "foamInstallationTest · 用于诊断安装路径及环境配置"
+title: "foamInstallationTest · 检查运行 OpenFOAM 所需的软件组件、安装路径和环境设置"
 layout: reference
-description: "用于诊断安装路径及环境配置。"
+description: "检查运行 OpenFOAM 所需的软件组件、安装路径和环境设置。"
 cms_slug: "command-foaminstallationtest"
 ---
 
-<p>用于诊断安装路径及环境配置。</p><h2>开始前</h2>
+<p>检查运行 OpenFOAM 所需的软件组件、安装路径和环境设置。</p><h2>开始前</h2>
 <p>先加载目标 v2512 环境。此脚本检查已安装程序、编译器和 OpenFOAM 环境。</p>
 <h2>示例 1：检查当前环境</h2>
 <pre><code class="language-bash">foamInstallationTest

@@ -1,11 +1,11 @@
 ---
-title: "Allclean · 算例提供的清理脚本，执行前检查其删除范围"
+title: "Allclean · 按算例脚本清理计算生成的网格、结果和日志"
 layout: reference
-description: "算例提供的清理脚本，执行前检查其删除范围。"
+description: "按算例脚本清理计算生成的网格、结果和日志。"
 cms_slug: "command-allclean"
 ---
 
-<p>算例提供的清理脚本，执行前检查其删除范围。</p><h2>开始前</h2>
+<p>按算例脚本清理计算生成的网格、结果和日志。</p><h2>开始前</h2>
 <p>这里指教程测试集的 Allclean。只在完整复制的 tutorial-clean-demo 中执行；各单独案例可能定义其他清理逻辑。顶层脚本还会处理对应 tutorials 构建缓存。</p>
 <h2>示例 1：清理完整测试副本</h2>
 <pre><code class="language-bash">cd tutorial-clean-demo

@@ -1,11 +1,11 @@
 ---
-title: "fluentMeshToFoam · 输入采用 Fluent mesh 格式；Gmsh 文件使用 gmshToFoam 转换"
+title: "fluentMeshToFoam · 将 Fluent 网格文件转换为 OpenFOAM 体网格"
 layout: reference
-description: "输入采用 Fluent mesh 格式；Gmsh 文件使用 gmshToFoam 转换。"
+description: "将 Fluent 网格文件转换为 OpenFOAM 体网格。"
 cms_slug: "command-fluentmeshtofoam"
 ---
 
-<p>输入采用 Fluent mesh 格式；Gmsh 文件使用 gmshToFoam 转换。</p><h2>开始前</h2>
+<p>将 Fluent 网格文件转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备 Fluent 网格文件和 OpenFOAM 案例。二维网格需提供有限厚度，场文件中相应前后边界应与二维模型一致。</p>
 <h2>示例 1：导入三维网格</h2>
 <pre><code class="language-bash">fluentMeshToFoam mesh.msh

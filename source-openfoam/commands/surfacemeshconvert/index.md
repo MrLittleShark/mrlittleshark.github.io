@@ -1,11 +1,11 @@
 ---
-title: "surfaceMeshConvert · 采用 surfaceMesh 读写接口"
+title: "surfaceMeshConvert · 转换表面网格格式，并可进行缩放、旋转和平移"
 layout: reference
-description: "采用 surfaceMesh 读写接口。"
+description: "转换表面网格格式，并可进行缩放、旋转和平移。"
 cms_slug: "command-surfacemeshconvert"
 ---
 
-<p>采用 surfaceMesh 读写接口。</p><h2>开始前</h2>
+<p>转换表面网格格式，并可进行缩放、旋转和平移。</p><h2>开始前</h2>
 <p>准备工具支持的表面网格；坐标变换示例还需在 constant/coordinateSystems 定义 local 坐标系。-from 与 -to 分别用于两个方向的变换，每次选一个。</p>
 <h2>示例 1：转换表面格式</h2>
 <pre><code class="language-bash">surfaceMeshConvert body.obj body.stl

@@ -1,11 +1,11 @@
 ---
-title: "vtkUnstructuredToFoam · 输入采用旧式 ASCII VTK 格式"
+title: "vtkUnstructuredToFoam · 将旧式 ASCII VTK 非结构网格转换为 OpenFOAM 体网格"
 layout: reference
-description: "输入采用旧式 ASCII VTK 格式。"
+description: "将旧式 ASCII VTK 非结构网格转换为 OpenFOAM 体网格。"
 cms_slug: "command-vtkunstructuredtofoam"
 ---
 
-<p>输入采用旧式 ASCII VTK 格式。</p><h2>开始前</h2>
+<p>将旧式 ASCII VTK 非结构网格转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备旧式 ASCII VTK UNSTRUCTURED_GRID 文件；转换器读取体网格，物理边界分组需后续建立。</p>
 <h2>示例 1：导入 VTK 体网格</h2>
 <pre><code class="language-bash">vtkUnstructuredToFoam mesh.vtk

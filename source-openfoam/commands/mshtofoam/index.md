@@ -1,11 +1,11 @@
 ---
-title: "mshToFoam · 输入须符合该转换器定义的 MSH 结构；Gmsh 网格使用 gmshToFoam"
+title: "mshToFoam · 将 Adventure 系统的 MSH 网格转换为 OpenFOAM 体网格"
 layout: reference
-description: "输入须符合该转换器定义的 MSH 结构；Gmsh 网格使用 gmshToFoam。"
+description: "将 Adventure 系统的 MSH 网格转换为 OpenFOAM 体网格。"
 cms_slug: "command-mshtofoam"
 ---
 
-<p>输入须符合该转换器定义的 MSH 结构；Gmsh 网格使用 gmshToFoam。</p><h2>开始前</h2>
+<p>将 Adventure 系统的 MSH 网格转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备 Adventure 格式的 .msh 文件。默认读取四面体网格，六面体使用 -hex；Gmsh 文件应使用 gmshToFoam。</p>
 <h2>示例 1：导入四面体网格</h2>
 <pre><code class="language-bash">mshToFoam mesh.msh

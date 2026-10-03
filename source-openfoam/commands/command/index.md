@@ -1,11 +1,11 @@
 ---
-title: "command · 查询外部程序的实际位置"
+title: "command · 查询命令的位置，或绕过同名 shell 函数执行命令"
 layout: reference
-description: "查询外部程序的实际位置。"
+description: "查询命令的位置，或绕过同名 shell 函数执行命令。"
 cms_slug: "command-command"
 ---
 
-<p>查询外部程序的实际位置。</p><h2>开始前</h2>
+<p>查询命令的位置，或绕过同名 shell 函数执行命令。</p><h2>开始前</h2>
 <p>在 Bash 中创建独立练习目录：mkdir -p "$HOME/foam-command-lab"，再 cd "$HOME/foam-command-lab"。caseA 表示复制到其中的完整算例，caseB 为另一份副本；日志例子需先完成对应计算。</p>
 <h2>示例 1：定位程序</h2>
 <pre><code class="language-bash">command -v blockMesh

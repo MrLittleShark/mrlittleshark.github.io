@@ -1,11 +1,11 @@
 ---
-title: "foamSystemCheck · 检查构建所需的系统和编译条件"
+title: "foamSystemCheck · 检查系统与编译工具是否满足 OpenFOAM 的安装要求"
 layout: reference
-description: "检查构建所需的系统和编译条件。"
+description: "检查系统与编译工具是否满足 OpenFOAM 的安装要求。"
 cms_slug: "command-foamsystemcheck"
 ---
 
-<p>检查构建所需的系统和编译条件。</p><h2>开始前</h2>
+<p>检查系统与编译工具是否满足 OpenFOAM 的安装要求。</p><h2>开始前</h2>
 <p>先加载目标 v2512 环境。此脚本检查准备安装 OpenFOAM 的系统工具与环境。</p>
 <h2>示例 1：检查当前环境</h2>
 <pre><code class="language-bash">foamSystemCheck

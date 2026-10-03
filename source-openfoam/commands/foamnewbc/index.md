@@ -1,11 +1,11 @@
 ---
-title: "foamNewBC · 在生成目录运行 wmake libso，并在算例的 libs 中加载生成的库"
+title: "foamNewBC · 创建自定义边界条件的源码和编译配置"
 layout: reference
-description: "在生成目录运行 wmake libso，并在算例的 libs 中加载生成的库。"
+description: "创建自定义边界条件的源码和编译配置。"
 cms_slug: "command-foamnewbc"
 ---
 
-<p>在生成目录运行 wmake libso，并在算例的 libs 中加载生成的库。</p><h2>开始前</h2>
+<p>创建自定义边界条件的源码和编译配置。</p><h2>开始前</h2>
 <p>在个人源码目录运行，名称须未存在。骨架需要填写 updateCoeffs 等具体公式；加载共享库并在字段 boundaryField 中使用注册类型。</p>
 <h2>示例 1：固定值标量边界</h2>
 <pre><code class="language-bash">foamNewBC fixedValue scalar heatedWall

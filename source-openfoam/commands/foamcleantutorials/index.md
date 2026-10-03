@@ -1,11 +1,11 @@
 ---
-title: "foamCleanTutorials · 按规则删除结果并执行相关 Allclean；存在 0.orig 时，默认清理过程可移除 0 目录"
+title: "foamCleanTutorials · 批量清理教程算例生成的网格、结果和日志"
 layout: reference
-description: "按规则删除结果并执行相关 Allclean；存在 0.orig 时，默认清理过程可移除 0 目录。"
+description: "批量清理教程算例生成的网格、结果和日志。"
 cms_slug: "command-foamcleantutorials"
 ---
 
-<p>按规则删除结果并执行相关 Allclean；存在 0.orig 时，默认清理过程可移除 0 目录。</p><h2>开始前</h2>
+<p>批量清理教程算例生成的网格、结果和日志。</p><h2>开始前</h2>
 <p>加载 v2512 环境，使用个人算例副本 caseA。并行示例先配置 decomposeParDict 并完成 decomposePar，程序和字典须匹配。 将测试集完整复制到 tutorial-clean-demo，清理只对该副本进行。该工具递归运行已有 Allclean/Allwclean，否则调用 CleanFunctions。</p>
 <h2>示例 1：按默认规则清理</h2>
 <pre><code class="language-bash">foamCleanTutorials -case tutorial-clean-demo

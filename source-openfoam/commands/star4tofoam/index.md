@@ -1,11 +1,11 @@
 ---
-title: "star4ToFoam · 按文件名前缀读取 mesh.vrt、mesh.cel 等配套文件"
+title: "star4ToFoam · 将 STAR-CD/PROSTAR v4 网格转换为 OpenFOAM 体网格"
 layout: reference
-description: "按文件名前缀读取 mesh.vrt、mesh.cel 等配套文件。"
+description: "将 STAR-CD/PROSTAR v4 网格转换为 OpenFOAM 体网格。"
 cms_slug: "command-star4tofoam"
 ---
 
-<p>按文件名前缀读取 mesh.vrt、mesh.cel 等配套文件。</p><h2>开始前</h2>
+<p>将 STAR-CD/PROSTAR v4 网格转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备 STAR-CD v4 的同名前缀 .vrt、.cel 和 .bnd 文件；默认缩放因子 0.001，通常把毫米转换为米。</p>
 <h2>示例 1：按文件前缀导入</h2>
 <pre><code class="language-bash">star4ToFoam mesh

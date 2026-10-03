@@ -1,11 +1,11 @@
 ---
-title: "surfaceInflate · 安全因子范围为 [1,10]，膨胀后检查表面自相交"
+title: "surfaceInflate · 沿表面法向移动顶点，生成膨胀后的表面"
 layout: reference
-description: "安全因子范围为 [1,10]，膨胀后检查表面自相交。"
+description: "沿表面法向移动顶点，生成膨胀后的表面。"
 cms_slug: "command-surfaceinflate"
 ---
 
-<p>安全因子范围为 [1,10]，膨胀后检查表面自相交。</p><h2>开始前</h2>
+<p>沿表面法向移动顶点，生成膨胀后的表面。</p><h2>开始前</h2>
 <p>在工作算例中准备表面及controlDict；distance按几何长度单位填写，factor为额外延伸安全系数，常用1～2。</p>
 <h2>示例 1：生成小幅外偏移</h2>
 <pre><code class="language-bash">surfaceInflate body.stl 0.001 1.2

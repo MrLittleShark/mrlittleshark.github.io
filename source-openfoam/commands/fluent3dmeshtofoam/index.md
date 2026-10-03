@@ -1,11 +1,11 @@
 ---
-title: "fluent3DMeshToFoam · 用于 Fluent 三维网格的专用转换，按输入格式选择"
+title: "fluent3DMeshToFoam · 将 Fluent 三维网格文件转换为 OpenFOAM 体网格"
 layout: reference
-description: "用于 Fluent 三维网格的专用转换，按输入格式选择。"
+description: "将 Fluent 三维网格文件转换为 OpenFOAM 体网格。"
 cms_slug: "command-fluent3dmeshtofoam"
 ---
 
-<p>用于 Fluent 三维网格的专用转换，按输入格式选择。</p><h2>开始前</h2>
+<p>将 Fluent 三维网格文件转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备三维 Fluent 网格文件；由 Cubit 生成的同类文件可使用专用选项。组名必须与输入网格实际名称一致。</p>
 <h2>示例 1：导入三维 Fluent 网格</h2>
 <pre><code class="language-bash">fluent3DMeshToFoam mesh.msh

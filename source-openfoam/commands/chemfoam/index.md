@@ -1,11 +1,11 @@
 ---
-title: "chemFoam · 单单元化学反应积分"
+title: "chemFoam · 在单个计算单元中积分化学反应方程，研究组分和温度随时间的变化"
 layout: reference
-description: "单单元化学反应积分。"
+description: "在单个计算单元中积分化学反应方程，研究组分和温度随时间的变化。"
 cms_slug: "command-chemfoam"
 ---
 
-<p>单单元化学反应积分。</p><h2>开始前</h2>
+<p>在单个计算单元中积分化学反应方程，研究组分和温度随时间的变化。</p><h2>开始前</h2>
 <p>使用已经建立单单元网格、反应机理、热物性和 <code>constant/initialConditions</code> 的化学算例 <code>baseCase</code>。以下温度和压力实验从各自的初始条件重新开始，保持同一反应机理与组成。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：计算单单元反应过程</h2>
 <pre><code class="language-bash">chemFoam -case baseCase &gt; baseCase/log.chemFoam 2&gt;&amp;1

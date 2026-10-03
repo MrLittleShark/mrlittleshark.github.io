@@ -1,11 +1,11 @@
 ---
-title: "foamEtcFile · 按用户、站点和安装目录搜索并输出文件路径"
+title: "foamEtcFile · 在用户、站点和安装目录中查找 OpenFOAM 配置文件，返回匹配的路径"
 layout: reference
-description: "按用户、站点和安装目录搜索并输出文件路径。-all 列出全部匹配项，-list 列出搜索目录。"
+description: "在用户、站点和安装目录中查找 OpenFOAM 配置文件，返回匹配的路径。"
 cms_slug: "command-foametcfile"
 ---
 
-<p>按用户、站点和安装目录搜索并输出文件路径。-all 列出全部匹配项，-list 列出搜索目录。</p><h2>开始前</h2>
+<p>在用户、站点和安装目录中查找 OpenFOAM 配置文件，返回匹配的路径。</p><h2>开始前</h2>
 <p>已加载环境。搜索优先级由用户、站点和安装的 etc 配置组成，-mode 可限定来源。</p>
 <h2>示例 1：定位全局控制字典</h2>
 <pre><code class="language-bash">foamEtcFile controlDict

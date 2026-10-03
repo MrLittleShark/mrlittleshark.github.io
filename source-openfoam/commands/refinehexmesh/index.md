@@ -1,11 +1,11 @@
 ---
-title: "refineHexMesh · 待细化集合可通过 topoSet 建立"
+title: "refineHexMesh · 将指定单元集合中的六面体按 2×2×2 方式细分"
 layout: reference
-description: "待细化集合可通过 topoSet 建立。"
+description: "将指定单元集合中的六面体按 2×2×2 方式细分。"
 cms_slug: "command-refinehexmesh"
 ---
 
-<p>待细化集合可通过 topoSet 建立。</p><h2>开始前</h2>
+<p>将指定单元集合中的六面体按 2×2×2 方式细分。</p><h2>开始前</h2>
 <p>网格由可进行 2×2×2 细化的六面体构成，并已有目标 cellSet；按几何选集时可先使用 topoSet。</p>
 <h2>示例 1：细化选定单元</h2>
 <pre><code class="language-bash">refineHexMesh refineCells

@@ -1,11 +1,11 @@
 ---
-title: "surfaceFind · 用于定位和检查表面坐标"
+title: "surfaceFind · 查找表面网格中距离指定位置最近的面和顶点"
 layout: reference
-description: "用于定位和检查表面坐标。"
+description: "查找表面网格中距离指定位置最近的面和顶点。"
 cms_slug: "command-surfacefind"
 ---
 
-<p>用于定位和检查表面坐标。</p><h2>开始前</h2>
+<p>查找表面网格中距离指定位置最近的面和顶点。</p><h2>开始前</h2>
 <p>给定表面文件和查询点；未指定的坐标分量为0。输出最近面、顶点等定位信息。</p>
 <h2>示例 1：查询原点附近表面</h2>
 <pre><code class="language-bash">surfaceFind body.stl

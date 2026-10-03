@@ -1,11 +1,11 @@
 ---
-title: "surfaceRedistributePar · 示例采用 4 个进程，并读取 constant/triSurface/body.stl"
+title: "surfaceRedistributePar · 按并行分区重新分配表面三角形，使各进程获得所需几何数据"
 layout: reference
-description: "示例采用 4 个进程，并读取 constant/triSurface/body.stl。分配方式包括 follow、independent、distributed 和 frozen；follow 按网格包围盒划分。"
+description: "按并行分区重新分配表面三角形，使各进程获得所需几何数据。"
 cms_slug: "command-surfaceredistributepar"
 ---
 
-<p>示例采用 4 个进程，并读取 constant/triSurface/body.stl。分配方式包括 follow、independent、distributed 和 frozen；follow 按网格包围盒划分。</p><h2>开始前</h2>
+<p>按并行分区重新分配表面三角形，使各进程获得所需几何数据。</p><h2>开始前</h2>
 <p>准备已分解的体网格、system/decomposeParDict 和 constant/triSurface/body.stl；MPI 进程数应等于子域数。操作写入分区表面，宜在案例副本内进行。</p>
 <h2>示例 1：按两个网格子域分配表面</h2>
 <pre><code class="language-bash">mpirun -np 2 surfaceRedistributePar body.stl follow -parallel

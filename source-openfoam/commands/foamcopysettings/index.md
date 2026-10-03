@@ -1,11 +1,11 @@
 ---
-title: "foamCopySettings · 采用 rsync，按 foamCopySettings.rc 定义的规则复制，不包含网格和计算结"
+title: "foamCopySettings · 将一个算例的配置文件复制到另一个算例"
 layout: reference
-description: "采用 rsync，按 foamCopySettings.rc 定义的规则复制，不包含网格和计算结果。"
+description: "将一个算例的配置文件复制到另一个算例。"
 cms_slug: "command-foamcopysettings"
 ---
 
-<p>采用 rsync，按 foamCopySettings.rc 定义的规则复制，不包含网格和计算结果。</p><h2>开始前</h2>
+<p>将一个算例的配置文件复制到另一个算例。</p><h2>开始前</h2>
 <p>先加载 v2512 环境，在个人工作目录中准备 caseA 算例副本。新目标目录使用未占用的名称。 需要 rsync；源和目标目录都须存在。脚本排除 polyMesh、processor* 与常见数字时间目录；匹配规则不涵盖所有自定义后处理目录。</p>
 <h2>示例 1：向空目录复制设置</h2>
 <pre><code class="language-bash">mkdir -p new-settings

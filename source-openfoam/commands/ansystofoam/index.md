@@ -1,11 +1,11 @@
 ---
-title: "ansysToFoam · 输入采用转换器支持的 ANSYS 文件格式"
+title: "ansysToFoam · 将支持的 ANSYS 网格文件转换为 OpenFOAM 体网格"
 layout: reference
-description: "输入采用转换器支持的 ANSYS 文件格式。"
+description: "将支持的 ANSYS 网格文件转换为 OpenFOAM 体网格。"
 cms_slug: "command-ansystofoam"
 ---
 
-<p>输入采用转换器支持的 ANSYS 文件格式。</p><h2>开始前</h2>
+<p>将支持的 ANSYS 网格文件转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备由 I-DEAS 导出的 ANSYS 网格输入文件，以及目标 OpenFOAM 案例；该转换器按这一网格格式读取数据。</p>
 <h2>示例 1：导入米制网格</h2>
 <pre><code class="language-bash">ansysToFoam mesh.ans

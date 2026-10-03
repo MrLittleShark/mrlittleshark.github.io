@@ -1,11 +1,11 @@
 ---
-title: "writeMeshObj · -cell、-face、-point 和 -cellSet 等选项指定诊断对象"
+title: "writeMeshObj · 将网格点、面中心、单元中心和指定边界导出为 OBJ 文件，便于检查几何"
 layout: reference
-description: "-cell、-face、-point 和 -cellSet 等选项指定诊断对象。"
+description: "将网格点、面中心、单元中心和指定边界导出为 OBJ 文件，便于检查几何。"
 cms_slug: "command-writemeshobj"
 ---
 
-<p>-cell、-face、-point 和 -cellSet 等选项指定诊断对象。</p><h2>开始前</h2>
+<p>将网格点、面中心、单元中心和指定边界导出为 OBJ 文件，便于检查几何。</p><h2>开始前</h2>
 <p>案例已有网格；按编号查看时编号从 0 开始，使用集合选取时需先创建对应 cellSet 或 faceSet。</p>
 <h2>示例 1：导出单个单元</h2>
 <pre><code class="language-bash">writeMeshObj -cell 0 -constant

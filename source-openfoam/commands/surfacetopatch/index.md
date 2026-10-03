@@ -1,11 +1,11 @@
 ---
-title: "surfaceToPatch · 修改后同步检查场文件中的边界条目"
+title: "surfaceToPatch · 根据输入表面的区域划分，重新分配体网格的边界面"
 layout: reference
-description: "修改后同步检查场文件中的边界条目。"
+description: "根据输入表面的区域划分，重新分配体网格的边界面。"
 cms_slug: "command-surfacetopatch"
 ---
 
-<p>修改后同步检查场文件中的边界条目。</p><h2>开始前</h2>
+<p>根据输入表面的区域划分，重新分配体网格的边界面。</p><h2>开始前</h2>
 <p>已有体网格及带区域名称的三角表面，二者坐标和单位一致。该工具按表面分区重新分配网格边界，建议在独立案例副本运行。</p>
 <h2>示例 1：按几何区域重划边界</h2>
 <pre><code class="language-bash">surfaceToPatch constant/triSurface/body.stl

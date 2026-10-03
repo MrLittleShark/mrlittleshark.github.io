@@ -198,6 +198,9 @@ def main():
             example_guides[name]=dict(command_edits.get(name,{}),body=body,examples=examples,example=examples[0]['code'])
             if guide.get('summary'):example_guides[name]['summary']=guide['summary']
     command_edits.update(example_guides)
+    # Keep the reviewed one-line purpose when rebuilding example sections.
+    for name, summary in load(HERE/'command-summary-overrides.json',{}).items():
+        command_edits.setdefault(name,{})['summary']=summary
     guides={}
     for filename in ['dictionary-guides.json','field-guides.json','mesh-guides.json']:
         guides.update(load(HERE/filename,{}))
@@ -234,7 +237,7 @@ def main():
             additional=item['examples'][1:]
             extra=''.join('<h2>'+e(x['title'])+'</h2>'+code(x['code'],'bash')+p(x['explanation']) for x in additional)
         else: extra=''
-        item['title']=item['name']+' · '+item['description'].split('。')[0][:48]
+        item['title']=item['name']+' · '+item['description'].split('。')[0]
         item.pop('display',None)
         body=command_body(item,originals[slug],command_html.get(item['name'],''))
         if extra:

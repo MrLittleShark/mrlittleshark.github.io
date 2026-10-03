@@ -1,11 +1,11 @@
 ---
-title: "combinePatchFaces · 通过 concaveAngle 及质量约束控制合并"
+title: "combinePatchFaces · 将同一单元上符合角度和质量要求的相邻边界面合并"
 layout: reference
-description: "通过 concaveAngle 及质量约束控制合并。"
+description: "将同一单元上符合角度和质量要求的相邻边界面合并。"
 cms_slug: "command-combinepatchfaces"
 ---
 
-<p>通过 concaveAngle 及质量约束控制合并。</p><h2>开始前</h2>
+<p>将同一单元上符合角度和质量要求的相邻边界面合并。</p><h2>开始前</h2>
 <p>网格某些单元在同一 patch 上有多个近共面的边界面；工具将符合角度与凸凹条件的面合并。示例应在独立案例副本比较。</p>
 <h2>示例 1：合并近共面的边界面</h2>
 <pre><code class="language-bash">combinePatchFaces 5

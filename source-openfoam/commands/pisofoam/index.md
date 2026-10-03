@@ -1,11 +1,11 @@
 ---
-title: "pisoFoam · PISO 不可压缩瞬态湍流"
+title: "pisoFoam · 使用 PISO 算法求解瞬态不可压缩湍流"
 layout: reference
-description: "PISO 不可压缩瞬态湍流。"
+description: "使用 PISO 算法求解瞬态不可压缩湍流。"
 cms_slug: "command-pisofoam"
 ---
 
-<p>PISO 不可压缩瞬态湍流。</p><h2>开始前</h2>
+<p>使用 PISO 算法求解瞬态不可压缩湍流。</p><h2>开始前</h2>
 <p><code>pisoFoam</code> 用于PISO 不可压缩瞬态湍流。以下操作使用已完成网格与初始化的串行算例 <code>baseCase</code>；将它换成自己的目录名。各例中的新目录用于保留不同设置，运行前使用尚未存在的目录名。 配套输入可从<a href="https://gitlab.com/openfoam/core/openfoam/-/tree/OpenFOAM-v2512/tutorials/incompressible/pisoFoam/LES/pitzDaily">官方 <code>incompressible/pisoFoam/LES/pitzDaily</code> 算例</a>取得；先按该算例的 <code>Allrun</code> 完成网格和初始场准备。 <code>foamCloneCase</code> 将最早时刻的场和 <code>constant</code>、<code>system</code> 复制到实验目录，各组对照从同一初态开始。</p>
 <h2>示例 1：运行准备好的算例</h2>
 <pre><code class="language-bash">pisoFoam -case baseCase &gt; baseCase/log.pisoFoam 2&gt;&amp;1

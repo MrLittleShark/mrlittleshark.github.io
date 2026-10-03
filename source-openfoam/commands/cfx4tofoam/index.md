@@ -1,11 +1,11 @@
 ---
-title: "cfx4ToFoam · -scale 指定长度缩放系数"
+title: "cfx4ToFoam · 将 CFX4 网格转换为 OpenFOAM 体网格"
 layout: reference
-description: "-scale 指定长度缩放系数。"
+description: "将 CFX4 网格转换为 OpenFOAM 体网格。"
 cms_slug: "command-cfx4tofoam"
 ---
 
-<p>-scale 指定长度缩放系数。</p><h2>开始前</h2>
+<p>将 CFX4 网格转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备 CFX4 的 .geo 几何文件和目标案例，输入格式应与 CFX4 转换器相符。</p>
 <h2>示例 1：导入 CFX4 几何</h2>
 <pre><code class="language-bash">cfx4ToFoam mesh.geo

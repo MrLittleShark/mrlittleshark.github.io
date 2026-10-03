@@ -1,11 +1,11 @@
 ---
-title: "foamCalc · v2512 中该命令为标量计算器，旧版同名场处理程序采用不同接口"
+title: "foamCalc · 计算数学表达式并输出数值结果"
 layout: reference
-description: "v2512 中该命令为标量计算器，旧版同名场处理程序采用不同接口。"
+description: "计算数学表达式并输出数值结果。"
 cms_slug: "command-foamcalc"
 ---
 
-<p>v2512 中该命令为标量计算器，旧版同名场处理程序采用不同接口。</p><h2>开始前</h2>
+<p>计算数学表达式并输出数值结果。</p><h2>开始前</h2>
 <p>需要当前安装包含 v2512 的 foamCalc 表达式计算器。表达式加引号，数值单位由输入者保持一致；该工具求表达式值。</p>
 <h2>示例 1：计算带括号的算术表达式</h2>
 <pre><code class="language-bash">foamCalc '(2 + 3)*4'

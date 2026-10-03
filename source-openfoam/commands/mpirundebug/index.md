@@ -1,11 +1,11 @@
 ---
-title: "mpirunDebug · 计算前完成分区"
+title: "mpirunDebug · 在 MPI 并行运行中为各进程启动调试器"
 layout: reference
-description: "计算前完成分区。图形调试模式需配置 xterm 及对应调试器。"
+description: "在 MPI 并行运行中为各进程启动调试器。"
 cms_slug: "command-mpirundebug"
 ---
 
-<p>计算前完成分区。图形调试模式需配置 xterm 及对应调试器。</p><h2>开始前</h2>
+<p>在 MPI 并行运行中为各进程启动调试器。</p><h2>开始前</h2>
 <p>加载 v2512 环境，使用个人算例副本 caseA。并行示例先配置 decomposeParDict 并完成 decomposePar，程序和字典须匹配。 示例使用已分成两个子域的算例；调试模式按需安装 gdb、xterm、valgrind 或 gperftools。</p>
 <h2>示例 1：普通 MPI 启动</h2>
 <pre><code class="language-bash">cd caseA

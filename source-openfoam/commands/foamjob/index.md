@@ -1,11 +1,11 @@
 ---
-title: "foamJob · 默认日志名为 log"
+title: "foamJob · 启动求解程序并保存运行日志，支持串行和并行计算"
 layout: reference
-description: "默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。"
+description: "启动求解程序并保存运行日志，支持串行和并行计算。"
 cms_slug: "command-foamjob"
 ---
 
-<p>默认日志名为 log。-parallel 启用 MPI，-screen 同时输出至终端，-wait 等待计算结束。</p><h2>开始前</h2>
+<p>启动求解程序并保存运行日志，支持串行和并行计算。</p><h2>开始前</h2>
 <p>加载 v2512 环境，使用个人算例副本 caseA。并行示例先配置 decomposeParDict 并完成 decomposePar，程序和字典须匹配。</p>
 <h2>示例 1：后台运行</h2>
 <pre><code class="language-bash">foamJob -case caseA icoFoam

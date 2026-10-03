@@ -1,11 +1,11 @@
 ---
-title: "foamExprParserInfo · 用于查询表达式语法及解析器支持范围"
+title: "foamExprParserInfo · 显示 OpenFOAM 表达式解析器支持的符号与语法规则"
 layout: reference
-description: "用于查询表达式语法及解析器支持范围。"
+description: "显示 OpenFOAM 表达式解析器支持的符号与语法规则。"
 cms_slug: "command-foamexprparserinfo"
 ---
 
-<p>用于查询表达式语法及解析器支持范围。</p><h2>开始前</h2>
+<p>显示 OpenFOAM 表达式解析器支持的符号与语法规则。</p><h2>开始前</h2>
 <p>需要当前安装包含 foamExprParserInfo。该工具输出表达式解析器的符号与语法规则，适合检查可用表达式写法。</p>
 <h2>示例 1：查看一般场表达式的符号</h2>
 <pre><code class="language-bash">foamExprParserInfo -field -tokens

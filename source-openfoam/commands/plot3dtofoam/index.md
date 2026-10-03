@@ -1,11 +1,11 @@
 ---
-title: "plot3dToFoam · -singleBlock 和 -2D 等选项用于指定输入网格形式"
+title: "plot3dToFoam · 将 PLOT3D 结构网格转换为 OpenFOAM 体网格"
 layout: reference
-description: "-singleBlock 和 -2D 等选项用于指定输入网格形式。"
+description: "将 PLOT3D 结构网格转换为 OpenFOAM 体网格。"
 cms_slug: "command-plot3dtofoam"
 ---
 
-<p>-singleBlock 和 -2D 等选项用于指定输入网格形式。</p><h2>开始前</h2>
+<p>将 PLOT3D 结构网格转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备 ASCII 格式 Plot3D 几何文件，确认文件是单块还是多块、是否包含 iblank 数据。</p>
 <h2>示例 1：导入多块几何</h2>
 <pre><code class="language-bash">plot3dToFoam mesh.xyz

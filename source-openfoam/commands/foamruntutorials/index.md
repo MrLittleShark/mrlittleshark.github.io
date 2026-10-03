@@ -1,11 +1,11 @@
 ---
-title: "foamRunTutorials · 执行目标目录中的 Allrun 或 Alltest"
+title: "foamRunTutorials · 批量运行指定目录及其子目录中的教程算例"
 layout: reference
-description: "执行目标目录中的 Allrun 或 Alltest。-dry-run 列出待执行脚本。"
+description: "批量运行指定目录及其子目录中的教程算例。"
 cms_slug: "command-foamruntutorials"
 ---
 
-<p>执行目标目录中的 Allrun 或 Alltest。-dry-run 列出待执行脚本。</p><h2>开始前</h2>
+<p>批量运行指定目录及其子目录中的教程算例。</p><h2>开始前</h2>
 <p>先加载 v2512 环境，在个人工作目录中准备 caseA 算例副本。新目标目录使用未占用的名称。 递归范围限定于个人教程副本 tutorial-study，包含 Allrun 或完整算例输入。</p>
 <h2>示例 1：预览将执行的脚本</h2>
 <pre><code class="language-bash">foamRunTutorials -dry-run -case tutorial-study

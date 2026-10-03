@@ -1,11 +1,11 @@
 ---
-title: "Allmake · 该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码"
+title: "Allmake · 编译 wmake 使用的依赖扫描与代码生成工具"
 layout: reference
-description: "该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码。"
+description: "编译 wmake 使用的依赖扫描与代码生成工具。"
 cms_slug: "command-allmake"
 ---
 
-<p>该脚本服务于 OpenFOAM 源码构建或维护，具体入口和前置条件见源码。</p><h2>开始前</h2>
+<p>编译 wmake 使用的依赖扫描与代码生成工具。</p><h2>开始前</h2>
 <p>先加载 v2512 环境。内部工具使用完整路径；所有输出放在个人可写目录。 此处是 wmake/src/Allmake，用于编译 Lemon 和依赖分析器，不是算例运行脚本。先完整复制 wmake/src 为个人 tools-src；设置 WMAKE_BIN 为新的个人输出目录，WM_DIR 仍指向已安装的规则。</p>
 <h2>示例 1：构建工具链</h2>
 <pre><code class="language-bash">cp -a "$WM_PROJECT_DIR/wmake/src" tools-src

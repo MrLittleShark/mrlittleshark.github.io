@@ -1,11 +1,11 @@
 ---
-title: "surfaceMeshInfo · -areas 输出面积统计，可用于核查几何尺度"
+title: "surfaceMeshInfo · 显示表面网格的点数、面数、区域和面积等信息"
 layout: reference
-description: "-areas 输出面积统计，可用于核查几何尺度。"
+description: "显示表面网格的点数、面数、区域和面积等信息。"
 cms_slug: "command-surfacemeshinfo"
 ---
 
-<p>-areas 输出面积统计，可用于核查几何尺度。</p><h2>开始前</h2>
+<p>显示表面网格的点数、面数、区域和面积等信息。</p><h2>开始前</h2>
 <p>准备受支持的表面文件。该工具读取表面并报告信息，适合转换和修复前后比较。</p>
 <h2>示例 1：查看点面统计</h2>
 <pre><code class="language-bash">surfaceMeshInfo body.stl

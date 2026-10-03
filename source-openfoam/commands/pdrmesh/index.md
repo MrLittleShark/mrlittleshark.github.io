@@ -1,11 +1,11 @@
 ---
-title: "PDRMesh · 输入包括 blockedCells、blockedFaces 等集合"
+title: "PDRMesh · 按阻塞单元和阻塞面集合修改网格，并更新 PDR 算例的场数据"
 layout: reference
-description: "输入包括 blockedCells、blockedFaces 等集合。"
+description: "按阻塞单元和阻塞面集合修改网格，并更新 PDR 算例的场数据。"
 cms_slug: "command-pdrmesh"
 ---
 
-<p>输入包括 blockedCells、blockedFaces 等集合。</p><h2>开始前</h2>
+<p>按阻塞单元和阻塞面集合修改网格，并更新 PDR 算例的场数据。</p><h2>开始前</h2>
 <p>已有 PDR 网格、system/PDRMeshDict、blockedCells 单元集及需要的面集；blockedFaces 的目标 patch 必须已存在。示例在案例副本执行。</p>
 <h2>示例 1：移除阻塞单元并生成边界</h2>
 <pre><code class="language-bash">PDRMesh

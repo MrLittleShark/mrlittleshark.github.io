@@ -1,11 +1,11 @@
 ---
-title: "surfaceOrient · 默认按物体外部观察点定向，-inside 将指定点按内部点处理"
+title: "surfaceOrient · 根据参考点统一表面三角形的法向方向"
 layout: reference
-description: "默认按物体外部观察点定向，-inside 将指定点按内部点处理。"
+description: "根据参考点统一表面三角形的法向方向。"
 cms_slug: "command-surfaceorient"
 ---
 
-<p>默认按物体外部观察点定向，-inside 将指定点按内部点处理。</p><h2>开始前</h2>
+<p>根据参考点统一表面三角形的法向方向。</p><h2>开始前</h2>
 <p>准备三角表面和一个坐标明确的观察点；闭合表面可选择已知内部点或外部点确定朝向。</p>
 <h2>示例 1：按外部点统一法向</h2>
 <pre><code class="language-bash">surfaceOrient body.stl '(10 10 10)' body-oriented.stl

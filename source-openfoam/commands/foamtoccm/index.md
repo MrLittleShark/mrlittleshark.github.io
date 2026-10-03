@@ -1,11 +1,11 @@
 ---
-title: "foamToCcm · 需编译 CCM 库支持"
+title: "foamToCcm · 将 OpenFOAM 网格及计算结果导出为 CCM 格式"
 layout: reference
-description: "需编译 CCM 库支持。"
+description: "将 OpenFOAM 网格及计算结果导出为 CCM 格式。"
 cms_slug: "command-foamtoccm"
 ---
 
-<p>需编译 CCM 库支持。</p><h2>开始前</h2>
+<p>将 OpenFOAM 网格及计算结果导出为 CCM 格式。</p><h2>开始前</h2>
 <p>安装带 CCM 支持的导出工具；案例已有网格，结果导出示例还需存在相应时间的场文件。</p>
 <h2>示例 1：导出网格与结果</h2>
 <pre><code class="language-bash">foamToCcm -latestTime

@@ -1,11 +1,11 @@
 ---
-title: "gambitToFoam · 转换后运行 checkMesh"
+title: "gambitToFoam · 将 GAMBIT 网格转换为 OpenFOAM 体网格"
 layout: reference
-description: "转换后运行 checkMesh。"
+description: "将 GAMBIT 网格转换为 OpenFOAM 体网格。"
 cms_slug: "command-gambittofoam"
 ---
 
-<p>转换后运行 checkMesh。</p><h2>开始前</h2>
+<p>将 GAMBIT 网格转换为 OpenFOAM 体网格。</p><h2>开始前</h2>
 <p>准备 GAMBIT Neutral 网格文件；该输入与 Fluent .msh 文件采用不同的格式。</p>
 <h2>示例 1：导入 Neutral 网格</h2>
 <pre><code class="language-bash">gambitToFoam mesh.neu

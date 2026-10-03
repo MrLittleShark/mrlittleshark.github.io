@@ -1,11 +1,11 @@
 ---
-title: "foamHasLibrary · -detail 输出详细信息"
+title: "foamHasLibrary · 检查指定的共享库能否成功加载"
 layout: reference
-description: "-detail 输出详细信息。"
+description: "检查指定的共享库能否成功加载。"
 cms_slug: "command-foamhaslibrary"
 ---
 
-<p>-detail 输出详细信息。</p><h2>开始前</h2>
+<p>检查指定的共享库能否成功加载。</p><h2>开始前</h2>
 <p>共享库位于当前 OpenFOAM 或用户库搜索路径。工具用退出状态表示装载是否成功，适合编译后的依赖检查。</p>
 <h2>示例 1：检查有限体积库</h2>
 <pre><code class="language-bash">foamHasLibrary libfiniteVolume.so

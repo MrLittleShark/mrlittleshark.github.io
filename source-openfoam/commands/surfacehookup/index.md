@@ -1,11 +1,11 @@
 ---
-title: "surfaceHookUp · 连接规则和输入表面由相应字典指定"
+title: "surfaceHookUp · 连接距离接近的开放边缘，缝合表面网格"
 layout: reference
-description: "连接规则和输入表面由相应字典指定。"
+description: "连接距离接近的开放边缘，缝合表面网格。"
 cms_slug: "command-surfacehookup"
 ---
 
-<p>连接规则和输入表面由相应字典指定。</p><h2>开始前</h2>
+<p>连接距离接近的开放边缘，缝合表面网格。</p><h2>开始前</h2>
 <p>system/surfaceHookUpDict逐项列出待连接表面及type triSurfaceMesh，文件位于constant/triSurface；容差与几何长度单位一致。</p>
 <h2>示例 1：连接微小间隙</h2>
 <pre><code class="language-bash">surfaceHookUp 1e-5

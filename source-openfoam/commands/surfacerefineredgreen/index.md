@@ -1,11 +1,11 @@
 ---
-title: "surfaceRefineRedGreen · -steps 指定细分次数"
+title: "surfaceRefineRedGreen · 细分指定表面三角形，并调整相邻三角形以保持连接连续"
 layout: reference
-description: "-steps 指定细分次数。"
+description: "细分指定表面三角形，并调整相邻三角形以保持连接连续。"
 cms_slug: "command-surfacerefineredgreen"
 ---
 
-<p>-steps 指定细分次数。</p><h2>开始前</h2>
+<p>细分指定表面三角形，并调整相邻三角形以保持连接连续。</p><h2>开始前</h2>
 <p>准备三角表面。红绿细化增加三角面数量，主要改变离散密度；新顶点位于原三角形上。</p>
 <h2>示例 1：细化一次</h2>
 <pre><code class="language-bash">surfaceRefineRedGreen body.stl body-refined.stl

@@ -1,11 +1,11 @@
 ---
-title: "surfaceMeshImport · 导入对象为表面网格，-name 指定名称"
+title: "surfaceMeshImport · 将外部表面网格导入为 OpenFOAM 的 surfMesh"
 layout: reference
-description: "导入对象为表面网格，-name 指定名称。"
+description: "将外部表面网格导入为 OpenFOAM 的 surfMesh。"
 cms_slug: "command-surfacemeshimport"
 ---
 
-<p>导入对象为表面网格，-name 指定名称。</p><h2>开始前</h2>
+<p>将外部表面网格导入为 OpenFOAM 的 surfMesh。</p><h2>开始前</h2>
 <p>准备表面文件和包含 system/controlDict 的案例目录；命名导入可在同一案例保存多个 surfMesh。</p>
 <h2>示例 1：导入默认表面</h2>
 <pre><code class="language-bash">surfaceMeshImport body.stl

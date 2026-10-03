@@ -1,11 +1,11 @@
 ---
-title: "surfaceSplitByTopology · 用于分离拓扑不连通的部件"
+title: "surfaceSplitByTopology · 按边的连接关系识别并剥离表面中的挡板部分"
 layout: reference
-description: "用于分离拓扑不连通的部件。"
+description: "按边的连接关系识别并剥离表面中的挡板部分。"
 cms_slug: "command-surfacesplitbytopology"
 ---
 
-<p>用于分离拓扑不连通的部件。</p><h2>开始前</h2>
+<p>按边的连接关系识别并剥离表面中的挡板部分。</p><h2>开始前</h2>
 <p>工具根据三角面拓扑识别并分离 baffle 等区域；输入中的开放边和多连接边决定分区，适合薄片附着在主体表面的几何。</p>
 <h2>示例 1：分离附着薄片区域</h2>
 <pre><code class="language-bash">surfaceSplitByTopology body-with-baffle.stl body-separated.stl
