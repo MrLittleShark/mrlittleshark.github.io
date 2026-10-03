@@ -1,0 +1,673 @@
+[
+  {
+    "slug": "topic-function-objects",
+    "kind": "module",
+    "title": "functionObject",
+    "summary": "采样、统计、场运算、载荷与传热后处理：参数、示例和结果。",
+    "body": "`functionObject` 是 OpenFOAM 的功能对象，用于在计算过程中采样、统计、导出结果，也可以处理已经保存的场。常见任务包括记录压力探针、计算流量和力系数、提取截面、生成平均场、检查水量与热功率。\n\n## 按要得到的结果选择工具\n\n| 课程编号 | 内容 | 主要工具与结果 |\n|---|---|---|\n| 00–01 | 运行方式与通用参数 | `controlDict`、`postProcess`、执行频率与输出控制 |\n| 02–04 | 点、线、面与流线 | `probes`、`sets`、`surfaces`、`streamLine` |\n| 05–06 | 空间统计与积分 | 极值、平均、直方图、流量、压降 |\n| 07–08 | 场运算与时间统计 | 梯度、涡量、Q、平均场与脉动 |\n| 09–10 | 力、壁面与湍流 | 升阻力、力矩、y+、壁面剪切、湍流量 |\n| 11–12 | 传热与两相流 | 热流、换热系数、水量、液位与界面 |\n| 13–15 | 导出、监测与自动控制 | VTK / EnSight、残差、守恒、条件停止 |\n| 16 | 工具分类与选用索引 | 按任务查找类型、课程与扩展工具 |\n\n## 配套算例\n\n| 算例 | 求解内容 | 用来练习 |\n|---|---|---|\n| [方腔](/downloads/function-objects/01-cavity.zip) | `icoFoam`，0–0.5 s | 采样、场运算、统计、流线与导出 |\n| [后台阶](/downloads/function-objects/02-pitzDaily.zip) | `simpleFoam`，100 次迭代 | 流量、压降、壁面量与力系数 |\n| [冷热壁面](/downloads/function-objects/03-hotRoom.zip) | `buoyantPimpleFoam`，0–0.2 s | 壁面热流、热流传感器与换热系数 |\n| [溃坝](/downloads/function-objects/04-damBreak.zip) | `interFoam`，0–0.2 s | 水相体积、液面高度与自由表面 |\n| [自动停止](/downloads/function-objects/05-autoStop.zip) | 方腔，控制器提前结束 | `runTimeControl` 条件与停止时刻 |\n\n[下载全部算例](/downloads/function-objects/function-objects-v2512.zip)。解压后进入对应算例目录，在已加载 OpenFOAM v2512 的终端运行 `bash Allrun`。每个包包含输入文件、运行脚本和参考数据。\n\n![方腔采样和中心线速度](/assets/science/functionobjects-sampling.png)\n\n第一次接触功能对象，可以从第 00 课运行方腔开始。已经有计算结果时，按上表直接选择需要的分析任务；各课都给出配置位置、参数含义和输出文件的读法。\n",
+    "track": "functionObject",
+    "series": "",
+    "sort_order": 180,
+    "cover_url": "/assets/science/functionobjects-sampling.png",
+    "metadata": {
+      "topic_key": "function-objects",
+      "version": "v2512",
+      "canonical_path": "/topics/function-objects/"
+    },
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": false
+  },
+  {
+    "slug": "function-objects-00",
+    "kind": "lesson",
+    "title": "00 · 第一个后处理对象：配置、运行与结果",
+    "summary": "在方腔中计算速度大小，练习五种 postProcess 调用，认识场文件与采样文件。",
+    "body": "计算过程中，我们常常关心几个具体问题：某一点的速度怎样变化？入口流量是多少？物体受到多大的力？`functionObject` 就是运行这些计算的功能对象。把它写进 `controlDict`，求解器就会按设定的频率执行；已有结果也可以用 `postProcess` 处理。\n\n这一课用方腔算例计算速度大小，并读取两个位置的速度。方腔边长 0.1 m，顶盖以 1 m/s 沿 x 方向移动，`icoFoam` 从 0 算到 0.5 s，时间步为 0.005 s。\n\n## 1. 下载并运行方腔算例\n\n下载本页的 `01-cavity.zip`，解压后进入 `01-cavity`。在已加载 OpenFOAM v2512 的终端运行：\n\n```bash\nbash Allrun\n```\n\n脚本依次生成网格、检查网格、运行 `icoFoam`，然后对保存的结果做离线后处理。网格是 20 × 20 × 1，z 方向厚度 0.01 m。每 10 步保存一次完整场，因此 `0.05/`、`0.1/`，直到 `0.5/` 都会出现。\n\n算例把后处理设置集中放在 `system/functions`。`system/controlDict` 末尾通过下面的写法加载它：\n\n```foam\nfunctions\n{\n    #include \"functions\"\n}\n```\n\n这里的 `#include` 会把文件内容放进外层 `functions` 字典。下载包的 `system/functions` 因此直接从各个对象的名称开始。\n\n## 2. 第一个对象：从 U 得到速度大小\n\n打开 `system/functions`，找到 `speed`：\n\n```foam\nspeed\n{\n    type mag;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n    result speed;\n}\n```\n\n| 条目 | 本例设置的含义 |\n|---|---|\n| `speed` | 对象名称，由我们命名，用于区分不同任务 |\n| `type mag` | 对输入场取模，向量速度变成标量速度大小 |\n| `libs (fieldFunctionObjects)` | 加载场运算工具库 |\n| `field U` | 输入场为速度 `U` |\n| `result speed` | 输出场命名为 `speed` |\n| `writeControl timeStep` | 按计算步数控制写出 |\n| `writeInterval 10` | 每 10 步写出一次，本例对应 0.05 s |\n| `errors strict` | 配置或运行错误会直接显示并结束运行，便于定位问题 |\n\n速度大小的计算是：\n\n$$|\\mathbf U|=\\sqrt{U_x^2+U_y^2+U_z^2}.$$\n\n本例为二维流动，$U_z=0$。打开 `0.5/speed`，可以看到每个单元的标量值。在 ParaView 中打开 `case.foam`，选择时间 0.5，再选择 `speed`，就得到速度云图。\n\n![方腔速度与中心线剖面](/assets/science/functionobjects-sampling.png)\n\n左图的两个圆点是探针位置。顶盖带动腔内形成回流，因此中心竖线上部的水平速度为正，中下部出现负值。\n\n## 3. 同一个对象，可以在线或离线运行\n\n在线运行时，求解器中的场已经在内存里，功能对象可以直接使用。离线运行时，`postProcess` 从选定的时间目录读场，然后执行后处理。下面五种调用均可在已经运行完的方腔目录中使用。\n\n**示例 1：处理最后一个已保存时刻。**\n\n```bash\npostProcess -func 'mag(U)' -latestTime\n```\n\n`mag(U)` 是预配置模板调用，输出名称通常为 `mag(U)`。它与本课手写配置的 `result speed` 命名不同，两者计算的是同一物理量。\n\n**示例 2：指定 0.5 s，计算压力梯度。**\n\n```bash\npostProcess -func 'grad(p)' -time 0.5\n```\n\n本算例的 `p` 是运动压力，单位为 m²/s²，因此 `grad(p)` 的单位为 m/s²。\n\n**示例 3：计算涡量。**\n\n```bash\npostProcess -func vorticity -latestTime\n```\n\n**示例 4：一次运行两个涡结构工具。**\n\n```bash\npostProcess -funcs '(Q Lambda2)' -latestTime\n```\n\n外层引号把整组函数作为一个参数传入，括号表示 OpenFOAM 列表。\n\n**示例 5：使用自己的后处理字典。**\n\n```bash\npostProcess -dict system/postProcess -latestTime\n```\n\n本例的独立字典先读 `U`、`p`，再生成 `postSpeed` 和涡量：\n\n```foam\nFoamFile { version 2.0; format ascii; class dictionary; object postProcess; }\nfunctions\n{\nreadSaved\n{\n    type readFields;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    fields (U p);\n}\nsavedSpeed\n{\n    type mag;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n    result postSpeed;\n}\nsavedVorticity\n{\n    type vorticity;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}\n}\n```\n\n`-dict` 适合把不同分析任务保存成文件，例如一份用于采样，一份用于积分。下次对新结果运行同一个字典，就能保持处理方式一致。\n\n## 4. 到哪里找结果\n\n| 结果类型 | 本例文件 | 用途 |\n|---|---|---|\n| 每个单元上的场 | `0.5/speed`、`0.5/vorticity` | 在 ParaView 中着色、切片、画等值面 |\n| 探针时间序列 | `postProcessing/pointHistory/0/U` | 画速度随时间变化的曲线 |\n| 沿线采样 | `postProcessing/centreLines/0.5/vertical_p_U.xy` | 比较剖面、实验数据和不同网格 |\n| 统计量 | `postProcessing/volumeMean/0/volFieldValue.dat` | 读取体积平均值等少量数据 |\n| 截面文件 | `postProcessing/midPlane/0.5/midZ.vtp` | 单独保存选定截面及其场 |\n\n探针目录中的 `0` 表示这次记录开始时的时间。文件里会继续追加 0.005、0.01 等采样时刻；它与按时刻分别保存的完整场目录采用不同组织方式。\n\n## 5. 带物理模型的后处理\n\n`yPlus`、壁面剪切应力等工具会读取湍流模型。它们适合随求解器运行，也可以由原求解器加载模型后再处理。配套的后台阶算例使用：\n\n```bash\nsimpleFoam -postProcess -func yPlus -latestTime\n```\n\n后续课程会分别介绍各类工具。下一课先弄清它们共用的时间控制和输出参数。\n\n## 参考\n\n[v2512 functionObject 接口](https://api.openfoam.com/2512/classFoam_1_1functionObject.html)；[官方功能对象使用说明](https://doc.openfoam.com/2212/tools/post-processing/function-objects/)。配套算例来自 v2512 的 `icoFoam/cavity`。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 400,
+    "cover_url": "/assets/science/functionobjects-sampling.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        },
+        {
+          "label": "后台阶：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 37125,
+          "url": "/downloads/function-objects/02-pitzDaily.zip",
+          "bytes": 37125,
+          "size": "36 KB",
+          "sha256": "a26091c3d03033d29285a174c78a98f993c791ef6b38dddf509cce7e7025492f"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-01",
+    "kind": "lesson",
+    "title": "01 · 通用参数：什么时候计算，什么时候保存",
+    "summary": "逐项设置库、区域、执行频率、写出频率、统计起点和文本精度。",
+    "body": "一个后处理对象有两种工作：**计算或更新结果**，以及**把结果写到文件**。对应的设置分别是 `executeControl` 和 `writeControl`。例如时间平均需要每一步都积累数据，但平均场可以每隔一段时间才保存。\n\n![通用参数：什么时候计算，什么时候保存](/assets/science/functionobjects-schedule.svg)\n\n## 1. 用方腔算例理解执行频率\n\n方腔的时间步为 0.005 s。下面这个配置每一步更新平均值，随求解器每 0.05 s 保存一次：\n\n```foam\naverages\n{\n    type fieldAverage;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    timeStart 0.1;\n    executeControl timeStep;\n    executeInterval 1;\n    restartOnRestart false;\n    fields\n    (\n        U { mean yes; prime2Mean yes; base time; }\n        p { mean yes; prime2Mean no; base time; }\n    );\n}\n```\n\n`executeInterval 1` 保留每一个时间步对平均值的贡献。`writeControl writeTime` 则跟随主 `controlDict` 的输出时刻。两项各管一件事，组合起来就能兼顾采样密度与文件大小。\n\n`timeStart 0.1` 把启动阶段的前 0.1 s 排除在统计窗口外。它只控制这个后处理对象，方腔仍然从 0 s 开始求解。\n\n## 2. 对象身份与工作区域\n\n| 参数 | 可设置的值 / 默认 | 作用及设置方法 |\n|---|---|---|\n| `type` | 必填，工具类型名 | 例如 `probes`、`fieldAverage`、`forces`，大小写与类型名一致 |\n| `libs` | 库名列表 | 常用 `(fieldFunctionObjects)`、`(sampling)`、`(forces)`、`(utilityFunctionObjects)` |\n| `enabled` | `true` / `false`，默认 `true` | 控制是否启用，保留配置时可暂时关闭 |\n| `log` | 默认 `true` | 控制该工具的常规日志输出；具体日志由工具实现 |\n| `region` | 网格区域名，默认 `region0` | 多区域传热时指定流体或固体区域；适用于基于区域网格的对象 |\n| `useNamePrefix` | 布尔值，受对象和全局设置影响 | 让派生场带上对象名前缀，方便区分多个同类计算 |\n| `errors` | `default`、`warn`、`ignore`、`strict` | 错误处理方式；教程算例使用 `strict`，错误直接反馈到运行结果 |\n\n对象名与 `type` 分开命名很有用。例如 `inletPressure` 和 `outletPressure` 都可以使用 `surfaceFieldValue`，分别处理不同边界。\n\n## 3. 时间范围与控制方式\n\n| 参数 | 默认值 | 说明 |\n|---|---|---|\n| `timeStart` | `0` | 对象开始生效的模拟时间 |\n| `timeEnd` | 无有限上限 | 对象停止生效的模拟时间 |\n| `executeControl` | `timeStep` | 何时调用计算 / 更新操作 |\n| `executeInterval` | `1` | 计算间隔；单位随控制方式变化 |\n| `writeControl` | `timeStep` | 何时调用写出操作 |\n| `writeInterval` | `1` | 写出间隔；单位随控制方式变化 |\n\n`executeControl` 与 `writeControl` 都使用下面这些取值：\n\n| 控制方式 | 间隔的含义 | 适用情景 |\n|---|---|---|\n| `timeStep` | 计算步数，例如 `10` 步 | 固定时间步采样、稳态迭代监测 |\n| `writeTime` | 求解器完整场输出的次数 | 截面和派生场与主结果同步 |\n| `runTime` | 模拟时间，例如 `0.05` s | 以物理时间安排输出，实际调用落在计算步上 |\n| `adjustableRunTime` | 模拟时间，并参与输出时间对齐 | 与可调整时间步配合；同时协调主 `controlDict` 的时间步和输出设置 |\n| `clockTime` | 已用墙钟时间，秒 | 长任务按实际等待时间输出 |\n| `cpuTime` | 已用 CPU 时间，秒 | 按计算消耗安排输出 |\n| `onEnd` | 计算结束时 | 只保存最终统计或结果 |\n| `none` | 关闭此项调度 | 分别控制计算和写出 |\n\n对于 `simpleFoam`，`timeStep` 通常对应一次稳态迭代。`writeInterval 10` 的意思是每 10 次迭代输出，不表示 10 s 的真实流动时间。\n\n## 4. 五种实际安排\n\n| 任务 | 配套算例里的对象 | 执行和输出方式 | 为什么这样设 |\n|---|---|---|---|\n| 观察启动过程 | `pointHistory` | 每一步采样写出 | 0.005 s 的分辨率能看清速度最初的变化 |\n| 保存速度大小 | `speed` | 每步可计算，每 10 步写出 | 派生场与完整场同为 0.05 s 一份 |\n| 保存截面 | `midPlane` | 每次主结果输出时写出 | 将截面与三维场对齐 |\n| 时间平均 | `averages` | 从 0.1 s 起每步积累，每次主输出时保存 | 统计窗口和保存间隔各自明确 |\n| 稳态力系数 | `wallCoefficients` | 每 10 次迭代保存 | 用较小文本文件观察迭代趋势 |\n\n这些对象都在配套案例的 `system/functions` 中。打开同一个文件比较它们，能直接看出时间控制如何与具体任务组合。\n\n## 5. 文本输出参数\n\n许多监测工具继承 `writeFile`，可以使用下表。`mag` 这类直接写 OpenFOAM 场的工具，保存格式主要受 `controlDict` 的场写出设置控制。\n\n| 参数 | 默认 | 含义 |\n|---|---|---|\n| `writeToFile` | `true` | 写出统计文本文件 |\n| `writePrecision` | 系统默认精度 | 文本数字的有效位数；对比微小差值时可增大 |\n| `useUserTime` | `true` | 按用户时间单位输出；发动机等算例可能使用曲轴转角 |\n| `updateHeader` | `true` | 在需要时更新文件头，反映当前字段或区域设置 |\n\n本专题的场文件使用 ASCII 格式和 10 位精度，便于直接查看及绘图。`writePrecision` 控制保存的数字位数；线性方程的容差仍由 `fvSolution` 设置。\n\n## 6. 组合顺序与依赖\n\n本算例先定义 `speed`，后定义使用 `speed` 的 `speedHistogram`。这样后一个对象读取的是本步已经计算出的速度大小。类似地，离线处理先用 `readFields` 读入 `U`，再计算 `mag(U)`。\n\n对于有内部累积状态的对象，例如 `fieldAverage`，保持执行时间连续尤其重要。对一个已保存的时刻计算涡量很自然；计算时间平均则需要完整的采样序列，并选择合适的权重。\n\n较复杂的自动化还可以设置 `controlMode` 为 `time`、`trigger`、`timeOrTrigger` 或 `timeAndTrigger`，并用 `triggerStart`、`triggerEnd` 限定触发区间。这类设置配合 `runTimeControl` 使用，在自动控制一课中展开。\n\n## 参考\n\n[v2512 时间控制接口](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1timeControl.html)；源码 `src/OpenFOAM/db/functionObjects/timeControl`、`src/functionObjects/utilities/timeControl` 与 `writeFile`。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 401,
+    "cover_url": "/assets/science/functionobjects-schedule.svg",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-02",
+    "kind": "lesson",
+    "title": "02 · probes：记录速度、压力与壁面测点",
+    "summary": "布置域内与壁面探针，选择插值和采样间隔，读取向量时间序列。",
+    "body": "`probes` 记录指定坐标处的场值，适合速度、压力、温度的时间序列。先确定测点的物理位置，再选择插值方式和记录频率，就能得到可以直接画曲线的数据。\n\n## 1. 在方腔里放两个测点\n\n运行本课方腔包的 `bash Allrun`。方腔范围为 $0\\le x,y\\le0.1$ m，z 方向厚度 0.01 m。我们把两个测点放在中间截面，分别位于腔体中心和中心上方。\n\n```foam\npointHistory\n{\n    type probes;\n    libs (sampling);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 1;\n    fields (U p);\n    probeLocations ((0.05 0.05 0.005) (0.05 0.075 0.005));\n    interpolationScheme cellPoint;\n    fixedLocations true;\n    includeOutOfBounds false;\n}\n```\n\n第一点为 `(0.05 0.05 0.005)`，第二点为 `(0.05 0.075 0.005)`。两点 x 相同，y 不同，因此可以比较回流中不同高度的速度变化。\n\n`fields (U p)` 同时记录向量速度与标量压力。`cellPoint` 利用单元和点上的信息插值到探针位置；探针恰好不在单元中心时，这比直接拿所在单元的值更容易表达位置差别。\n\n## 2. 可设置的参数\n\n| 参数 | 默认 / 取值 | 作用与选法 |\n|---|---|---|\n| `type`、`libs` | `probes`、`(sampling)` | 加载空间点采样工具 |\n| `fields` | 必填，字段名列表，可用匹配表达式 | `(U p)`、`(T)`；字段来自正在运行的算例 |\n| `probeLocations` | 必填，坐标列表 | 每个点写成 `(x y z)`，单位与网格一致 |\n| `interpolationScheme` | 默认 `cell` | `cell` 使用所在单元值；本例 `cellPoint` 做空间插值 |\n| `fixedLocations` | 默认 `true` | 测点保持在指定空间坐标；动网格下设 `false` 可随关联单元运动 |\n| `includeOutOfBounds` | 默认 `true` | 保留网格外位置的输出占位，越界值用极大负值表示；本例关闭 |\n| `sampleOnExecute` | 默认 `false` | 是否在 execute 阶段额外采样；默认主要由写出调度驱动 |\n| `verbose` | 默认 `false` | 增加采样诊断信息 |\n| `writeControl`、`writeInterval` | 本例 `timeStep`、`1` | 每一步记录，时间间隔 0.005 s |\n\n测点数可以增加。做实验对比时，直接采用实验探头的坐标；做对称性检查时，则布置成对位置。坐标落在流体网格内，输出才对应所研究的流体。\n\n## 3. 读懂 U 文件的每一列\n\n文件 `postProcessing/pointHistory/0/U` 开头是两个探针坐标，随后每一行先写时间，再依次写各探针的速度向量：\n\n```text\n# Probe 0 (0.05 0.05 0.005)\n# Probe 1 (0.05 0.075 0.005)\n# Time       0                                  1\n0.005        (-0.0577744 0.0000063063 0)          (-0.0772819 0.0000085211 0)\n```\n\n括号里的顺序是 `Ux Uy Uz`。0.005 s 时两点的 `Ux` 都为负，说明局部速度指向 x 的负方向。顶盖虽然向右移动，腔内回流仍然会向左运动。\n\n![探针时间序列与速度分布](/assets/science/functionobjects-statistics.png)\n\n左图直接使用这个文件绘制。探针 0 与探针 1 经历不同的启动过程，之后逐渐趋于稳定。判断周期或振荡时，可把采样间隔与预期周期相比较；一个周期内保留足够多的数据点，曲线形状才清楚。\n\n## 4. 在壁面上测量：patchProbes\n\n壁面值来自边界条件或壁面模型。`patchProbes` 把给定位置对应到所选边界面，读取壁面上的场值。方腔顶盖的两个测点这样设置：\n\n```foam\nlidProbes\n{\n    type patchProbes;\n    libs (sampling);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    patches (movingWall);\n    fields (p U);\n    probeLocations ((0.025 0.1 0.005) (0.075 0.1 0.005));\n}\n```\n\n其中 `patches (movingWall)` 限定目标边界。y 坐标等于 0.1 m，正好落在顶盖上。顶盖采用固定速度 `(1 0 0)`，所以这里的 `U` 用于确认壁面运动；壁面附近流体的速度变化则由域内 `probes` 查看。\n\n| 条目 | patchProbes 中的含义 |\n|---|---|\n| `patches` | 目标 patch 名称或匹配表达式，列表写法 |\n| `probeLocations` | 用于寻找目标边界采样位置的坐标 |\n| `fields` | 要读取的边界场，如 `p`、`U`、`T` |\n| `writeControl` | 沿用公共输出调度，本例每 10 步写出 |\n\n## 5. 从两个测点扩展到工程监测\n\n先用一个测点确认坐标和输出，再增加多个测点；接着同时记录 `U`、`p`，最后加入壁面测点或运动网格。这五个层次分别解决位置、空间差异、多物理量、边界值与运动参考的问题。\n\n对于压力信号，还要确认压力单位。方腔的 `p` 是运动压力；把它乘以密度才得到以 Pa 表示的压力差。若需要频谱，先保证连续、均匀的时间采样，再对稳定统计阶段的信号分析。\n\n## 参考\n\n[probes](https://api.openfoam.com/2512/classFoam_1_1probes.html)；[patchProbes](https://api.openfoam.com/2512/classFoam_1_1patchProbes.html)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 402,
+    "cover_url": "/assets/science/functionobjects-statistics.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-03",
+    "kind": "lesson",
+    "title": "03 · sets：提取中心线剖面与离散点数据",
+    "summary": "设置直线、坐标轴、点数和文件格式，解释采样位置与网格分辨率。",
+    "body": "沿一条直线取出速度或温度，就得到剖面。剖面可以直接比较不同网格，也便于与实验点或解析解放在同一张图里。`sets` 负责这种离散点集采样。\n\n## 1. 提取方腔的两条中心线\n\n运行方腔配套包后，`centreLines` 会在每次场输出时保存两条线：一条固定 x，沿 y 方向；另一条固定 y，沿 x 方向。\n\n```foam\ncentreLines\n{\n    type sets;\n    libs (sampling);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U p);\n    interpolationScheme cellPoint;\n    setFormat raw;\n    sets\n    {\n        vertical\n        {\n            type uniform;\n            axis y;\n            start (0.05 0.0001 0.005);\n            end (0.05 0.0999 0.005);\n            nPoints 51;\n        }\n        horizontal\n        {\n            type uniform;\n            axis x;\n            start (0.0001 0.05 0.005);\n            end (0.0999 0.05 0.005);\n            nPoints 51;\n        }\n    }\n}\n```\n\n先看竖线 `vertical`。`start` 和 `end` 都位于 z = 0.005 m 截面上，x = 0.05 m。y 从 0.0001 到 0.0999 m，略微避开上下壁面，采集的是流体内部的值。`nPoints 51` 将线段均分成 50 个间隔。\n\n横线 `horizontal` 采用同样的方法。它可以用来观察垂直速度 `Uy`，与竖线上观察 `Ux` 互相补充。\n\n## 2. sets 的外层参数\n\n| 参数 | 默认 / 可选值 | 作用 |\n|---|---|---|\n| `type`、`libs` | `sets`、`(sampling)` | 点集采样 |\n| `fields` | 必填 | 本例同时采样 `U` 和 `p` |\n| `sets` | 必填，命名子字典或列表 | 每个子项定义一组采样点 |\n| `interpolationScheme` | 默认 `cellPoint` | 插值到指定坐标；也可使用 `cell` 等已注册的插值方法 |\n| `setFormat` | 必填 | 常用 `raw`、`csv`、`vtk`、`ensight`，按输出用途选 |\n| `formatOptions` | 可选子字典 | 为相应写出格式设置选项，例如 ASCII / binary |\n| `sampleOnExecute` | 默认 `false` | 选择是否在执行阶段进行采样 |\n\n每个子集合还可以设置自己的 `setFormat`、`formatOptions`，覆盖外层格式；子集合的 `store` 控制是否将采样数据保存在对象数据库，供后续处理使用。所有采样线使用相同格式时，把格式设置放在外层最清楚。\n\n## 3. uniform 线段参数\n\n| 参数 | 本例值 | 说明 |\n|---|---|---|\n| `type` | `uniform` | 沿线段均匀布点 |\n| `axis` | `y` 或 `x` | 输出文件横坐标使用哪个坐标；还可选 `z`、`xyz` 或 `distance` |\n| `start`、`end` | 三维坐标 | 线段起点和终点 |\n| `nPoints` | `51` | 采样点数量，包含两端 |\n\n`axis` 改变的是输出坐标的表示方法，线的位置仍由 `start`、`end` 决定。倾斜直线使用 `distance`，得到沿线距离；希望保留完整位置时使用 `xyz`。\n\n增加采样点主要让曲线更密。网格只有 20 个单元跨越腔高时，51 个采样点是对现有场插值，空间分辨率仍由原网格决定。研究网格敏感性时，保持同一条采样线，再比较不同网格上的曲线。\n\n## 4. 读取输出并画图\n\n文件位于：\n\n```text\npostProcessing/centreLines/0.5/vertical_p_U.xy\npostProcessing/centreLines/0.5/horizontal_p_U.xy\n```\n\n本例 `vertical_p_U.xy` 的列顺序是 `y p Ux Uy Uz`。标量与向量会按写出器的字段分组组织，因此读取时对照文件名和列数。前几行的 y 值依次为 0.0001、0.002096、0.004092 m。\n\n![中心线采样结果](/assets/science/functionobjects-sampling.png)\n\n右图以 `Ux` 为横轴、y 为纵轴。底部接近静止壁面，速度接近 0；中部为向左的回流；顶部逐渐接近顶盖的正向速度。这张曲线把云图中颜色变化转成了可以定量比较的数据。\n\n## 5. 其他点集怎样选\n\n| 采样几何 | 常用类型 | 主要条目 | 典型用途 |\n|---|---|---|---|\n| 均匀直线 | `uniform` | `start`、`end`、`nPoints`、`axis` | 通道剖面、方腔中心线 |\n| 指定离散点 | `cloud` | `points`、`axis` | 与实验测点坐标逐一对应 |\n| 折线 | `polyLine` | `points`、`axis` | 沿弯曲路径串联采样位置 |\n| 单元中心穿越线 | `midPoint` | `start`、`end`、`axis` | 查看线段穿过的单元值 |\n| 与网格面相交的位置 | `face` | `start`、`end`、`axis` | 对照面位置分析场的变化 |\n\n直线剖面适合从 `uniform` 开始。接下来再练习多条平行线、倾斜线、实验点云和跨区域采样；每增加一组，给它起一个能识别位置的名称，例如 `inletSection` 或 `x050mm`，后续整理结果更方便。\n\n## 参考\n\n[sampledSets](https://api.openfoam.com/2512/classFoam_1_1sampledSets.html)；源码 `src/sampling/sampledSet`。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 403,
+    "cover_url": "/assets/science/functionobjects-sampling.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-04",
+    "kind": "lesson",
+    "title": "04 · surfaces 与 streamLine：截面、界面和流线",
+    "summary": "设置切平面、相分数等值面和流线种子，导出可直接打开的 VTK 文件。",
+    "body": "点和线适合画曲线，截面适合观察二维分布。`surfaces` 把选定表面上的场导出成独立文件；`streamLine` 则根据一个时刻的速度场追踪流线。\n\n![surfaces 与 streamLine：截面、界面和流线](/assets/science/functionobjects-sampling.png)\n\n## 1. 输出方腔的中间截面\n\n下载并运行方腔算例。在 `system/functions` 中找到 `midPlane`：\n\n```foam\nmidPlane\n{\n    type surfaces;\n    libs (sampling);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U p speed);\n    surfaceFormat vtk;\n    interpolationScheme cellPoint;\n    surfaces\n    {\n        midZ\n        {\n            type cuttingPlane;\n            planeType pointAndNormal;\n            pointAndNormalDict { point (0 0 0.005); normal (0 0 1); }\n            interpolate true;\n        }\n    }\n}\n```\n\n平面经过 `(0 0 0.005)`，法向量是 `(0 0 1)`，因此它就是 z = 0.005 m 的截面。`fields (U p speed)` 同时带出速度、压力和已经由前一个对象生成的速度大小。\n\n`interpolate true` 把单元数据插值到采样表面的点上，适合连续着色。若关注逐单元数值，可选基于单元值的表面表示，再与网格对应。\n\n## 2. surfaces 参数\n\n| 参数 | 默认 / 可设置值 | 含义 |\n|---|---|---|\n| `type`、`libs` | `surfaces`、`(sampling)` | 创建采样表面集合 |\n| `fields` | 必填 | 输出到表面的字段名列表 |\n| `surfaceFormat` | 必填，常用 `vtk`、`ensight`、`raw` | ParaView 使用 `vtk` 很方便 |\n| `surfaces` | 必填，命名子字典 | 每个子项定义一个表面 |\n| `interpolationScheme` | 默认 `cellPoint` | 给插值表面提供场值 |\n| `sampleScheme` | 默认 `cell` | 非点插值采样使用的方案 |\n| `store` | 默认 `false` | 保存表面对象，供其他功能对象读取 |\n| `sampleOnExecute` | 默认 `false` | 执行阶段采样开关 |\n| `formatOptions` | 可选 | 写出格式专用设置 |\n\n表面子字典也可单独指定 `surfaceFormat`、`formatOptions` 和 `store`。例如只想保存某一个关键截面时，可以为它单独设置输出方式。\n\n## 3. 打开结果\n\n方腔在 0.5 s 的文件是：\n\n```text\npostProcessing/midPlane/0.5/midZ.vtp\n```\n\n在 ParaView 中打开它并应用，先用 `speed` 着色，再切到 `p`。截面文件已经包含几何和选择的字段，后续分享这一截面时，无须携带整个三维时间目录。\n\n同一个 `surfaces` 对象可以同时包含多个平面。对长通道，可沿轴向布置入口、中部、出口三张截面；对旋转设备，可布置不同半径的比较面。给表面命名时写清位置，能直接从文件名辨认数据。\n\n## 4. 从平面扩展到等值面\n\n两相溃坝算例使用 `alpha.water = 0.5` 表示水气界面的位置：\n\n```foam\nfreeSurface\n{\n    type surfaces;\n    libs (sampling);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U p_rgh);\n    surfaceFormat vtk;\n    surfaces\n    {\n        waterAir\n        {\n            type isoSurfaceCell;\n            isoField alpha.water;\n            isoValue 0.5;\n            interpolate true;\n        }\n    }\n}\n```\n\n| 参数 | 含义 |\n|---|---|\n| `type isoSurfaceCell` | 在单元场上提取等值面 |\n| `isoField alpha.water` | 用水相体积分数定义表面 |\n| `isoValue 0.5` | 选择体积分数为 0.5 的位置 |\n| `interpolate true` | 将 `U`、`p_rgh` 等输出字段插值到界面 |\n\n运行 `04-damBreak` 的 `bash Allrun` 后，打开 `postProcessing/freeSurface/0.2/waterAir.vtp`，可以给界面按速度着色。这样几何由相分数决定，颜色由流动速度决定，两种信息表达在同一张图上。\n\n常见的其他表面类型包括 `patch`（已有边界面）、`faceZone`（已有面区）和 `cuttingPlane`（切平面）。先按几何任务选择类型，再填写这一类型的子参数。\n\n## 5. 追踪方腔中的流线\n\n```foam\nstreamlines\n{\n    type streamLine;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    U U;\n    fields (U p);\n    setFormat vtk;\n    direction bidirectional;\n    lifeTime 200;\n    nSubCycle 5;\n    seedSampleSet\n    {\n        type uniform;\n        axis y;\n        start (0.05 0.01 0.005);\n        end (0.05 0.09 0.005);\n        nPoints 5;\n    }\n}\n```\n\n种子点都在 x = 0.05 m 上，y 从 0.01 到 0.09 m，共 5 点。`direction bidirectional` 从每个点同时沿速度方向和反方向追踪，使回流结构更容易显示。\n\n| 参数 | 默认 / 取值 | 作用 |\n|---|---|---|\n| `U` | 默认 `U` | 用哪个速度场追踪 |\n| `fields` | 必填 | 沿流线保存的字段 |\n| `setFormat` | 必填 | 本例为 `vtk` |\n| `direction` | `forward`、`backward`、`bidirectional` | 追踪方向 |\n| `lifeTime` | 必填，整数 | 追踪寿命的步数上限，注意大写 `T` |\n| `nSubCycle` | 默认 `1` | 单元内细分追踪，提高曲线分辨率 |\n| `trackLength` | 可选 | 用固定跟踪长度控制步进 |\n| `interpolationScheme` | 默认 `cellPoint` | 追踪位置上的速度插值 |\n| `seedSampleSet` | 必填子字典 | 种子点集，内部写法与线采样点集相似 |\n| `bounds` | 可选包围盒 | 限定追踪范围 |\n| `cloud` | 默认取对象名 | 输出流线集合名称 |\n\n输出文件在 `postProcessing/sets/streamlines/0.5/track0.vtp`。先打开该文件，再用 `U` 的模着色；曲线上的箭头可在 ParaView 中通过 Glyph 添加。\n\n流线满足某个时刻的速度方向关系 $d\\mathbf x/ds\\parallel\\mathbf U(\\mathbf x,t_0)$。粒子轨迹则随时间积分 $d\\mathbf x/dt=\\mathbf U(\\mathbf x,t)$。本课的 `streamLine` 用于前一种，尤其适合查看稳态流场或某一瞬时流动结构。\n\n## 参考\n\n[sampledSurfaces](https://api.openfoam.com/2512/classFoam_1_1sampledSurfaces.html)；[streamLine](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1streamLine.html)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 404,
+    "cover_url": "/assets/science/functionobjects-sampling.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        },
+        {
+          "label": "溃坝：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 23513,
+          "url": "/downloads/function-objects/04-damBreak.zip",
+          "bytes": 23513,
+          "size": "23 KB",
+          "sha256": "c0837db5d0a69b095c1b08a3dc9cb8258025154015c5ed1d353404f49d7ae63c"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-05",
+    "kind": "lesson",
+    "title": "05 · 空间统计：极值、体积平均与直方图",
+    "summary": "比较平均与体积平均，掌握 fieldStatistics、volFieldValue 和分箱参数。",
+    "body": "空间统计回答的是“这个时刻、这一片区域里的场怎样分布”。本课依次计算极值、体积平均、多个统计量和直方图。时间平均在后面的 `fieldAverage` 一课介绍。\n\n## 1. 找出最大速度及其位置\n\n运行方腔算例。下面的对象记录压力、速度和速度大小的极值：\n\n```foam\nextrema\n{\n    type fieldMinMax;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    fields (p U speed);\n    mode magnitude;\n    location true;\n}\n```\n\n`mode magnitude` 对向量取模后比较；改为 `component` 则分别统计 x、y、z 分量。`location true` 同时记录极值坐标和所属进程，便于回到网格中找到它。\n\n| 参数 | 默认 / 取值 | 说明 |\n|---|---|---|\n| `fields` | 必填 | 可同时列出标量、向量和张量场 |\n| `mode` | 默认 `magnitude`；另有 `component` | 取模比较，或逐分量比较 |\n| `location` | 默认 `true` | 输出极值位置 |\n\n结果为 `postProcessing/extrema/0/fieldMinMax.dat`。速度极值可能位于移动壁面，读数应与对应坐标一起看；若要专门统计内部单元，可使用后面 `fieldStatistics` 的 `internal` 参数。\n\n## 2. 体积平均与简单平均\n\n```foam\nvolumeMean\n{\n    type volFieldValue;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    regionType all;\n    operation volAverage;\n    fields (U p speed);\n    writeFields false;\n}\n```\n\n这里的 `regionType all` 表示整个体网格，`volAverage` 按每个单元的体积加权：\n\n$$\\overline f_V=\\frac{\\sum_i f_iV_i}{\\sum_iV_i}.$$\n\n简单平均 `average` 为 $\\sum_i f_i/N$。均匀网格中两者相同；局部加密网格中，小单元数量很多，简单平均会给加密区更多权重。研究空间整体平均时，通常使用 `volAverage`。\n\n| 参数 | 默认 / 可选值 | 作用 |\n|---|---|---|\n| `regionType` | 必填：`all`、`cellZone` | 选择全域或单元区 |\n| `name` | 选择 `cellZone` 时填写 | 对应网格中的单元区名 |\n| `fields` | 必填 | 要统计的场 |\n| `operation` | 必填 | 见下表 |\n| `postOperation` | `none`、`mag`、`sqrt`，默认 `none` | 对统计结果再取模或平方根 |\n| `weightField` / `weightFields` | 加权操作时配置 | 权重字段或多个权重字段的组合 |\n| `scaleFactor` | 默认 `1` | 对处理数值施加比例系数 |\n| `writeFields` | 默认 `false` | 是否另外写选中区域的场数据 |\n\n| `operation` | 计算内容 | 适用例子 |\n|---|---|---|\n| `min`、`max` | 最小、最大值 | 最高温度、最低压力 |\n| `sum`、`sumMag` | 数值求和、取模后求和 | 离散量汇总 |\n| `average` | 按单元数量平均 | 比较等体积单元数据 |\n| `volAverage` | 按体积平均 | 全域平均温度 |\n| `volIntegrate` | $\\sum f_iV_i$ | 水相体积、体积热源总功率 |\n| `CoV` | 变异系数 | 量化场分布均匀程度 |\n| `weightedSum`、`weightedAverage` | 加权求和、加权平均 | 按用户定义权重统计 |\n| `weightedVolAverage`、`weightedVolIntegrate` | 同时使用权重和体积 | 用密度权重计算质量平均 |\n| `none` | 跳过归约计算 | 与场输出等任务组合 |\n\n本例 `U` 的体积平均接近零，而 `speed` 的平均为正。向量在不同方向会抵消，速度大小始终非负，所以这两个结果描述的内容不同。\n\n## 3. 一次输出多种统计：fieldStatistics\n\n```foam\nstatistics\n{\n    type fieldStatistics;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (p U); statistics (min max mean variance); mode component; mean volumetric; internal true; extrema true;\n}\n```\n\n这是 v2512 的场统计工具。它可以对每个字段同时计算多种统计量，并为极值附上详细信息。\n\n| 参数 | 默认 / 可选值 | 作用 |\n|---|---|---|\n| `fields` | 必填列表 | 本例 `p`、`U` |\n| `statistics` | 必填列表：`min`、`max`、`mean`、`variance` | 选择输出的统计量 |\n| `mode` | 默认 `magnitude`，另有 `component` | 向量取模或按分量分别处理 |\n| `mean` | 默认 `arithmetic`，另有 `volumetric` | 算术平均或体积加权平均 |\n| `internal` | 默认 `false` | 设 `true` 只统计内部场，排除边界面值 |\n| `extrema` | 默认 `false` | 额外输出极值位置等信息 |\n\n本例把 `internal` 设为 `true`，所以内部最大 `Ux` 约为 0.8527 m/s，而顶盖边界速度为 1 m/s。由统计区域的选择就能解释这个差别。\n\n`variance` 是空间样本方差。它反映同一时刻各位置之间的变化；湍流中某一点随时间的脉动方差要用时间统计计算。\n\n## 4. 直方图：多少区域处在某个速度范围\n\n```foam\nspeedHistogram\n{\n    type histogram;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    field speed; model equalBinWidth; nBins 10; min 0; max 1;\n}\n```\n\n`equalBinWidth` 把 0–1 m/s 分成 10 个等宽区间。输出 `histogram.dat` 中依次有时间、分箱中心、单元数和体积分数。\n\n| 参数 | 等宽模型 `equalBinWidth` | 不等宽模型 `unequalBinWidth` |\n|---|---|---|\n| `field` | 标量输入场，如 `speed` | 同左 |\n| `model` | `equalBinWidth` | `unequalBinWidth` |\n| `nBins` | 必填，分箱数量 | 使用 `ranges` 指定区间 |\n| `min`、`max` | 指定范围；省略上限时自动获取场范围 | 使用 `ranges ((下限 上限) ...)` |\n\n![速度探针与速度直方图](/assets/science/functionobjects-statistics.png)\n\n图中 0–0.1 m/s 的柱对应体积分数约 0.345。它说明此时约 34.5% 的内部网格体积处于这一速度范围。\n\n## 5. 五种由浅入深的用法\n\n先找最大速度，再输出极值坐标；随后计算平均速度大小，比较 `average` 与 `volAverage`；最后绘制直方图。进一步分析两相流时，把 `volIntegrate` 用在 `alpha.water` 上，就能把空间统计转化为水量守恒检查。\n\n## 参考\n\n[volFieldValue](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1fieldValues_1_1volFieldValue.html)；[fieldStatistics](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1fieldStatistics.html)；[v2512 后处理更新](https://www.openfoam.com/news/main-news/openfoam-v2512/post-processing)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 405,
+    "cover_url": "/assets/science/functionobjects-statistics.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-06",
+    "kind": "lesson",
+    "title": "06 · 流量与压降：选面、积分和组合运算",
+    "summary": "用 phi 求流量、用压力求面积平均，再自动计算进出口压降。",
+    "body": "流量、平均压力、压降都可以由面上的场得到。本课用后台阶 `pitzDaily` 算例，先统计入口与出口流量，再计算入口平均压力和进出口压降。\n\n## 1. 运行后台阶算例\n\n下载 `02-pitzDaily.zip`，解压后进入目录，运行 `bash Allrun`。`simpleFoam` 做 100 次稳态迭代，入口速度为 10 m/s。每 20 次迭代保存完整场，每 10 次迭代输出流量和力系数。\n\n入口体积流量由 `phi` 求和：\n\n```foam\ninletFlux\n{\n    type surfaceFieldValue;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    regionType patch;\n    name inlet;\n    operation sum;\n    fields (phi);\n    writeFields false;\n}\n```\n\n`phi` 在这个不可压缩算例中是每个网格面的体积通量，已经包含面面积：\n\n$$\\phi_f=\\mathbf U_f\\cdot\\mathbf S_f,\\qquad Q=\\sum_{f\\in S}\\phi_f.$$\n\n所以使用 `operation sum`。入口面法向指向计算域外，而流体向域内流入，因此入口流量为负，出口流量为正。\n\n## 2. 选择什么面\n\n| 参数 | 可选值 / 默认 | 作用 |\n|---|---|---|\n| `regionType` | `patch`、`faceZone`、`sampledSurface`、`functionObjectSurface` | 选择已有边界、面区、采样面或功能对象生成的表面 |\n| `name` | 区域名称 | 单个 patch / faceZone 的名称 |\n| `names` | 名称列表或匹配表达式 | 合并处理多个目标面区，适用于支持该选择的区域类型 |\n| `sampledSurfaceDict` | `sampledSurface` 时设置 | 写切面等采样表面的几何定义 |\n| `fields` | 必填列表 | 例如 `(phi)`、`(p)`、`(T)` |\n| `operation` | 必填 | 选择求和、平均、积分等 |\n| `writeArea` | 默认 `false` | 把总面积写入结果文件 |\n| `writeFields` | 默认 `false` | 是否同时导出面上的字段分布 |\n| `surfaceFormat` | 导出面字段时设置 | 如 `vtk`，用于查看选区分布 |\n| `postOperation` | 默认 `none`；另有 `mag`、`sqrt` | 对归约结果继续运算 |\n| `weightField` / `weightFields` | 加权操作时填写 | 单个权重场或权重场列表 |\n| `empty-surface` | `default`、`warn`、`ignore`、`strict` | 选区没有面时的处理策略 |\n\n先查看 `constant/polyMesh/boundary` 中的真实边界名，再把对应名称填到 `name`。选择内部截面时，采用 `faceZone` 或采样表面。\n\n## 3. 平均压力与流量为何采用不同操作\n\n```foam\ninletPressure\n{\n    type surfaceFieldValue;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    regionType patch;\n    name inlet;\n    operation areaAverage;\n    fields (p);\n    writeFields false;\n}\n```\n\n压力是“每个位置的值”，求面积平均时要给每个面乘面积，再除以总面积：\n\n$$\\overline p_A=\\frac{\\sum_f p_fA_f}{\\sum_f A_f}.$$\n\n常见的操作选择如下：\n\n| 操作 | 作用 | 典型输入 |\n|---|---|---|\n| `sum` | 逐面相加 | 已经积分到单个面上的 `phi` |\n| `sumMag` | 逐面取模后相加 | 统计双向穿越的总量 |\n| `sumDirection`、`sumDirectionBalance` | 按指定 `direction` 区分方向求和 | 有明确主方向的通量分析 |\n| `average`、`areaAverage` | 按面数平均、按面积平均 | 压力和温度常用面积平均 |\n| `areaIntegrate` | $\\sum f_fA_f$ | 热流密度积分成总热功率 |\n| `areaNormalAverage`、`areaNormalIntegrate` | 与面法向点乘后平均或积分 | 从面速度计算法向输运 |\n| `min`、`max` | 面上的极值 | 最高壁温、最大壁面剪切 |\n| `CoV`、`uniformity` | 变异系数、均匀性指标 | 评价出口分布 |\n| `weightedSum`、`weightedAverage` | 加权求和、平均 | 自定义权重统计 |\n| `weightedAreaAverage`、`weightedAreaIntegrate`、`weightedUniformity` | 面积与权重共同参与 | 按通量或密度加权 |\n| 对应的 `absWeighted...` | 使用权重的绝对值 | 流向变化时按通过量加权 |\n| `none` | 只保留对象的其他处理 | 与面字段输出组合 |\n\n通量的量纲可从 `phi` 文件的 `dimensions` 读取：不可压缩体积通量是 m³/s，可压缩求解器也可能使用 kg/s 的质量通量。先确定这一点，图表纵轴才能写对单位。\n\n## 4. 自动输出进出口压降\n\n`multiFieldValue` 对多个统计结果再计算。下面先分别得到两个面的平均压力，然后按“入口减出口”输出：\n\n```foam\npressureDrop\n{\n    type multiFieldValue;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    operation subtract;\n    functions\n    {\n        inletMean\n        {\n            type surfaceFieldValue;\n            regionType patch;\n            name inlet;\n            operation areaAverage;\n            fields (p);\n            writeFields false;\n        }\n        outletMean\n        {\n            type surfaceFieldValue;\n            regionType patch;\n            name outlet;\n            operation areaAverage;\n            fields (p);\n            writeFields false;\n        }\n    }\n}\n```\n\n`functions` 中的顺序决定减法的顺序。这里两个子对象都只输出一个标量平均压力，恰好逐项对应。\n\n| `multiFieldValue` 参数 | 说明 |\n|---|---|\n| `operation` | `sum` / `add`、`subtract`、`divide`、`cmptDivide`、`min`、`max`、`average` |\n| `functions` | 用命名子字典列出参加运算的功能对象 |\n| 子对象的 `resultFields` | 可选择该对象已经公布的结果名称；省略时使用全部结果 |\n\n压降输出位于 `postProcessing/pressureDrop/0/multiFieldValue.dat`。本例仍是运动压力差，乘以密度后得到 Pa。\n\n## 5. 读数和下一步检查\n\n![后台阶力系数与流量](/assets/science/functionobjects-forces.png)\n\n100 次迭代时，入口流量为 −0.000254 m³/s，出口约为 0.0002541203 m³/s，相对差约 0.047%。图上的迭代变化提示我们，工程计算还可以继续迭代，观察流量差、压降和力是否一起趋于稳定。\n\n由浅入深可以依次完成：单入口流量、入口与出口对比、面积平均压力、自动压降、带权重的平均。每次改变统计对象时，保留区域名称与量纲，结果之间就有明确的可比关系。\n\n## 参考\n\n[surfaceFieldValue](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1fieldValues_1_1surfaceFieldValue.html)；[multiFieldValue](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1fieldValues_1_1multiFieldValue.html)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 406,
+    "cover_url": "/assets/science/functionobjects-forces.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "后台阶：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 37125,
+          "url": "/downloads/function-objects/02-pitzDaily.zip",
+          "bytes": 37125,
+          "size": "36 KB",
+          "sha256": "a26091c3d03033d29285a174c78a98f993c791ef6b38dddf509cce7e7025492f"
+        }
+      ],
+      "download": "/downloads/function-objects/02-pitzDaily.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-07",
+    "kind": "lesson",
+    "title": "07 · 场运算：梯度、涡量、Q 与表达式",
+    "summary": "从速度大小开始，逐步生成导数、涡结构指标和自定义动能场。",
+    "body": "速度、压力是求解器直接给出的场。速度大小、梯度、涡量和 Q 值则可以由这些场进一步计算。本课在方腔算例中逐步组合场运算，并说明每种结果的物理含义。\n\n## 1. 从向量得到标量：mag 和 magSqr\n\n```foam\nspeed\n{\n    type mag;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n    result speed;\n}\n```\n\n```foam\nspeedSquared\n{\n    type magSqr;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    field U; result speedSquared;\n}\n```\n\n`mag` 输出 $|\\mathbf U|$，单位 m/s；`magSqr` 输出 $|\\mathbf U|^2$，单位 m²/s²。后者乘以 0.5 就是单位质量动能。两个对象都用 `field` 选择输入，`result` 指定输出名称。\n\n| 公共参数 | 作用 |\n|---|---|\n| `field` | 单场运算输入，具体工具有各自默认值，示例明确填写 |\n| `fields` | 多场运算的输入列表，如 `add` 使用 `(U U)` |\n| `result` | 输出场名称；省略时由工具按类型和输入生成名称 |\n| `region` | 所处理的网格区域 |\n| `writeControl` / `writeInterval` | 输出频率 |\n\n## 2. 梯度与散度\n\n```foam\nvelocityGradient\n{\n    type grad;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n    result gradU;\n}\n```\n\n速度梯度 $\\nabla\\mathbf U$ 是张量，描述每个速度分量沿不同方向的变化。`gradU` 因此有 9 个分量，单位 s⁻¹。压力梯度 `grad(p)` 则是向量。空间导数会使用 `fvSchemes` 中相应的离散设置，比较不同网格时应保持格式一致。\n\n对面通量的散度可这样计算：\n\n```foam\ndivFlux\n{\n    type div;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    field phi; result divPhi;\n}\n```\n\n输入 `phi` 已经是单个面的通量，`div` 把各面的有符号通量求和并除以单元体积。对不可压缩流，它衡量局部体积流入与流出的差异，单位 s⁻¹。\n\n`components` 会把 `U` 拆成 `Ux`、`Uy`、`Uz`。需要单独查看水平速度的正负分布时，分量场比速度大小更直接：\n\n```foam\nvelocityComponents\n{\n    type components;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}\n```\n\n## 3. 涡量与涡结构指标\n\n```foam\nvorticity\n{\n    type vorticity;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}\n```\n\n涡量定义为 $\\boldsymbol\\omega=\\nabla\\times\\mathbf U$。方腔主要在 xy 平面内运动，主要涡量分量是 $\\omega_z$。正负号对应不同旋转方向，壁面附近的速度剪切也会产生较大的涡量。\n\n```foam\nQcriterion\n{\n    type Q;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}\n```\n\n把速度梯度分解为对称部分 $\\mathbf S$ 和反对称部分 $\\boldsymbol\\Omega$，Q 定义为：\n\n$$Q=\\frac12\\left(\\|\\boldsymbol\\Omega\\|^2-\\|\\mathbf S\\|^2\\right).$$\n\n`Q > 0` 表示局部旋转强于应变。Q 的量纲是 s⁻²，显示等值面时应记录所用阈值。\n\n```foam\nlambda2\n{\n    type Lambda2;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}\n```\n\n`Lambda2` 取 $\\mathbf S^2+\\boldsymbol\\Omega^2$ 的中间特征值。常用负值等值面观察旋涡核心；改变阈值会改变被显示的范围。\n\n![方腔涡量与 Q](/assets/science/functionobjects-vortex.png)\n\n两张图使用同一时刻、同一网格。涡量图突出旋转方向与剪切；Q 图比较局部旋转和应变。它们回答的问题不同，因此可以互相补充。\n\n| 工具 | 主要输入 | 输出的含义 |\n|---|---|---|\n| `vorticity` | `field U` | 涡量向量 |\n| `Q` | `field U` | 旋转与应变竞争的标量指标 |\n| `Lambda2` | `field U` | 中间特征值 |\n| `enstrophy` | `field U` | $\\tfrac12|\\boldsymbol\\omega|^2$ |\n| `LambVector` | `field U` | $\\boldsymbol\\omega\\times\\mathbf U$ |\n| `flowType` | `field U` | 用应变和旋转强度区分局部流动类型 |\n\n以上对象都已包含在方腔的 `system/functions` 中，可以在 `0.5/` 找到对应场。\n\n## 4. 多场组合与面插值\n\n`add`、`subtract`、`multiply` 使用 `fields` 列表。配套文件中的三个小例子分别得到 `2U`、零压力差和压力平方，用于观察输入输出类型与量纲：\n\n```foam\ndoubleVelocity\n{\n    type add;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U U); result twoU;\n}\n```\n\n```foam\npressureDifference\n{\n    type subtract;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (p p); result zeroPressure;\n}\n```\n\n```foam\npressureProduct\n{\n    type multiply;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (p p); result pressureSquared;\n}\n```\n\n多场组合的输入需要具有相应运算的量纲关系。实际应用中，可以相加多个同量纲贡献，或相减两份压力结果。\n\n单元场转成面场使用 `surfaceInterpolate`：\n\n```foam\nfacePressure\n{\n    type surfaceInterpolate;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields ((p pFace));\n}\n```\n\n`(p pFace)` 是“输入名、输出名”一对。它会生成网格面上的压力值，使用的插值方案与有限体积离散设置相联系。\n\n## 5. 用表达式计算单位质量动能\n\n```foam\nenergy\n{\n    type exprField;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    field kineticEnergy; expression \"0.5*magSqr(U)\"; dimensions [0 2 -2 0 0 0 0];\n}\n```\n\n这里 `field kineticEnergy` 是输出名，`expression` 中的 `U` 是输入场。`dimensions [0 2 -2 0 0 0 0]` 对应 m²/s²。\n\n| `exprField` 参数 | 默认 / 用途 |\n|---|---|\n| `field` | 要生成或修改的字段名 |\n| `expression` | 必填，带引号的表达式 |\n| `action` | 默认 `new`，另有 `modify`、`none` |\n| `dimensions` | 设置输出量纲 |\n| `fieldMask` | `modify` 时选择要更新的位置 |\n| `store` | 默认 `true`，把结果留在数据库供后续对象使用 |\n| `autowrite` | 默认 `false`，控制对象自动写出属性；自身写出调度仍由功能对象处理 |\n| `readFields` | 离线处理时自动读取表达式需要的场 |\n\n组合时把生产数据的对象放在前面。例如先生成 `kineticEnergy`，再用 `volFieldValue` 积分，就能得到动能相关的空间统计量。\n\n## 参考\n\n[场功能对象 API](https://api.openfoam.com/2512/group__grpFieldFunctionObjects.html)；源码 `src/functionObjects/field`。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 407,
+    "cover_url": "/assets/science/functionobjects-vortex.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-08",
+    "kind": "lesson",
+    "title": "08 · 时间统计：平均场、脉动与统计窗口",
+    "summary": "区分时间与空间平均，解释 UPrime2Mean、窗口和重启设置。",
+    "body": "平均流场可以过滤快速变化，帮助观察长期结构。`fieldAverage` 对整个场随时间累积，保存平均场与脉动二阶矩；`valueAverage` 则对另一个对象已经输出的少量数值继续求平均。\n\n## 1. 设置统计起点与采样频率\n\n本课仍使用方腔包。它从 0 s 运行到 0.5 s，从 0.1 s 开始统计，每一步更新平均值：\n\n```foam\naverages\n{\n    type fieldAverage;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    timeStart 0.1;\n    executeControl timeStep;\n    executeInterval 1;\n    restartOnRestart false;\n    fields\n    (\n        U { mean yes; prime2Mean yes; base time; }\n        p { mean yes; prime2Mean no; base time; }\n    );\n}\n```\n\n`timeStart 0.1` 表示 0.1 s 前的数据不参与这个对象的累积。本例流动很快趋于稳定，适合观察平均文件的生成过程。湍流算例中，应根据流动达到统计稳定的时间选择起点，再留出足够长的采样区间。\n\n## 2. 每个字段都要说明平均方式\n\n| 字段内参数 | 可设置值 / 默认 | 含义 |\n|---|---|---|\n| `mean` | 必填，`yes` / `no` | 输出该场的平均值 |\n| `prime2Mean` | 必填，`yes` / `no` | 输出脉动二阶矩，使用时同时启用平均 |\n| `base` | 必填，`time` / `iteration` | 用时间步长加权，或每次执行等权 |\n| `window` | 默认无固定窗口 | 使用有限统计窗口时给出长度 |\n| `windowType` | `none`、`approximate`、`exact` | 全历史、近似窗口或精确滑动窗口 |\n| `windowName` | 可选名称 | 区分多个窗口结果 |\n| `allowRestart` | 默认 `true` | 是否允许用保存的统计状态继续累积 |\n\n选择 `base time` 时：\n\n$$\\overline{\\mathbf U}=\\frac{\\sum_n\\mathbf U^n\\Delta t_n}{\\sum_n\\Delta t_n}.$$\n\n时间步长改变后，每个样本仍按它代表的时间长度加权。选择 `base iteration` 时，权重相等，适合用迭代样本定义统计的任务。\n\n本例对 `U` 同时开启 `mean` 和 `prime2Mean`，得到 `UMean` 和 `UPrime2Mean`；对 `p` 只生成 `pMean`。\n\n## 3. UPrime2Mean 的六个分量是什么\n\n定义脉动 $\\mathbf u'=\\mathbf U-\\overline{\\mathbf U}$，二阶矩为：\n\n$$\\overline{\\mathbf u'\\mathbf u'}=\\overline{\\mathbf U\\mathbf U}-\\overline{\\mathbf U}\\,\\overline{\\mathbf U}.$$\n\n它是对称张量。三个对角分量分别是 x、y、z 速度脉动的方差，非对角分量表示相关性。可由对角项求脉动均方根，例如 $u_{x,\\mathrm{rms}}=\\sqrt{\\overline{u_x'^2}}$。\n\n在 LES 中，这些量反映被解析的非定常速度脉动。RANS 模型给出的 `k`、`R` 属于模型统计量，含义和来源应在后处理中分别标明。\n\n## 4. 从文件继续累计\n\n| 外层参数 | 默认 | 含义与典型用途 |\n|---|---|---|\n| `restartOnRestart` | `false` | 重启求解器时是否重新开始统计 |\n| `restartOnOutput` | `false` | 每次写出后是否清空累积，适合分段平均 |\n| `periodicRestart` | `false` | 按固定周期重新开始统计 |\n| `restartPeriod` | 周期重置启用时填写 | 每个统计段的持续长度 |\n| `restartTime` | 默认无有限触发时间 | 到指定时刻重新开始 |\n| `subRegion` | 可选 | 选择对象数据库中的子区域，例如某个采样区域 |\n\n输出时除了平均场，还会保存统计状态，例如 `0.5/uniform/averagesProperties`。继续计算时保留这些状态，就能延续已累计的样本数和统计时间。\n\n滑动平均有另一种目的：只看最近一段时间。精确窗口会保留更多历史信息，窗口越长、字段越多，存储和内存开销也越大。只想了解整体平均时，先使用本例的全历史累计方式。\n\n## 5. 与探针和空间统计对照\n\n![方腔速度时间序列](/assets/science/functionobjects-statistics.png)\n\n图左显示两个固定位置的速度变化。`fieldAverage` 对每个网格位置做类似的时间累计，因此保存的是一个平均场；`volFieldValue` 则把一个时刻的整片空间归约成一个数。这是时间平均和空间平均的直接区别。\n\n配套文件中同时存在 `averages`、`volumeMean` 和 `pointHistory`。可以先看瞬时 `U`，再看 `UMean`，然后观察 `UPrime2Mean`，最后与探针时间曲线和全域空间平均对照。\n\n## 6. 对力系数等少量数据再平均\n\n`valueAverage` 通过 `functionObject` 指定数据来源，通过 `fields` 指定该对象公布的结果名称。它适合平均 `forceCoeffs` 产生的 `Cd` 等标量结果。\n\n| 参数 | 作用 |\n|---|---|\n| `functionObject` | 已有功能对象的名字，例如负责计算系数的对象 |\n| `fields` | 来源对象公布的结果名列表 |\n| `window` | 可选统计窗口 |\n| `resetOnRestart` | 是否在重启时重置平均 |\n| `tolerance` | 用于平均值变化判断的容差设置 |\n\n先让来源对象稳定输出，再加入数值平均。按这样的顺序配置，能分别检查原始曲线和平均结果。\n\n## 参考\n\n[fieldAverage](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1fieldAverage.html)；[fieldAverageItem](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1fieldAverageItem.html)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 408,
+    "cover_url": "/assets/science/functionobjects-statistics.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-09",
+    "kind": "lesson",
+    "title": "09 · forces 与 forceCoeffs：力、力矩和参考量",
+    "summary": "设置受力壁面、密度、参考中心、面积、方向，读懂系数曲线。",
+    "body": "`forces` 计算选中壁面的压力力、黏性力和力矩；`forceCoeffs` 再把它们无量纲化。本课用后台阶通道的上下壁面说明设置方法，运行后能得到随稳态迭代变化的力系数曲线。\n\n## 1. 先确定统计对象与压力单位\n\n解压后台阶包并运行 `bash Allrun`。本例选择 `upperWall`、`lowerWall`，入口速度 10 m/s，密度取 1 kg/m³。`simpleFoam` 的 `p` 是运动压力，所以把 `rho` 指定为常数密度模式。\n\n```foam\nwallForces\n{\n    type forces;\n    libs (forces);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    patches (upperWall lowerWall);\n    rho rhoInf;\n    rhoInf 1;\n    CofR (0 0 0);\n    pRef 0;\n}\n```\n\n`CofR (0 0 0)` 是力矩参考点。压力和剪切力即使不变，参考点改变后，力臂发生变化，力矩也会变化。\n\n## 2. forces 的主要参数\n\n| 参数 | 默认 / 可设置值 | 含义 |\n|---|---|---|\n| `patches` | 必填，名称或匹配表达式列表 | 要统计的物体表面 |\n| `p` | 默认 `p` | 压力字段名 |\n| `U` | 默认 `U` | 速度字段名，用于黏性应力 |\n| `rho` | 默认 `rho`；常数密度用 `rhoInf` | 从密度场读取，或使用固定密度 |\n| `rhoInf` | 常数密度模式填写 | kg/m³；对运动压力恢复有量纲压力力 |\n| `pRef` | 默认 `0` | 参考压力水平 |\n| `CofR` | 参考点坐标 | 力矩中心，单位 m |\n| `coordinateSystem` | 可选坐标系子字典 | 定义局部原点和方向；也可按接口支持的轴条目设置 |\n| `directForceDensity` | 默认 `false` | 直接对力密度场积分 |\n| `fD` | 直接力密度模式的字段名 | 配合 `directForceDensity` |\n| `porosity` | 默认 `false` | 纳入多孔介质模型的力贡献 |\n| `writeFields` | 默认 `false` | 额外写局部力相关字段，便于查看贡献位置 |\n\n有量纲压力通常以 Pa 保存，可直接用于压力积分；运动压力需要密度换算。可压缩算例一般从 `rho` 场读取密度。先检查 `p` 的量纲，再选择相应的密度来源。\n\n## 3. 设置升阻力系数\n\n```foam\nwallCoefficients\n{\n    type forceCoeffs;\n    libs (forces);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    patches (upperWall lowerWall);\n    rho rhoInf;\n    rhoInf 1;\n    CofR (0 0 0);\n    dragDir (1 0 0);\n    liftDir (0 1 0);\n    magUInf 10;\n    lRef 0.0254;\n    Aref 0.0000254;\n}\n```\n\n参考动压为 $q_\\infty=\\tfrac12\\rho_\\infty U_\\infty^2$，力和力矩系数通常写为：\n\n$$C_D=\\frac{\\mathbf F\\cdot\\mathbf e_D}{q_\\infty A_\\mathrm{ref}},\\qquad C_M=\\frac{\\mathbf M\\cdot\\mathbf e_M}{q_\\infty A_\\mathrm{ref}L_\\mathrm{ref}}.$$\n\n| 新增参数 | 本例 | 设置原因 |\n|---|---|---|\n| `magUInf` | `10` | 参考速度与入口速度相同 |\n| `lRef` | `0.0254` | 采用 25.4 mm 的特征长度 |\n| `Aref` | `0.0000254` | 25.4 mm × 1 mm 的参考面积，与二维模型厚度一致 |\n| `dragDir` | `(1 0 0)` | 阻力沿主流 x 方向 |\n| `liftDir` | `(0 1 0)` | 升力沿 y 方向 |\n| `coefficients` | 可选列表 | 只输出所需的系数，如 `Cd`、`Cl`、`CmPitch` |\n\n本例的侧向轴由正交坐标系生成，为负 z 方向。输出文件头中会列出 `dragDir`、`liftDir`、`pitchAxis` 等实际轴向。读俯仰力矩系数时，以文件头中记录的方向为准。\n\n二维算例仍然具有实际厚度。参考面积应使用“参考长度 × 建模厚度”，这样网格厚度与归一化面积相互一致。若将 `Aref` 加倍，同一力对应的系数会减半。\n\n## 4. 读取结果与判断迭代趋势\n\n```text\npostProcessing/wallForces/0/force.dat\npostProcessing/wallForces/0/moment.dat\npostProcessing/wallCoefficients/0/coefficient.dat\n```\n\n力文件按压力、黏性和总贡献组织；系数文件头给出列名。读取 `Cd`、`Cl` 时按标题定位列，方便以后启用更多系数。\n\n![后台阶力系数与流量](/assets/science/functionobjects-forces.png)\n\n图左显示 100 次迭代内的变化。本算例用于学习统计配置；若研究最终的通道载荷，可以继续迭代，并同时观察压降、流量差和壁面力。几条曲线一起稳定时，再提取最终值会更清楚。\n\n## 5. 压力转换也可以自动完成\n\n```foam\nstaticPressure\n{\n    type pressure;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    mode static;\n    rho rhoInf;\n    rhoInf 1;\n    result pPa;\n}\n```\n\n它把运动压力转换成有量纲静压 `pPa`。\n\n| `pressure` 参数 | 可设置的内容 |\n|---|---|\n| `mode` | `static`、`total`、`isentropic`、`staticCoeff`、`totalCoeff` |\n| `field`、`U`、`rho` | 输入压力、速度和密度场，默认 `p`、`U`、`rho` |\n| `rhoInf` | 常数密度或系数归一化所需密度 |\n| `pRef` | 参考压力，默认 0 |\n| `hydrostaticMode` | `none`、`add`、`subtract`，默认 `none` |\n| `g`、`hRef` | 加减静水压项时使用；可从已有数据库获取或明确填写 |\n| `pInf`、`UInf` | 压力系数的参考压力和速度向量 |\n| `result` | 输出场名称 |\n\n五个渐进任务是：单壁面受力、多壁面合力、改变力矩参考点、计算系数、输出有量纲压力。完成这些步骤后，再扩展到翼型、圆柱或旋转设备。\n\n## 参考\n\n[forces](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1forces.html)；[forceCoeffs](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1forceCoeffs.html)；[pressure](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1pressure.html)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 409,
+    "cover_url": "/assets/science/functionobjects-forces.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "后台阶：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 37125,
+          "url": "/downloads/function-objects/02-pitzDaily.zip",
+          "bytes": 37125,
+          "size": "36 KB",
+          "sha256": "a26091c3d03033d29285a174c78a98f993c791ef6b38dddf509cce7e7025492f"
+        }
+      ],
+      "download": "/downloads/function-objects/02-pitzDaily.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-10",
+    "kind": "lesson",
+    "title": "10 · 壁面与湍流：yPlus、剪切应力和模型场",
+    "summary": "输出近壁指标、剪切方向与湍流量，使用求解器加载模型做后处理。",
+    "body": "近壁网格是否合适，可以从 `yPlus` 开始检查；哪里受到较大摩擦，可以看 `wallShearStress`；要进一步分析模型预测的湍流，则用 `turbulenceFields` 输出 `k`、耗散率和应力等量。\n\n![壁面与湍流：yPlus、剪切应力和模型场](/assets/science/functionobjects-wall.svg)\n\n## 1. 先运行带湍流模型的算例\n\n后台阶包使用 `simpleFoam` 和湍流模型，`Allrun` 先求解，再用求解器的后处理模式计算最后时刻的 `yPlus`：\n\n```bash\nbash Allrun\n```\n\n其中离线调用是：\n\n```bash\nsimpleFoam -postProcess -func yPlus -latestTime\n```\n\n这一步会加载该求解器的模型，使壁面工具能够读取所需的湍流和物性信息。\n\n## 2. yPlus 的意义与配置\n\n```foam\nyPlus\n{\n    type yPlus;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n\n}\n```\n\n$$y^+=\\frac{u_\\tau y}{\\nu},\\qquad u_\\tau=\\sqrt{\\frac{|\\tau_w|}{\\rho}}.$$\n\n$y$ 是壁面到近壁单元中心的距离，$\\nu$ 为运动黏度。`yPlus` 把第一层单元位置表示成壁面单位，便于与所采用的近壁处理方法对照。\n\n| 参数 | 默认 / 可选值 | 用法 |\n|---|---|---|\n| `type`、`libs` | `yPlus`、`(fieldFunctionObjects)` | 壁面无量纲距离 |\n| `useWallFunction` | 默认 `true` | 优先使用可用壁面函数给出的 y+；关闭后采用工具的直接计算路径 |\n| `region` | 默认 `region0` | 多区域时选择流体区域 |\n| 输出控制 | 通用参数 | 本例随主场写出 |\n\n结果在 `100/yPlus`，文本统计位于 `postProcessing/yPlus`。在 ParaView 中只显示壁面并按 `yPlus` 着色，可以直接找出第一层网格过粗或变化明显的区域。\n\n采用解析黏性底层的方案时，通常将首层目标设在 $y^+\\approx1$ 附近；使用壁面函数时，目标区间应结合具体壁面函数和流动条件。先确定近壁模型，再反推第一层高度。\n\n## 3. wallShearStress：方向也很重要\n\n```foam\nwallShearStress\n{\n    type wallShearStress;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n\n}\n```\n\n| 参数 | 说明 |\n|---|---|\n| `patches` | 可选壁面列表；省略时处理可用壁面 |\n| `writeControl`、`writeInterval` | 输出频率 |\n| `region` | 所属网格区域 |\n\n它输出壁面剪切应力向量，既有大小也有方向。后台阶后方会出现回流，沿壁面的剪切分量可能变号；把 x 分量沿下壁面绘出，有助于观察分离与再附着区域。\n\n输出量纲取决于动量模型：不可压缩模型常得到运动学应力，单位 m²/s²；乘以密度后是 Pa。读取结果文件的 `dimensions` 可以确定当前模型采用哪一种。\n\n## 4. turbulenceFields：把模型内部量保存出来\n\n```foam\nturbulenceFields\n{\n    type turbulenceFields;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (k epsilon nut R);\n}\n```\n\n本例选择 `k`、`epsilon`、`nut` 和 `R`：\n\n| 字段 | 物理意义 | 常见单位 |\n|---|---|---|\n| `k` | 湍动能 | m²/s² |\n| `epsilon` | 湍动能耗散率 | m²/s³ |\n| `omega` | 比耗散率，由适用模型提供 | s⁻¹ |\n| `nut` | 湍流运动黏度 | m²/s |\n| `nuEff` | 有效运动黏度 | m²/s |\n| `R` | 雷诺应力张量 | m²/s² |\n| `devReff` | 有效偏应力，适用于不可压缩接口 | m²/s² |\n| `mut`、`muEff` | 湍流 / 有效动力黏度，适用于可压缩接口 | Pa·s |\n| `alphat`、`alphaEff` | 湍流 / 有效热扩散相关系数，由热物性接口定义 | 按模型量纲读取 |\n| `devRhoReff` | 含密度的有效偏应力 | Pa |\n| `nuTilda` | 修正湍流黏度的估计量 | m²/s |\n| `L`、`I` | 长度尺度、湍流强度 | m、无量纲 |\n\n`fields` 选择所需列表，也可按工具接口用单个 `field`。`prefix` 默认是 `turbulenceProperties`，用来区分输出来源。这些字段通过所选模型的接口获得，因此在更换模型时，同时调整字段列表。模型已有的场会被复用，新计算的量通常带有如 `turbulenceProperties:` 的名称前缀。DES 区域指标由单独的 `DESModelRegions` 工具提供。\n\n## 5. 用一套输出检查近壁计算\n\n先看 `yPlus` 的分布，再看剪切应力的大小和方向；接着查看 `nut`，判断模型黏度在哪些位置较强；然后对照 `k` 与 `R`，最后沿壁面或截面采样。五个步骤把网格、摩擦与湍流模型联系起来。\n\n配套包保存了参考文本结果。模型生成的字段可在 ParaView 的字段列表中选择；批量比较不同网格时，沿用相同的采样位置和绘图范围。\n\n## 参考\n\n[yPlus](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1yPlus.html)；[wallShearStress](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1wallShearStress.html)；[turbulenceFields](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1turbulenceFields.html)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 410,
+    "cover_url": "/assets/science/functionobjects-wall.svg",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "后台阶：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 37125,
+          "url": "/downloads/function-objects/02-pitzDaily.zip",
+          "bytes": 37125,
+          "size": "36 KB",
+          "sha256": "a26091c3d03033d29285a174c78a98f993c791ef6b38dddf509cce7e7025492f"
+        }
+      ],
+      "download": "/downloads/function-objects/02-pitzDaily.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-11",
+    "kind": "lesson",
+    "title": "11 · 传热：壁面热流、热流传感器与换热系数",
+    "summary": "解释 v2512 wall/gauge 两种模型，设置热流积分与参考温差。",
+    "body": "传热后处理可以分成三种任务：求壁面热流密度、把热流积分成热功率、计算相对于某个温差定义的换热系数。v2512 的 `wallHeatFlux` 还提供 `gauge` 模型，用于预测固定温度热流传感器的读数。\n\n## 1. 运行冷热壁面算例\n\n下载 `03-hotRoom.zip`，解压后运行 `bash Allrun`。计算域为 10 × 5 × 10 m，初始温度为 300 K。底部 `floor` 较热，顶部 `ceiling` 较冷，`buoyantPimpleFoam` 计算到 0.2 s。\n\n这一段短时计算主要用于观察各工具怎样生成结果。壁面温差刚开始影响流体时，内部温度仍接近 300 K。\n\n## 2. 计算所有壁面的热流\n\n```foam\nwallHeatFlux\n{\n    type wallHeatFlux;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    model wall;\n}\n```\n\n`model wall` 使用壁面温度梯度和有效热扩散 / 热物性计算热流。省略 `patches` 时处理所有壁面，并在文本中列出每个壁面的最小值、最大值和面积积分。\n\n| 参数 | 默认 / 可选值 | 作用 |\n|---|---|---|\n| `model` | 默认 `wall`，另有 `gauge` | 壁面热流，或热流传感器模型 |\n| `patches` | `wall` 模型中默认所有壁面 | 选择需要统计的壁面列表 |\n| `qr` | 默认 `qr` | 已有辐射热流字段的名字；存在时纳入壁面处理 |\n| 输出控制 | 通用参数 | 本例在 0.1、0.2 s 写出 |\n\n结果包括 `0.2/wallHeatFlux` 和 `postProcessing/wallHeatFlux/0/wallHeatFlux.dat`。前者用于在壁面上着色，后者方便直接读取热功率。\n\n0.2 s 时，底壁积分约 −19.8583 W，顶壁约 19.8366 W。这里的符号与壁面外法向及工具的热流约定相联系：热量通过底壁进入流体，通过顶壁流出。比较输入和输出时，把符号与物理方向一起解释。\n\n![壁面热流与传感器读数](/assets/science/functionobjects-heat.png)\n\n## 3. 热流密度与热功率\n\n热流密度的单位为 W/m²，总热功率为：\n\n$$\\dot Q=\\int_A q''\\,dA.$$\n\n直接把所有面的热流密度相加，得到的是与面数有关的量；使用面积积分，才得到与实际表面积对应的功率。`wallHeatFlux.dat` 已包含各壁面积分，也可以让 `surfaceFieldValue` 对选定面区做 `areaIntegrate`。\n\n## 4. gauge：模拟固定温度热流传感器\n\n本例把两个传感器放在底壁，固定传感器温度 300 K，只计算对流部分：\n\n```foam\nheatGauge\n{\n    type wallHeatFlux;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    model gauge;\n    patch floor;\n    probeLocations ((2.5 0 5) (7.5 0 5));\n    Tgauge 300;\n    convective true;\n    radiative false;\n    writeFields true;\n}\n```\n\n| 参数 | 默认 / 取值 | 含义 |\n|---|---|---|\n| `patch` | 必填，单个 patch | 传感器所在壁面，本例 `floor` |\n| `probeLocations` | 必填坐标列表 | 传感器位置；可在同一壁面放多个 |\n| `Tgauge` | 必填，K | 传感器温度，本例 300 K |\n| `convective` | 默认 `false` | 开启对流热流计算 |\n| `radiative` | 默认 `false` | 开启辐射热流计算 |\n| `writeFields` | 默认 `false` | 保存传感器结果字段 |\n| `T` | 默认 `T` | 流体温度场 |\n| `alphat` | 默认 `alphat` | 湍流热扩散字段 |\n| `qin` | 默认 `qin` | 入射辐射热流场 |\n| `absorptivity` | 默认 `1`，范围 0–1 | 辐射吸收率 |\n| `emissivity` | 默认 `1`，范围 0–1 | 表面发射率 |\n\nv2512 的 `gauge` 在构造时就读取 `qin`。本例没有辐射热源，在 `0.orig/qin` 中放置量纲为 W/m² 的零场，并先加载它：\n\n```foam\nreadRadiation\n{\n    type readFields;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    fields (qin);\n    readOnStart true;\n}\n```\n\n```foam\nFoamFile { version 2.0; format ascii; class volScalarField; object qin; }\ndimensions [1 0 -3 0 0 0 0];\ninternalField uniform 0;\nboundaryField { \".*\" { type calculated; value uniform 0; } }\n```\n\n`readOnStart true` 使字段在其他对象初始化前进入数据库，随后 `heatGauge` 就能读取它。这种“先加载数据、再构造依赖它的对象”的顺序同样适用于其他组合。\n\n`postProcessing/heatGauge/0/convective.dat` 是逗号分隔数据。0.2 s 时，两点的对流热流约为 0.0124020 和 0.0123968 W/m²。传感器温度为 300 K，与实际热壁面温度不同，所以读数与 `model wall` 的热流有不同物理含义。\n\n启用辐射后，模型使用吸收和发射项：$q''_\\mathrm{rad}=a q''_\\mathrm{in}-\\varepsilon\\sigma T_g^4$。这时 `qin` 应由相应辐射计算提供。\n\n## 5. heatTransferCoeff：选择温差定义\n\n```foam\nheatTransfer\n{\n    type heatTransferCoeff;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    field T;\n    patches (floor ceiling);\n    htcModel localReferenceTemperature;\n    result htc;\n}\n```\n\n本例使用 `localReferenceTemperature`，参考温度来自近壁单元。换热系数与所选温差相联系：\n\n$$h=\\frac{q''}{T_w-T_\\mathrm{ref}}.$$\n\n| 参数 | 默认 / 可选值 | 作用 |\n|---|---|---|\n| `field` | 必填 | 温度场，本例 `T` |\n| `patches` | 必填列表 | 求换热系数的壁面 |\n| `htcModel` | 必填 | 见下表 |\n| `qr` | 默认 `qr` | 辐射热流字段名 |\n| `L`、`kappa` | 均默认 `1` | 输出按 $L/\\kappa$ 缩放，可用于生成 Nusselt 数 |\n| `result` | 可选名称 | 本例输出 `htc` |\n\n| 模型 | 温差或物理关系 | 额外设置 |\n|---|---|---|\n| `localReferenceTemperature` | 使用壁面邻近单元温度 | 由局部场提供参考温度 |\n| `fixedReferenceTemperature` | 所有选中壁面共用一个参考温度 | `TRef` |\n| `faceZoneReferenceTemperature` | 从指定面区计算参考温度 | `referenceFaceZone`；可用 `referenceRegion` 指定所属区域 |\n| `ReynoldsAnalogy` | 用摩擦和传热类比估算 | `UInf`；`U`、`rho`、`Cp` 选择字段，常数参考模式再填写 `rhoInf`、`CpInf` |\n\n保持默认缩放时读取 $h$；若要输出 $Nu=hL/\\kappa$，填写实际特征长度和导热系数，并在图表中注明无量纲结果。温差很小的位置会对 $h$ 产生明显影响，因此读换热系数时同时查看壁温和参考温度。\n\n## 参考\n\n[wallHeatFlux](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1wallHeatFlux.html)；源码 `wallHeatFluxModels/gauge`、`heatTransferCoeff/heatTransferCoeffModels`。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 411,
+    "cover_url": "/assets/science/functionobjects-heat.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "冷热壁面：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 25241,
+          "url": "/downloads/function-objects/03-hotRoom.zip",
+          "bytes": 25241,
+          "size": "25 KB",
+          "sha256": "94a7e1086d2629a3486b7640531d8e021626821832e43af71a53fad3ae4ca1c5"
+        }
+      ],
+      "download": "/downloads/function-objects/03-hotRoom.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-12",
+    "kind": "lesson",
+    "title": "12 · 两相流：水量、液位和自由表面",
+    "summary": "运行溃坝算例，用相分数积分检查水量，沿重力方向测量液位。",
+    "body": "两相流的云图展示界面形状，水相体积和液面高度则给出定量信息。本课对溃坝算例同时输出这三类结果，便于把界面运动与守恒联系起来。\n\n## 1. 从初始水柱开始\n\n下载 `04-damBreak.zip`，进入目录运行 `bash Allrun`。脚本生成网格后执行 `setFields`，初始化 `alpha.water`，再由 `interFoam` 计算到 0.2 s。`alpha.water = 1` 表示水，0 表示空气，中间数值表示界面单元中的水相比例。\n\n初始时间步为 0.001 s，启用自适应时间步，`maxCo` 与 `maxAlphaCo` 均为 0.5。每 0.05 s 保存完整场，后处理对象也按各自频率工作。\n\n## 2. 积分相分数，得到水量\n\n```foam\nwaterVolume\n{\n    type volFieldValue;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    regionType all;\n    operation volIntegrate;\n    fields (alpha.water);\n    writeFields false;\n}\n```\n\n水相体积为：\n\n$$V_w=\\sum_i\\alpha_{w,i}V_i.$$\n\n因此输入 `alpha.water`、使用 `volIntegrate`。相分数本身无量纲，积分结果的单位是 m³。二维算例也有厚度，这个体积包含实际建模厚度。\n\n输出位于 `postProcessing/waterVolume/0/volFieldValue.dat`。比较初始与末尾的体积，可以量化计算中的水量变化。\n\n## 3. 沿指定方向测液位\n\n```foam\nlevel\n{\n    type interfaceHeight;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    alpha alpha.water;\n    liquid true;\n    direction (0 -1 0);\n    locations ((0.1 0 0.0073) (0.3 0 0.0073));\n}\n```\n\n| 参数 | 默认 / 可设置值 | 含义 |\n|---|---|---|\n| `alpha` | 默认 `alpha` | 相分数名称，本例明确填 `alpha.water` |\n| `locations` | 必填坐标列表 | 定义每根液位测量线的位置 |\n| `direction` | 默认从重力方向取得 | 本例 `(0 -1 0)`，与重力方向一致 |\n| `liquid` | 默认 `true` | 当前相分数是否表示所测液体；另一种情况使用互补相 |\n| `interpolationScheme` | 默认 `cellPoint` | 测量线上的相分数插值 |\n\n`interfaceHeight` 沿测量线积分相分数，得到等效液柱高度。水面单值且界面清楚时，它接近直观水位；出现飞溅、液滴或多层界面时，这个积分含义仍然成立。\n\n两个位置的 x 坐标分别为 0.1 和 0.3 m。前者位于初始水柱附近，后者用于观察水流到达下游后的液位变化。\n\n## 4. hB、hL 和 position 怎样读\n\n```text\npostProcessing/level/0/height.dat\npostProcessing/level/0/position.dat\n```\n\n`height.dat` 对每个位置输出两列：`hB` 是相对于测量线边界的高度，`hL` 是相对于所给测量位置的高度。`position.dat` 输出推算的界面位置坐标。\n\n本例测点位于底部，方向向下，方便以底部作为高度基准。改变测点高度或方向时，这两列的几何基准也会随之改变。\n\n![水量与液位曲线](/assets/science/functionobjects-multiphase.png)\n\n左图显示相对于第一次输出的水量变化，最大相对变化约为 $1.13\\times10^{-6}$；右图显示两个位置的等效液位。配套包保留了原始文本数据，可以直接重新绘图。\n\n## 5. 同时记录相分数极值和自由表面\n\n```foam\nwaterRange\n{\n    type fieldMinMax;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    fields (alpha.water);\n}\n```\n\n极值记录方便观察界面输运过程中相分数的范围。与总体水量一起检查，就能分别了解局部范围和整体守恒。\n\n```foam\nfreeSurface\n{\n    type surfaces;\n    libs (sampling);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U p_rgh);\n    surfaceFormat vtk;\n    surfaces\n    {\n        waterAir\n        {\n            type isoSurfaceCell;\n            isoField alpha.water;\n            isoValue 0.5;\n            interpolate true;\n        }\n    }\n}\n```\n\n这里用 `alpha.water = 0.5` 提取界面几何，并将速度、压力带到界面。打开 `postProcessing/freeSurface/0.2/waterAir.vtp` 即可查看。\n\n由浅入深，五项任务依次是：相分数极值、水相体积、一个液位点、多个液位点、带速度着色的自由表面。\n\n## 6. 进一步分析液滴：regionSizeDistribution\n\n喷雾或破碎问题需要把连通液相区域识别出来，再统计尺度分布。`regionSizeDistribution` 按相分数阈值区分连通区域，并将区域体积换算为等效直径。\n\n| 主要参数 | 用途 |\n|---|---|\n| `field` | 相分数场名称 |\n| `threshold` | 划分相区域的阈值 |\n| `patches` | 识别与指定边界相连的区域，例如喷嘴液核 |\n| `minDiameter`、`maxDiameter` | 等效直径统计区间 |\n| `nBins` | 直径分箱数量 |\n| `fields` | 额外统计区域内的场，如速度 |\n| `setFormat` | 分布数据的输出格式 |\n| `coordinateSystem` | 可选局部坐标，用于方向相关统计 |\n| `isoPlanes` 及其子参数 | 增加沿参考方向的平面统计 |\n\n等效直径由体积定义为 $d=(6V/\\pi)^{1/3}$，表达的是同体积球的直径。使用前先明确液核、液滴及统计直径范围，再结合实际网格分辨率解释小液滴数量。\n\n## 参考\n\n[interfaceHeight](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1interfaceHeight.html)；[regionSizeDistribution](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1regionSizeDistribution.html)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 412,
+    "cover_url": "/assets/science/functionobjects-multiphase.png",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "溃坝：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 23513,
+          "url": "/downloads/function-objects/04-damBreak.zip",
+          "bytes": 23513,
+          "size": "23 KB",
+          "sha256": "c0837db5d0a69b095c1b08a3dc9cb8258025154015c5ed1d353404f49d7ae63c"
+        }
+      ],
+      "download": "/downloads/function-objects/04-damBreak.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-13",
+    "kind": "lesson",
+    "title": "13 · 结果导出：读取场、VTK 与 EnSight",
+    "summary": "选择字段和网格部分，输出单元坐标与体积，整理可分享的结果。",
+    "body": "后处理结果可以保存成 OpenFOAM 场，也可以导出为 ParaView 或 EnSight 文件。本课把“读取字段、生成几何辅助量、选择输出字段、导出文件”连成一套流程。\n\n![结果导出：读取场、VTK 与 EnSight](/assets/science/functionobjects-workflow.svg)\n\n## 1. 读入已保存的字段\n\n方腔包中的独立后处理字典先使用 `readFields`：\n\n```foam\nFoamFile { version 2.0; format ascii; class dictionary; object postProcess; }\nfunctions\n{\nreadSaved\n{\n    type readFields;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    fields (U p);\n}\nsavedSpeed\n{\n    type mag;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n    result postSpeed;\n}\nsavedVorticity\n{\n    type vorticity;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field U;\n}\n}\n```\n\n运行：\n\n```bash\npostProcess -dict system/postProcess -latestTime\n```\n\n`readFields` 的 `fields` 是要从当前选中时间目录读取的字段列表；`readOnStart` 默认 `true`，在初始化时读取。随后 `savedSpeed` 和 `savedVorticity` 使用这些字段计算结果。\n\n`readFields` 负责把现有数据放进对象数据库。求解器在线运行时，多数主场已经在数据库中，通常可直接使用。\n\n## 2. 输出单元中心和体积\n\n```foam\ncentres\n{\n    type writeCellCentres;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n\n}\n```\n\n```foam\nvolumes\n{\n    type writeCellVolumes;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n\n}\n```\n\n`writeCellCentres` 输出中心坐标 `C` 以及分量 `Cx`、`Cy`、`Cz`；`writeCellVolumes` 输出 `V`。这两个工具适合导出到 Python 后做自定义计算，例如 $\\sum_i\\alpha_iV_i$。\n\n本专题的结果图就使用了方腔的中心坐标和速度场。将坐标和场一一对应，可以画规则网格图，也可以对非结构网格建立散点或多边形表示。\n\n## 3. 用 vtkWrite 导出选定字段\n\n```foam\nexportVTK\n{\n    type vtkWrite;\n    libs (utilityFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U p speed);\n    boundary true;\n    internal true;\n    format ascii;\n    interpolate false;\n}\n```\n\n| 参数 | 默认 / 可设置值 | 用途 |\n|---|---|---|\n| `fields` | 字段名称或匹配列表 | 本例只导出 `U`、`p`、`speed` |\n| `excludeFields` | 可选列表 | 从选择中排除字段 |\n| `internal` | 默认 `true` | 导出内部体网格 |\n| `boundary` | 默认 `true` | 导出边界面 |\n| `patches`、`excludePatches` | 可选列表 | 包含或排除指定边界 |\n| `interpolate` | 默认 `false` | 是否添加插值到点上的数据 |\n| `single` | 默认 `false` | 使用合并方式写出支持的网格部分 |\n| `format` | 默认 `binary`；另有 `ascii` | 二进制更紧凑，ASCII 便于查看 |\n| `legacy` | 默认 `false` | 使用旧式 VTK 格式而非 XML 格式 |\n| `precision` | 系统默认 | ASCII 数字精度 |\n| `directory` | 默认 `postProcessing/对象名` | 导出目录 |\n| `width` | 默认 `8` | 文件名中步数的补零宽度 |\n| `decompose` | 默认 `false` | 分解多面体，供相应读取器使用 |\n| `writeIds` | 默认 `false` | 写出实体编号，辅助追踪原网格 |\n| `selection` | 可选拓扑选择字典 | 导出子集 |\n| `region` / `regions` | 区域名或列表 | 选择多区域网格 |\n\n方腔的 `postProcessing/exportVTK` 中有 `.vtm` 汇总文件和 `.vtu` / `.vtp` 数据。优先打开 `.vtm`，它会组织内部网格和各个边界。文件名里的 `00000100` 是第 100 个时间步，物理时间为 0.5 s。\n\n## 4. EnSight 格式\n\n```foam\nexportEnsight\n{\n    type ensightWrite;\n    libs (utilityFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    fields (U p);\n    format ascii;\n}\n```\n\n`ensightWrite` 同样接受字段选择、区域和输出频率等设置。常用的格式选项为 `format ascii` 或 `binary`，并可通过 `directory` 指定输出位置，按需要选择内部网格和边界。\n\n| 参数 | 默认值 | 作用 |\n|---|---|---|\n| `fields`、`excludeFields` | 字段选择列表 | 指定输出和排除的字段 |\n| `internal`、`boundary` | 均为 `true` | 内部网格与边界输出开关 |\n| `nodeValues` | `false` | 输出插值到节点的数据 |\n| `faceZones`、`patches`、`excludePatches` | 可选列表 | 选择面区及边界 |\n| `format` | `binary` | 另可选 `ascii` |\n| `width` | `8` | 数据目录的编号宽度 |\n| `overwrite` | `false` | 是否覆盖已有导出目录 |\n| `consecutive` | `false` | 使用连续输出编号 |\n| `timeFormat`、`timePrecision` | `scientific`、`5` | 时间字符串格式与精度 |\n| `selection` | 空字典 | 用拓扑选择动作限定网格子集 |\n\n运行完成后打开：\n\n```text\npostProcessing/exportEnsight/01-cavity.case\n```\n\n`.case` 文件负责关联网格、字段和时间信息。分享 EnSight 数据时，把它与配套的 `data` 目录一起保留。\n\n## 5. 保存数据库里已有的对象\n\n`writeObjects` 用于将当前数据库中已有的对象写到磁盘。它适合保存某些由模型或前一个工具生成、但尚未自动输出的字段。\n\n| 参数 | 用途 |\n|---|---|\n| `objects` | 要写出的对象名或匹配列表 |\n| `writeOption` | 按对象的写出属性筛选，如 `autoWrite`、`noWrite`、`anyWrite` |\n| `field` / `fields` | 可替代 `objects`，选择一个或多个字段 |\n| `writeOption log` | 只列出匹配对象，便于先确认选择结果 |\n\n`writeObjects` 与 `readFields` 方向相反：前者把内存中的对象写出去，后者把磁盘中的字段读进来。将它们和计算对象组合，就可以形成可重复使用的后处理字典。\n\n## 6. 文件怎样选，数据怎样保持清楚\n\n五个渐进操作是：读取一个场、读多个场后生成派生量、输出单元坐标和体积、导出指定字段到 VTK、导出完整时间序列到 EnSight。\n\n研究内部场时选择内部网格，研究壁面载荷时选择对应 patch。每次导出只保留当前分析所需的字段，可以明显减小文件数量和传输大小。数值精度、单位、坐标方向与物理时间则应跟随结果一起保留。\n\n## 参考\n\n[vtkWrite](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1vtkWrite.html)；[ensightWrite](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1ensightWrite.html)；[readFields](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1readFields.html)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 413,
+    "cover_url": "/assets/science/functionobjects-workflow.svg",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-14",
+    "kind": "lesson",
+    "title": "14 · 计算监测：残差、守恒和 Courant 数",
+    "summary": "组合 solverInfo、continuityError 与 Co 场，定位数值和物理变化。",
+    "body": "计算监测应同时包含代数求解、守恒和物理量。`solverInfo` 记录残差和迭代次数，`continuityError` 汇总连续性误差，`CourantNo` 给出局部时间步指标。本课把它们配置在同一个方腔算例里。\n\n![计算监测：残差、守恒和 Courant 数](/assets/science/functionobjects-monitor.svg)\n\n## 1. 保存残差和线性迭代次数\n\n```foam\nresiduals\n{\n    type solverInfo;\n    libs (utilityFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 1;\n    fields (p U);\n    writeResidualFields false;\n}\n```\n\n`fields (p U)` 选择压力与速度方程。`solverInfo.dat` 中包含求解器名称、初始和最终残差、迭代次数等列。\n\n| 参数 | 默认 / 含义 |\n|---|---|\n| `fields` | 必填，要监测的方程字段列表 |\n| `writeResidualFields` | 默认 `false`，开启后可输出局部残差场 |\n| `writeControl`、`writeInterval` | 本例每一步记录 |\n| 文本参数 | 可设置 `writePrecision`、`writeToFile` 等 |\n\n初始残差反映本次线性求解开始时的方程不平衡；最终残差与迭代次数反映本次线性求解的结束状态。一次 PIMPLE / PISO 时间步中可能多次求同一个方程，具体记录应结合文件头和求解循环理解。\n\n残差下降后，还要看流量、力或温度这些关心的物理量怎样变化。例如后台阶的入口出口流量差会随迭代改变，它提供了独立于线性残差的检查。\n\n## 2. 连续性误差\n\n```foam\ncontinuity\n{\n    type continuityError;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    phi phi;\n}\n```\n\n主要字段参数是 `phi`，默认也叫 `phi`。工具由面通量的散度计算局部、全局和累计误差，并写到：\n\n```text\npostProcessing/continuity/0/continuityError.dat\n```\n\n局部绝对误差能反映各单元不平衡的整体大小；有符号全局误差会发生正负抵消；累计量用于观察误差是否长期偏向一侧。把三者放在一起读，比只看其中一个数更完整。\n\n## 3. 输出每个单元的 Courant 数\n\n```foam\ncourant\n{\n    type CourantNo;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n    field phi;\n    result Co;\n}\n```\n\n常用的有限体积表达式为：\n\n$$Co_i=\\frac{\\Delta t}{2V_i}\\sum_{f\\in i}|\\phi_f|.$$\n\n| 参数 | 默认 / 作用 |\n|---|---|\n| `field` | 默认 `phi`，用作通量 |\n| `rho` | 默认 `rho`，质量通量需要密度换算时使用 |\n| `result` | 可指定输出名，本例 `Co` |\n\n`Co` 场可以显示大 Courant 数出现在哪里。小单元、高速度和较大时间步都会提高局部值。日志里的最大 Courant 数告诉你极值大小，场文件则告诉你位置。\n\n## 4. 其他诊断工具如何选\n\n| 工具 | 主要条目 | 回答的问题 |\n|---|---|---|\n| `PecletNo` | `field`（通量）、`rho`、`result` | 对流相对于扩散有多强；需读取相应输运模型 |\n| `MachNo` | `field`（通常 `U`）、`result` | 速度相对于当地声速有多大；声速来自热物性 |\n| `AMIWeights` | `writeFields` 等 | AMI 接口的插值权重和覆盖情况 |\n| `processorField` | 公共区域和输出参数 | 每个单元属于哪个并行分区 |\n| `timeInfo` | `perTimeStep`，默认 `false` | CPU 时间和实际耗时，或逐步耗时 |\n| `caseInfo` | `dictionaries`、`writeFormat` | 把选定字典和算例信息保存为字典或 JSON |\n| `wallShearStress` / `yPlus` | 壁面与模型参数 | 近壁分辨率及摩擦分布 |\n\n本例同时输出了分区编号和时间信息：\n\n```foam\npartition\n{\n    type processorField;\n    libs (fieldFunctionObjects);\n    errors strict;\n    writeControl writeTime;\n    writeInterval 1;\n    \n}\n```\n\n```foam\nclock\n{\n    type timeInfo;\n    libs (utilityFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 10;\n\n}\n```\n\n串行运行时 `processorID` 全为 0。并行算例中同一工具会得到不同处理器编号，可用于查看分区边界。\n\n## 5. 建立一组计算监测量\n\n先记录残差，再加入连续性误差、Courant 数、关键位置探针和整体物理量，这是五个逐步增加的监测层次。不同问题的最后一项可以分别选择：通道的压降、物体的力、传热问题的热功率、两相流的水量。\n\n短期残差下降而力仍在缓慢变化时，可以继续计算；瞬态周期流动的瞬时力持续振荡时，则检查周期、均值和振幅是否稳定。监测量的选择应对应最终要回答的物理问题。\n\n## 参考\n\n[solverInfo](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1solverInfo.html)；[continuityError](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1continuityError.html)；[CourantNo](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1CourantNo.html)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 414,
+    "cover_url": "/assets/science/functionobjects-monitor.svg",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-15",
+    "kind": "lesson",
+    "title": "15 · runTimeControl：按条件结束或切换阶段",
+    "summary": "运行自动停止算例，解释条件、持续时间、组合逻辑和触发器。",
+    "body": "`runTimeControl` 根据计算中的条件执行动作，例如达到统计窗口后停止、残差达到目标后结束，或触发另一组输出。本课先运行一个容易观察的例子：从对象首次执行起经过 0.2 s，自动写出并结束计算。\n\n![runTimeControl：按条件结束或切换阶段](/assets/science/functionobjects-schedule.svg)\n\n## 1. 运行自动停止算例\n\n下载 `05-autoStop.zip`，进入目录运行 `bash Allrun`。主 `controlDict` 仍写着 `endTime 0.5`，但后处理中的控制器会提前结束：\n\n```foam\nstopAfter\n{\n    type runTimeControl;\n    libs (utilityFunctionObjects);\n    errors strict;\n    writeControl timeStep;\n    writeInterval 1;\n    conditions { elapsed { type maxDuration; duration 0.2; } }\n    satisfiedAction end;\n    nWriteStep 0;\n}\n```\n\n`conditions` 包含一个名为 `elapsed` 的条件。`type maxDuration` 检查经过的模拟时间，`duration 0.2` 是这一条件的阈值。`satisfiedAction end` 表示满足后正常写出并结束。\n\n## 2. 为什么结束时间是 0.205 s\n\n本例时间步为 0.005 s，控制器第一次执行发生在 0.005 s。它从这一时刻开始累计 `duration`，所以到 0.205 s 时正好经过 0.2 s。\n\n日志末尾会出现：\n\n```text\nTime = 0.205\nrunTimeControl stopAfter output:\n    maxDuration: elapsed\n        Completed 0.2 out of 0.2\n    maxDuration: elapsed condition satisfied\n    Stopping calculation\n    Writing fields\nEnd\n```\n\n这种方式适合表达“从某阶段开始再运行多久”。若只需要固定的绝对结束时刻，在主 `controlDict` 中设置 `endTime` 就更直接。\n\n## 3. 外层控制参数\n\n| 参数 | 默认 / 取值 | 作用 |\n|---|---|---|\n| `conditions` | 必填命名子字典 | 列出检查条件 |\n| `nWriteStep` | 默认 `0` | 条件满足后，在结束前额外写出的步数 |\n| `satisfiedAction` | `end`、`abort`、`setTrigger` | 正常结束、异常终止或设置触发编号 |\n| `trigger` | `setTrigger` 时填写 | 传递给其他功能对象的触发编号 |\n| 执行控制 | 公共 `executeControl` 等 | 多久检查一次条件 |\n\n正常提前结束使用 `end`。`setTrigger` 用于切换统计阶段，例如流场满足条件后才开始时间平均或增加输出频率。\n\n## 4. 可组合的条件\n\n| 条件类型 | 主要参数 | 典型用途 |\n|---|---|---|\n| `maxDuration` | `duration`、`resetOnRestart` | 某个阶段持续到指定时长 |\n| `equationInitialResidual` | `fields`、`value`、`mode`、`timeStart` | 初始残差高于或低于阈值 |\n| `equationMaxIter` | `fields`、`threshold` | 线性求解迭代次数达到阈值 |\n| `minTimeStep` | `value` | 时间步缩小到给定值 |\n| `minMax` | `functionObject`、`fields`、`value`、`mode` | 已有监测结果高于或低于给定阈值 |\n| `average` | `functionObject`、`fields`、`tolerance`、`window`、`windowType` | 一段窗口内监测量变化满足容差 |\n\n`functionObject` 引用已存在对象的名字，`fields` 则引用它公布的结果名。例如力系数控制先配置 `forceCoeffs`，再用其 `Cd` 等结果检查变化。\n\n`equationInitialResidual` 与 `minMax` 的 `mode` 可取 `minimum` 或 `maximum`，对应低于阈值或高于阈值的判断。把阈值 `value` 与监测量的量纲配套填写。\n\n同一个条件组可以通过 `groupID` 将多项条件组合为同时满足；不同组之间可以形成任一组满足即触发的逻辑。`active` 控制单个条件是否启用。逐项加入条件，并在日志中观察各项状态，组合的意义就容易判断。\n\n## 5. 触发器怎样连接其他对象\n\n被控制的对象可以设置 `controlMode trigger`，通过 `triggerStart`、`triggerEnd` 选择生效区间。需要同时限制物理时间时，使用 `timeAndTrigger`；满足时间或触发任一条件就运行时，使用 `timeOrTrigger`。\n\n实际设置顺序是：先单独跑通监测对象，再确认控制条件读取到了它的结果，最后连接被触发的平均或输出对象。每一步都有对应文件或日志可以查看。\n\n## 6. 从最简单的控制逐步扩展\n\n五个层次分别是：经过固定时长结束；指定残差阈值；观察力系数窗口变化；把多个条件组成一组；满足条件后触发下一阶段。配套包提供第一个完整例子，后四类可按上表参数扩展到自己的问题。\n\n提前结束前，选择的量应能代表当前任务。例如通道压降趋稳比只看某一个速度分量残差更接近最终目标；两相流则可能需要同时考虑液位、水量和周期变化。\n\n## 参考\n\n[runTimeControl](https://api.openfoam.com/2512/classFoam_1_1functionObjects_1_1runTimeControl.html)；源码 `src/functionObjects/utilities/runTimeControl/runTimeCondition`。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 415,
+    "cover_url": "/assets/science/functionobjects-schedule.svg",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "自动停止：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 20404,
+          "url": "/downloads/function-objects/05-autoStop.zip",
+          "bytes": 20404,
+          "size": "20 KB",
+          "sha256": "5dc514cf5b159ac64fff5d4ea157e2923bc0cfd7e7af40ee496434f6271ed8c6"
+        }
+      ],
+      "download": "/downloads/function-objects/05-autoStop.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  },
+  {
+    "slug": "function-objects-16",
+    "kind": "lesson",
+    "title": "16 · 工具分类与选用索引",
+    "summary": "按采样、统计、场运算、载荷、传热、声学、颗粒和流程管理查工具。",
+    "body": "按“想得到什么结果”选择工具，通常比从类型名称开始查更快。本页把 v2512 的常用后处理工具与专题课程对应，并补充声学、颗粒、场映射等扩展功能。\n\n![工具分类与选用索引](/assets/science/functionobjects-workflow.svg)\n\n## 1. 先按任务查课程\n\n| 要完成的任务 | 主要工具 | 课程 |\n|---|---|---|\n| 给算例加入自动后处理 | `functions`、`postProcess` | [00 · 第一个后处理对象](/read/?slug=function-objects-00) |\n| 设置采样和写出频率 | 公共时间控制、`writeFile` | [01 · 通用参数](/read/?slug=function-objects-01) |\n| 记录点上的速度、压力 | `probes`、`patchProbes` | [02 · 探针](/read/?slug=function-objects-02) |\n| 与实验剖面对照 | `sets` | [03 · 线与点集](/read/?slug=function-objects-03) |\n| 保存截面、界面和流线 | `surfaces`、`streamLine` | [04 · 截面与流线](/read/?slug=function-objects-04) |\n| 统计极值、平均和分布 | `fieldMinMax`、`volFieldValue`、`fieldStatistics`、`histogram` | [05 · 空间统计](/read/?slug=function-objects-05) |\n| 计算流量、平均压力和压降 | `surfaceFieldValue`、`multiFieldValue` | [06 · 面积分](/read/?slug=function-objects-06) |\n| 计算速度梯度与涡结构 | `mag`、`grad`、`div`、`vorticity`、`Q`、`Lambda2`、`exprField` | [07 · 场运算](/read/?slug=function-objects-07) |\n| 保存平均场和脉动 | `fieldAverage`、`valueAverage` | [08 · 时间统计](/read/?slug=function-objects-08) |\n| 计算力、力矩、升阻力系数 | `forces`、`forceCoeffs`、`pressure` | [09 · 力与压力](/read/?slug=function-objects-09) |\n| 检查近壁网格与湍流量 | `yPlus`、`wallShearStress`、`turbulenceFields` | [10 · 壁面与湍流](/read/?slug=function-objects-10) |\n| 计算热功率、热流与换热系数 | `wallHeatFlux`、`heatTransferCoeff` | [11 · 传热](/read/?slug=function-objects-11) |\n| 监测水量、液位和液滴 | `interfaceHeight`、`regionSizeDistribution` | [12 · 两相流](/read/?slug=function-objects-12) |\n| 导出所需字段 | `readFields`、`vtkWrite`、`ensightWrite`、`writeObjects` | [13 · 数据导出](/read/?slug=function-objects-13) |\n| 检查残差、守恒和时间步 | `solverInfo`、`continuityError`、`CourantNo` | [14 · 计算监测](/read/?slug=function-objects-14) |\n| 按条件停止或切换阶段 | `runTimeControl` | [15 · 自动控制](/read/?slug=function-objects-15) |\n\n## 2. 场运算工具\n\n这些类型主要使用 `fieldFunctionObjects` 库。单场工具通常选择 `field`，多场组合通常使用 `fields`，输出名通过 `result` 设置；具体条目见对应工具说明。\n\n| 工具 | 用途 | 主要设置 |\n|---|---|---|\n| `mag`、`magSqr` | 模和模平方 | `field`、`result` |\n| `components` | 拆分向量 / 张量分量 | `field` |\n| `add`、`subtract`、`multiply` | 多场相加、相减、相乘 | `fields`、`result` |\n| `pow` | 幂运算 | `field`、`n`、`scale`、`offset`、`checkDimensions` |\n| `log` | 标量对数及缩放 | `field`、`scale`、`offset`、`clip` |\n| `norm` | 按选定范数归一化场 | `field`、`norm`；`Lp` 模式配 `p`，`composite` 配 `divisor`，`divisorField` 配同名字段条目 |\n| `grad`、`div` | 梯度、散度 | 输入类型和相应离散格式 |\n| `ddt`、`ddt2` | 时间变化相关导数量 | `field`，并保留所需时间历史 |\n| `vorticity`、`enstrophy`、`LambVector` | 涡量、拟涡能、Lamb 向量 | `field U` |\n| `Q`、`Lambda2`、`flowType` | 旋转与应变特征 | `field U` |\n| `surfaceInterpolate` | 单元场插值到面 | `fields ((输入 输出) ...)` |\n| `fieldCoordinateSystemTransform` | 转换向量 / 张量坐标系 | `fields`、`coordinateSystem` |\n| `exprField` | 表达式生成或修改场 | `field`、`expression`、`action`、`dimensions` |\n| `reference` | 相对于参考值生成新场 | 输入场、参考模式与参考位置 |\n| `randomise` | 给场添加随机扰动 | 输入场、扰动幅值与结果名 |\n| `zeroGradient` | 生成采用零梯度边界的派生场 | 输入字段及筛选方式 |\n| `limitFields` | 限定指定场的数值范围 | 字段、上下限及限制方式 |\n| `derivedFields` | 生成预定义派生量 | 选定派生字段列表 |\n\n`limitFields`、`exprField` 的修改模式等会改变数据库中的场。需要保留原始场时，采用新的输出名称，将原量和派生量分别保存。\n\n## 3. 几何采样与区域统计\n\n| 工具 | 用途 | 参数重点 |\n|---|---|---|\n| `probes`、`patchProbes` | 域内与边界点采样 | 坐标、字段、patch、插值 |\n| `sets`、`surfaces` | 点集与表面采样 | 几何子字典、字段与格式 |\n| `nearWallFields` | 距壁面指定距离处采样 | 壁面、采样距离、输入输出字段对 |\n| `streamLine`、`wallBoundedStreamLine` | 流线与沿壁面约束的追踪 | 种子点、追踪方向、寿命、输出字段 |\n| `surfaceDistance` | 计算到几何表面的距离 | 表面文件、几何位置与输出 |\n| `fieldExtents` | 场值超过阈值的空间范围 | `fields`、`threshold`、`referencePosition` |\n| `volFieldValue`、`surfaceFieldValue` | 体 / 面归约 | 选区、操作、权重 |\n| `multiFieldValue` | 多个归约值之间的运算 | 子对象、操作与结果筛选 |\n| `fieldMinMax`、`fieldStatistics` | 极值和空间统计 | 分量模式、区域、统计量 |\n| `histogram` | 分箱分布 | 字段、上下限、箱数或区间 |\n| `columnAverage` | 沿网格柱方向平均 | 选择字段和用于定义柱的边界 |\n| `binField` | 沿指定坐标分箱统计 | 分箱模型、方向、范围、箱数与字段 |\n| `fluxSummary` | 对选定面区汇总通量 | 通量名称、选区模式和参考方向 |\n| `momentum`、`momentumError` | 动量统计及方程误差 | 区域、速度、密度及模型来源 |\n\n采样工具一般使用 `sampling` 库；`streamLine` 等场功能对象使用 `fieldFunctionObjects`。配置时以所选工具的 `libs` 为准。\n\n## 4. 湍流、声学与模态\n\n| 工具 | 能得到什么 | 配置前准备 |\n|---|---|---|\n| `turbulenceFields` | 模型中的 k、耗散率、应力与黏度 | 已创建的湍流模型 |\n| `yPlus`、`wallShearStress` | 近壁位置与剪切 | 壁面边界和动量模型 |\n| `DESModelRegions` | DES 的 RANS / LES 区域指标 | 对应混合模型 |\n| `resolutionIndex` | 网格 / 湍流解析程度指标 | 选定指标模型及所需场 |\n| `energySpectrum` | 湍动能谱 | 符合工具要求的速度数据和网格 |\n| `DMD` | 动态模态、频率和模态贡献 | 连续快照、采样步长、截断阶数和字段 |\n| `Curle` | 基于表面压力等数据的声学估计 | 壁面、声速、观测点与采样时序 |\n| `proudmanAcousticPower` | 各向同性湍流噪声功率估计 | 湍动能、耗散率及声速相关数据 |\n| `blendingFactor`、`stabilityBlendingFactor` | 混合离散格式指标 | 对流格式和稳定性指标设置 |\n\n声学与模态依赖足够密集、持续足够久的数据。先根据关注频率选择采样间隔和总时长，再开始保存快照，可减少事后发现时间分辨率不足的情况。\n\n## 5. 力、热、化学与其他物理量\n\n| 工具 | 主要用途 | 配置重点 |\n|---|---|---|\n| `forces`、`forceCoeffs` | 力、力矩及系数 | patch、密度、参考中心、速度、面积和长度 |\n| `phaseForces` | 相相关作用力 | 多相系统、相名和模型数据 |\n| `propellerInfo`、`bladeForces` | 推进器和叶片载荷 | 旋转轴、几何、参考量与分区 |\n| `pressure` | 静压、总压和系数转换 | 压力形式、密度、参考量 |\n| `hydrostaticPressure` | 静水压力初始化 / 计算 | 重力、热物性与边界 |\n| `wallHeatFlux`、`heatTransferCoeff` | 壁面热流与换热系数 | 热物性、壁面、参考温差 |\n| `viewFactorHeatFlux` | 视角系数辐射模型热流汇总 | 辐射模型和参与壁面 |\n| `radiometerProbes`、`thermoCoupleProbes` | 辐射计与热电偶模型采样 | 位置、传感器参数及辐射 / 温度场 |\n| `comfort` | 热舒适度指标 | 温湿度、速度、人体和衣着参数 |\n| `XiReactionRate` | 反应率相关输出 | 对应燃烧模型和反应场 |\n| `reactingEulerHtcModel`、`multiphaseInterHtcModel` | 特定多相求解框架的换热 | 相名、区域和匹配的物性模型 |\n| `electricPotential` | 电势方程与相关量 | 导电率、边界和方程设置 |\n| `scalarTransport`、`energyTransport`、`age` | 额外输运方程或流龄 | 对流通量、扩散、源项和边界条件 |\n\n最后一组会求解额外方程，适合已有速度场上的扩展分析；其配置还包括初始场、边界和 `fvSchemes` / `fvSolution` 中的相关条目。\n\n## 6. 颗粒与两相界面\n\n| 工具 | 主要用途 |\n|---|---|\n| `interfaceHeight`、`regionSizeDistribution` | 等效液位、连通区域和等效直径分布 |\n| `extractEulerianParticles` | 从欧拉相分数输运中提取颗粒事件数据 |\n| `cloudInfo` | 颗粒云的数量、质量等概要 |\n| `particleDistribution`、`sizeDistribution` | 颗粒属性或尺度分布 |\n| `vtkCloud`、`ensightCloud` | 颗粒数据格式导出 |\n| `icoUncoupledKinematicCloud` | 在给定流场中追踪单向耦合运动颗粒 |\n| `dsmcFields` | DSMC 宏观统计量 |\n\n颗粒类工具需要在算例中选择真实存在的 cloud 名称，并读取相应颗粒属性。粒径、单个计算颗粒代表的实际粒子数与质量统计采用不同权重，整理分布时要明确纵轴表示数量、质量还是体积占比。\n\n## 7. 文件、时间与流程管理\n\n| 工具 | 主要用途 |\n|---|---|\n| `readFields`、`writeObjects` | 读取场、保存数据库对象 |\n| `writeCellCentres`、`writeCellVolumes`、`processorField` | 导出网格中心、体积和并行编号 |\n| `vtkWrite`、`ensightWrite`、`areaWrite` | 体网格或有限面积场的格式导出 |\n| `mapFields` | 不同网格 / 区域之间映射字段 |\n| `writeDictionary` | 输出选定字典，记录计算配置 |\n| `caseInfo`、`timeInfo`、`parProfiling` | 案例信息、时间消耗与并行分析 |\n| `solverInfo`、`continuityError`、`CourantNo`、`PecletNo`、`MachNo`、`AMIWeights` | 计算过程诊断 |\n| `runTimeControl`、`setTimeStep`、`abort` | 条件控制、时间步设置与外部停止 |\n| `timeActivatedFileUpdate` | 按时间更新指定文件 |\n| `multiRegion` | 在多个区域上组织同类功能对象 |\n| `coded` | 在功能对象接口中嵌入 C++ 操作 |\n| `systemCall` | 调用外部脚本或程序 |\n| `externalCoupled` | 与外部程序交换数据 |\n| `removeRegisteredObject`、`syncObjects` | 管理对象数据库和同步写出 |\n| `setFlow` | 设置预定义流动场 |\n| `foamReport`、`graphFunctionObject` | 报告汇总与监测量曲线输出 |\n| `dataCloud` | 把指定颗粒云字段写成数据集合 |\n\n## 8. 模板名称与 type 怎样对应\n\n`postProcess -list` 列出的是可以直接调用的预配置模板。模板可能给通用类型填好常用参数，例如 `patchAverage` 使用面统计工具，`forceCoeffsIncompressible` 使用 `forceCoeffs` 并配置不可压缩分支所需条目。\n\n本专题方腔中使用过的模板调用包括 `mag(U)`、`grad(p)`、`vorticity`、`Q`、`Lambda2`。从模板入手容易快速看到结果；需要指定区域、权重和输出名称时，展开成字典更便于维护。\n\n类型的完整参数可沿“类型名 → 官方 API 的 Usage → 所继承接口”查阅。字段运算常继承 `fieldExpression`，文本监测常继承 `writeFile`，时间调度使用公共控制。先查本类型专用条目，再补公共条目，就能把配置组织完整。\n\n## 参考\n\n[v2512 功能对象 API 分组](https://api.openfoam.com/2512/group__grpFunctionObjects.html)；[场工具](https://api.openfoam.com/2512/group__grpFieldFunctionObjects.html)；[源码与发布](https://www.openfoam.com/news/main-news/openfoam-v2512)。\n",
+    "track": "functionObject",
+    "series": "functionObject 后处理",
+    "sort_order": 416,
+    "cover_url": "/assets/science/functionobjects-workflow.svg",
+    "section_ids": [
+      "3b26788f-2922-5a80-8592-ac5ef1edfdb8"
+    ],
+    "metadata": {
+      "version": "v2512",
+      "topics": [
+        "function-objects"
+      ],
+      "duration": "30–60 分钟",
+      "downloads": [
+        {
+          "label": "方腔：完整算例与参考数据",
+          "kind": "case",
+          "description": "解压后进入算例目录，运行 bash Allrun。",
+          "size_bytes": 36596,
+          "url": "/downloads/function-objects/01-cavity.zip",
+          "bytes": 36596,
+          "size": "36 KB",
+          "sha256": "218caf97792cbd695e35bef25bd2171910b91fcda3dc9e0828d32e69104d2ff2"
+        }
+      ],
+      "download": "/downloads/function-objects/01-cavity.zip"
+    },
+    "status": "published",
+    "author_name": "FoamLab",
+    "comments_enabled": true
+  }
+]
