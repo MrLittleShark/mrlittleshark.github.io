@@ -9,7 +9,7 @@
   {id:'module',label:'专题学习 / 专题导览',kind:'module',track:null},
   {id:'article',label:'实践与分享 / 文章',kind:'article',track:null},
   {id:'log',label:'实践与分享 / 作者日志',kind:'log',track:null},
-  {id:'resource',label:'资料中心 / 讲义与算例',kind:'resource',track:null},
+  {id:'resource',label:'资料中心 / 算例与源码',kind:'resource',track:null},
   {id:'recommendation',label:'资料中心 / 资源推荐',kind:'recommendation',track:null},
   {id:'tool',label:'工具生态',kind:'tool',track:null},
   {id:'announcement',label:'网站公告',kind:'announcement',track:null},

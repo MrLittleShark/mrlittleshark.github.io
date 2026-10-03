@@ -1,7 +1,7 @@
 <% const resourceActive=['resources','recommendations'].includes(page.section); %>
 <div class="nav-group" data-nav-section="resources">
  <div class="nav-parent"><a href="/resources/" class="nav-item <%= resourceActive?'active':'' %>" <%- resourceActive?'aria-current="page"':'' %>><%- icon('download') %><span>资料中心</span></a><button type="button" class="nav-expand" aria-expanded="<%= resourceActive %>" aria-controls="nav-children-resources" aria-label="资料中心子目录"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6"/></svg></button></div>
- <div id="nav-children-resources" class="nav-subgroup" <%- resourceActive?'':'hidden' %>><a class="nav-item nav-subitem" href="/resources/?kind=resource"><span>讲义与算例</span></a><a class="nav-item nav-subitem" href="/resources/?kind=recommendation"><span>资源推荐</span></a></div>
+ <div id="nav-children-resources" class="nav-subgroup" <%- resourceActive?'':'hidden' %>><a class="nav-item nav-subitem" href="/resources/?kind=resource"><span>算例与源码</span></a><a class="nav-item nav-subitem" href="/resources/?kind=recommendation"><span>资源推荐</span></a></div>
 </div>
 <% [['sharing','book','实践与分享'],['community','chat','讨论中心'],['assignments','task','作业与实践'],['announcements','bell','网站公告']].forEach(([slug,ico,label])=>{const active=page.section===slug||(slug==='sharing'&&page.section==='authors'); %>
 <div class="nav-group" data-nav-section="<%= slug %>">

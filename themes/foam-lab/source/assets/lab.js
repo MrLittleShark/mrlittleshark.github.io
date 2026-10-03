@@ -11,6 +11,7 @@
  lab.headingTitle=item=>String(item.slug||'').startsWith('command-')?item.title.split(' · ')[0]:item.title;
  lab.updateBreadcrumb=item=>{let parent={url:'/',label:'学习概览'};const track=String(item.track||''),canonical=String(item.metadata?.canonical_path||'');
   if(item.metadata?.admin_only)parent={url:'/admin/',label:'管理平台'};
+  else if(canonical==='/start/')parent={url:'/',label:'学习概览'};
   else if(canonical.startsWith('/dictionaries/')||String(item.slug).startsWith('dictionary-'))parent={url:'/dictionaries/',label:'配置与字典'};
   else if(String(item.slug).startsWith('command-'))parent={url:'/commands/',label:'命令速查'};
   else if(['lesson','course'].includes(item.kind)){parent=/C\+\+/.test(track)?{url:'/cpp/',label:'C++ 入门'}:/Linux/.test(track)?{url:'/linux/',label:'Linux 入门'}:/OpenFOAM 编程/.test(track)?{url:'/programming/',label:'OpenFOAM 编程'}:track==='数值方法与理论'?{url:'/topics/finite-volume/',label:'有限体积法'}:{url:'/courses/',label:'课程目录'};}
@@ -92,7 +93,7 @@
  }else{const groups={courses:['lesson','course'],programming:['lesson'],cpp:['lesson'],linux:['lesson'],algorithms:['lesson'],tools:['tool'],resources:['resource','recommendation'],recommendations:['recommendation'],sharing:['article','log'],authors:['log','article'],announcements:['announcement'],assignments:['assignment']};let q=lab.client.from('foamlab_content').select('id,slug,kind,title,summary,track,series,cover_url,metadata,author_id,author_name,sort_order,published_at,created_at,updated_at').eq('status','published').in('kind',groups[mode]||['article']).order('sort_order').order('created_at',{ascending:false}).limit(1000);if(mode==='programming')q=q.eq('track','OpenFOAM 编程');if(mode==='cpp')q=q.eq('track','C++ 入门');if(mode==='linux')q=q.eq('track','Linux 入门');if(mode==='algorithms')q=q.ilike('track','%数值%');rows=lab.check(await q).filter(r=>mode!=='courses'||!['Linux 入门','C++ 入门','OpenFOAM 编程','数值方法与理论'].includes(r.track));}
  lab.catalog=rows;await lab.names(rows.filter(r=>['article','log'].includes(r.kind)).map(r=>r.author_id));
  const search=$('#catalog-query'),filters=$('#catalog-filters'),kindFilters=$('#catalog-kind-filters');
- const kinds=[['','全部资料'],['resource','讲义与算例'],['recommendation','资源推荐']];let track='全部',kind='';
+ const kinds=[['','全部资料'],['resource','算例与源码'],['recommendation','资源推荐']];let track='全部',kind='';
  if(kindFilters)kindFilters.hidden=!!D?.available;
  if(kindFilters)kindFilters.innerHTML=kinds.map(([value,label])=>'<button type="button" data-catalog-kind="'+value+'" aria-pressed="false">'+label+'</button>').join('');
  function restoreFilters(){
@@ -106,7 +107,7 @@
  restoreFilters();window.foamListState?.remember(listing);
  if(filters)filters.onclick=e=>{const b=e.target.closest('[data-track]');if(!b)return;window.foamListState?.write({q:search?.value||'',track:b.dataset.track,...(kindFilters?{kind}:{})},true);restoreFilters();render();};
  if(kindFilters)kindFilters.onclick=e=>{const b=e.target.closest('[data-catalog-kind]');if(!b)return;window.foamListState?.write({q:search?.value||'',track:'全部',kind:b.dataset.catalogKind},true);restoreFilters();render();};
- function render(){const words=(search?.value||'').toLowerCase().split(/\s+/).filter(Boolean);const shown=rows.filter(r=>(!kind||r.kind===kind)&&(track==='全部'||r.track===track)&&words.every(w=>[r.title,r.summary,r.track,r.series].join(' ').toLowerCase().includes(w)));listing.innerHTML=window.FoamPagination.slice(listing,shown,render,12).map(lab.card).join('')||'<div class="lab-empty">目前没有符合条件的内容。</div>';if($('#catalog-count'))$('#catalog-count').textContent=shown.length+' 项内容';}
+ function render(){const words=(search?.value||'').toLowerCase().split(/\s+/).filter(Boolean);const shown=rows.filter(r=>(!kind||r.kind===kind)&&(track==='全部'||r.track===track)&&words.every(w=>[r.title,r.summary,r.track,r.series].join(' ').toLowerCase().includes(w)));if(window.FoamResourcesHub?.render({listing,rows:shown,words,filtered:shown.length!==rows.length,mode,D}))return;listing.innerHTML=window.FoamPagination.slice(listing,shown,render,12).map(lab.card).join('')||'<div class="lab-empty">目前没有符合条件的内容。</div>';if($('#catalog-count'))$('#catalog-count').textContent=shown.length+' 项内容';}
  search?.addEventListener('input',()=>{window.foamListState?.write({q:search.value,track,...(kindFilters?{kind}:{})});render();});window.addEventListener('popstate',()=>{restoreFilters();render();});render();
  }catch(e){lab.error(listing,e);}})();
  // Static Hexo content remains readable while the CMS is unavailable. A successful

@@ -1,7 +1,8 @@
 ---
 title: "快速开始"
 layout: page
-description: "FoamLab 使用与维护说明。"
+section: start
+description: "用方腔算例练习环境加载、网格生成、求解与结果查看。"
 cms_slug: "site-start"
 ---
 
