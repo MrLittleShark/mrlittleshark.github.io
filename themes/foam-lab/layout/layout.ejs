@@ -29,10 +29,12 @@
   <link rel="stylesheet" href="/assets/account-menu.css">
   <link rel="stylesheet" href="/assets/community-byline.css">
   <link rel="stylesheet" href="/assets/directory.css"><link rel="stylesheet" href="/assets/resources-hub.css">
+  <% if(page.section==='function-objects'){ %><link rel="stylesheet" href="/assets/function-objects.css"><% } %>
   <script src="/assets/vendor/supabase.js" defer></script>
   <script src="/assets/account.js" defer></script>
   <script src="/assets/pagination.js" defer></script>
   <script src="/assets/site.js" defer></script>
+  <% if(page.section==='function-objects'){ %><script src="/assets/function-objects.js" defer></script><% } %>
   <script src="/assets/vendor/purify.min.js" defer></script>
   <script src="/assets/vendor/marked.js" defer></script>
   <script src="/assets/vendor/katex/katex.min.js" defer></script>

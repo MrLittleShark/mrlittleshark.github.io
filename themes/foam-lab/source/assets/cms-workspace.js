@@ -16,7 +16,7 @@
   {id:'assignment',label:'作业与实践',kind:'assignment',track:null},
   {id:'course',label:'系统学习 / 课程集合',kind:'course',track:null},
   {id:'commands',label:'命令速查',kind:'reference',fixed:true},
-  {id:'dictionaries',label:'配置与字典',kind:'reference',fixed:true},
+  {id:'dictionaries',label:'配置与字典速查',kind:'reference',fixed:true},
   {id:'reference',label:'其他参考资料',kind:'reference',fixed:true},
   {id:'internal',label:'管理平台 / 内部文档',fixed:true}
  ];

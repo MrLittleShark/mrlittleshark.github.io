@@ -1,0 +1,25 @@
+<% const entries = function_objects(); const categories = [...new Set(entries.map(item => item.category))]; %>
+<div class="page-wrap fo-quick">
+  <div class="eyebrow">FUNCTION OBJECT INDEX · v2512</div>
+  <div class="page-heading">
+    <h1>functionObject 速查</h1>
+    <p>查找 <%= entries.length %> 种功能对象的用途与配置重点，进入对应教程查看参数和示例。</p>
+  </div>
+  <nav class="fo-quick-links" aria-label="functionObject 学习入口">
+    <a href="/read/?slug=function-objects-00">第一个 functionObject →</a>
+    <a href="/read/?slug=function-objects-01">通用参数与执行频率 →</a>
+    <a href="/topics/function-objects/">专题课程与配套算例 →</a>
+  </nav>
+  <label class="search-field"><%- icon('search') %><input id="fo-query" type="search" aria-label="搜索 functionObject" placeholder="输入名称、用途或参数，例如 probes、流量、patches…"></label>
+  <div class="filter-tabs" role="group" aria-label="functionObject 分类">
+    <% ['全部', ...categories].forEach((category, index) => { %>
+      <button type="button" data-fo-category="<%= category %>" class="<%= index === 0 ? 'selected' : '' %>" aria-pressed="<%= index === 0 %>"><%= category %></button>
+    <% }); %>
+  </div>
+  <div class="fo-quick-results">
+    <p class="result-count" id="fo-count" role="status">共 <%= entries.length %> 种功能对象</p>
+    <label for="fo-sort">排序 <select id="fo-sort"><option value="common">常用优先</option><option value="name">名称 A–Z</option><option value="name-desc">名称 Z–A</option></select></label>
+  </div>
+  <div class="fo-quick-grid" id="fo-list" aria-label="功能对象列表"></div>
+  <noscript><p>启用 JavaScript 后可搜索和分页。也可以直接打开下列工具所在的教程。</p><ul><% entries.forEach(item => { %><li><a href="<%= item.url %>"><%= item.name %></a>：<%= item.description %></li><% }); %></ul></noscript>
+</div>
