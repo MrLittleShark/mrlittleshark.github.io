@@ -1,0 +1,24 @@
+[
+  {
+    "slug": "topic-algorithms",
+    "kind": "module",
+    "title": "数值方法",
+    "summary": "有限体积法、空间与时间离散、压力–速度耦合，以及迭代求解与误差分析。",
+    "body": "## 数值方法解决什么问题\n\n速度、压力和温度在空间中连续变化，计算机保存的是网格上的一组数值。数值方法负责把守恒方程转化为这些数值之间的关系，再通过迭代求出结果。\n\n以通道中的温度输运为例：流动把热量带向下游，这是**对流**；相邻区域因温差传递热量，这是**扩散**；温度随时间升高或降低，对应**时间变化项**。OpenFOAM 用有限体积法在每个单元上计算这些收支，形成代数方程组。选择离散格式，就是选择怎样用网格上的已知信息近似各项。\n\n## 从离散格式到求解设置\n\n一个算例中的数值设置主要分布在三个文件里。阅读课程时，可以把原理与对应条目放在一起看。\n\n| 文件 | 主要设置 | 例子 |\n| --- | --- | --- |\n| [`system/fvSchemes`](/dictionaries/system-fvschemes/) | 时间、对流、扩散和梯度等项的离散格式 | 用迎风或受限格式计算对流项，用非正交修正处理倾斜网格上的扩散通量。 |\n| [`system/fvSolution`](/dictionaries/system-fvsolution/) | 线性求解器、容差、压力–速度耦合和松弛 | 给压力方程选择求解器与停止条件，设置 PIMPLE 的外循环次数。 |\n| [`system/controlDict`](/dictionaries/system-controldict/) | 计算时间、时间步长与结果输出 | 用较小时间步分辨快速变化，按指定间隔保存结果。 |\n\n例如，迎风格式利用流动上游的值计算面通量，通常较稳健，但会把尖锐的温度分布抹平。提高空间分辨率或调整对流格式，会改变这种误差。线性求解容差则控制每次代数求解的停止条件；网格、格式和容差分别影响计算的不同环节。\n\n## 各部分学什么\n\n| 学习内容 | 需要弄清的问题 | 对应课程 |\n| --- | --- | --- |\n| 有限体积法 | 面通量怎样组成单元方程？相邻单元如何保持守恒？ | [有限体积法与守恒方程](/read/?slug=finite-volume-conservation) |\n| 空间离散 | 迎风、线性插值和受限格式怎样影响结果？倾斜网格怎样处理？ | [对流格式](/read/?slug=advection-schemes-boundedness) · [扩散与非正交修正](/read/?slug=diffusion-gradients-laplacian) |\n| 时间离散 | 时间步多大合适？Courant 数与时间格式有什么关系？ | [时间格式与 Courant 数](/read/?slug=time-discretisation-courant) |\n| 压力–速度耦合 | 怎样让求得的速度满足质量守恒？不同校正循环怎样工作？ | [SIMPLE、PISO 与 PIMPLE](/read/?slug=simple-piso-pimple) |\n| 迭代与稳定性 | 怎样读残差、设置容差和松弛，定位发散原因？ | [线性求解器与残差](/read/?slug=linear-solvers-residuals) · [松弛与发散排查](/read/?slug=relaxation-stability-diagnosis) |\n\n初次学习可以按上述顺序阅读，结合导热、标量输运和方腔算例观察设置的作用。需要进一步理解推导时，目录中的四节理论课程会展开控制方程、一致性与稳定性、稀疏矩阵，以及压力泊松方程与共点网格通量。\n\n比较两组设置时，每次改变一个因素，并记录残差、速度或温度剖面、流量等结果。这样可以看出变化来自空间离散、时间离散，还是迭代过程。\n\n参考：[OpenFOAM 数值格式](https://www.openfoam.com/documentation/user-guide/6-solving/6.2-numerical-schemes) · [求解与算法控制](https://www.openfoam.com/documentation/user-guide/6-solving/6.3-solution-and-algorithm-control)。\n",
+    "track": "专题学习",
+    "series": "OpenFOAM v2512 专题",
+    "sort_order": 130,
+    "status": "published",
+    "author_name": "FoamLab",
+    "cover_url": "/assets/diagrams/core-finite-volume.svg",
+    "comments_enabled": false,
+    "metadata": {
+      "topic_key": "algorithms",
+      "version": "v2512",
+      "canonical_path": "/algorithms/"
+    },
+    "section_ids": [
+      "d8198ea8-e06c-4071-a76e-38e0db38fd23"
+    ]
+  }
+]
