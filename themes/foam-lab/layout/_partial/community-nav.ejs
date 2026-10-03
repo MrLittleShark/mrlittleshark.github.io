@@ -4,5 +4,7 @@
  <div id="nav-children-resources" class="nav-subgroup" <%- resourceActive?'':'hidden' %>><a class="nav-item nav-subitem" href="/resources/?kind=resource"><span>讲义与算例</span></a><a class="nav-item nav-subitem" href="/resources/?kind=recommendation"><span>资源推荐</span></a></div>
 </div>
 <% [['sharing','book','实践与分享'],['community','chat','讨论中心'],['assignments','task','作业与实践'],['announcements','bell','网站公告']].forEach(([slug,ico,label])=>{const active=page.section===slug||(slug==='sharing'&&page.section==='authors'); %>
-<a href="/<%= slug %>/" class="nav-item <%= active?'active':'' %>" <%- active?'aria-current="page"':'' %>><%- icon(ico) %><span><%= label %></span></a>
+<div class="nav-group" data-nav-section="<%= slug %>">
+ <div class="nav-parent"><a href="/<%= slug %>/" class="nav-item <%= active?'active':'' %>" <%- active?'aria-current="page"':'' %>><%- icon(ico) %><span><%= label %></span></a></div>
+</div>
 <% }); %>
