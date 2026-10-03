@@ -2,10 +2,10 @@
 (() => {
  const L=window.FoamLab,esc=L.esc,hub=document.querySelector('#topic-hub'),home=document.querySelector('#home-special-topics');if(!hub&&!home)return;
  const known=new Set(Object.keys(L.topicLabels));
- const topicURL=key=>key==='algorithms'?'/algorithms/':known.has(key)?'/topics/'+key+'/':'/topics/?topic='+encodeURIComponent(key);
+ if(hub&&(hub.dataset.topic||new URLSearchParams(location.search).get('topic'))==='algorithms'){location.replace('/topics/finite-volume/'+location.hash);return;}
+ const topicURL=key=>known.has(key)?'/topics/'+key+'/':'/topics/?topic='+encodeURIComponent(key);
  const figure=item=>L.safeURL(item.cover_url)?'<img src="'+esc(L.safeURL(item.cover_url))+'" alt="'+esc(item.title)+'配图" loading="lazy">':'';
  function card(item,lessons){const key=item.metadata.topic_key,count=lessons.filter(x=>Array.isArray(x.metadata?.topics)&&x.metadata.topics.includes(key)).length;return '<a class="topic-collection" data-topic="'+esc(key)+'" href="'+topicURL(key)+'">'+figure(item)+'<div class="topic-collection-body"><small>'+count+' 个关联课程</small><h2>'+esc(item.title)+'</h2><p>'+esc(item.summary)+'</p><span class="text-link">进入专题 →</span></div></a>';}
- function numericalCard(lessons){const count=lessons.filter(x=>(x.track||'').includes('数值')).length;return '<a class="topic-collection" data-topic="algorithms" href="/algorithms/"><img src="/assets/diagrams/core-finite-volume.svg" alt="有限体积离散示意图" loading="lazy"><div class="topic-collection-body"><small>'+count+' 个关联课程</small><h2>数值方法</h2><p>离散格式、线性求解、压力与速度耦合，以及稳定性、收敛性与误差分析。</p><span class="text-link">进入专题 →</span></div></a>';}
  async function readAll(queryFactory){const all=[];for(let start=0;;start+=500){const rows=L.check(await queryFactory().range(start,start+499));all.push(...rows);if(rows.length<500)return all;}}
  (async()=>{try{await L.ready;await window.FoamDirectory?.ready;const D=window.FoamDirectory;
  if(D?.available){
@@ -23,7 +23,7 @@
   const grid=hub.querySelector('.lab-card-grid');window.foamListState.remember(grid);await L.names(selected.filter(r=>['article','log'].includes(r.kind)).map(r=>r.author_id));const render=()=>{grid.innerHTML=window.FoamPagination.slice(grid,selected,render,12).map(L.card).join('')||'<p>这里还没有发布内容。</p>';};render();window.addEventListener('popstate',render);return;
  }
  const [rawModules,lessons]=await Promise.all([readAll(()=>L.client.from('foamlab_content').select('*').eq('kind','module').eq('status','published').order('sort_order').order('slug')),readAll(()=>L.client.from('foamlab_content').select('id,slug,kind,title,summary,track,series,cover_url,metadata,sort_order').eq('kind','lesson').eq('status','published').order('sort_order').order('slug'))]);const modules=rawModules.filter(x=>typeof x.metadata?.topic_key==='string'&&x.metadata.topic_key);
- const collection=()=>numericalCard(lessons)+modules.filter(x=>x.metadata.topic_key!=='algorithms').map(x=>card(x,lessons)).join('');
+ const collection=()=>modules.filter(x=>x.metadata.topic_key!=='algorithms').map(x=>card(x,lessons)).join('');
  if(home)home.innerHTML=collection();
  if(!hub)return;const key=hub.dataset.topic||new URLSearchParams(location.search).get('topic');if(!key){hub.querySelector('.lab-loading')?.remove();const grid=document.createElement('div');grid.className='topic-collection-grid';grid.innerHTML=collection();hub.append(grid);return;}
  const item=modules.find(x=>x.metadata.topic_key===key);if(!item){hub.innerHTML='<div class="lab-empty"><h1>这个专题暂未发布</h1><p>可以先查看已经开放的专题和系统课程。</p><a class="button" href="/topics/">全部专题</a></div>';return;}

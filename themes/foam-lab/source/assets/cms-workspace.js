@@ -2,7 +2,7 @@
 (() => {
  const placements=[
   {id:'system',label:'系统学习',kind:'lesson',track:null},
-  {id:'algorithms',label:'专题学习 / 数值方法',kind:'lesson',track:'数值方法与理论'},
+  {id:'algorithms',label:'专题学习 / 有限体积法',kind:'lesson',track:'数值方法与理论'},
   {id:'programming',label:'OpenFOAM 编程 / 编程实例',kind:'lesson',track:'OpenFOAM 编程'},
   {id:'linux',label:'OpenFOAM 编程 / Linux 入门',kind:'lesson',track:'Linux 入门'},
   {id:'cpp',label:'OpenFOAM 编程 / C++ 入门',kind:'lesson',track:'C++ 入门'},

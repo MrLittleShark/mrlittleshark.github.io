@@ -18,7 +18,7 @@
    let key='',filter='';
    if(item.kind==='lesson'){
     if(['OpenFOAM 编程','C++ 入门','Linux 入门'].includes(item.track)){key='programming';filter=item.track==='C++ 入门'?'/cpp/':item.track==='Linux 入门'?'/linux/':'/programming/?q=';}
-    else if(item.track==='数值方法与理论'){key='topics';filter='/algorithms/';}
+    else if(item.track==='数值方法与理论'){key='topics';filter='/topics/finite-volume/';}
     else{key='courses';filter='track='+encodeURIComponent(item.track);}
    }else if(item.kind==='tool'){key='tools';}
    else if(['resource','recommendation'].includes(item.kind)){key='resources';filter='kind='+item.kind;}
